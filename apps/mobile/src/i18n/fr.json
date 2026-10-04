@@ -1,0 +1,8 @@
+{
+  "app": { "name": "Glyka", "tagline": "Suivez. Contrôlez. Comprenez." },
+  "common": { "save": "Enregistrer", "cancel": "Annuler", "next": "Suivant", "back": "Retour", "retry": "Réessayer" },
+  "disclaimer": "Glyka est un outil d'aide au suivi. Il ne remplace pas l'avis d'un professionnel de santé.",
+  "glucose": { "unusualConfirm": "Cette valeur est inhabituelle, est-ce correct ?" },
+  "sync": { "pending_one": "{{count}} mesure en attente de synchronisation", "pending_other": "{{count}} mesures en attente de synchronisation", "offline": "Hors ligne — vos données sont enregistrées sur ce téléphone" },
+  "safety": { "extreme": "Suivez les consignes de votre équipe soignante. En cas de malaise, demandez de l'aide immédiatement." }
+}

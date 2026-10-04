@@ -1,0 +1,27 @@
+# Liste des labels à créer (voir docs/team/github-setup.md).
+- { name: "type:task", color: "0b6e6e", description: "Ticket de développement" }
+- { name: "type:bug", color: "d73a4a", description: "Bug" }
+- { name: "type:proposal", color: "a2eeef", description: "Proposition à décider" }
+- { name: "prio:P0", color: "b60205", description: "Obligatoire pour la démo" }
+- { name: "prio:P1", color: "e99695", description: "Souhaité" }
+- { name: "prio:P2", color: "f9d0c4", description: "Bonus" }
+- { name: "lot:L0", color: "5319e7", description: "Socle" }
+- { name: "lot:L1", color: "1d76db", description: "Auth & profil" }
+- { name: "lot:L2", color: "0e8a16", description: "Mesures & tableau de bord" }
+- { name: "lot:L3", color: "fbca04", description: "Analyse" }
+- { name: "lot:L4", color: "c5def5", description: "Import" }
+- { name: "lot:L5", color: "d4c5f9", description: "Partage & portail médecin" }
+- { name: "lot:L6", color: "bfd4f2", description: "Rapport & urgence" }
+- { name: "lot:L7", color: "ff7619", description: "Design & contenu" }
+- { name: "lot:L8", color: "006b75", description: "Hors-ligne & notifications" }
+- { name: "area:mobile", color: "ededed", description: "apps/mobile" }
+- { name: "area:portal", color: "ededed", description: "apps/portal" }
+- { name: "area:api", color: "ededed", description: "apps/api" }
+- { name: "area:shared", color: "ededed", description: "packages/shared" }
+- { name: "area:analytics", color: "ededed", description: "packages/analytics" }
+- { name: "status:blocked", color: "000000", description: "Bloqué" }
+- { name: "needs-decision", color: "fef2c0", description: "À trancher en réunion" }
+- { name: "area:design", color: "ededed", description: "Maquettes, tokens" }
+- { name: "area:infra", color: "ededed", description: "Docker, CI, déploiement" }
+- { name: "area:scripts", color: "ededed", description: "scripts/" }
+- { name: "area:docs", color: "ededed", description: "docs/" }

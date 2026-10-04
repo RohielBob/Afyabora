@@ -1,0 +1,41 @@
+# Environnement local : base de données + boîte mail de développement.
+# Usage : pnpm db:up
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-glyka}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-glyka_dev_password}
+      POSTGRES_DB: ${POSTGRES_DB:-glyka}
+    ports:
+      - "5432:5432"
+    volumes:
+      - glyka_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-glyka}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  mailpit:
+    image: axllent/mailpit:latest
+    restart: unless-stopped
+    ports:
+      - "1025:1025"   # SMTP
+      - "8025:8025"   # Interface web des emails reçus
+
+  api:
+    build:
+      context: .
+      dockerfile: infra/docker/api.Dockerfile
+    profiles: ["full"]
+    env_file: apps/api/.env
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "3000:3000"
+
+volumes:
+  glyka_pgdata:

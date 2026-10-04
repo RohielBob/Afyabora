@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Question sur le projet
+    url: https://github.com/OWNER/glyka/discussions
+    about: Pour une question générale, utilisez les discussions plutôt qu'une issue.

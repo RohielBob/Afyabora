@@ -1,0 +1,353 @@
+// Schéma de base de données Glyka — v0.2 (voir cahier des charges §9).
+// Règle (ADR-0002) : la glycémie est stockée en mg/dL entier ; l'unité d'origine est conservée.
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  PATIENT
+  DOCTOR
+  ADMIN
+}
+
+enum DiabetesType {
+  TYPE_1
+  TYPE_2
+  GESTATIONAL
+  OTHER
+}
+
+enum GlucoseUnit {
+  G_L
+  MG_DL
+  MMOL_L
+}
+
+enum MeasurementContext {
+  FASTING
+  BEFORE_MEAL
+  AFTER_MEAL
+  BEDTIME
+  NIGHT
+  OTHER
+}
+
+enum MeasurementSource {
+  MANUAL
+  IMPORT
+  DEVICE
+}
+
+enum LifeEventType {
+  MEAL
+  ACTIVITY
+  TREATMENT
+}
+
+enum ShareStatus {
+  PENDING
+  ACTIVE
+  EXPIRED
+  REVOKED
+}
+
+enum DoctorVerificationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum ImportStatus {
+  PREVIEW
+  COMMITTED
+  REVERTED
+}
+
+enum EmailTokenType {
+  VERIFY_EMAIL
+  RESET_PASSWORD
+}
+
+enum NotificationStatus {
+  PENDING
+  SENT
+  FAILED
+}
+
+model User {
+  id              String    @id @default(uuid()) @db.Uuid
+  email           String    @unique
+  passwordHash    String
+  role            UserRole
+  emailVerifiedAt DateTime?
+  failedLogins    Int       @default(0)
+  lockedUntil     DateTime?
+  consentAt       DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  patientProfile PatientProfile?
+  doctorProfile  DoctorProfile?
+  refreshTokens  RefreshToken[]
+  emailTokens    EmailToken[]
+  devices        Device[]
+}
+
+model PatientProfile {
+  userId                        String       @id @db.Uuid
+  user                          User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  firstName                     String
+  lastName                      String
+  birthDate                     DateTime     @db.Date
+  sex                           String
+  diabetesType                  DiabetesType
+  diagnosisYear                 Int?
+  preferredUnit                 GlucoseUnit  @default(G_L)
+  veryLowMgDl                   Int          @default(54)
+  targetMinMgDl                 Int          @default(70)
+  targetMaxMgDl                 Int          @default(180)
+  veryHighMgDl                  Int          @default(250)
+  thresholdsReviewedByClinician Boolean      @default(false)
+  emergencyContactName          String?
+  emergencyContactPhone         String?
+  emergencyContactRelation      String?
+  timezoneOffsetMinutes         Int          @default(60) // Kinshasa : UTC+1
+  updatedAt                     DateTime     @updatedAt
+
+  measurements   Measurement[]
+  events         LifeEvent[]
+  importBatches  ImportBatch[]
+  insights       Insight[]
+  shareSessions  ShareSession[]
+  accessLogs     AccessLog[]
+  emergencyCard  EmergencyCard?
+  notificationPreference NotificationPreference?
+  syncOps        SyncOpLog[]
+}
+
+model DoctorProfile {
+  userId             String                   @id @db.Uuid
+  user               User                     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  firstName          String
+  lastName           String
+  licenseNumber      String
+  institution        String
+  verificationStatus DoctorVerificationStatus @default(PENDING)
+  verifiedAt         DateTime?
+  createdAt          DateTime                 @default(now())
+
+  claimedSessions ShareSession[]
+}
+
+model RefreshToken {
+  id        String    @id @default(uuid()) @db.Uuid
+  userId    String    @db.Uuid
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash String    @unique
+  familyId  String    @db.Uuid // détection de réutilisation : une famille compromise est révoquée en entier
+  expiresAt DateTime
+  rotatedAt DateTime?
+  revokedAt DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([userId])
+}
+
+model EmailToken {
+  id        String         @id @default(uuid()) @db.Uuid
+  userId    String         @db.Uuid
+  user      User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      EmailTokenType
+  tokenHash String         @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime       @default(now())
+}
+
+/// Identifiant généré par le CLIENT (UUID) : idempotence de la synchronisation hors-ligne.
+model Measurement {
+  id             String             @id @db.Uuid
+  patientId      String             @db.Uuid
+  patient        PatientProfile     @relation(fields: [patientId], references: [userId], onDelete: Cascade)
+  valueMgDl      Int
+  originalValue  Float
+  originalUnit   GlucoseUnit
+  measuredAt     DateTime
+  context        MeasurementContext @default(OTHER)
+  source         MeasurementSource  @default(MANUAL)
+  importBatchId  String?            @db.Uuid
+  importBatch    ImportBatch?       @relation(fields: [importBatchId], references: [id], onDelete: SetNull)
+  noteEncrypted  String?
+  clientUpdatedAt DateTime
+  editedAt       DateTime?
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+  deletedAt      DateTime? // tombstone : nécessaire pour propager les suppressions à la synchronisation
+
+  @@index([patientId, measuredAt])
+  @@index([patientId, updatedAt, id])
+}
+
+model LifeEvent {
+  id              String         @id @db.Uuid
+  patientId       String         @db.Uuid
+  patient         PatientProfile @relation(fields: [patientId], references: [userId], onDelete: Cascade)
+  type            LifeEventType
+  occurredAt      DateTime
+  label           String
+  details         String?
+  durationMinutes Int?
+  clientUpdatedAt DateTime
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  deletedAt       DateTime?
+
+  @@index([patientId, occurredAt])
+  @@index([patientId, updatedAt, id])
+}
+
+/// Journal des opérations de synchronisation déjà traitées (idempotence).
+model SyncOpLog {
+  opId      String         @id @db.Uuid
+  patientId String         @db.Uuid
+  patient   PatientProfile @relation(fields: [patientId], references: [userId], onDelete: Cascade)
+  deviceId  String         @db.Uuid
+  result    String
+  appliedAt DateTime       @default(now())
+
+  @@index([patientId])
+}
+
+model ImportBatch {
+  id             String         @id @default(uuid()) @db.Uuid
+  patientId      String         @db.Uuid
+  patient        PatientProfile @relation(fields: [patientId], references: [userId], onDelete: Cascade)
+  fileName       String
+  status         ImportStatus   @default(PREVIEW)
+  defaultUnit    GlucoseUnit
+  parsedRows     Json // lignes analysées en attente de confirmation (PREVIEW)
+  validCount     Int            @default(0)
+  duplicateCount Int            @default(0)
+  inconsistentCount Int         @default(0)
+  errorCount     Int            @default(0)
+  createdAt      DateTime       @default(now())
+  committedAt    DateTime?
+  revertedAt     DateTime?
+
+  measurements Measurement[]
+}
+
+model Insight {
+  id                    String         @id @default(uuid()) @db.Uuid
+  patientId             String         @db.Uuid
+  patient               PatientProfile @relation(fields: [patientId], references: [userId], onDelete: Cascade)
+  type                  String
+  severity              String
+  facts                 Json
+  evidenceMeasurementIds String[]
+  periodFrom            DateTime
+  periodTo              DateTime
+  createdAt             DateTime       @default(now())
+
+  @@index([patientId, createdAt])
+}
+
+model ShareSession {
+  id                String         @id @default(uuid()) @db.Uuid
+  patientId         String         @db.Uuid
+  patient           PatientProfile @relation(fields: [patientId], references: [userId], onDelete: Cascade)
+  categories        String[]
+  duration          String
+  status            ShareStatus    @default(PENDING)
+  claimedByDoctorId String?        @db.Uuid
+  claimedByDoctor   DoctorProfile? @relation(fields: [claimedByDoctorId], references: [userId])
+  claimedAt         DateTime?
+  expiresAt         DateTime? // fixé au moment du scan (claimedAt + durée)
+  revokedAt         DateTime?
+  createdAt         DateTime       @default(now())
+
+  tokens ShareToken[]
+
+  @@index([patientId, status])
+}
+
+/// Jeton affiché dans le QR : opaque, à usage unique, rotatif. Seul le HASH est stocké.
+model ShareToken {
+  id        String       @id @default(uuid()) @db.Uuid
+  sessionId String       @db.Uuid
+  session   ShareSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  tokenHash String       @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime     @default(now())
+
+  @@index([sessionId])
+}
+
+model AccessLog {
+  id        String         @id @default(uuid()) @db.Uuid
+  patientId String         @db.Uuid
+  patient   PatientProfile @relation(fields: [patientId], references: [userId], onDelete: Cascade)
+  actorId   String?        @db.Uuid // médecin ; null pour un accès urgence anonyme
+  sessionId String?        @db.Uuid
+  action    String // SHARE_CLAIMED, SHARE_VIEWED, SHARE_REVOKED, SHARE_EXPIRED, EMERGENCY_VIEWED, REPORT_DOWNLOADED
+  ip        String?
+  at        DateTime       @default(now())
+
+  @@index([patientId, at])
+}
+
+model EmergencyCard {
+  patientId             String         @id @db.Uuid
+  patient               PatientProfile @relation(fields: [patientId], references: [userId], onDelete: Cascade)
+  fullName              String?
+  diabetesType          String?
+  declaredTreatment     String?
+  allergies             String?
+  bloodGroup            String?
+  lastKnownGlucoseMgDl  Int?
+  emergencyContactName  String?
+  emergencyContactPhone String?
+  enabled               Boolean        @default(false)
+  tokenHash             String?        @unique
+  updatedAt             DateTime       @updatedAt
+}
+
+model NotificationPreference {
+  patientId String         @id @db.Uuid
+  patient   PatientProfile @relation(fields: [patientId], references: [userId], onDelete: Cascade)
+  settings  Json // NotificationPreferences (voir @glyka/shared)
+  updatedAt DateTime       @updatedAt
+}
+
+model Device {
+  id            String   @id @db.Uuid // généré par l'app, sert aussi à la synchronisation
+  userId        String   @db.Uuid
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expoPushToken String   @unique
+  platform      String
+  lastSeenAt    DateTime @default(now())
+
+  @@index([userId])
+}
+
+/// File d'envoi des notifications serveur (push) — traitée par une tâche planifiée.
+model NotificationOutbox {
+  id          String             @id @default(uuid()) @db.Uuid
+  userId      String             @db.Uuid
+  category    String
+  title       String
+  body        String
+  data        Json?
+  status      NotificationStatus @default(PENDING)
+  scheduledAt DateTime           @default(now())
+  sentAt      DateTime?
+  error       String?
+
+  @@index([status, scheduledAt])
+}

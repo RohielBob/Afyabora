@@ -1,0 +1,4 @@
+{
+  "app": { "name": "Glyka", "tagline": "Track. Control. Understand." },
+  "common": { "save": "Save", "cancel": "Cancel", "next": "Next", "back": "Back", "retry": "Retry" }
+}

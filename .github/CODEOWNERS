@@ -1,0 +1,10 @@
+# Remplacer @lead-technique, @backend, etc. par les vrais identifiants GitHub.
+*                          @lead-technique
+/apps/api/                 @lead-technique @backend
+/apps/mobile/              @lead-technique @mobile
+/apps/portal/              @lead-technique @portal
+/packages/shared/          @lead-technique
+/packages/analytics/       @lead-technique @data
+/apps/api/src/modules/sharing/   @lead-technique
+/apps/api/src/modules/auth/      @lead-technique
+/docs/                     @lead-technique

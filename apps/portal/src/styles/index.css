@@ -1,0 +1,23 @@
+@import "tailwindcss";
+
+/* Identité Glyka : valeurs alignées sur @glyka/ui-tokens (L7-03 les met à jour). */
+@theme {
+  --color-primary: #0b6e6e;
+  --color-primary-dark: #084f4f;
+  --color-primary-light: #d7eeee;
+  --color-accent: #e9a23b;
+  --color-surface: #ffffff;
+  --color-page: #f7fafa;
+  --color-ink: #10231f;
+  --color-muted: #52665f;
+  --color-line: #d6e2e0;
+  --color-state-low: #d9534f;
+  --color-state-in: #2e8b57;
+  --color-state-high: #e9a23b;
+}
+
+body {
+  background: var(--color-page);
+  color: var(--color-ink);
+  font-family: Inter, system-ui, sans-serif;
+}

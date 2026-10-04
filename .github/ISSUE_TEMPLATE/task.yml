@@ -1,0 +1,55 @@
+name: Tâche (ticket de développement)
+description: Une unité de travail issue du backlog (voir docs/team/backlog.csv)
+title: "[L?-??] "
+labels: ["type:task"]
+body:
+  - type: input
+    id: ref
+    attributes:
+      label: Référence
+      description: Identifiant du backlog (ex. L2-04) et fonctionnalité du cahier des charges (ex. F3)
+    validations:
+      required: true
+  - type: textarea
+    id: objective
+    attributes:
+      label: Objectif
+      description: Ce que cette tâche doit permettre, en une ou deux phrases.
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Périmètre (fichiers et modules concernés)
+      placeholder: "apps/mobile/src/features/measurements/..."
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Critères d'acceptation
+      description: Reprendre les CA du cahier des charges. Une case = un critère testable.
+      value: |
+        - [ ] 
+        - [ ] 
+    validations:
+      required: true
+  - type: textarea
+    id: deps
+    attributes:
+      label: Dépendances
+      description: Tickets ou contrats (OpenAPI, schémas Zod) dont cette tâche dépend.
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priorité
+      options: ["P0 — obligatoire pour la démo", "P1 — souhaité", "P2 — bonus"]
+    validations:
+      required: true
+  - type: dropdown
+    id: estimate
+    attributes:
+      label: Estimation
+      options: ["S (≤ 2 h)", "M (½ journée)", "L (1 journée)", "XL (à découper)"]
+    validations:
+      required: true

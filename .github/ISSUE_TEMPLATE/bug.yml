@@ -1,0 +1,46 @@
+name: Bug
+description: Quelque chose ne fonctionne pas comme prévu
+title: "[BUG] "
+labels: ["type:bug"]
+body:
+  - type: dropdown
+    id: where
+    attributes:
+      label: Où ?
+      options: ["Mobile", "Portail médecin", "API", "Analyse / IA", "Synchronisation", "Autre"]
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Étapes pour reproduire
+      value: |
+        1. 
+        2. 
+        3. 
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Résultat attendu
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Résultat obtenu
+    validations:
+      required: true
+  - type: input
+    id: env
+    attributes:
+      label: Environnement
+      placeholder: "Android 14, build APK du 08/10, API locale"
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: Confidentialité
+      options:
+        - label: Cette issue ne contient aucune donnée de santé réelle, aucun mot de passe, aucun jeton.
+          required: true
