@@ -19,7 +19,10 @@ export const DEFAULT_THRESHOLDS: GlucoseThresholds = {
   veryHighMgDl: 250,
 };
 
-export function classifyGlucose(mgDl: number, t: GlucoseThresholds = DEFAULT_THRESHOLDS): GlucoseState {
+export function classifyGlucose(
+  mgDl: number,
+  t: GlucoseThresholds = DEFAULT_THRESHOLDS,
+): GlucoseState {
   if (mgDl < t.veryLowMgDl) return 'VERY_LOW';
   if (mgDl < t.targetMinMgDl) return 'LOW';
   if (mgDl > t.veryHighMgDl) return 'VERY_HIGH';

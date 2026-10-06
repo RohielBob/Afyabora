@@ -8,12 +8,12 @@ import {
   toMgDl,
 } from '../src';
 
-describe('conversion d\'unités', () => {
+describe("conversion d'unités", () => {
   it('1,48 g/L = 148 mg/dL', () => expect(toMgDl(1.48, 'G_L')).toBe(148));
   it('aller-retour g/L sans perte', () => expect(fromMgDl(toMgDl(1.31, 'G_L'), 'G_L')).toBe(1.31));
   it('5,5 mmol/L ≈ 99 mg/dL', () => expect(toMgDl(5.5, 'MMOL_L')).toBe(99));
-  it('148 mg/dL s\'affiche 1,48 g/L', () => expect(formatGlucose(148, 'G_L')).toBe('1,48 g/L'));
-  it('148 mg/dL s\'affiche 148 mg/dL', () => expect(formatGlucose(148, 'MG_DL')).toBe('148 mg/dL'));
+  it("148 mg/dL s'affiche 1,48 g/L", () => expect(formatGlucose(148, 'G_L')).toBe('1,48 g/L'));
+  it("148 mg/dL s'affiche 148 mg/dL", () => expect(formatGlucose(148, 'MG_DL')).toBe('148 mg/dL'));
 });
 
 describe('plausibilité', () => {

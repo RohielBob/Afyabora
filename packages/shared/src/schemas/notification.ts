@@ -10,7 +10,13 @@ export const notificationPreferencesSchema = z.object({
   quietHours: z.object({ start: hhmm, end: hhmm }).optional(),
   /** Rappels de mesure programmés (heure locale) */
   reminders: z
-    .array(z.object({ time: hhmm, label: z.string().max(60), days: z.array(z.number().int().min(1).max(7)) }))
+    .array(
+      z.object({
+        time: hhmm,
+        label: z.string().max(60),
+        days: z.array(z.number().int().min(1).max(7)),
+      }),
+    )
     .max(8)
     .default([]),
   /** Alerte « pas de mesure depuis X heures » */

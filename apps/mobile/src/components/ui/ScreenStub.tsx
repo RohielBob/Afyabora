@@ -3,7 +3,15 @@ import { Screen } from './Screen';
 import { Card } from './Card';
 import { Text } from './Text';
 
-export function ScreenStub({ title, ticket, description }: { title: string; ticket: string; description: string }) {
+export function ScreenStub({
+  title,
+  ticket,
+  description,
+}: {
+  title: string;
+  ticket: string;
+  description: string;
+}) {
   return (
     <Screen>
       <Text variant="title">{title}</Text>

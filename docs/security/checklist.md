@@ -3,6 +3,7 @@
 À relire au **point sécurité du jour 7** et avant la démonstration. Cocher uniquement ce qui est **vérifié par un test ou une relecture de code**.
 
 ## Authentification et sessions
+
 - [ ] Mots de passe hachés en Argon2id ; jamais dans les logs ni dans les réponses
 - [ ] Email vérifié obligatoire avant connexion
 - [ ] Verrouillage après 5 échecs en 10 minutes
@@ -11,10 +12,12 @@
 - [ ] Jetons stockés dans SecureStore (mobile) ; aucune donnée patient dans `localStorage` (portail)
 
 ## Autorisation
+
 - [ ] Toute route vérifie le **rôle** ET la **propriété** de la donnée (un patient ne lit jamais les données d'un autre)
 - [ ] Un médecin `PENDING` ou `REJECTED` ne peut pas utiliser `/shares/claim`
 
 ## Partage par QR (ADR-0003) — tests automatiques obligatoires (L5-14)
+
 - [ ] Le même QR scanné deux fois : le second est refusé
 - [ ] Un jeton de plus de 60 s est refusé
 - [ ] Deux scans simultanés : un seul réussit
@@ -26,6 +29,7 @@
 - [ ] Chaque étape écrit dans le journal d'accès
 
 ## Données
+
 - [ ] Notes personnelles chiffrées (AES-256-GCM)
 - [ ] Entrées validées côté serveur avec les schémas Zod partagés
 - [ ] Aucune donnée de santé dans les logs, les messages d'erreur, les URL
@@ -33,10 +37,12 @@
 - [ ] **Données de démo uniquement fictives**
 
 ## Notifications et IA
+
 - [ ] Aucune valeur de santé dans le texte d'une notification par défaut
 - [ ] Le modèle de langage ne reçoit ni nom, ni email, ni identifiant
 - [ ] Jeu de questions-pièges : aucun diagnostic, aucune dose, refus poli
 
 ## Dépôt
+
 - [ ] Aucun secret dans Git (`.env` ignorés) ; secrets de démo changés après la présentation
 - [ ] CI verte ; pas de dépendance abandonnée ou vulnérable connue (`pnpm audit`)

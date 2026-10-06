@@ -1,7 +1,7 @@
 name: Tâche (ticket de développement)
 description: Une unité de travail issue du backlog (voir docs/team/backlog.csv)
-title: "[L?-??] "
-labels: ["type:task"]
+title: '[L?-??] '
+labels: ['type:task']
 body:
   - type: input
     id: ref
@@ -21,7 +21,7 @@ body:
     id: scope
     attributes:
       label: Périmètre (fichiers et modules concernés)
-      placeholder: "apps/mobile/src/features/measurements/..."
+      placeholder: 'apps/mobile/src/features/measurements/...'
     validations:
       required: true
   - type: textarea
@@ -31,7 +31,7 @@ body:
       description: Reprendre les CA du cahier des charges. Une case = un critère testable.
       value: |
         - [ ] 
-        - [ ] 
+        - [ ]
     validations:
       required: true
   - type: textarea
@@ -43,13 +43,13 @@ body:
     id: priority
     attributes:
       label: Priorité
-      options: ["P0 — obligatoire pour la démo", "P1 — souhaité", "P2 — bonus"]
+      options: ['P0 — obligatoire pour la démo', 'P1 — souhaité', 'P2 — bonus']
     validations:
       required: true
   - type: dropdown
     id: estimate
     attributes:
       label: Estimation
-      options: ["S (≤ 2 h)", "M (½ journée)", "L (1 journée)", "XL (à découper)"]
+      options: ['S (≤ 2 h)', 'M (½ journée)', 'L (1 journée)', 'XL (à découper)']
     validations:
       required: true

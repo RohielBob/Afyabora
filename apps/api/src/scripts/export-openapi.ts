@@ -10,7 +10,11 @@ import { AppModule } from '../app.module';
 
 async function main() {
   const app = await NestFactory.create(AppModule, { logger: false });
-  const config = new DocumentBuilder().setTitle('Glyka API').setVersion('0.1.0').addBearerAuth().build();
+  const config = new DocumentBuilder()
+    .setTitle('Glyka API')
+    .setVersion('0.1.0')
+    .addBearerAuth()
+    .build();
   const document = SwaggerModule.createDocument(app, config);
   const out = resolve(__dirname, '../../../../docs/api/openapi.json');
   writeFileSync(out, JSON.stringify(document, null, 2));

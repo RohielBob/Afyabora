@@ -3,27 +3,32 @@
 App Android (prioritaire) et iOS : suivi de glycémie, **saisie hors-ligne**, import, analyse, **partage par QR dynamique**, carte d'urgence, **notifications**.
 
 ## Principe d'architecture : local-first (ADR-0004)
+
 ```
 Écran ──► repository local (SQLite) ──► outbox ──► moteur de sync ──► API (/sync/push, /sync/pull)
    ▲                 │
    └── lecture ──────┘   Le tableau de bord et l'analyse lisent la base LOCALE (@glyka/analytics tourne sur le téléphone).
 ```
+
 - **On n'écrit jamais directement sur l'API** pour une mesure ou un événement : écriture locale + opération dans l'`outbox` (même transaction), puis synchronisation dès que le réseau est là.
 - L'identifiant (UUID) est généré sur le téléphone : rejouer une opération ne crée jamais de doublon.
 - Fonctionnent **hors-ligne** : saisie, tableau de bord, chronologie, analyse (gabarits), rappels et alertes locales.
 - Nécessitent le **réseau** : inscription/connexion, import, partage QR, rapport PDF, carte d'urgence, question libre IA.
 
 ## Démarrer
+
 ```bash
 pnpm install
 cp apps/mobile/.env.example apps/mobile/.env
 cd apps/mobile && npx expo install --fix     # aligne les versions Expo/React Native (ticket L0-02)
 pnpm dev:mobile                               # Expo
 ```
+
 > **Important :** les notifications push et le chiffrement SQLite exigent un **development build** (APK EAS, ticket L0-11), pas Expo Go.
 > `eas build --profile development --platform android`
 
 ## Structure
+
 ```
 app/                     Routes (expo-router) — UN fichier = UN écran = un ticket (voir ScreenStub)
 ├─ (auth)/               bienvenue, inscription, vérification, connexion, mot de passe oublié
@@ -43,6 +48,7 @@ src/
 ```
 
 ## Règles
+
 - Textes via `i18n` ; couleurs/espacements via `theme` ; **un état glycémique = couleur + symbole + libellé** (`RangeBadge`).
 - Cibles tactiles ≥ 48 px, tailles de police adaptables.
 - Jetons uniquement dans **SecureStore**. Aucune donnée de santé dans les logs.
@@ -50,9 +56,11 @@ src/
 - Notifications : **aucune valeur de santé** dans le texte par défaut.
 
 ## Déjà en place
+
 Config Expo/EAS, schéma SQLite v1 + migrations, repository des mesures avec outbox atomique, `coalesceOps` (testé), détection réseau, composants UI de base, i18n, navigation complète en écrans provisoires.
 
 ## Tests
+
 `pnpm --filter @glyka/mobile test` (jest-expo). Premier test : `src/features/sync/__tests__/coalesce.test.ts`.
 
 **Lots : L1, L2, L3, L4, L5, L6, L8 (partie mobile) · L7 (composants).**

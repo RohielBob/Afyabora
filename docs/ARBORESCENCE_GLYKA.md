@@ -4,33 +4,37 @@ Version du dépôt : **v0.2** (hors-ligne + notifications) · **299 fichiers** �
 À distribuer à l'équipe avec `glyka-repo.zip`. Une copie est dans le dépôt : `docs/ARBORESCENCE_GLYKA.md`.
 
 ## Légende
-| Marque | Signification |
-|---|---|
-| ✅ | Code ou contenu **réel** : en place (voir §4 pour ce qui a été exécuté) |
-| 🟡 | **Squelette** à implémenter : contient un `TODO(ticket)` ou un écran/page provisoire |
-| (vide) | Document ou configuration |
+
+| Marque | Signification                                                                        |
+| ------ | ------------------------------------------------------------------------------------ |
+| ✅     | Code ou contenu **réel** : en place (voir §4 pour ce qui a été exécuté)              |
+| 🟡     | **Squelette** à implémenter : contient un `TODO(ticket)` ou un écran/page provisoire |
+| (vide) | Document ou configuration                                                            |
 
 Chaque squelette cite le **ticket** à réaliser ; les tickets sont dans `docs/team/backlog.md`.
 
 ## 1. Chiffres
+
 - 101 fichiers de code réels (✅) · 75 squelettes à implémenter (🟡) · le reste : documentation et configuration
 - 7 paquets : `@glyka/api`, `@glyka/mobile`, `@glyka/portal`, `@glyka/shared`, `@glyka/analytics`, `@glyka/ui-tokens`, `@glyka/scripts`
 - 14 modules d'API · 29 écrans mobiles · 7 pages de portail · 13 features mobiles · 6 ADR
 
 ## 2. Où travaille chaque lot
-| Lot | Intitulé | Tickets | Dossiers principaux |
-|---|---|---|---|
-| **L0** | Socle | 11 | racine, `infra/`, `.github/`, `apps/api/prisma/`, `docs/api/` |
-| **L1** | Auth & profil | 14 | `apps/api/src/modules/{auth,patients}`, `apps/mobile/app/(auth)`, `(onboarding)`, `features/{auth,profile}`, `apps/portal/src/features/auth` |
-| **L2** | Mesures & tableau de bord | 12 | `modules/{measurements,events}`, `features/{measurements,events,dashboard,timeline}`, `app/(tabs)`, `app/measurement` |
-| **L3** | Analyse | 10 | `packages/analytics`, `modules/insights`, `features/insights` |
-| **L4** | Import | 9 | `modules/imports`, `features/imports`, `app/import`, `scripts/sample-data` |
-| **L5** | Partage & portail médecin | 14 | `modules/{sharing,audit,doctor}`, `features/sharing`, `app/share`, **tout `apps/portal`** |
-| **L6** | Rapport & urgence | 6 | `modules/{reports,emergency}`, `features/{report,emergency}`, `app/{report,emergency}` |
-| **L7** | Design & contenu | 12 | `packages/ui-tokens`, `apps/mobile/src/components/ui`, `i18n`, `docs/design`, `docs/demo`, `scripts/seed-demo` |
-| **L8** | Hors-ligne & notifications | 17 | `apps/mobile/src/{db,features/sync,features/notifications}`, `modules/{sync,notifications}`, `app/settings/notifications` |
+
+| Lot    | Intitulé                   | Tickets | Dossiers principaux                                                                                                                          |
+| ------ | -------------------------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| **L0** | Socle                      | 11      | racine, `infra/`, `.github/`, `apps/api/prisma/`, `docs/api/`                                                                                |
+| **L1** | Auth & profil              | 14      | `apps/api/src/modules/{auth,patients}`, `apps/mobile/app/(auth)`, `(onboarding)`, `features/{auth,profile}`, `apps/portal/src/features/auth` |
+| **L2** | Mesures & tableau de bord  | 12      | `modules/{measurements,events}`, `features/{measurements,events,dashboard,timeline}`, `app/(tabs)`, `app/measurement`                        |
+| **L3** | Analyse                    | 10      | `packages/analytics`, `modules/insights`, `features/insights`                                                                                |
+| **L4** | Import                     | 9       | `modules/imports`, `features/imports`, `app/import`, `scripts/sample-data`                                                                   |
+| **L5** | Partage & portail médecin  | 14      | `modules/{sharing,audit,doctor}`, `features/sharing`, `app/share`, **tout `apps/portal`**                                                    |
+| **L6** | Rapport & urgence          | 6       | `modules/{reports,emergency}`, `features/{report,emergency}`, `app/{report,emergency}`                                                       |
+| **L7** | Design & contenu           | 12      | `packages/ui-tokens`, `apps/mobile/src/components/ui`, `i18n`, `docs/design`, `docs/demo`, `scripts/seed-demo`                               |
+| **L8** | Hors-ligne & notifications | 17      | `apps/mobile/src/{db,features/sync,features/notifications}`, `modules/{sync,notifications}`, `app/settings/notifications`                    |
 
 ## 3. L'arborescence
+
 ```
 glyka/
 ├── .github/  — Automatisation et modèles GitHub
@@ -446,7 +450,9 @@ glyka/
 ```
 
 ## 4. Ce qui a été vérifié, et ce qui ne l'a pas été
+
 **Exécuté ici avec succès :**
+
 - Typage strict de `@glyka/shared` (hors schémas Zod) et `@glyka/analytics` + vérifications chiffrées (conversions d'unités, statistiques, score de qualité, anomalies, règle « moins de 10 mesures = pas d'analyse »)
 - Helpers de sécurité de l'API : chiffrement AES-256-GCM (aller-retour, altération détectée), jetons opaques et hash
 - `coalesceOps` (synchronisation mobile) : 4 comportements
@@ -455,6 +461,7 @@ glyka/
 - Syntaxe des **176 fichiers** TypeScript/TSX ; validité de tous les JSON et YAML ; références entre paquets ; aucun secret ni `.env` dans le dépôt
 
 **NON exécuté (pas d'accès au réseau ici) :**
+
 - `pnpm install` n'a **jamais** été lancé : versions de dépendances à aligner au **jour 1** (notamment `npx expo install --fix`, SDK Expo 54 supposé)
 - L'API, le mobile et le portail n'ont **pas été compilés ni démarrés** : seule leur syntaxe est vérifiée
 - Les schémas Zod, la migration Prisma, `seed-demo/index.ts` et `admin/approve-doctor.ts` sont à valider contre une vraie base
@@ -464,6 +471,7 @@ glyka/
 Ces points sont des tickets du backlog (L0-02, L0-11, L8-02, L7-07, L1-12), pas des oublis.
 
 ## 5. Premiers pas du chef technique (jour 1)
+
 1. Lire `docs/team/github-setup.md` : créer le dépôt, `develop`, protections, labels, tableau, jalons.
 2. `scripts/github/create-issues.sh --dry-run` puis sans l'option : 105 issues créées.
 3. Assigner les lots selon `docs/team/plan-de-travail.md` (rôles proposés, chemin critique, règle de coupe).

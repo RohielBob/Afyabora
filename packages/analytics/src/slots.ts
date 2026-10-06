@@ -11,7 +11,10 @@ export function slotOf(at: number, tzOffsetMinutes = 60): TimeSlot {
   return 'NIGHT';
 }
 
-export function groupBySlot(points: GlucosePoint[], tzOffsetMinutes = 60): Record<TimeSlot, GlucosePoint[]> {
+export function groupBySlot(
+  points: GlucosePoint[],
+  tzOffsetMinutes = 60,
+): Record<TimeSlot, GlucosePoint[]> {
   const out: Record<TimeSlot, GlucosePoint[]> = { MORNING: [], NOON: [], EVENING: [], NIGHT: [] };
   for (const p of points) out[slotOf(p.at, tzOffsetMinutes)].push(p);
   return out;

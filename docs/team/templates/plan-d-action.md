@@ -1,5 +1,5 @@
 # Plan d'action
 
-| # | Action | Responsable | Échéance | Statut (à faire / en cours / fait / bloqué) | Ticket |
-|---|---|---|---|---|---|
-| 1 | | | | | |
+| #   | Action | Responsable | Échéance | Statut (à faire / en cours / fait / bloqué) | Ticket |
+| --- | ------ | ----------- | -------- | ------------------------------------------- | ------ |
+| 1   |        |             |          |                                             |        |
