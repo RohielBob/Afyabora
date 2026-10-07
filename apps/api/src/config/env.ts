@@ -27,7 +27,7 @@ const envSchema = z.object({
     ),
   SMTP_HOST: z.string().default('localhost'),
   SMTP_PORT: z.coerce.number().default(1025),
-  SMTP_FROM: z.string().default('Glyka <no-reply@glyka.local>'),
+  SMTP_FROM: z.string().default('Afyabora <no-reply@afyabora.local>'),
   PORTAL_URL: z.string().url().default('http://localhost:5173'),
   API_PUBLIC_URL: z.string().url().default('http://localhost:3000'),
   LLM_PROVIDER: z.enum(['none', 'anthropic']).default('none'),
