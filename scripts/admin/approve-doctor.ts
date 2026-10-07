@@ -12,7 +12,10 @@ async function main() {
   const approve = flag !== '--reject';
   await prisma.doctorProfile.update({
     where: { userId: user.id },
-    data: { verificationStatus: approve ? 'APPROVED' : 'REJECTED', verifiedAt: approve ? new Date() : null },
+    data: {
+      verificationStatus: approve ? 'APPROVED' : 'REJECTED',
+      verifiedAt: approve ? new Date() : null,
+    },
   });
   console.log(`${email} : ${approve ? 'APPROUVÉ' : 'REJETÉ'}`);
 }

@@ -1,6 +1,11 @@
 // Badge d'état glycémique : COULEUR + SYMBOLE + LIBELLÉ (jamais la couleur seule).
 import { View } from 'react-native';
-import { classifyGlucose, STATE_SYMBOLS, type GlucoseThresholds, type GlucoseState } from '@glyka/shared';
+import {
+  classifyGlucose,
+  STATE_SYMBOLS,
+  type GlucoseThresholds,
+  type GlucoseState,
+} from '@glyka/shared';
 import { colors, radii, spacing } from '@/theme';
 import { Text } from './Text';
 

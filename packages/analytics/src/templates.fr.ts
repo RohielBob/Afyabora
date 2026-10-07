@@ -4,7 +4,7 @@
 import type { Insight } from './types';
 
 export const DISCLAIMER_FR =
-  "Ces observations sont statistiques. Elles ne constituent pas un diagnostic. En cas de doute, parlez-en à votre professionnel de santé.";
+  'Ces observations sont statistiques. Elles ne constituent pas un diagnostic. En cas de doute, parlez-en à votre professionnel de santé.';
 
 const SLOT_FR: Record<string, string> = {
   MORNING: 'matin',

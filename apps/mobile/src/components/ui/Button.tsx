@@ -32,7 +32,9 @@ export function Button({
         minHeight: 48, // cible tactile accessible
       }}
     >
-      <Text style={{ color: primary ? '#FFFFFF' : theme.primary, fontWeight: '600', fontSize: 16 }}>{label}</Text>
+      <Text style={{ color: primary ? '#FFFFFF' : theme.primary, fontWeight: '600', fontSize: 16 }}>
+        {label}
+      </Text>
     </Pressable>
   );
 }

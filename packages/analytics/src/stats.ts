@@ -22,7 +22,9 @@ export function median(values: number[]): number | null {
   if (values.length === 0) return null;
   const s = [...values].sort((a, b) => a - b);
   const mid = Math.floor(s.length / 2);
-  return s.length % 2 === 0 ? ((s[mid - 1] as number) + (s[mid] as number)) / 2 : (s[mid] as number);
+  return s.length % 2 === 0
+    ? ((s[mid - 1] as number) + (s[mid] as number)) / 2
+    : (s[mid] as number);
 }
 
 const pct = (n: number, total: number) => (total === 0 ? null : (n / total) * 100);

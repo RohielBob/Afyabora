@@ -5,10 +5,12 @@
 Synchronisation hors-ligne : reçoit les opérations empilées sur le téléphone, renvoie les changements serveur.
 
 ## Routes
+
 - POST /sync/push : lot d'opérations (≤ 200) avec résultat par opération
 - GET /sync/pull?cursor&limit : changements depuis le curseur (inclut les tombstones)
 
 ## Règles de gestion
+
 - Chaque opération a un `opId` : déjà traité = `DUPLICATE` (table `SyncOpLog`), jamais appliqué deux fois.
 - Conflit : la dernière écriture gagne selon `clientUpdatedAt`; sinon `CONFLICT_SERVER_WINS`.
 - Curseur = (`updatedAt`, `id`) ; pagination stable, pas de perte d'élément.
@@ -17,6 +19,7 @@ Synchronisation hors-ligne : reçoit les opérations empilées sur le téléphon
 - Réutilise les services `measurements` et `events` (une seule logique métier).
 
 ## Tests obligatoires
+
 - [ ] Même lot envoyé deux fois : aucun doublon.
 - [ ] Suppression hors-ligne propagée.
 - [ ] Conflit : dernière écriture gagne.
@@ -24,13 +27,15 @@ Synchronisation hors-ligne : reçoit les opérations empilées sur le téléphon
 - [ ] Opération invalide n'empêche pas les autres.
 
 ## Fichiers
-| Fichier | Rôle |
-|---|---|
-| `sync.module.ts` | Déclaration du module NestJS |
+
+| Fichier              | Rôle                                                                                                   |
+| -------------------- | ------------------------------------------------------------------------------------------------------ |
+| `sync.module.ts`     | Déclaration du module NestJS                                                                           |
 | `sync.controller.ts` | Routes HTTP : validation Zod (`ZodValidationPipe` + schémas de `@glyka/shared`), pas de logique métier |
-| `sync.service.ts` | Logique métier et accès base (Prisma) |
+| `sync.service.ts`    | Logique métier et accès base (Prisma)                                                                  |
 
 ## Rappels
+
 - Chaque route vérifie le **rôle** (`@Roles`) **et** la **propriété** de la donnée.
 - Toute entrée est validée avec un schéma de `@glyka/shared`.
 - Aucun secret ni donnée de santé dans les logs.

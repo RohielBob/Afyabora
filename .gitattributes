@@ -1,0 +1,2 @@
+# Fins de ligne : LF partout (aligné sur .editorconfig et Prettier), même sous Windows.
+* text=auto eol=lf

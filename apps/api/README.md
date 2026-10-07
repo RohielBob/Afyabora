@@ -3,6 +3,7 @@
 Back-end de Glyka : comptes, mesures, **synchronisation hors-ligne**, import, analyse, **partage par QR dynamique**, portail médecin, rapport PDF, carte d'urgence, notifications.
 
 ## Démarrer
+
 ```bash
 cp apps/api/.env.example apps/api/.env     # puis générer les secrets (voir le fichier)
 pnpm db:up                                  # PostgreSQL + Mailpit (http://localhost:8025)
@@ -11,6 +12,7 @@ pnpm dev:api                                # http://localhost:3000 — Swagger 
 ```
 
 ## Structure
+
 ```
 src/
 ├─ main.ts · app.module.ts          # démarrage, modules, guards globaux (throttler → JWT → rôles)
@@ -29,20 +31,22 @@ test/                               # tests transverses (crypto, e2e)
 ```
 
 ## Modules
-| Module | Lot | Fonctionnalité |
-|---|---|---|
-| `health` | L0 | Vérification de l'API |
-| `auth` | L1 | F1 — comptes et sessions |
-| `patients` | L1 | F1 — profil, seuils, export, suppression |
-| `measurements` · `events` | L2 | F2, F4 |
-| `sync` | L8 | F11 — synchronisation hors-ligne |
-| `imports` | L4 | F5 |
-| `insights` | L3 | F6 — analyse + IA |
-| `sharing` · `audit` · `doctor` | L5 | F7, F8 — **QR dynamique et portail** |
-| `reports` · `emergency` | L6 | F9, F10 |
-| `notifications` | L8 | F12 — push serveur |
+
+| Module                         | Lot | Fonctionnalité                           |
+| ------------------------------ | --- | ---------------------------------------- |
+| `health`                       | L0  | Vérification de l'API                    |
+| `auth`                         | L1  | F1 — comptes et sessions                 |
+| `patients`                     | L1  | F1 — profil, seuils, export, suppression |
+| `measurements` · `events`      | L2  | F2, F4                                   |
+| `sync`                         | L8  | F11 — synchronisation hors-ligne         |
+| `imports`                      | L4  | F5                                       |
+| `insights`                     | L3  | F6 — analyse + IA                        |
+| `sharing` · `audit` · `doctor` | L5  | F7, F8 — **QR dynamique et portail**     |
+| `reports` · `emergency`        | L6  | F9, F10                                  |
+| `notifications`                | L8  | F12 — push serveur                       |
 
 ## Règles du projet
+
 - Un contrôleur **ne contient pas de logique métier** : il valide (Zod), appelle le service, renvoie.
 - Chaque route vérifie le **rôle** et la **propriété** de la donnée.
 - Les chiffres médicaux viennent de `@glyka/analytics`, jamais recalculés à la main.
@@ -50,5 +54,6 @@ test/                               # tests transverses (crypto, e2e)
 - Tests : `pnpm --filter @glyka/api test` (Vitest + SWC).
 
 ## État actuel
+
 Squelette : modules, contrôleurs et services sont **à implémenter** selon le backlog (`docs/team/backlog.md`).
 La route `GET /health`, la validation d'environnement, les guards, les helpers de chiffrement et le schéma Prisma sont déjà en place.

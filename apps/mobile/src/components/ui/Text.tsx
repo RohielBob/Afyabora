@@ -9,13 +9,22 @@ const SIZE: Record<Variant, number> = {
   caption: fontSizes.sm,
 };
 
-export function Text({ variant = 'body', muted, style, ...rest }: TextProps & { variant?: Variant; muted?: boolean }) {
+export function Text({
+  variant = 'body',
+  muted,
+  style,
+  ...rest
+}: TextProps & { variant?: Variant; muted?: boolean }) {
   const theme = useTheme();
   return (
     <RNText
       {...rest}
       style={[
-        { fontSize: SIZE[variant], color: muted ? theme.textMuted : theme.text, fontWeight: variant === 'body' ? '400' : '700' },
+        {
+          fontSize: SIZE[variant],
+          color: muted ? theme.textMuted : theme.text,
+          fontWeight: variant === 'body' ? '400' : '700',
+        },
         style,
       ]}
     />

@@ -13,9 +13,27 @@ if (!password || password.length < 12) {
 }
 
 const PATIENTS = [
-  { key: 'jean', email: 'jean@demo.glyka.local', firstName: 'Jean', lastName: 'Demo', type: 'TYPE_2' },
-  { key: 'marie', email: 'marie@demo.glyka.local', firstName: 'Marie', lastName: 'Demo', type: 'TYPE_1' },
-  { key: 'paul', email: 'paul@demo.glyka.local', firstName: 'Paul', lastName: 'Demo', type: 'TYPE_2' },
+  {
+    key: 'jean',
+    email: 'jean@demo.glyka.local',
+    firstName: 'Jean',
+    lastName: 'Demo',
+    type: 'TYPE_2',
+  },
+  {
+    key: 'marie',
+    email: 'marie@demo.glyka.local',
+    firstName: 'Marie',
+    lastName: 'Demo',
+    type: 'TYPE_1',
+  },
+  {
+    key: 'paul',
+    email: 'paul@demo.glyka.local',
+    firstName: 'Paul',
+    lastName: 'Demo',
+    type: 'TYPE_2',
+  },
 ] as const;
 
 async function main() {

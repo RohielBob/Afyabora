@@ -2,6 +2,8 @@ node_modules
 dist
 build
 .expo
+.turbo
 coverage
 pnpm-lock.yaml
+expo-env.d.ts
 apps/api/prisma/migrations

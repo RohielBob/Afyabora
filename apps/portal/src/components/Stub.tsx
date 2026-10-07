@@ -1,5 +1,13 @@
 // Page provisoire : indique le ticket à réaliser. À SUPPRIMER au fil du développement.
-export function Stub({ title, ticket, description }: { title: string; ticket: string; description: string }) {
+export function Stub({
+  title,
+  ticket,
+  description,
+}: {
+  title: string;
+  ticket: string;
+  description: string;
+}) {
   return (
     <section className="mx-auto max-w-3xl p-6">
       <h1 className="text-2xl font-bold">{title}</h1>
