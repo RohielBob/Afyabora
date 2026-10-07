@@ -1,5 +1,10 @@
 import { Controller, Get } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import {
+  ApiOkResponse,
+  ApiOperation,
+  ApiServiceUnavailableResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { Public } from '../../common/decorators/public.decorator';
 import { HealthService } from './health.service';
 
@@ -10,6 +15,13 @@ export class HealthController {
 
   @Public()
   @Get()
+  @ApiOperation({
+    summary: "État de l'API et de la base de données (public, sans donnée sensible)",
+  })
+  @ApiOkResponse({ description: 'API et base de données opérationnelles : { status: "ok", time }' })
+  @ApiServiceUnavailableResponse({
+    description: 'Base de données injoignable : { status: "error", message }',
+  })
   check() {
     return this.health.check();
   }
