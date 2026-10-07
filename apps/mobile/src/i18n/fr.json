@@ -1,5 +1,5 @@
 {
-  "app": { "name": "Glyka", "tagline": "Suivez. Contrôlez. Comprenez." },
+  "app": { "name": "Afyabora", "tagline": "Suivez. Contrôlez. Comprenez." },
   "common": {
     "save": "Enregistrer",
     "cancel": "Annuler",
@@ -7,7 +7,7 @@
     "back": "Retour",
     "retry": "Réessayer"
   },
-  "disclaimer": "Glyka est un outil d'aide au suivi. Il ne remplace pas l'avis d'un professionnel de santé.",
+  "disclaimer": "Afyabora est un outil d'aide au suivi. Il ne remplace pas l'avis d'un professionnel de santé.",
   "glucose": { "unusualConfirm": "Cette valeur est inhabituelle, est-ce correct ?" },
   "sync": {
     "pending_one": "{{count}} mesure en attente de synchronisation",

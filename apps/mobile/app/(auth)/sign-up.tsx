@@ -11,19 +11,20 @@ import {
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { LogoMark } from '@/components/brand';
+import { colors } from '@/theme';
 
-// Palette alignée sur @glyka/ui-tokens.
-// TODO : remplacer par l'import des tokens (ticket L7-03/L7-05).
+// Palette issue des tokens Afyabora (@glyka/ui-tokens, voir docs/design/marque-afyabora.md).
 const C = {
-  primary: '#0B6E6E',
-  primaryLight: '#D7EEEE',
-  background: '#F7FAFA',
-  surface: '#FFFFFF',
-  text: '#10231F',
-  textMuted: '#52665F',
-  border: '#D6E2E0',
-  danger: '#C0392B',
-  inRange: '#2E8B57',
+  primary: colors.primary,
+  primaryLight: colors.primaryLight,
+  background: colors.background,
+  surface: colors.surface,
+  text: colors.text,
+  textMuted: colors.textMuted,
+  border: colors.border,
+  danger: colors.danger,
+  inRange: colors.state.inRange,
 };
 
 // Règle du cahier des charges (F1) : 12 caractères minimum.
@@ -85,8 +86,8 @@ export default function SignUpScreen() {
 
             {/* En-tête */}
             <View style={styles.header}>
-              <View style={styles.logoSquare}>
-                <Text style={styles.logoLetter}>G</Text>
+              <View style={styles.logoWrap}>
+                <LogoMark size={72} />
               </View>
               <Text style={styles.title}>Créer un compte</Text>
               <Text style={styles.subtitle}>
@@ -165,7 +166,7 @@ export default function SignUpScreen() {
                 <Pressable
                   accessibilityRole="checkbox"
                   accessibilityState={{ checked: consent }}
-                  accessibilityLabel="J'accepte la politique de confidentialité et je comprends que Glyka est un outil d'aide, pas un avis médical"
+                  accessibilityLabel="J'accepte la politique de confidentialité et je comprends que Afyabora est un outil d'aide, pas un avis médical"
                   onPress={() => setConsent((v) => !v)}
                   style={styles.consentRow}
                 >
@@ -173,8 +174,8 @@ export default function SignUpScreen() {
                     {consent ? <Text style={styles.checkboxMark}>✓</Text> : null}
                   </View>
                   <Text style={styles.consentText}>
-                    J'accepte la politique de confidentialité et je comprends que Glyka est un outil
-                    d'aide au suivi, pas un avis médical.
+                    J'accepte la politique de confidentialité et je comprends que Afyabora est un
+                    outil d'aide au suivi, pas un avis médical.
                   </Text>
                 </Pressable>
                 {submitted && consentError ? (
@@ -212,8 +213,8 @@ export default function SignUpScreen() {
               </View>
 
               <Text style={styles.disclaimer}>
-                Glyka est un outil d'aide au suivi. Il ne remplace pas l'avis d'un professionnel de
-                santé.
+                Afyabora est un outil d'aide au suivi. Il ne remplace pas l'avis d'un professionnel
+                de santé.
               </Text>
             </View>
           </View>
@@ -259,19 +260,8 @@ const styles = StyleSheet.create({
   header: {
     alignItems: 'center',
   },
-  logoSquare: {
-    width: 52,
-    height: 52,
-    borderRadius: 16,
-    backgroundColor: C.primary,
-    alignItems: 'center',
-    justifyContent: 'center',
+  logoWrap: {
     marginBottom: 12,
-  },
-  logoLetter: {
-    color: '#FFFFFF',
-    fontSize: 28,
-    fontWeight: '800',
   },
   title: {
     fontSize: 28,
