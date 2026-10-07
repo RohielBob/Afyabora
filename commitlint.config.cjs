@@ -4,7 +4,18 @@ module.exports = {
     'scope-enum': [
       1,
       'always',
-      ['api', 'mobile', 'portal', 'shared', 'analytics', 'ui-tokens', 'docs', 'infra', 'scripts', 'ci'],
+      [
+        'api',
+        'mobile',
+        'portal',
+        'shared',
+        'analytics',
+        'ui-tokens',
+        'docs',
+        'infra',
+        'scripts',
+        'ci',
+      ],
     ],
   },
 };

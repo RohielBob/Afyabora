@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 /* Identité Glyka : valeurs alignées sur @glyka/ui-tokens (L7-03 les met à jour). */
 @theme {

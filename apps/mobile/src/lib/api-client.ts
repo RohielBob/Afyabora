@@ -12,7 +12,10 @@ export class ApiError extends Error {
   }
 }
 
-export async function api<T>(path: string, init: RequestInit & { auth?: boolean } = {}): Promise<T> {
+export async function api<T>(
+  path: string,
+  init: RequestInit & { auth?: boolean } = {},
+): Promise<T> {
   const headers = new Headers(init.headers);
   headers.set('Content-Type', 'application/json');
   if (init.auth !== false) {
@@ -22,7 +25,11 @@ export async function api<T>(path: string, init: RequestInit & { auth?: boolean 
   const response = await fetch(`${API_URL}${path}`, { ...init, headers });
   const body = await response.json().catch(() => undefined);
   if (!response.ok) {
-    throw new ApiError(response.status, (body as { message?: string })?.message ?? 'Erreur réseau', body);
+    throw new ApiError(
+      response.status,
+      (body as { message?: string })?.message ?? 'Erreur réseau',
+      body,
+    );
   }
   return body as T;
 }

@@ -4,6 +4,6 @@ Couleurs, typographie, espacements : **la seule source** de l'identité visuelle
 
 - Les valeurs actuelles sont une **proposition de départ** ; le lot L7 (Design) les valide dans Figma puis met à jour ce package.
 - Un état glycémique n'est **jamais** exprimé par la couleur seule : toujours couleur + symbole + libellé (`STATE_SYMBOLS` dans `@glyka/shared`).
-- Polices : *Manrope* (titres), *Inter* (texte).
+- Polices : _Manrope_ (titres), _Inter_ (texte).
 
 **Lot : L7 (Design & contenu).**

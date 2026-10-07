@@ -4,7 +4,9 @@
   "version": "0.1.0",
   "description": "Glyka — carte numérique d'historique médical pour diabétiques (monorepo)",
   "packageManager": "pnpm@9.12.0",
-  "engines": { "node": ">=20.11" },
+  "engines": {
+    "node": ">=20.11"
+  },
   "scripts": {
     "dev:api": "pnpm --filter @glyka/api dev",
     "dev:portal": "pnpm --filter @glyka/portal dev",
@@ -24,12 +26,16 @@
   "devDependencies": {
     "@commitlint/cli": "^19.5.0",
     "@commitlint/config-conventional": "^19.5.0",
+    "@eslint/js": "^9",
     "eslint": "^9.12.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "globals": "^17.13.0",
     "husky": "^9.1.6",
     "lint-staged": "^15.2.10",
     "prettier": "^3.3.3",
     "turbo": "^2.1.3",
-    "typescript": "^5.6.3"
+    "typescript": "^5.6.3",
+    "typescript-eslint": "^8.71.1"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx,json,md,yml,yaml,css}": "prettier --write"

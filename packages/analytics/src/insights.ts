@@ -27,7 +27,11 @@ export interface AnalyzeOptions {
   tzOffsetMinutes?: number;
 }
 
-export function analyze(allPoints: GlucosePoint[], period: Period, opts: AnalyzeOptions): AnalysisResult {
+export function analyze(
+  allPoints: GlucosePoint[],
+  period: Period,
+  opts: AnalyzeOptions,
+): AnalysisResult {
   const thresholds = opts.thresholds ?? DEFAULT_THRESHOLDS;
   const tz = opts.tzOffsetMinutes ?? 60;
   const points = inPeriod(allPoints, period);
@@ -87,7 +91,11 @@ export function analyze(allPoints: GlucosePoint[], period: Period, opts: Analyze
       insights.push({
         type: 'TIME_OF_DAY_PATTERN',
         severity: 'INFO',
-        facts: { slot, slotAbovePct: Math.round(slotAbove), globalAbovePct: Math.round(globalAbove) },
+        facts: {
+          slot,
+          slotAbovePct: Math.round(slotAbove),
+          globalAbovePct: Math.round(globalAbove),
+        },
         evidenceIds: pts.filter((p) => p.mgDl > thresholds.targetMaxMgDl).map((p) => p.id),
       });
     }
@@ -98,7 +106,10 @@ export function analyze(allPoints: GlucosePoint[], period: Period, opts: Analyze
     insights.push({
       type: 'MISSING_DATA',
       severity: 'INFO',
-      facts: { daysWithoutData: quality.daysInPeriod - quality.daysWithData, daysInPeriod: quality.daysInPeriod },
+      facts: {
+        daysWithoutData: quality.daysInPeriod - quality.daysWithData,
+        daysInPeriod: quality.daysInPeriod,
+      },
       evidenceIds: [],
     });
   }

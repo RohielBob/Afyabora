@@ -21,6 +21,7 @@ export async function api<T>(path: string, init: RequestInit = {}): Promise<T> {
   if (accessToken) headers.set('Authorization', `Bearer ${accessToken}`);
   const res = await fetch(`${API_URL}${path}`, { ...init, headers });
   const body = await res.json().catch(() => undefined);
-  if (!res.ok) throw new ApiError(res.status, (body as { message?: string })?.message ?? 'Erreur réseau');
+  if (!res.ok)
+    throw new ApiError(res.status, (body as { message?: string })?.message ?? 'Erreur réseau');
   return body as T;
 }

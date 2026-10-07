@@ -9,7 +9,7 @@
     "generate:sample-import": "python3 sample-data/generate_import_demo.py",
     "typecheck": "tsc --noEmit",
     "lint": "echo \"no lint\"",
-    "test": "node --test --experimental-strip-types seed-demo/generators/*.test.ts"
+    "test": "node --import tsx --test seed-demo/generators/glucose-series.test.ts"
   },
   "dependencies": {
     "@glyka/shared": "workspace:*",

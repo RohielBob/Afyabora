@@ -3,12 +3,14 @@
 Espace professionnel : le médecin **scanne le QR du patient** et consulte, **pendant une durée limitée**, uniquement ce que le patient a autorisé. **Lecture seule.**
 
 ## Démarrer
+
 ```bash
 cp apps/portal/.env.example apps/portal/.env
 pnpm dev:portal          # http://localhost:5173  (l'API doit tourner : pnpm dev:api)
 ```
 
 ## Structure
+
 ```
 index.html · vite.config.ts · tsconfig.json
 src/
@@ -21,6 +23,7 @@ src/
 ```
 
 ## Règles
+
 - **Lecture seule** : aucun formulaire d'édition des données patient.
 - L'expiration est vérifiée **par le serveur à chaque requête** ; le compte à rebours affiché n'est qu'indicatif.
 - À l'expiration ou à la révocation : on **vide les données en mémoire** (cache React Query compris) et on affiche « Accès expiré ».
@@ -29,6 +32,7 @@ src/
 - Responsive : utilisable sur ordinateur et tablette ; identité visuelle alignée sur `@glyka/ui-tokens`.
 
 ## Tickets principaux
+
 L1-11 (compte médecin) · L5-10 (scanner) · L5-11 (liste) · L5-12 (dossier) · L5-13 (expiration) · L6-04 (rapport).
 
 **Lots : L1, L5, L6 (partie portail).**

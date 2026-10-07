@@ -5,11 +5,13 @@ Carte numérique d'historique médical pour personnes diabétiques : le patient 
 > **Glyka est un outil d'aide au suivi.** Il ne pose pas de diagnostic, ne calcule pas de dose et ne remplace pas un professionnel de santé.
 
 ## Les trois piliers
-| Suivre | Contrôler | Comprendre |
-|---|---|---|
+
+| Suivre                                                                         | Contrôler                                                                          | Comprendre                                                         |
+| ------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
 | Saisie rapide, **hors-ligne**, import CSV/Excel, chronologie, score de qualité | QR rotatif à usage unique, consentement par catégorie, révocation, journal d'accès | Tendances, alertes, résumé, rapport PDF — une analyse **traçable** |
 
 ## Structure du dépôt
+
 ```
 apps/
 ├─ mobile/      App patient (Expo, local-first : SQLite + synchronisation)
@@ -26,6 +28,7 @@ infra/          Docker (le docker-compose.yml est à la racine)
 ```
 
 ## Démarrage rapide
+
 ```bash
 corepack enable
 pnpm install
@@ -39,10 +42,12 @@ pnpm test           # tous les tests
 ```
 
 ## Pour l'équipe
+
 1. Lire `docs/cahier-des-charges/CDC_MVP_Glyka.md` et `CONTRIBUTING.md`.
 2. Prendre un ticket de `docs/team/backlog.md` (lot, priorité, jour, dépendances).
 3. Branche `feat/<lot>-<sujet>` → pull request vers `develop` → relecture → CI verte.
 4. Chacun doit pouvoir **expliquer chaque ligne** qu'il pousse.
 
 ## État du dépôt
+
 Socle, contrats partagés, moteur d'analyse (testé), schéma de base, helpers de sécurité (testés), base locale mobile + outbox, écrans provisoires, modèles GitHub et backlog sont **en place**. Les modules métier de l'API, les écrans, la synchronisation et le portail sont **à implémenter** selon le backlog.

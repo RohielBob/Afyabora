@@ -42,7 +42,9 @@ const SLOTS = [
 
 /** Heure locale (UTC+1, Kinshasa) convertie en UTC. */
 function atLocal(day: Date, hour: number, minute: number): Date {
-  return new Date(Date.UTC(day.getUTCFullYear(), day.getUTCMonth(), day.getUTCDate(), hour - 1, minute));
+  return new Date(
+    Date.UTC(day.getUTCFullYear(), day.getUTCMonth(), day.getUTCDate(), hour - 1, minute),
+  );
 }
 
 export function generateSeries(p: SeriesProfile): GeneratedMeasurement[] {
@@ -51,7 +53,9 @@ export function generateSeries(p: SeriesProfile): GeneratedMeasurement[] {
   for (let d = p.days - 1; d >= 0; d--) {
     if (d < p.silentLastDays) continue;
     if (rnd() > p.dayCoverage) continue;
-    const day = new Date(Date.UTC(p.endDate.getUTCFullYear(), p.endDate.getUTCMonth(), p.endDate.getUTCDate() - d));
+    const day = new Date(
+      Date.UTC(p.endDate.getUTCFullYear(), p.endDate.getUTCMonth(), p.endDate.getUTCDate() - d),
+    );
     const slots = p.perDay === 3 ? SLOTS : p.perDay === 2 ? [SLOTS[0]!, SLOTS[2]!] : [SLOTS[0]!];
     for (const s of slots) {
       const noise = (rnd() + rnd() + rnd() - 1.5) * 40; // ≈ gaussienne, écart ~ 20 mg/dL

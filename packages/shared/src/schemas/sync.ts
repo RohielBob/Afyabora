@@ -25,7 +25,12 @@ export const syncPushRequestSchema = z.object({
 });
 export type SyncPushRequest = z.infer<typeof syncPushRequestSchema>;
 
-export const SYNC_OP_RESULTS = ['APPLIED', 'DUPLICATE', 'REJECTED', 'CONFLICT_SERVER_WINS'] as const;
+export const SYNC_OP_RESULTS = [
+  'APPLIED',
+  'DUPLICATE',
+  'REJECTED',
+  'CONFLICT_SERVER_WINS',
+] as const;
 export interface SyncOpResult {
   opId: string;
   result: (typeof SYNC_OP_RESULTS)[number];

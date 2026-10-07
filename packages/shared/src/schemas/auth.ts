@@ -4,7 +4,10 @@ import { PASSWORD_MIN_LENGTH } from '../constants';
 export const emailSchema = z.string().trim().toLowerCase().email().max(254);
 export const passwordSchema = z
   .string()
-  .min(PASSWORD_MIN_LENGTH, `Le mot de passe doit contenir au moins ${PASSWORD_MIN_LENGTH} caractères`)
+  .min(
+    PASSWORD_MIN_LENGTH,
+    `Le mot de passe doit contenir au moins ${PASSWORD_MIN_LENGTH} caractères`,
+  )
   .max(128);
 
 export const registerPatientSchema = z.object({

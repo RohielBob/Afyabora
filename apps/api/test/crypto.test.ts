@@ -6,7 +6,8 @@ import { generateOpaqueToken, hashToken } from '../src/common/crypto/tokens';
 const key = randomBytes(32).toString('base64');
 
 describe('chiffrement des champs', () => {
-  it('aller-retour', () => expect(decryptField(encryptField('note privée', key), key)).toBe('note privée'));
+  it('aller-retour', () =>
+    expect(decryptField(encryptField('note privée', key), key)).toBe('note privée'));
   it('un champ modifié est rejeté', () => {
     const [iv, tag, data] = encryptField('secret', key).split(':');
     const tampered = [iv, tag, Buffer.from('xxxxxx').toString('base64')].join(':');

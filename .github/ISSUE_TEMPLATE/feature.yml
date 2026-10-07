@@ -1,7 +1,7 @@
 name: Proposition de fonctionnalité
 description: Une idée qui n'est pas dans le cahier des charges (passera en réunion de décision)
-title: "[IDÉE] "
-labels: ["type:proposal"]
+title: '[IDÉE] '
+labels: ['type:proposal']
 body:
   - type: textarea
     id: problem
@@ -19,8 +19,8 @@ body:
     id: scores
     attributes:
       label: Score proposé (matrice de décision)
-      description: "Valeur utilisateur / Différenciation / Faisabilité en 10 jours / Exigence du guide, notes de 1 à 5"
-      placeholder: "5 / 3 / 4 / 2"
+      description: 'Valeur utilisateur / Différenciation / Faisabilité en 10 jours / Exigence du guide, notes de 1 à 5'
+      placeholder: '5 / 3 / 4 / 2'
   - type: textarea
     id: impact
     attributes:

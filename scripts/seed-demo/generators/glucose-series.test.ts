@@ -19,7 +19,7 @@ test('toutes les valeurs sont plausibles (20–600 mg/dL) et les dates ordonnée
   }
 });
 
-test('Paul n\'a aucune mesure sur les 5 derniers jours', () => {
+test("Paul n'a aucune mesure sur les 5 derniers jours", () => {
   const s = generateSeries({ ...DEMO_PROFILES.paul, endDate });
   const last = s[s.length - 1]!.measuredAt.getTime();
   assert.ok(endDate.getTime() - last >= 4 * 86_400_000);

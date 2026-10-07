@@ -18,7 +18,9 @@ export interface LocalMeasurement {
   pending_sync: number;
 }
 
-export async function createMeasurement(input: Omit<CreateMeasurementInput, 'id'>): Promise<string> {
+export async function createMeasurement(
+  input: Omit<CreateMeasurementInput, 'id'>,
+): Promise<string> {
   const db = await getDb();
   const id = newId();
   const now = new Date().toISOString();
@@ -51,7 +53,10 @@ export async function createMeasurement(input: Omit<CreateMeasurementInput, 'id'
   return id;
 }
 
-export async function listMeasurements(fromIso: string, toIso: string): Promise<LocalMeasurement[]> {
+export async function listMeasurements(
+  fromIso: string,
+  toIso: string,
+): Promise<LocalMeasurement[]> {
   const db = await getDb();
   return db.getAllAsync<LocalMeasurement>(
     `SELECT id, value_mgdl, original_value, original_unit, measured_at, context, source, note, pending_sync
@@ -67,8 +72,19 @@ export async function deleteMeasurement(id: string): Promise<void> {
   const db = await getDb();
   const now = new Date().toISOString();
   await db.withTransactionAsync(async () => {
-    await db.runAsync('UPDATE measurements SET deleted_at = ?, updated_at = ?, pending_sync = 1 WHERE id = ?', now, now, id);
-    await enqueue(db, { opId: newId(), entity: 'measurement', type: 'delete', entityId: id, clientUpdatedAt: now });
+    await db.runAsync(
+      'UPDATE measurements SET deleted_at = ?, updated_at = ?, pending_sync = 1 WHERE id = ?',
+      now,
+      now,
+      id,
+    );
+    await enqueue(db, {
+      opId: newId(),
+      entity: 'measurement',
+      type: 'delete',
+      entityId: id,
+      clientUpdatedAt: now,
+    });
   });
 }
 // TODO(L8-03) : updateMeasurement, repositories d'événements (events.repo.ts), mapping vers GlucosePoint.

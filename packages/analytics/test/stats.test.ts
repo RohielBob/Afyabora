@@ -11,7 +11,11 @@ import {
 
 const NOW = Date.UTC(2026, 9, 4, 12, 0, 0);
 const DAY = 86_400_000;
-const mk = (id: string, mgDl: number, hoursAgo: number) => ({ id, mgDl, at: NOW - hoursAgo * 3_600_000 });
+const mk = (id: string, mgDl: number, hoursAgo: number) => ({
+  id,
+  mgDl,
+  at: NOW - hoursAgo * 3_600_000,
+});
 
 describe('statistiques', () => {
   it('pourcentages dans la cible / au-dessus / en dessous', () => {
@@ -38,7 +42,7 @@ describe('statistiques', () => {
 });
 
 describe('analyze', () => {
-  it('refuse d\'analyser en dessous de 10 mesures', () => {
+  it("refuse d'analyser en dessous de 10 mesures", () => {
     const pts = [100, 110, 120].map((v, i) => mk(String(i), v, i));
     const r = analyze(pts, { from: NOW - 14 * DAY, to: NOW }, { now: NOW });
     expect(r.stats).toBeNull();

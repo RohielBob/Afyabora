@@ -41,5 +41,9 @@ export async function remove(db: SQLiteDatabase, opIds: string[]): Promise<void>
 }
 
 export async function markFailed(db: SQLiteDatabase, opId: string, error: string): Promise<void> {
-  await db.runAsync('UPDATE outbox SET attempts = attempts + 1, last_error = ? WHERE op_id = ?', error, opId);
+  await db.runAsync(
+    'UPDATE outbox SET attempts = attempts + 1, last_error = ? WHERE op_id = ?',
+    error,
+    opId,
+  );
 }
