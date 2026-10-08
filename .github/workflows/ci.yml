@@ -36,6 +36,8 @@ jobs:
           node-version: 20
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      # Le client Prisma n'est pas créé par « pnpm install » : sans cette étape, typecheck et build échouent.
+      - run: pnpm --filter @glyka/api exec prisma generate
       - run: pnpm format:check
       - run: pnpm lint
       - run: pnpm typecheck
