@@ -1,0 +1,70 @@
+name: Docker
+
+# Valide docker-compose.yml et l'image de l'API (ticket L0-05).
+# Ne se déclenche que si un fichier concerné change, pour ne pas ralentir les autres PR.
+on:
+  pull_request:
+    branches: [develop, main]
+    paths:
+      - 'docker-compose.yml'
+      - '.dockerignore'
+      - 'infra/**'
+      - 'apps/api/**'
+      - 'packages/shared/**'
+      - 'packages/analytics/**'
+      - 'pnpm-lock.yaml'
+      - '.github/workflows/docker.yml'
+  push:
+    branches: [develop, main]
+    paths:
+      - 'docker-compose.yml'
+      - '.dockerignore'
+      - 'infra/**'
+      - 'apps/api/**'
+      - 'packages/shared/**'
+      - 'packages/analytics/**'
+      - 'pnpm-lock.yaml'
+      - '.github/workflows/docker.yml'
+
+concurrency:
+  group: docker-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Préparer la configuration de l'API (secrets jetables, générés pour ce test)
+        run: |
+          cp apps/api/.env.example apps/api/.env
+          sed -i "s|^JWT_ACCESS_SECRET=.*|JWT_ACCESS_SECRET=$(openssl rand -base64 48)|" apps/api/.env
+          sed -i "s|^FIELD_ENCRYPTION_KEY=.*|FIELD_ENCRYPTION_KEY=$(openssl rand -base64 32)|" apps/api/.env
+
+      - name: Valider docker-compose.yml
+        run: docker compose --profile full config --quiet
+
+      - name: Construire l'image de l'API et démarrer la pile
+        run: docker compose --profile full up --build --detach db mailpit api
+
+      - name: Vérifier que /health répond (base de données comprise)
+        run: |
+          for i in $(seq 1 30); do
+            if curl --fail --silent --show-error http://127.0.0.1:3000/health; then
+              echo
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "L'API n'a pas répondu à temps."
+          exit 1
+
+      - name: Journaux (en cas d'échec)
+        if: failure()
+        run: docker compose --profile full logs --no-color
+
+      - name: Arrêter la pile
+        if: always()
+        run: docker compose --profile full down --volumes

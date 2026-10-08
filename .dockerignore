@@ -1,0 +1,28 @@
+# Ce que Docker ne doit PAS copier dans l'image de l'API (ticket L0-05).
+# Surtout : jamais de .env (secrets) ni de node_modules de ta machine (autre système, énormes).
+.git
+.github
+.husky
+.turbo
+**/node_modules
+**/dist
+**/.expo
+**/coverage
+**/*.log
+**/.DS_Store
+
+# Secrets : seuls les fichiers .env.example peuvent entrer dans l'image.
+**/.env
+**/.env.*
+!**/.env.example
+
+# Le build de l'API n'a pas besoin du code du mobile ni du portail.
+# (leurs package.json restent : pnpm en a besoin pour lire le pnpm-lock.yaml)
+apps/mobile/app
+apps/mobile/src
+apps/mobile/assets
+apps/mobile/android
+apps/mobile/ios
+apps/portal/src
+apps/portal/public
+docs
