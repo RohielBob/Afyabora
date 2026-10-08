@@ -4,7 +4,7 @@
 
 - **Figma** : maquettes patient (L7-01) et portail médecin (L7-02). Lien à ajouter ici : _à compléter_.
 - **Tokens** : `packages/ui-tokens` (L7-03). Les maquettes et le code utilisent les mêmes valeurs.
-- **Identité** : logo, icône, écran de lancement (L7-04). Nom : **Glyka** — slogan « Suivez. Contrôlez. Comprenez. ».
+- **Identité** : logo, icône, écran de lancement (L7-04). Nom : **Afyabora** (décision du groupe, voir ADR-0007 et `marque-afyabora.md`) — slogan « Suivez. Contrôlez. Comprenez. ».
 
 ## Principes
 

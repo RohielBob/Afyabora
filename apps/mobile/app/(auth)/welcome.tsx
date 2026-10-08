@@ -1,18 +1,20 @@
 import { router } from 'expo-router';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { LogoMark, Wordmark } from '@/components/brand';
+import { colors } from '@/theme';
 
-// Palette alignée sur @glyka/ui-tokens.
-// TODO : remplacer par l'import des tokens quand les packages seront buildés (ticket L7-03/L7-05).
+// Palette issue des tokens Afyabora (@glyka/ui-tokens, voir docs/design/marque-afyabora.md).
 const C = {
-  primary: '#0B6E6E',
-  primaryLight: '#D7EEEE',
-  background: '#F7FAFA',
-  surface: '#FFFFFF',
-  text: '#10231F',
-  textMuted: '#52665F',
-  border: '#D6E2E0',
-  inRange: '#2E8B57',
+  primary: colors.primary,
+  primaryLight: colors.primaryLight,
+  background: colors.background,
+  surface: colors.surface,
+  text: colors.text,
+  textMuted: colors.textMuted,
+  border: colors.border,
+  danger: colors.danger,
+  inRange: colors.state.inRange,
 };
 
 export default function WelcomeScreen() {
@@ -22,10 +24,10 @@ export default function WelcomeScreen() {
         <View style={styles.container}>
           {/* Logo */}
           <View style={styles.logoBlock}>
-            <View style={styles.logoSquare}>
-              <Text style={styles.logoLetter}>G</Text>
+            <LogoMark size={104} />
+            <View style={styles.wordmarkWrap}>
+              <Wordmark size={36} />
             </View>
-            <Text style={styles.brand}>Glyka</Text>
             <Text style={styles.slogan}>Suivez. Contrôlez. Comprenez.</Text>
           </View>
 
@@ -84,7 +86,7 @@ export default function WelcomeScreen() {
 
           {/* Avertissement d'usage (exigence du cahier des charges) */}
           <Text style={styles.disclaimer}>
-            Glyka est un outil d'aide au suivi. Il ne remplace pas l'avis d'un professionnel de
+            Afyabora est un outil d'aide au suivi. Il ne remplace pas l'avis d'un professionnel de
             santé.
           </Text>
         </View>
@@ -116,26 +118,10 @@ const styles = StyleSheet.create({
   logoBlock: {
     alignItems: 'center',
   },
-  logoSquare: {
-    width: 60,
-    height: 60,
-    borderRadius: 18,
-    backgroundColor: C.primary,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 10,
+  wordmarkWrap: {
+    marginTop: 10,
   },
-  logoLetter: {
-    color: '#FFFFFF',
-    fontSize: 32,
-    fontWeight: '800',
-  },
-  brand: {
-    fontSize: 30,
-    fontWeight: '800',
-    color: C.text,
-    letterSpacing: -0.8,
-  },
+
   slogan: {
     marginTop: 4,
     fontSize: 14,

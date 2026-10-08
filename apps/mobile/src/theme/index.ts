@@ -2,6 +2,7 @@ import { useColorScheme } from 'react-native';
 import { colors, darkColors } from '@glyka/ui-tokens';
 
 export {
+  brand,
   colors,
   darkColors,
   spacing,

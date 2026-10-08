@@ -11,18 +11,20 @@ import {
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { LogoMark } from '@/components/brand';
+import { colors } from '@/theme';
 
-// Palette alignée sur @glyka/ui-tokens.
-// TODO : remplacer par l'import des tokens (ticket L7-03/L7-05).
+// Palette issue des tokens Afyabora (@glyka/ui-tokens, voir docs/design/marque-afyabora.md).
 const C = {
-  primary: '#0B6E6E',
-  primaryLight: '#D7EEEE',
-  background: '#F7FAFA',
-  surface: '#FFFFFF',
-  text: '#10231F',
-  textMuted: '#52665F',
-  border: '#D6E2E0',
-  danger: '#C0392B',
+  primary: colors.primary,
+  primaryLight: colors.primaryLight,
+  background: colors.background,
+  surface: colors.surface,
+  text: colors.text,
+  textMuted: colors.textMuted,
+  border: colors.border,
+  danger: colors.danger,
+  inRange: colors.state.inRange,
 };
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -74,8 +76,8 @@ export default function SignInScreen() {
 
             {/* En-tête */}
             <View style={styles.header}>
-              <View style={styles.logoSquare}>
-                <Text style={styles.logoLetter}>G</Text>
+              <View style={styles.logoWrap}>
+                <LogoMark size={72} />
               </View>
               <Text style={styles.title}>Bon retour</Text>
               <Text style={styles.subtitle}>Connectez-vous pour retrouver votre historique.</Text>
@@ -179,8 +181,8 @@ export default function SignInScreen() {
               </View>
 
               <Text style={styles.disclaimer}>
-                Glyka est un outil d'aide au suivi. Il ne remplace pas l'avis d'un professionnel de
-                santé.
+                Afyabora est un outil d'aide au suivi. Il ne remplace pas l'avis d'un professionnel
+                de santé.
               </Text>
             </View>
           </View>
@@ -226,19 +228,8 @@ const styles = StyleSheet.create({
   header: {
     alignItems: 'center',
   },
-  logoSquare: {
-    width: 52,
-    height: 52,
-    borderRadius: 16,
-    backgroundColor: C.primary,
-    alignItems: 'center',
-    justifyContent: 'center',
+  logoWrap: {
     marginBottom: 12,
-  },
-  logoLetter: {
-    color: '#FFFFFF',
-    fontSize: 28,
-    fontWeight: '800',
   },
   title: {
     fontSize: 28,
