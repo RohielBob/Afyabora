@@ -1,5 +1,6 @@
 # Environnement local : base de données + boîte mail de développement.
 # Usage : pnpm db:up
+# Profil « full » : pnpm docker:api lance aussi l'API dans Docker (utile pour valider l'image).
 services:
   db:
     image: postgres:16-alpine
@@ -9,11 +10,12 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-glyka_dev_password}
       POSTGRES_DB: ${POSTGRES_DB:-glyka}
     ports:
-      - '5432:5432'
+      # Publié sur 127.0.0.1 uniquement : la base n'est pas visible depuis le réseau local.
+      - '127.0.0.1:5432:5432'
     volumes:
       - glyka_pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER:-glyka}']
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER:-glyka} -d ${POSTGRES_DB:-glyka}']
       interval: 5s
       timeout: 3s
       retries: 10
@@ -22,20 +24,32 @@ services:
     image: axllent/mailpit:latest
     restart: unless-stopped
     ports:
-      - '1025:1025' # SMTP
-      - '8025:8025' # Interface web des emails reçus
+      - '127.0.0.1:1025:1025' # SMTP
+      - '127.0.0.1:8025:8025' # Interface web des emails reçus
 
   api:
     build:
       context: .
       dockerfile: infra/docker/api.Dockerfile
     profiles: ['full']
-    env_file: apps/api/.env
+    env_file:
+      - path: apps/api/.env
+        required: false
+    environment:
+      # Dans Docker, « localhost » désigne le conteneur lui-même : les autres services
+      # s'atteignent par leur nom. Ces valeurs l'emportent sur celles de apps/api/.env.
+      # (Si le mot de passe de la base contient des caractères spéciaux, il doit être encodé en URL.)
+      NODE_ENV: production
+      PORT: '3000'
+      DATABASE_URL: postgresql://${POSTGRES_USER:-glyka}:${POSTGRES_PASSWORD:-glyka_dev_password}@db:5432/${POSTGRES_DB:-glyka}
+      SMTP_HOST: mailpit
     depends_on:
       db:
         condition: service_healthy
+      mailpit:
+        condition: service_started
     ports:
-      - '3000:3000'
+      - '127.0.0.1:3000:3000'
 
 volumes:
   glyka_pgdata:

@@ -19,6 +19,8 @@
     "format:check": "prettier --check .",
     "db:up": "docker compose up -d db mailpit",
     "db:down": "docker compose down",
+    "db:logs": "docker compose logs -f db mailpit",
+    "docker:api": "docker compose --profile full up --build db mailpit api",
     "db:migrate": "pnpm --filter @glyka/api prisma:migrate",
     "db:seed": "pnpm --filter @glyka/scripts seed:demo",
     "prepare": "husky"
