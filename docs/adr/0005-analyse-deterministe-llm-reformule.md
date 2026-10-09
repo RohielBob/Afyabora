@@ -1,6 +1,6 @@
 # ADR-0005 — L'analyse est déterministe ; le modèle de langage ne fait que reformuler
 
-- **Statut :** Proposé
+- **Statut :** Accepté — réunion du 2026-10-09 (ticket L0-09)
 - **Date :** 2026-10-04
 
 ## Contexte
@@ -20,3 +20,7 @@ Une IA qui calcule ou diagnostique est risquée (erreurs, hallucinations) et dif
 - Chaque affirmation de l'app est vérifiable et testable.
 - Le texte est plus sobre que celui d'un chatbot libre : c'est voulu.
 - Un seul endroit à auditer pour la sécurité médicale du produit.
+
+## Précision ajoutée à l'acceptation (réunion du 2026-10-09)
+
+- MVP : `LLM_PROVIDER=none` par défaut, donc **gabarits seulement**. Un fournisseur ne pourra être branché qu'en option, derrière l'interface `LlmProvider`, et la démo n'en dépendra jamais.
