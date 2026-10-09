@@ -2,7 +2,7 @@
 // Comme health.test.ts : vrai serveur HTTP (port 0), mais base de données et envoi d'emails SIMULÉS en mémoire.
 // Aucune vraie base ni Mailpit n'est nécessaire : ces tests tournent partout, CI comprise.
 import type { INestApplication } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigService } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtModule } from '@nestjs/jwt';
 import { Test } from '@nestjs/testing';
@@ -134,6 +134,20 @@ function tokenFrom(mail: OutgoingMail | undefined): string {
   return match[1];
 }
 
+// ---------- Fausse configuration ----------
+// Volontairement PAS ConfigModule : le vrai ConfigService lit d'abord process.env, donc le apps/api/.env
+// du développeur (chargé par un autre test) changerait le résultat. Ici, la valeur est fixée par le test.
+const fakeConfigValues: Record<string, string> = {
+  PORTAL_URL: `${PORTAL_URL}/`, // « / » final volontaire : le lien ne doit pas contenir « // »
+};
+const fakeConfig = {
+  getOrThrow: (key: string) => {
+    const value = fakeConfigValues[key];
+    if (value === undefined) throw new Error(`Configuration absente du test : ${key}`);
+    return value;
+  },
+};
+
 class FakeInfraModule {}
 
 describe('L1-01 : inscription et vérification de l’adresse email', () => {
@@ -151,11 +165,6 @@ describe('L1-01 : inscription et vérification de l’adresse email', () => {
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
       imports: [
-        ConfigModule.forRoot({
-          isGlobal: true,
-          ignoreEnvFile: true,
-          load: [() => ({ PORTAL_URL: `${PORTAL_URL}/` })], // « / » final : le lien ne doit pas avoir « // »
-        }),
         // Mêmes gardes globales que l'application réelle : les routes doivent rester publiques malgré elles.
         JwtModule.register({ global: true, secret: 'secret-de-test-uniquement-0123456789abcdef' }),
         ThrottlerModule.forRoot({
@@ -168,8 +177,9 @@ describe('L1-01 : inscription et vérification de l’adresse email', () => {
           providers: [
             { provide: PrismaService, useValue: fakePrisma },
             { provide: MailService, useValue: fakeMail },
+            { provide: ConfigService, useValue: fakeConfig },
           ],
-          exports: [PrismaService, MailService],
+          exports: [PrismaService, MailService, ConfigService],
         },
         AuthModule,
       ],
