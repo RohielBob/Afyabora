@@ -14,6 +14,29 @@ export const importPreviewRequestSchema = z.object({
   mapping: importColumnMappingSchema.optional(), // absent = détection automatique
 });
 
+/**
+ * POST /imports/preview est un envoi multipart/form-data : les champs texte arrivent en chaînes.
+ * `mapping` y est donc un JSON sérialisé, que ce schéma décode et valide.
+ */
+export const importPreviewFormSchema = z.object({
+  defaultUnit: z.enum(GLUCOSE_UNITS),
+  mapping: z
+    .string()
+    .optional()
+    .transform((raw, ctx) => {
+      if (raw === undefined || raw.trim() === '') return undefined;
+      try {
+        return importColumnMappingSchema.parse(JSON.parse(raw));
+      } catch {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'mapping doit être un JSON valide de correspondance de colonnes',
+        });
+        return z.NEVER;
+      }
+    }),
+});
+
 export const IMPORT_ROW_STATUSES = ['VALID', 'DUPLICATE', 'INCONSISTENT', 'ERROR'] as const;
 export type ImportRowStatus = (typeof IMPORT_ROW_STATUSES)[number];
 
@@ -34,15 +57,24 @@ export interface ImportReport {
   rows: ImportRowReport[]; // seules les lignes non valides sont détaillées
 }
 
+const importDecisionSchema = z
+  .object({
+    line: z.number().int().positive(),
+    action: z.enum(['CORRECT', 'IGNORE', 'ACCEPT']),
+    correctedValue: z.number().positive().optional(),
+    /** Absente : l'unité par défaut choisie à l'aperçu s'applique. */
+    correctedUnit: z.enum(GLUCOSE_UNITS).optional(),
+  })
+  .refine((d) => d.action !== 'CORRECT' || d.correctedValue !== undefined, {
+    message: 'correctedValue est obligatoire pour une correction',
+    path: ['correctedValue'],
+  });
+
 export const importCommitSchema = z.object({
   decisions: z
-    .array(
-      z.object({
-        line: z.number().int().positive(),
-        action: z.enum(['CORRECT', 'IGNORE', 'ACCEPT']),
-        correctedValue: z.number().positive().optional(),
-        correctedUnit: z.enum(GLUCOSE_UNITS).optional(),
-      }),
-    )
+    .array(importDecisionSchema)
+    .refine((list) => new Set(list.map((d) => d.line)).size === list.length, {
+      message: 'Une seule décision par ligne',
+    })
     .default([]),
 });

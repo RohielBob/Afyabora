@@ -7,3 +7,5 @@ export * from './share';
 export * from './emergency';
 export * from './notification';
 export * from './sync';
+export * from './insights';
+export * from './query';

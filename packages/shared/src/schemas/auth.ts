@@ -36,6 +36,9 @@ export const resetPasswordSchema = z.object({
   password: passwordSchema,
 });
 
+/** DELETE /me : le mot de passe est redemandé avant de supprimer le compte et toutes ses données. */
+export const deleteAccountSchema = z.object({ password: z.string().min(1).max(128) });
+
 export interface AuthTokens {
   accessToken: string;
   refreshToken: string;

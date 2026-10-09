@@ -14,7 +14,14 @@ export const createMeasurementSchema = z.object({
 });
 export type CreateMeasurementInput = z.infer<typeof createMeasurementSchema>;
 
-export const updateMeasurementSchema = createMeasurementSchema.omit({ id: true }).partial();
+/** PUT /measurements/:id : l'identifiant est dans l'URL. Une valeur n'a de sens qu'avec son unité. */
+export const updateMeasurementSchema = createMeasurementSchema
+  .omit({ id: true })
+  .partial()
+  .refine((update) => (update.value === undefined) === (update.unit === undefined), {
+    message: 'value et unit doivent être fournis ensemble',
+    path: ['unit'],
+  });
 export type UpdateMeasurementInput = z.infer<typeof updateMeasurementSchema>;
 
 export const measurementDtoSchema = z.object({
