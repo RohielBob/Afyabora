@@ -17,6 +17,11 @@ export class AllExceptionsFilter implements ExceptionFilter {
     if (exception instanceof HttpException) {
       const status = exception.getStatus();
       const body = exception.getResponse();
+      // Une erreur qui précise un délai (ex. ACCOUNT_LOCKED) le donne aussi dans l'en-tête standard Retry-After.
+      if (typeof body === 'object' && body !== null && 'retryAfterSeconds' in body) {
+        const seconds = (body as { retryAfterSeconds?: unknown }).retryAfterSeconds;
+        if (typeof seconds === 'number') res.setHeader('Retry-After', String(seconds));
+      }
       return res.status(status).json(typeof body === 'string' ? { message: body } : body);
     }
     this.logger.error(exception instanceof Error ? exception.stack : String(exception));
