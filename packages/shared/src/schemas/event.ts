@@ -11,3 +11,7 @@ export const createLifeEventSchema = z.object({
   durationMinutes: z.number().int().min(1).max(1440).optional(),
 });
 export type CreateLifeEventInput = z.infer<typeof createLifeEventSchema>;
+
+/** PUT /events/:id : l'identifiant est dans l'URL, tous les champs sont optionnels. */
+export const updateLifeEventSchema = createLifeEventSchema.omit({ id: true }).partial();
+export type UpdateLifeEventInput = z.infer<typeof updateLifeEventSchema>;

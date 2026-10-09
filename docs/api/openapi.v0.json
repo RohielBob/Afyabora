@@ -1,0 +1,5286 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Glyka API",
+    "version": "0.1.0",
+    "description": "Contrat de l'API Glyka — **version 0 (gelée)**. Les écrans du mobile et du portail se développent contre ce document avant que l'API soit prête.\n\n## Conventions\n- **Format** : JSON en UTF-8. Dates en ISO 8601 avec fuseau. Identifiants en UUID.\n- **Glycémie** : stockée et renvoyée en **mg/dL entier** (`valueMgDl`) ; la valeur saisie et son unité d'origine sont conservées (`originalValue`, `originalUnit`). 1 g/L = 100 mg/dL.\n- **Authentification** : `Authorization: Bearer <jeton d'accès>` (15 minutes). Les routes publiques sont marquées `security: []`.\n- **Identifiants créés par le client** : mesures et événements portent un UUID généré sur l'appareil, ce qui rend les envois répétables sans doublon.\n- **Erreurs** : corps `{ message, code?, issues?, retryAfterSeconds? }`. Jamais de détail interne ni de donnée de santé.\n- **Pagination** : `limit` et `cursor` opaque ; réponse `{ items, nextCursor }`. `nextCursor` nul = dernière page.\n- **Extensions** : `x-roles`, `x-lot`, `x-ticket`, `x-priority` (P0/P1), `x-status` (`implemented` / `planned`).\n\n## Règle de changement\nAjouter une route ou un champ optionnel est compatible. Tout autre changement est une **rupture** : annoncée à l'équipe, consignée dans `docs/api/CHANGELOG.md`, validée par le lead technique.\n",
+    "x-contract-status": "frozen-v0",
+    "x-frozen-on": "2026-10-07"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "Développement local"
+    }
+  ],
+  "tags": [
+    {
+      "name": "health",
+      "description": "Santé de l'API."
+    },
+    {
+      "name": "auth",
+      "description": "Comptes et sessions (patients et médecins)."
+    },
+    {
+      "name": "account",
+      "description": "Profil médical, export et suppression de compte."
+    },
+    {
+      "name": "measurements",
+      "description": "Mesures de glycémie."
+    },
+    {
+      "name": "events",
+      "description": "Repas, activité, traitements déclarés."
+    },
+    {
+      "name": "sync",
+      "description": "Synchronisation de la saisie hors-ligne."
+    },
+    {
+      "name": "imports",
+      "description": "Import CSV / Excel avec rapport de validation."
+    },
+    {
+      "name": "insights",
+      "description": "Analyse, qualité des données, question libre."
+    },
+    {
+      "name": "sharing",
+      "description": "Partage par QR dynamique : sessions, jetons rotatifs, révocation, journal d'accès."
+    },
+    {
+      "name": "doctor",
+      "description": "Portail médecin : lecture seule, filtrée par catégories et durée."
+    },
+    {
+      "name": "reports",
+      "description": "Rapport PDF « Préparer ma consultation »."
+    },
+    {
+      "name": "emergency",
+      "description": "Carte d'urgence et son QR."
+    },
+    {
+      "name": "notifications",
+      "description": "Appareils et préférences de notification."
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/auth/forgot-password": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "operationId": "forgotPassword",
+        "summary": "Demander la réinitialisation du mot de passe",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ForgotPasswordRequest"
+              }
+            }
+          }
+        },
+        "security": [],
+        "responses": {
+          "202": {
+            "description": "Demande prise en compte (réponse identique que le compte existe ou non).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
+          }
+        },
+        "x-roles": [
+          "PUBLIC"
+        ],
+        "x-lot": "L1",
+        "x-ticket": "L1-03",
+        "x-priority": "P0",
+        "x-status": "planned"
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "operationId": "login",
+        "summary": "Se connecter",
+        "description": "Message identique pour « email inconnu » et « mauvais mot de passe » (401).",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            }
+          }
+        },
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Connexion réussie.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "description": "Adresse email non vérifiée (code EMAIL_NOT_VERIFIED).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "message": "Adresse email non vérifiée",
+                  "code": "EMAIL_NOT_VERIFIED"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Compte verrouillé 10 minutes après 5 échecs (code ACCOUNT_LOCKED).",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "message": "Compte temporairement verrouillé",
+                  "code": "ACCOUNT_LOCKED",
+                  "retryAfterSeconds": 600
+                }
+              }
+            }
+          }
+        },
+        "x-roles": [
+          "PUBLIC"
+        ],
+        "x-lot": "L1",
+        "x-ticket": "L1-02",
+        "x-priority": "P0",
+        "x-status": "planned"
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "operationId": "logout",
+        "summary": "Se déconnecter",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RefreshRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Session terminée : le jeton de rafraîchissement est révoqué."
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        },
+        "x-roles": [
+          "PATIENT",
+          "DOCTOR",
+          "ADMIN"
+        ],
+        "x-lot": "L1",
+        "x-ticket": "L1-02",
+        "x-priority": "P0",
+        "x-status": "planned"
+      }
+    },
+    "/auth/refresh": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "operationId": "refreshTokens",
+        "summary": "Renouveler les jetons",
+        "description": "Rotation : chaque jeton de rafraîchissement n'est valable qu'une fois. Réutiliser un ancien jeton révoque toute la famille de jetons (401).",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RefreshRequest"
+              }
+            }
+          }
+        },
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Nouveaux jetons. L'ancien jeton de rafraîchissement ne fonctionne plus.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthTokens"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        },
+        "x-roles": [
+          "PUBLIC"
+        ],
+        "x-lot": "L1",
+        "x-ticket": "L1-02",
+        "x-priority": "P0",
+        "x-status": "planned"
+      }
+    },
+    "/auth/register": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "operationId": "registerPatient",
+        "summary": "Créer un compte patient",
+        "description": "Répond TOUJOURS 202, même si l'adresse existe déjà (pas d'énumération de comptes).",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterPatientRequest"
+              }
+            }
+          }
+        },
+        "security": [],
+        "responses": {
+          "202": {
+            "description": "Demande prise en compte. Un email de vérification est envoyé si l'adresse est valide.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
+          }
+        },
+        "x-roles": [
+          "PUBLIC"
+        ],
+        "x-lot": "L1",
+        "x-ticket": "L1-01",
+        "x-priority": "P0",
+        "x-status": "planned"
+      }
+    },
+    "/auth/register-doctor": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "operationId": "registerDoctor",
+        "summary": "Créer un compte médecin (en attente d'approbation)",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterDoctorRequest"
+              }
+            }
+          }
+        },
+        "security": [],
+        "responses": {
+          "202": {
+            "description": "Demande prise en compte. Le compte reste en attente jusqu'à approbation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
+          }
+        },
+        "x-roles": [
+          "PUBLIC"
+        ],
+        "x-lot": "L1",
+        "x-ticket": "L1-01",
+        "x-priority": "P0",
+        "x-status": "planned"
+      }
+    },
+    "/auth/reset-password": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "operationId": "resetPassword",
+        "summary": "Choisir un nouveau mot de passe",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResetPasswordRequest"
+              }
+            }
+          }
+        },
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Mot de passe modifié. Toutes les sessions existantes sont révoquées.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
+          }
+        },
+        "x-roles": [
+          "PUBLIC"
+        ],
+        "x-lot": "L1",
+        "x-ticket": "L1-03",
+        "x-priority": "P0",
+        "x-status": "planned"
+      }
+    },
+    "/auth/verify-email": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "operationId": "verifyEmail",
+        "summary": "Vérifier l'adresse email",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VerifyEmailRequest"
+              }
+            }
+          }
+        },
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Adresse vérifiée.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
+          }
+        },
+        "x-roles": [
+          "PUBLIC"
+        ],
+        "x-lot": "L1",
+        "x-ticket": "L1-01",
+        "x-priority": "P0",
+        "x-status": "planned"
+      }
+    },
+    "/devices": {
+      "post": {
+        "tags": [
+          "notifications"
+        ],
+        "operationId": "registerDevice",
+        "summary": "Enregistrer l'appareil pour les notifications push",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterDeviceRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Appareil enregistré (ou mis à jour)."
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        },
+        "x-roles": [
+          "PATIENT",
+          "DOCTOR",
+          "ADMIN"
+        ],
+        "x-lot": "L8",
+        "x-ticket": "L8-14",
+        "x-priority": "P0",
+        "x-status": "planned"
+      }
+    },
+    "/devices/{deviceId}": {
+      "delete": {
+        "tags": [
+          "notifications"
+        ],
+        "operationId": "unregisterDevice",
+        "summary": "Retirer l'appareil (déconnexion)",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/DeviceIdPath"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Appareil retiré : plus aucune notification sur ce téléphone."
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        },
+        "x-roles": [
+          "PATIENT",
+          "DOCTOR",
+          "ADMIN"
+        ],
+        "x-lot": "L8",
+        "x-ticket": "L8-14",
+        "x-priority": "P0",
+        "x-status": "planned"
+      }
+    },
+    "/doctor/sessions": {
+      "get": {
+        "tags": [
+          "doctor"
+        ],
+        "operationId": "listDoctorSessions",
+        "summary": "Mes patients partagés",
+        "description": "Lecture seule. À CHAQUE requête le serveur revérifie : session ACTIVE, non expirée, rattachée à ce médecin. Sinon 403 (codes SESSION_EXPIRED, SESSION_REVOKED, CATEGORY_NOT_SHARED). Chaque consultation est journalisée.",
+        "responses": {
+          "200": {
+            "description": "Sessions du médecin, actives et expirées.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DoctorSessionList"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        },
+        "x-roles": [
+          "DOCTOR"
+        ],
+        "x-lot": "L5",
+        "x-ticket": "L5-15",
+        "x-priority": "P0",
+        "x-status": "planned"
+      }
+    },
+    "/doctor/sessions/{sessionId}/measurements": {
+      "get": {
+        "tags": [
+          "doctor"
+        ],
+        "operationId": "getDoctorMeasurements",
+        "summary": "Dossier patient : glycémie",
+        "description": "Lecture seule. À CHAQUE requête le serveur revérifie : session ACTIVE, non expirée, rattachée à ce médecin. Sinon 403 (codes SESSION_EXPIRED, SESSION_REVOKED, CATEGORY_NOT_SHARED). Chaque consultation est journalisée.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/SessionIdPath"
+          },
+          {
+            "$ref": "#/components/parameters/From"
+          },
+          {
+            "$ref": "#/components/parameters/To"
+          },
+          {
+            "$ref": "#/components/parameters/Limit"
+          },
+          {
+            "$ref": "#/components/parameters/Cursor"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Mesures (catégorie GLUCOSE_HISTORY).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MeasurementList"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        },
+        "x-roles": [
+          "DOCTOR"
+        ],
+        "x-lot": "L5",
+        "x-ticket": "L5-15",
+        "x-priority": "P0",
+        "x-status": "planned"
+      }
+    },
+    "/doctor/sessions/{sessionId}/report": {
+      "get": {
+        "tags": [
+          "doctor"
+        ],
+        "operationId": "downloadDoctorReport",
+        "summary": "Dossier patient : rapport PDF",
+        "description": "Lecture seule. À CHAQUE requête le serveur revérifie : session ACTIVE, non expirée, rattachée à ce médecin. Sinon 403 (codes SESSION_EXPIRED, SESSION_REVOKED, CATEGORY_NOT_SHARED). Chaque consultation est journalisée.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/SessionIdPath"
+          },
+          {
+            "$ref": "#/components/parameters/ReportPeriod"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Rapport PDF (catégorie REPORT_DOWNLOAD requise). Téléchargement journalisé.",
+            "content": {
+              "application/pdf": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        },
+        "x-roles": [
+          "DOCTOR"
+        ],
+        "x-lot": "L5",
+        "x-ticket": "L5-15",
+        "x-priority": "P0",
+        "x-status": "planned"
+      }
+    },
+    "/doctor/sessions/{sessionId}/summary": {
+      "get": {
+        "tags": [
+          "doctor"
+        ],
+        "operationId": "getDoctorSummary",
+        "summary": "Dossier patient : résumé",
+        "description": "Lecture seule. À CHAQUE requête le serveur revérifie : session ACTIVE, non expirée, rattachée à ce médecin. Sinon 403 (codes SESSION_EXPIRED, SESSION_REVOKED, CATEGORY_NOT_SHARED). Chaque consultation est journalisée.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/SessionIdPath"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Identité limitée, qualité, statistiques ; résumé IA si la catégorie est partagée.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DoctorSummary"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        },
+        "x-roles": [
+          "DOCTOR"
+        ],
+        "x-lot": "L5",
+        "x-ticket": "L5-15",
+        "x-priority": "P0",
+        "x-status": "planned"
+      }
+    },
+    "/doctor/sessions/{sessionId}/timeline": {
+      "get": {
+        "tags": [
+          "doctor"
+        ],
+        "operationId": "getDoctorTimeline",
+        "summary": "Dossier patient : chronologie",
+        "description": "Lecture seule. À CHAQUE requête le serveur revérifie : session ACTIVE, non expirée, rattachée à ce médecin. Sinon 403 (codes SESSION_EXPIRED, SESSION_REVOKED, CATEGORY_NOT_SHARED). Chaque consultation est journalisée.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/SessionIdPath"
+          },
+          {
+            "$ref": "#/components/parameters/From"
+          },
+          {
+            "$ref": "#/components/parameters/To"
+          },
+          {
+            "$ref": "#/components/parameters/Limit"
+          },
+          {
+            "$ref": "#/components/parameters/Cursor"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Chronologie limitée aux catégories partagées.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TimelineList"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        },
+        "x-roles": [
+          "DOCTOR"
+        ],
+        "x-lot": "L5",
+        "x-ticket": "L5-15",
+        "x-priority": "P0",
+        "x-status": "planned"
+      }
+    },
+    "/e/{token}": {
+      "get": {
+        "tags": [
+          "emergency"
+        ],
+        "operationId": "readEmergencyCard",
+        "summary": "Lire une carte d'urgence (page publique)",
+        "description": "Sans compte. Chaque ouverture est journalisée et notifiée au patient. QR désactivé ou régénéré : 404.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/EmergencyTokenPath"
+          }
+        ],
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Uniquement les champs choisis par le patient. Aucun historique.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmergencyCardPublic"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
+          }
+        },
+        "x-roles": [
+          "PUBLIC"
+        ],
+        "x-lot": "L6",
+        "x-ticket": "L6-05",
+        "x-priority": "P1",
+        "x-status": "planned"
+      }
+    },
+    "/emergency": {
+      "get": {
+        "tags": [
+          "emergency"
+        ],
+        "operationId": "getEmergencyCard",
+        "summary": "Lire ma carte d'urgence",
+        "responses": {
+          "200": {
+            "description": "Carte d'urgence.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmergencyCardResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        },
+        "x-roles": [
+          "PATIENT"
+        ],
+        "x-lot": "L6",
+        "x-ticket": "L6-05",
+        "x-priority": "P1",
+        "x-status": "planned"
+      },
+      "put": {
+        "tags": [
+          "emergency"
+        ],
+        "operationId": "saveEmergencyCard",
+        "summary": "Modifier ma carte d'urgence",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EmergencyCardRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Carte enregistrée.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmergencyCardResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        },
+        "x-roles": [
+          "PATIENT"
+        ],
+        "x-lot": "L6",
+        "x-ticket": "L6-05",
+        "x-priority": "P1",
+        "x-status": "planned"
+      }
+    },
+    "/emergency/regenerate": {
+      "post": {
+        "tags": [
+          "emergency"
+        ],
+        "operationId": "regenerateEmergencyQr",
+        "summary": "Générer un nouveau QR d'urgence",
+        "description": "Le jeton n'est renvoyé qu'ici : l'app le conserve. Réinstallation de l'app : régénérer.",
+        "responses": {
+          "200": {
+            "description": "Nouveau jeton. L'ancien QR devient inopérant immédiatement.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmergencyQrResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        },
+        "x-roles": [
+          "PATIENT"
+        ],
+        "x-lot": "L6",
+        "x-ticket": "L6-05",
+        "x-priority": "P1",
+        "x-status": "planned"
+      }
+    },
+    "/events": {
+      "get": {
+        "tags": [
+          "events"
+        ],
+        "operationId": "listEvents",
+        "summary": "Lister mes événements (repas, activité, traitements)",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/From"
+          },
+          {
+            "$ref": "#/components/parameters/To"
+          },
+          {
+            "$ref": "#/components/parameters/Limit"
+          },
+          {
+            "$ref": "#/components/parameters/Cursor"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Événements de la période.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LifeEventList"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        },
+        "x-roles": [
+          "PATIENT"
+        ],
+        "x-lot": "L2",
+        "x-ticket": "L2-02",
+        "x-priority": "P0",
+        "x-status": "planned"
+      },
+      "post": {
+        "tags": [
+          "events"
+        ],
+        "operationId": "createEvent",
+        "summary": "Enregistrer un événement",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateLifeEventRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Déjà enregistré avec cet identifiant (rejeu idempotent).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LifeEvent"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Événement créé.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LifeEvent"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        },
+        "x-roles": [
+          "PATIENT"
+        ],
+        "x-lot": "L2",
+        "x-ticket": "L2-02",
+        "x-priority": "P0",
+        "x-status": "planned"
+      }
+    },
+    "/events/{id}": {
+      "put": {
+        "tags": [
+          "events"
+        ],
+        "operationId": "updateEvent",
+        "summary": "Modifier un événement",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdPath"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateLifeEventRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Événement modifié.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LifeEvent"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        },
+        "x-roles": [
+          "PATIENT"
+        ],
+        "x-lot": "L2",
+        "x-ticket": "L2-02",
+        "x-priority": "P0",
+        "x-status": "planned"
+      },
+      "delete": {
+        "tags": [
+          "events"
+        ],
+        "operationId": "deleteEvent",
+        "summary": "Supprimer un événement",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdPath"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Événement supprimé (idempotent)."
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        },
+        "x-roles": [
+          "PATIENT"
+        ],
+        "x-lot": "L2",
+        "x-ticket": "L2-02",
+        "x-priority": "P0",
+        "x-status": "planned"
+      }
+    },
+    "/health": {
+      "get": {
+        "tags": [
+          "health"
+        ],
+        "operationId": "healthCheck",
+        "summary": "Santé de l'API",
+        "description": "Utilisée par Docker, l'hébergeur et la CI. Ne contient aucun détail interne.",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "L'API répond et la base de données est joignable.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthOk"
+                }
+              }
+            }
+          },
+          "503": {
+            "$ref": "#/components/responses/ServiceUnavailable"
+          }
+        },
+        "x-roles": [
+          "PUBLIC"
+        ],
+        "x-lot": "L0",
+        "x-ticket": "L0-04",
+        "x-priority": "P0",
+        "x-status": "implemented"
+      }
+    },
+    "/imports/preview": {
+      "post": {
+        "tags": [
+          "imports"
+        ],
+        "operationId": "previewImport",
+        "summary": "Analyser un fichier CSV / Excel",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/ImportPreviewRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Rapport d'analyse. Rien n'est encore importé.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImportReport"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "413": {
+            "$ref": "#/components/responses/PayloadTooLarge"
+          }
+        },
+        "x-roles": [
+          "PATIENT"
+        ],
+        "x-lot": "L4",
+        "x-ticket": "L4-04",
+        "x-priority": "P0",
+        "x-status": "planned"
+      }
+    },
+    "/imports/{id}": {
+      "delete": {
+        "tags": [
+          "imports"
+        ],
+        "operationId": "revertImport",
+        "summary": "Annuler un lot importé",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdPath"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lot annulé : toutes ses mesures sont supprimées.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImportRevertResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        },
+        "x-roles": [
+          "PATIENT"
+        ],
+        "x-lot": "L4",
+        "x-ticket": "L4-04",
+        "x-priority": "P0",
+        "x-status": "planned"
+      }
+    },
+    "/imports/{id}/commit": {
+      "post": {
+        "tags": [
+          "imports"
+        ],
+        "operationId": "commitImport",
+        "summary": "Importer après décisions",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdPath"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ImportCommitRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Lot importé : mesures créées avec la source IMPORT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImportCommitResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          }
+        },
+        "x-roles": [
+          "PATIENT"
+        ],
+        "x-lot": "L4",
+        "x-ticket": "L4-04",
+        "x-priority": "P0",
+        "x-status": "planned"
+      }
+    },
+    "/insights": {
+      "get": {
+        "tags": [
+          "insights"
+        ],
+        "operationId": "getInsights",
+        "summary": "Statistiques et observations",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Period"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Analyse de la période. Sous 10 mesures : `stats` est nul et `insights` est vide.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InsightsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        },
+        "x-roles": [
+          "PATIENT"
+        ],
+        "x-lot": "L3",
+        "x-ticket": "L3-03",
+        "x-priority": "P0",
+        "x-status": "planned"
+      }
+    },
+    "/insights/ask": {
+      "post": {
+        "tags": [
+          "insights"
+        ],
+        "operationId": "askInsight",
+        "summary": "Poser une question sur mon historique",
+        "description": "Jamais de diagnostic, de dose ni de conseil de traitement.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AskInsightRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Réponse, ou refus poli si la question sort du périmètre.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AskInsightResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
+          }
+        },
+        "x-roles": [
+          "PATIENT"
+        ],
+        "x-lot": "L3",
+        "x-ticket": "L3-08",
+        "x-priority": "P1",
+        "x-status": "planned"
+      }
+    },
+    "/me": {
+      "delete": {
+        "tags": [
+          "account"
+        ],
+        "operationId": "deleteMyAccount",
+        "summary": "Supprimer mon compte et toutes mes données",
+        "description": "Le mot de passe est redemandé. Mot de passe incorrect : 403 (code INVALID_PASSWORD).",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteAccountRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Compte et données supprimés."
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          }
+        },
+        "x-roles": [
+          "PATIENT"
+        ],
+        "x-lot": "L1",
+        "x-ticket": "L1-14",
+        "x-priority": "P1",
+        "x-status": "planned"
+      }
+    },
+    "/me/export": {
+      "get": {
+        "tags": [
+          "account"
+        ],
+        "operationId": "exportMyData",
+        "summary": "Exporter mes données",
+        "responses": {
+          "200": {
+            "description": "Export complet des données du patient.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DataExport"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        },
+        "x-roles": [
+          "PATIENT"
+        ],
+        "x-lot": "L1",
+        "x-ticket": "L1-14",
+        "x-priority": "P1",
+        "x-status": "planned"
+      }
+    },
+    "/me/profile": {
+      "get": {
+        "tags": [
+          "account"
+        ],
+        "operationId": "getMyProfile",
+        "summary": "Lire mon profil médical",
+        "description": "404 : le profil n'est pas encore créé (l'app lance l'assistant de profil).",
+        "responses": {
+          "200": {
+            "description": "Profil du patient.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PatientProfileResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        },
+        "x-roles": [
+          "PATIENT"
+        ],
+        "x-lot": "L1",
+        "x-ticket": "L1-05",
+        "x-priority": "P0",
+        "x-status": "planned"
+      },
+      "put": {
+        "tags": [
+          "account"
+        ],
+        "operationId": "saveMyProfile",
+        "summary": "Créer ou mettre à jour mon profil médical",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PatientProfile"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Profil enregistré.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PatientProfileResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        },
+        "x-roles": [
+          "PATIENT"
+        ],
+        "x-lot": "L1",
+        "x-ticket": "L1-05",
+        "x-priority": "P0",
+        "x-status": "planned"
+      }
+    },
+    "/measurements": {
+      "get": {
+        "tags": [
+          "measurements"
+        ],
+        "operationId": "listMeasurements",
+        "summary": "Lister mes mesures",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/From"
+          },
+          {
+            "$ref": "#/components/parameters/To"
+          },
+          {
+            "$ref": "#/components/parameters/Limit"
+          },
+          {
+            "$ref": "#/components/parameters/Cursor"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Mesures de la période, par ordre chronologique décroissant (suppressions exclues).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MeasurementList"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        },
+        "x-roles": [
+          "PATIENT"
+        ],
+        "x-lot": "L2",
+        "x-ticket": "L2-01",
+        "x-priority": "P0",
+        "x-status": "planned"
+      },
+      "post": {
+        "tags": [
+          "measurements"
+        ],
+        "operationId": "createMeasurement",
+        "summary": "Enregistrer une mesure",
+        "description": "Conversion en mg/dL entier côté serveur. Date plus de 5 minutes dans le futur : 400.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateMeasurementRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Mesure déjà enregistrée avec cet identifiant (rejeu idempotent) : aucune création.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Measurement"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Mesure créée.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Measurement"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "422": {
+            "description": "Valeur hors des bornes plausibles sans confirmation (code UNUSUAL_VALUE).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "message": "Cette valeur est inhabituelle, est-ce correct ?",
+                  "code": "UNUSUAL_VALUE",
+                  "statusCode": 422
+                }
+              }
+            }
+          }
+        },
+        "x-roles": [
+          "PATIENT"
+        ],
+        "x-lot": "L2",
+        "x-ticket": "L2-01",
+        "x-priority": "P0",
+        "x-status": "planned"
+      }
+    },
+    "/measurements/{id}": {
+      "put": {
+        "tags": [
+          "measurements"
+        ],
+        "operationId": "updateMeasurement",
+        "summary": "Modifier une mesure",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdPath"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateMeasurementRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Mesure modifiée.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Measurement"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "422": {
+            "$ref": "#/components/responses/UnprocessableEntity"
+          }
+        },
+        "x-roles": [
+          "PATIENT"
+        ],
+        "x-lot": "L2",
+        "x-ticket": "L2-01",
+        "x-priority": "P0",
+        "x-status": "planned"
+      },
+      "delete": {
+        "tags": [
+          "measurements"
+        ],
+        "operationId": "deleteMeasurement",
+        "summary": "Supprimer une mesure",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdPath"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Mesure supprimée (idempotent : 204 même si déjà supprimée)."
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        },
+        "x-roles": [
+          "PATIENT"
+        ],
+        "x-lot": "L2",
+        "x-ticket": "L2-01",
+        "x-priority": "P0",
+        "x-status": "planned"
+      }
+    },
+    "/notifications/preferences": {
+      "get": {
+        "tags": [
+          "notifications"
+        ],
+        "operationId": "getNotificationPreferences",
+        "summary": "Lire mes préférences de notification",
+        "responses": {
+          "200": {
+            "description": "Préférences.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotificationPreferences"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        },
+        "x-roles": [
+          "PATIENT"
+        ],
+        "x-lot": "L8",
+        "x-ticket": "L8-14",
+        "x-priority": "P0",
+        "x-status": "planned"
+      },
+      "put": {
+        "tags": [
+          "notifications"
+        ],
+        "operationId": "saveNotificationPreferences",
+        "summary": "Modifier mes préférences de notification",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NotificationPreferences"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Préférences enregistrées.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotificationPreferences"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        },
+        "x-roles": [
+          "PATIENT"
+        ],
+        "x-lot": "L8",
+        "x-ticket": "L8-14",
+        "x-priority": "P0",
+        "x-status": "planned"
+      }
+    },
+    "/quality": {
+      "get": {
+        "tags": [
+          "insights"
+        ],
+        "operationId": "getQuality",
+        "summary": "Score de qualité des données",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Period"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Score de qualité (couverture, densité, fraîcheur).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QualityScore"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        },
+        "x-roles": [
+          "PATIENT"
+        ],
+        "x-lot": "L3",
+        "x-ticket": "L3-03",
+        "x-priority": "P0",
+        "x-status": "planned"
+      }
+    },
+    "/reports/consultation": {
+      "get": {
+        "tags": [
+          "reports"
+        ],
+        "operationId": "downloadConsultationReport",
+        "summary": "Rapport « Préparer ma consultation »",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ReportPeriod"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Rapport PDF.",
+            "content": {
+              "application/pdf": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        },
+        "x-roles": [
+          "PATIENT"
+        ],
+        "x-lot": "L6",
+        "x-ticket": "L6-02",
+        "x-priority": "P0",
+        "x-status": "planned"
+      }
+    },
+    "/shares": {
+      "post": {
+        "tags": [
+          "sharing"
+        ],
+        "operationId": "createShare",
+        "summary": "Créer une session de partage et son premier QR",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateShareRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Session créée (en attente de scan) avec son premier jeton.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateShareResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        },
+        "x-roles": [
+          "PATIENT"
+        ],
+        "x-lot": "L5",
+        "x-ticket": "L5-01",
+        "x-priority": "P0",
+        "x-status": "planned"
+      }
+    },
+    "/shares/claim": {
+      "post": {
+        "tags": [
+          "sharing"
+        ],
+        "operationId": "claimShare",
+        "summary": "Scanner un QR patient (médecin)",
+        "description": "Réservé aux médecins APPROUVÉS (sinon 403, code DOCTOR_NOT_APPROVED). Le jeton est consommé de façon atomique : deux scans simultanés, un seul réussit. Limitation de débit stricte.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClaimShareRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Accès ouvert : la durée démarre maintenant.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClaimShareResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "description": "Jeton invalide, expiré ou déjà utilisé (code TOKEN_INVALID, sans autre précision).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "message": "QR invalide ou expiré",
+                  "code": "TOKEN_INVALID"
+                }
+              }
+            }
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
+          }
+        },
+        "x-roles": [
+          "DOCTOR"
+        ],
+        "x-lot": "L5",
+        "x-ticket": "L5-03",
+        "x-priority": "P0",
+        "x-status": "planned"
+      }
+    },
+    "/shares/log": {
+      "get": {
+        "tags": [
+          "sharing"
+        ],
+        "operationId": "listAccessLog",
+        "summary": "Qui a consulté mes données",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Limit"
+          },
+          {
+            "$ref": "#/components/parameters/Cursor"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Journal d'accès, du plus récent au plus ancien.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccessLogList"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        },
+        "x-roles": [
+          "PATIENT"
+        ],
+        "x-lot": "L5",
+        "x-ticket": "L5-05",
+        "x-priority": "P0",
+        "x-status": "planned"
+      }
+    },
+    "/shares/{id}": {
+      "delete": {
+        "tags": [
+          "sharing"
+        ],
+        "operationId": "revokeShare",
+        "summary": "Mettre fin à l'accès",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdPath"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Accès révoqué : le médecin n'a plus accès dès sa requête suivante."
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        },
+        "x-roles": [
+          "PATIENT"
+        ],
+        "x-lot": "L5",
+        "x-ticket": "L5-04",
+        "x-priority": "P0",
+        "x-status": "planned"
+      }
+    },
+    "/shares/{id}/status": {
+      "get": {
+        "tags": [
+          "sharing"
+        ],
+        "operationId": "getShareStatus",
+        "summary": "Suivre l'état d'une session",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdPath"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "État courant (le serveur est la seule horloge de référence).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ShareStatusResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        },
+        "x-roles": [
+          "PATIENT"
+        ],
+        "x-lot": "L5",
+        "x-ticket": "L5-04",
+        "x-priority": "P0",
+        "x-status": "planned"
+      }
+    },
+    "/shares/{id}/token": {
+      "get": {
+        "tags": [
+          "sharing"
+        ],
+        "operationId": "rotateShareToken",
+        "summary": "Obtenir le jeton courant du QR (rotation 60 s)",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdPath"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Nouveau jeton, usage unique.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ShareToken"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "409": {
+            "description": "La session n'est plus en attente (déjà scannée, expirée ou révoquée) : code SESSION_NOT_PENDING.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "x-roles": [
+          "PATIENT"
+        ],
+        "x-lot": "L5",
+        "x-ticket": "L5-02",
+        "x-priority": "P0",
+        "x-status": "planned"
+      }
+    },
+    "/sync/pull": {
+      "get": {
+        "tags": [
+          "sync"
+        ],
+        "operationId": "syncPull",
+        "summary": "Récupérer les changements du serveur",
+        "parameters": [
+          {
+            "name": "cursor",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Absent : première synchronisation."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500,
+              "default": 200
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Changements depuis le curseur, suppressions comprises.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SyncPullResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        },
+        "x-roles": [
+          "PATIENT"
+        ],
+        "x-lot": "L8",
+        "x-ticket": "L8-05",
+        "x-priority": "P0",
+        "x-status": "planned"
+      }
+    },
+    "/sync/push": {
+      "post": {
+        "tags": [
+          "sync"
+        ],
+        "operationId": "syncPush",
+        "summary": "Envoyer les opérations hors-ligne",
+        "description": "Au plus 200 opérations par lot. Chaque opération est traitée une seule fois (`opId`). Une opération invalide est REJECTED avec sa raison, sans bloquer les autres. `measuredAt` à plus de 5 minutes dans le futur : rejet. Conflit : la dernière écriture gagne (`clientUpdatedAt`).",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SyncPushRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Un résultat par opération. Rejouer un lot ne crée jamais de doublon.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SyncPushResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        },
+        "x-roles": [
+          "PATIENT"
+        ],
+        "x-lot": "L8",
+        "x-ticket": "L8-04",
+        "x-priority": "P0",
+        "x-status": "planned"
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "parameters": {
+      "IdPath": {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "description": "Identifiant (UUID)."
+      },
+      "SessionIdPath": {
+        "name": "sessionId",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "description": "Identifiant de la session de partage."
+      },
+      "DeviceIdPath": {
+        "name": "deviceId",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "EmergencyTokenPath": {
+        "name": "token",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "minLength": 20,
+          "maxLength": 200
+        },
+        "description": "Jeton du QR d'urgence."
+      },
+      "From": {
+        "name": "from",
+        "in": "query",
+        "schema": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "description": "Début de période (inclus)."
+      },
+      "To": {
+        "name": "to",
+        "in": "query",
+        "schema": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "description": "Fin de période (exclue)."
+      },
+      "Limit": {
+        "name": "limit",
+        "in": "query",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 2000,
+          "default": 500
+        },
+        "description": "Taille de la page."
+      },
+      "Cursor": {
+        "name": "cursor",
+        "in": "query",
+        "schema": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "description": "Curseur opaque renvoyé par la page précédente (`nextCursor`)."
+      },
+      "Period": {
+        "name": "period",
+        "in": "query",
+        "schema": {
+          "type": "integer",
+          "enum": [
+            7,
+            14,
+            30,
+            90
+          ],
+          "default": 30
+        },
+        "description": "Période en jours."
+      },
+      "ReportPeriod": {
+        "name": "period",
+        "in": "query",
+        "schema": {
+          "type": "integer",
+          "enum": [
+            14,
+            30,
+            90
+          ],
+          "default": 30
+        },
+        "description": "Période du rapport, en jours."
+      }
+    },
+    "responses": {
+      "BadRequest": {
+        "description": "Requête invalide : un ou plusieurs champs ne respectent pas le schéma.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            },
+            "example": {
+              "message": "Données invalides",
+              "issues": [
+                {
+                  "path": "password",
+                  "message": "Le mot de passe doit contenir au moins 12 caractères"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "Unauthorized": {
+        "description": "Jeton d'accès absent, invalide ou expiré.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            },
+            "example": {
+              "message": "Jeton d'accès absent, invalide ou expiré.",
+              "statusCode": 401
+            }
+          }
+        }
+      },
+      "Forbidden": {
+        "description": "Accès refusé (rôle insuffisant, compte non approuvé, accès partagé expiré ou révoqué…).",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            },
+            "example": {
+              "message": "Accès refusé (rôle insuffisant, compte non approuvé, accès partagé expiré ou révoqué…).",
+              "statusCode": 403
+            }
+          }
+        }
+      },
+      "NotFound": {
+        "description": "Ressource introuvable (ou qui ne vous appartient pas).",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            },
+            "example": {
+              "message": "Ressource introuvable (ou qui ne vous appartient pas).",
+              "statusCode": 404
+            }
+          }
+        }
+      },
+      "Conflict": {
+        "description": "Conflit avec l'état actuel de la ressource.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            },
+            "example": {
+              "message": "Conflit avec l'état actuel de la ressource.",
+              "statusCode": 409
+            }
+          }
+        }
+      },
+      "PayloadTooLarge": {
+        "description": "Fichier trop volumineux (5 Mo maximum, 5 000 lignes maximum).",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            },
+            "example": {
+              "message": "Fichier trop volumineux (5 Mo maximum, 5 000 lignes maximum).",
+              "statusCode": 413
+            }
+          }
+        }
+      },
+      "UnprocessableEntity": {
+        "description": "Requête comprise mais refusée (règle métier).",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            },
+            "example": {
+              "message": "Requête comprise mais refusée (règle métier).",
+              "code": "UNUSUAL_VALUE",
+              "statusCode": 422
+            }
+          }
+        }
+      },
+      "TooManyRequests": {
+        "description": "Trop de requêtes : réessayez plus tard.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            },
+            "example": {
+              "message": "Trop de requêtes : réessayez plus tard.",
+              "statusCode": 429
+            }
+          }
+        },
+        "headers": {
+          "Retry-After": {
+            "description": "Secondes à attendre avant de réessayer.",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        }
+      },
+      "ServiceUnavailable": {
+        "description": "Service indisponible (base de données injoignable).",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/HealthError"
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "UserRole": {
+        "type": "string",
+        "enum": [
+          "PATIENT",
+          "DOCTOR",
+          "ADMIN"
+        ],
+        "description": "Rôle du compte."
+      },
+      "DiabetesType": {
+        "type": "string",
+        "enum": [
+          "TYPE_1",
+          "TYPE_2",
+          "GESTATIONAL",
+          "OTHER"
+        ],
+        "description": "Type de diabète."
+      },
+      "GlucoseUnit": {
+        "type": "string",
+        "enum": [
+          "G_L",
+          "MG_DL",
+          "MMOL_L"
+        ],
+        "description": "Unité de glycémie : G_L = g/L, MG_DL = mg/dL, MMOL_L = mmol/L."
+      },
+      "MeasurementContext": {
+        "type": "string",
+        "enum": [
+          "FASTING",
+          "BEFORE_MEAL",
+          "AFTER_MEAL",
+          "BEDTIME",
+          "NIGHT",
+          "OTHER"
+        ],
+        "description": "Contexte de la mesure."
+      },
+      "MeasurementSource": {
+        "type": "string",
+        "enum": [
+          "MANUAL",
+          "IMPORT",
+          "DEVICE"
+        ],
+        "description": "Provenance : saisie manuelle, import CSV/Excel, appareil connecté."
+      },
+      "LifeEventType": {
+        "type": "string",
+        "enum": [
+          "MEAL",
+          "ACTIVITY",
+          "TREATMENT"
+        ],
+        "description": "Repas, activité ou traitement déclaré par le patient."
+      },
+      "ShareCategory": {
+        "type": "string",
+        "enum": [
+          "GLUCOSE_HISTORY",
+          "TREATMENTS",
+          "MEALS",
+          "ACTIVITY",
+          "AI_SUMMARY",
+          "PERSONAL_NOTES",
+          "REPORT_DOWNLOAD"
+        ],
+        "description": "Catégorie de données qu'un patient peut partager avec un médecin."
+      },
+      "ShareDuration": {
+        "type": "string",
+        "enum": [
+          "MIN_5",
+          "MIN_30",
+          "HOUR_1",
+          "CONSULTATION"
+        ],
+        "description": "Durée de l'accès, comptée à partir du scan (CONSULTATION : 2 h maximum, révocable)."
+      },
+      "ShareStatus": {
+        "type": "string",
+        "enum": [
+          "PENDING",
+          "ACTIVE",
+          "EXPIRED",
+          "REVOKED"
+        ],
+        "description": "État d'une session de partage."
+      },
+      "DoctorVerificationStatus": {
+        "type": "string",
+        "enum": [
+          "PENDING",
+          "APPROVED",
+          "REJECTED"
+        ],
+        "description": "État de validation d'un compte médecin."
+      },
+      "GlucoseState": {
+        "type": "string",
+        "enum": [
+          "VERY_LOW",
+          "LOW",
+          "IN_RANGE",
+          "HIGH",
+          "VERY_HIGH"
+        ],
+        "description": "État d'une mesure par rapport aux seuils du patient."
+      },
+      "QualityLevel": {
+        "type": "string",
+        "enum": [
+          "GOOD",
+          "PARTIAL",
+          "INSUFFICIENT"
+        ],
+        "description": "Niveau de qualité des données : BONNE ≥ 75, PARTIELLE 40–74, INSUFFISANTE < 40."
+      },
+      "InsightType": {
+        "type": "string",
+        "enum": [
+          "TREND",
+          "TIME_OF_DAY_PATTERN",
+          "ANOMALY",
+          "HIGH_STREAK",
+          "REPEATED_HYPO",
+          "MISSING_DATA",
+          "PERIOD_COMPARISON"
+        ],
+        "description": "Type d'observation produite par le moteur d'analyse."
+      },
+      "InsightSeverity": {
+        "type": "string",
+        "enum": [
+          "INFO",
+          "ATTENTION",
+          "ALERT"
+        ],
+        "description": "Gravité d'une observation (jamais un diagnostic)."
+      },
+      "NotificationCategory": {
+        "type": "string",
+        "enum": [
+          "MEASUREMENT_REMINDER",
+          "GLUCOSE_ALERT",
+          "DATA_GAP",
+          "SHARE_ACTIVITY",
+          "EMERGENCY_ACCESS",
+          "IMPORT_DONE"
+        ],
+        "description": "Catégorie de notification."
+      },
+      "SyncEntity": {
+        "type": "string",
+        "enum": [
+          "measurement",
+          "event"
+        ],
+        "description": "Entité synchronisable hors-ligne."
+      },
+      "SyncOpType": {
+        "type": "string",
+        "enum": [
+          "upsert",
+          "delete"
+        ],
+        "description": "Type d'opération de synchronisation."
+      },
+      "SyncOpResultCode": {
+        "type": "string",
+        "enum": [
+          "APPLIED",
+          "DUPLICATE",
+          "REJECTED",
+          "CONFLICT_SERVER_WINS"
+        ],
+        "description": "Résultat du traitement d'une opération."
+      },
+      "ImportRowStatus": {
+        "type": "string",
+        "enum": [
+          "VALID",
+          "DUPLICATE",
+          "INCONSISTENT",
+          "ERROR"
+        ],
+        "description": "Statut d'une ligne analysée lors d'un import."
+      },
+      "AccessAction": {
+        "type": "string",
+        "enum": [
+          "SHARE_CLAIMED",
+          "SHARE_VIEWED",
+          "SHARE_REVOKED",
+          "SHARE_EXPIRED",
+          "EMERGENCY_VIEWED",
+          "REPORT_DOWNLOADED"
+        ],
+        "description": "Action enregistrée dans le journal d'accès."
+      },
+      "TimelineKind": {
+        "type": "string",
+        "enum": [
+          "MEASUREMENT",
+          "MEAL",
+          "ACTIVITY",
+          "TREATMENT",
+          "ALERT"
+        ],
+        "description": "Nature d'une ligne de la chronologie médicale."
+      },
+      "ValidationIssue": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "Chemin du champ fautif, ex. « thresholds.targetMinMgDl »."
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "path",
+          "message"
+        ]
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Message lisible, jamais de détail interne (ni adresse, ni identifiant, ni donnée de santé)."
+          },
+          "statusCode": {
+            "type": "integer"
+          },
+          "code": {
+            "type": "string",
+            "description": "Code stable pour le client. Valeurs : UNUSUAL_VALUE, EMAIL_NOT_VERIFIED, ACCOUNT_LOCKED, INVALID_PASSWORD, DOCTOR_NOT_APPROVED, TOKEN_INVALID, SESSION_EXPIRED, SESSION_REVOKED, SESSION_NOT_PENDING, CATEGORY_NOT_SHARED, IMPORT_ALREADY_COMMITTED."
+          },
+          "issues": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ValidationIssue"
+            },
+            "description": "Détail des champs invalides (réponses 400)."
+          },
+          "retryAfterSeconds": {
+            "type": "integer",
+            "description": "Délai avant de réessayer (réponses 429)."
+          }
+        },
+        "required": [
+          "message"
+        ],
+        "example": {
+          "message": "Données invalides",
+          "issues": [
+            {
+              "path": "password",
+              "message": "Le mot de passe doit contenir au moins 12 caractères"
+            }
+          ]
+        }
+      },
+      "MessageResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "message"
+        ],
+        "example": {
+          "message": "Si cette adresse est valide, un email vient d'être envoyé."
+        }
+      },
+      "HealthOk": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "ok"
+            ]
+          },
+          "time": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-10-07T08:30:00+01:00"
+          }
+        },
+        "required": [
+          "status",
+          "time"
+        ],
+        "example": {
+          "status": "ok",
+          "time": "2026-10-07T07:30:00Z"
+        }
+      },
+      "HealthError": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "error"
+            ]
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "status",
+          "message"
+        ],
+        "example": {
+          "status": "error",
+          "message": "Service indisponible"
+        }
+      },
+      "RegisterPatientRequest": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "maxLength": 254,
+            "example": "jean@example.com"
+          },
+          "password": {
+            "type": "string",
+            "minLength": 12,
+            "maxLength": 128,
+            "format": "password",
+            "example": "un-mot-de-passe-solide-2026"
+          },
+          "consent": {
+            "type": "boolean",
+            "enum": [
+              true
+            ],
+            "description": "Consentement explicite : doit être `true`."
+          }
+        },
+        "required": [
+          "email",
+          "password",
+          "consent"
+        ],
+        "example": {
+          "email": "jean@example.com",
+          "password": "un-mot-de-passe-solide-2026",
+          "consent": true
+        }
+      },
+      "RegisterDoctorRequest": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "maxLength": 254,
+            "example": "jean@example.com"
+          },
+          "password": {
+            "type": "string",
+            "minLength": 12,
+            "maxLength": 128,
+            "format": "password",
+            "example": "un-mot-de-passe-solide-2026"
+          },
+          "consent": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "firstName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "lastName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "licenseNumber": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 40,
+            "description": "Numéro d'ordre."
+          },
+          "institution": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 120
+          }
+        },
+        "required": [
+          "email",
+          "password",
+          "consent",
+          "firstName",
+          "lastName",
+          "licenseNumber",
+          "institution"
+        ],
+        "example": {
+          "email": "dr.demo@example.com",
+          "password": "un-mot-de-passe-solide-2026",
+          "consent": true,
+          "firstName": "Aline",
+          "lastName": "Demo",
+          "licenseNumber": "MED-2026-0142",
+          "institution": "Clinique de démonstration"
+        }
+      },
+      "LoginRequest": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "maxLength": 254,
+            "example": "jean@example.com"
+          },
+          "password": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "format": "password"
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ],
+        "example": {
+          "email": "jean@example.com",
+          "password": "un-mot-de-passe-solide-2026"
+        }
+      },
+      "VerifyEmailRequest": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "minLength": 20,
+            "maxLength": 200
+          }
+        },
+        "required": [
+          "token"
+        ],
+        "example": {
+          "token": "k3Zt9Qw2Vx7LpR4mNc8YbH1sDfG6jAe5UoI0TyXvWzE"
+        }
+      },
+      "RefreshRequest": {
+        "type": "object",
+        "properties": {
+          "refreshToken": {
+            "type": "string",
+            "minLength": 20,
+            "maxLength": 500
+          }
+        },
+        "required": [
+          "refreshToken"
+        ],
+        "example": {
+          "refreshToken": "k3Zt9Qw2Vx7LpR4mNc8YbH1sDfG6jAe5UoI0TyXvWzE"
+        }
+      },
+      "ForgotPasswordRequest": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "maxLength": 254,
+            "example": "jean@example.com"
+          }
+        },
+        "required": [
+          "email"
+        ],
+        "example": {
+          "email": "jean@example.com"
+        }
+      },
+      "ResetPasswordRequest": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "minLength": 20,
+            "maxLength": 200
+          },
+          "password": {
+            "type": "string",
+            "minLength": 12,
+            "maxLength": 128,
+            "format": "password",
+            "example": "un-mot-de-passe-solide-2026"
+          }
+        },
+        "required": [
+          "token",
+          "password"
+        ],
+        "example": {
+          "token": "k3Zt9Qw2Vx7LpR4mNc8YbH1sDfG6jAe5UoI0TyXvWzE",
+          "password": "un-nouveau-mot-de-passe-2026"
+        }
+      },
+      "DeleteAccountRequest": {
+        "type": "object",
+        "properties": {
+          "password": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "format": "password"
+          }
+        },
+        "required": [
+          "password"
+        ],
+        "example": {
+          "password": "un-mot-de-passe-solide-2026"
+        }
+      },
+      "AuthTokens": {
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "description": "Jeton d'accès (JWT, 15 minutes)."
+          },
+          "refreshToken": {
+            "type": "string",
+            "description": "Jeton de rafraîchissement, rotatif : chaque usage en émet un nouveau."
+          },
+          "expiresInSeconds": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "accessToken",
+          "refreshToken",
+          "expiresInSeconds"
+        ],
+        "example": {
+          "accessToken": "eyJhbGciOi…",
+          "refreshToken": "k3Zt9Qw2Vx7LpR4mNc8YbH1sDfG6jAe5UoI0TyXvWzE",
+          "expiresInSeconds": 900
+        }
+      },
+      "LoginResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AuthTokens"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "user": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "role": {
+                    "$ref": "#/components/schemas/UserRole"
+                  },
+                  "profileCompleted": {
+                    "type": "boolean",
+                    "description": "Faux : le client doit lancer l'assistant de profil (patients)."
+                  },
+                  "doctorVerificationStatus": {
+                    "nullable": true,
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/DoctorVerificationStatus"
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "id",
+                  "role",
+                  "profileCompleted"
+                ]
+              }
+            },
+            "required": [
+              "user"
+            ]
+          }
+        ],
+        "example": {
+          "accessToken": "eyJhbGciOi…",
+          "refreshToken": "k3Zt9Qw2Vx7LpR4mNc8YbH1sDfG6jAe5UoI0TyXvWzE",
+          "expiresInSeconds": 900,
+          "user": {
+            "id": "3f2b8c1e-6a4d-4e1b-9c7a-1d2e3f4a5b6c",
+            "role": "PATIENT",
+            "profileCompleted": true,
+            "doctorVerificationStatus": null
+          }
+        }
+      },
+      "Thresholds": {
+        "type": "object",
+        "properties": {
+          "veryLowMgDl": {
+            "type": "integer",
+            "minimum": 20,
+            "maximum": 600,
+            "description": "En dessous : TRÈS BAS (mg/dL)."
+          },
+          "targetMinMgDl": {
+            "type": "integer",
+            "minimum": 20,
+            "maximum": 600,
+            "description": "Début de la plage cible (mg/dL)."
+          },
+          "targetMaxMgDl": {
+            "type": "integer",
+            "minimum": 20,
+            "maximum": 600,
+            "description": "Fin de la plage cible (mg/dL)."
+          },
+          "veryHighMgDl": {
+            "type": "integer",
+            "minimum": 20,
+            "maximum": 600,
+            "description": "Au-dessus : TRÈS HAUT (mg/dL)."
+          }
+        },
+        "required": [
+          "veryLowMgDl",
+          "targetMinMgDl",
+          "targetMaxMgDl",
+          "veryHighMgDl"
+        ],
+        "description": "Doit respecter : veryLow < targetMin < targetMax < veryHigh. Valeurs par défaut à faire valider par un professionnel de santé.",
+        "example": {
+          "veryLowMgDl": 54,
+          "targetMinMgDl": 70,
+          "targetMaxMgDl": 180,
+          "veryHighMgDl": 250
+        }
+      },
+      "EmergencyContact": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "phone": {
+            "type": "string",
+            "minLength": 6,
+            "maxLength": 30
+          },
+          "relation": {
+            "type": "string",
+            "maxLength": 60
+          }
+        },
+        "required": [
+          "name",
+          "phone"
+        ]
+      },
+      "PatientProfile": {
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "lastName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "birthDate": {
+            "type": "string",
+            "format": "date",
+            "example": "1980-05-14"
+          },
+          "sex": {
+            "type": "string",
+            "enum": [
+              "F",
+              "M",
+              "OTHER"
+            ]
+          },
+          "diabetesType": {
+            "$ref": "#/components/schemas/DiabetesType"
+          },
+          "diagnosisYear": {
+            "type": "integer",
+            "minimum": 1950
+          },
+          "preferredUnit": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GlucoseUnit"
+              }
+            ],
+            "default": "G_L"
+          },
+          "thresholds": {
+            "$ref": "#/components/schemas/Thresholds"
+          },
+          "thresholdsReviewedByClinician": {
+            "type": "boolean",
+            "default": false,
+            "description": "Vrai une fois les seuils relus avec un professionnel de santé."
+          },
+          "emergencyContact": {
+            "$ref": "#/components/schemas/EmergencyContact"
+          }
+        },
+        "required": [
+          "firstName",
+          "lastName",
+          "birthDate",
+          "sex",
+          "diabetesType",
+          "thresholds"
+        ],
+        "example": {
+          "firstName": "Jean",
+          "lastName": "Demo",
+          "birthDate": "1980-05-14",
+          "sex": "M",
+          "diabetesType": "TYPE_2",
+          "diagnosisYear": 2016,
+          "preferredUnit": "G_L",
+          "thresholds": {
+            "veryLowMgDl": 54,
+            "targetMinMgDl": 70,
+            "targetMaxMgDl": 180,
+            "veryHighMgDl": 250
+          },
+          "thresholdsReviewedByClinician": false,
+          "emergencyContact": {
+            "name": "Marie Demo",
+            "phone": "+243810000000",
+            "relation": "Épouse"
+          }
+        }
+      },
+      "PatientProfileResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/PatientProfile"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "updatedAt": {
+                "type": "string",
+                "format": "date-time",
+                "example": "2026-10-07T08:30:00+01:00"
+              }
+            },
+            "required": [
+              "updatedAt"
+            ]
+          }
+        ]
+      },
+      "CreateMeasurementRequest": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Généré par le CLIENT (UUID v4) : rejouer la même requête ne crée jamais de doublon."
+          },
+          "value": {
+            "type": "number",
+            "exclusiveMinimum": true,
+            "minimum": 0,
+            "description": "Valeur dans l'unité `unit`. Bornes plausibles : 20 à 600 mg/dL."
+          },
+          "unit": {
+            "$ref": "#/components/schemas/GlucoseUnit"
+          },
+          "measuredAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-10-07T08:30:00+01:00",
+            "description": "Date et heure de la mesure (ISO 8601 avec fuseau). Refusée si dans le futur de plus de 5 minutes."
+          },
+          "context": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MeasurementContext"
+              }
+            ],
+            "default": "OTHER"
+          },
+          "note": {
+            "type": "string",
+            "maxLength": 500,
+            "description": "Note personnelle (stockée chiffrée)."
+          },
+          "confirmedUnusual": {
+            "type": "boolean",
+            "default": false,
+            "description": "Vrai si le patient a confirmé une valeur hors des bornes plausibles."
+          }
+        },
+        "required": [
+          "id",
+          "value",
+          "unit",
+          "measuredAt"
+        ],
+        "example": {
+          "id": "3f2b8c1e-6a4d-4e1b-9c7a-1d2e3f4a5b6c",
+          "value": 1.48,
+          "unit": "G_L",
+          "measuredAt": "2026-10-07T08:30:00+01:00",
+          "context": "FASTING",
+          "note": "Avant le petit-déjeuner",
+          "confirmedUnusual": false
+        }
+      },
+      "UpdateMeasurementRequest": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "number",
+            "exclusiveMinimum": true,
+            "minimum": 0
+          },
+          "unit": {
+            "$ref": "#/components/schemas/GlucoseUnit"
+          },
+          "measuredAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-10-07T08:30:00+01:00"
+          },
+          "context": {
+            "$ref": "#/components/schemas/MeasurementContext"
+          },
+          "note": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "confirmedUnusual": {
+            "type": "boolean"
+          }
+        },
+        "description": "Tous les champs sont optionnels, mais `value` et `unit` vont ensemble.",
+        "example": {
+          "value": 1.52,
+          "unit": "G_L"
+        }
+      },
+      "Measurement": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "valueMgDl": {
+            "type": "integer",
+            "description": "Valeur canonique, en mg/dL entier (1,48 g/L = 148 mg/dL)."
+          },
+          "originalValue": {
+            "type": "number",
+            "description": "Valeur telle que saisie."
+          },
+          "originalUnit": {
+            "$ref": "#/components/schemas/GlucoseUnit"
+          },
+          "measuredAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-10-07T08:30:00+01:00"
+          },
+          "context": {
+            "$ref": "#/components/schemas/MeasurementContext"
+          },
+          "source": {
+            "$ref": "#/components/schemas/MeasurementSource"
+          },
+          "importBatchId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "note": {
+            "type": "string",
+            "nullable": true
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-10-07T08:30:00+01:00"
+          },
+          "deletedAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-10-07T08:30:00+01:00",
+            "description": "Non nul : suppression à propager (tombstone).",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "valueMgDl",
+          "originalValue",
+          "originalUnit",
+          "measuredAt",
+          "context",
+          "source",
+          "importBatchId",
+          "note",
+          "updatedAt",
+          "deletedAt"
+        ],
+        "example": {
+          "id": "3f2b8c1e-6a4d-4e1b-9c7a-1d2e3f4a5b6c",
+          "valueMgDl": 148,
+          "originalValue": 1.48,
+          "originalUnit": "G_L",
+          "measuredAt": "2026-10-07T08:30:00+01:00",
+          "context": "FASTING",
+          "source": "MANUAL",
+          "importBatchId": null,
+          "note": "Avant le petit-déjeuner",
+          "updatedAt": "2026-10-07T08:30:00+01:00",
+          "deletedAt": null
+        }
+      },
+      "MeasurementList": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Measurement"
+            }
+          },
+          "nextCursor": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "items",
+          "nextCursor"
+        ],
+        "example": {
+          "items": [
+            {
+              "id": "3f2b8c1e-6a4d-4e1b-9c7a-1d2e3f4a5b6c",
+              "valueMgDl": 148,
+              "originalValue": 1.48,
+              "originalUnit": "G_L",
+              "measuredAt": "2026-10-07T08:30:00+01:00",
+              "context": "FASTING",
+              "source": "MANUAL",
+              "importBatchId": null,
+              "note": "Avant le petit-déjeuner",
+              "updatedAt": "2026-10-07T08:30:00+01:00",
+              "deletedAt": null
+            }
+          ],
+          "nextCursor": null
+        }
+      },
+      "CreateLifeEventRequest": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Généré par le CLIENT (UUID v4)."
+          },
+          "type": {
+            "$ref": "#/components/schemas/LifeEventType"
+          },
+          "occurredAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-10-07T08:30:00+01:00"
+          },
+          "label": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "details": {
+            "type": "string",
+            "maxLength": 500,
+            "description": "Texte libre. Traitement : déclaré par le patient, jamais de calcul de dose."
+          },
+          "durationMinutes": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 1440
+          }
+        },
+        "required": [
+          "id",
+          "type",
+          "occurredAt",
+          "label"
+        ],
+        "example": {
+          "id": "9a8b7c6d-5e4f-4a3b-8c2d-1e0f9a8b7c6d",
+          "type": "MEAL",
+          "occurredAt": "2026-10-07T08:30:00+01:00",
+          "label": "Déjeuner",
+          "details": "Riz, poisson, légumes"
+        }
+      },
+      "UpdateLifeEventRequest": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/LifeEventType"
+          },
+          "occurredAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-10-07T08:30:00+01:00"
+          },
+          "label": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "details": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "durationMinutes": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 1440
+          }
+        },
+        "description": "Tous les champs sont optionnels.",
+        "example": {
+          "label": "Dîner"
+        }
+      },
+      "LifeEvent": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "type": {
+            "$ref": "#/components/schemas/LifeEventType"
+          },
+          "occurredAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-10-07T08:30:00+01:00"
+          },
+          "label": {
+            "type": "string"
+          },
+          "details": {
+            "type": "string",
+            "nullable": true
+          },
+          "durationMinutes": {
+            "type": "integer",
+            "nullable": true
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-10-07T08:30:00+01:00"
+          },
+          "deletedAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-10-07T08:30:00+01:00",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "type",
+          "occurredAt",
+          "label",
+          "details",
+          "durationMinutes",
+          "updatedAt",
+          "deletedAt"
+        ],
+        "example": {
+          "id": "9a8b7c6d-5e4f-4a3b-8c2d-1e0f9a8b7c6d",
+          "type": "MEAL",
+          "occurredAt": "2026-10-07T08:30:00+01:00",
+          "label": "Déjeuner",
+          "details": "Riz, poisson, légumes",
+          "durationMinutes": null,
+          "updatedAt": "2026-10-07T08:30:00+01:00",
+          "deletedAt": null
+        }
+      },
+      "LifeEventList": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LifeEvent"
+            }
+          },
+          "nextCursor": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "items",
+          "nextCursor"
+        ]
+      },
+      "SyncOp": {
+        "type": "object",
+        "properties": {
+          "opId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Identifiant unique de l'opération : le serveur la traite une seule fois (idempotence)."
+          },
+          "entity": {
+            "$ref": "#/components/schemas/SyncEntity"
+          },
+          "type": {
+            "$ref": "#/components/schemas/SyncOpType"
+          },
+          "entityId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "clientUpdatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-10-07T08:30:00+01:00",
+            "description": "Horloge de l'appareil (règle : la dernière écriture gagne)."
+          },
+          "payload": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/CreateMeasurementRequest"
+              },
+              {
+                "$ref": "#/components/schemas/CreateLifeEventRequest"
+              }
+            ],
+            "description": "Obligatoire pour un `upsert` (et cohérent avec `entity`, avec `payload.id` = `entityId`) ; absent ou null pour un `delete`."
+          }
+        },
+        "required": [
+          "opId",
+          "entity",
+          "type",
+          "entityId",
+          "clientUpdatedAt"
+        ],
+        "example": {
+          "opId": "0b1c2d3e-4f5a-4b6c-8d7e-9f0a1b2c3d4e",
+          "entity": "measurement",
+          "type": "upsert",
+          "entityId": "3f2b8c1e-6a4d-4e1b-9c7a-1d2e3f4a5b6c",
+          "clientUpdatedAt": "2026-10-07T08:30:00+01:00",
+          "payload": {
+            "id": "3f2b8c1e-6a4d-4e1b-9c7a-1d2e3f4a5b6c",
+            "value": 1.48,
+            "unit": "G_L",
+            "measuredAt": "2026-10-07T08:30:00+01:00",
+            "context": "FASTING",
+            "note": "Avant le petit-déjeuner",
+            "confirmedUnusual": false
+          }
+        }
+      },
+      "SyncPushRequest": {
+        "type": "object",
+        "properties": {
+          "deviceId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Identifiant de l'appareil."
+          },
+          "ops": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SyncOp"
+            },
+            "maxItems": 200
+          }
+        },
+        "required": [
+          "deviceId",
+          "ops"
+        ],
+        "example": {
+          "deviceId": "9a8b7c6d-5e4f-4a3b-8c2d-1e0f9a8b7c6d",
+          "ops": [
+            {
+              "opId": "0b1c2d3e-4f5a-4b6c-8d7e-9f0a1b2c3d4e",
+              "entity": "measurement",
+              "type": "upsert",
+              "entityId": "3f2b8c1e-6a4d-4e1b-9c7a-1d2e3f4a5b6c",
+              "clientUpdatedAt": "2026-10-07T08:30:00+01:00",
+              "payload": {
+                "id": "3f2b8c1e-6a4d-4e1b-9c7a-1d2e3f4a5b6c",
+                "value": 1.48,
+                "unit": "G_L",
+                "measuredAt": "2026-10-07T08:30:00+01:00",
+                "context": "FASTING",
+                "note": "Avant le petit-déjeuner",
+                "confirmedUnusual": false
+              }
+            }
+          ]
+        }
+      },
+      "SyncOpResult": {
+        "type": "object",
+        "properties": {
+          "opId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "result": {
+            "$ref": "#/components/schemas/SyncOpResultCode"
+          },
+          "reason": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "opId",
+          "result"
+        ]
+      },
+      "SyncPushResponse": {
+        "type": "object",
+        "properties": {
+          "results": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SyncOpResult"
+            }
+          },
+          "serverTime": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-10-07T08:30:00+01:00"
+          }
+        },
+        "required": [
+          "results",
+          "serverTime"
+        ],
+        "description": "Un résultat par opération reçue, dans le même ordre. Une opération rejetée ne bloque pas les autres.",
+        "example": {
+          "results": [
+            {
+              "opId": "0b1c2d3e-4f5a-4b6c-8d7e-9f0a1b2c3d4e",
+              "result": "APPLIED"
+            }
+          ],
+          "serverTime": "2026-10-07T07:30:00Z"
+        }
+      },
+      "SyncPullResponse": {
+        "type": "object",
+        "properties": {
+          "measurements": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Measurement"
+            }
+          },
+          "events": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LifeEvent"
+            }
+          },
+          "nextCursor": {
+            "type": "string",
+            "description": "À conserver SEULEMENT après avoir appliqué la page localement.",
+            "nullable": true
+          },
+          "hasMore": {
+            "type": "boolean",
+            "description": "Vrai : rappeler `/sync/pull` avec `nextCursor` jusqu'à épuisement."
+          },
+          "serverTime": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-10-07T08:30:00+01:00"
+          }
+        },
+        "required": [
+          "measurements",
+          "events",
+          "nextCursor",
+          "hasMore",
+          "serverTime"
+        ],
+        "description": "Changements depuis le curseur, suppressions comprises (éléments dont `deletedAt` n'est pas nul).",
+        "example": {
+          "measurements": [
+            {
+              "id": "3f2b8c1e-6a4d-4e1b-9c7a-1d2e3f4a5b6c",
+              "valueMgDl": 148,
+              "originalValue": 1.48,
+              "originalUnit": "G_L",
+              "measuredAt": "2026-10-07T08:30:00+01:00",
+              "context": "FASTING",
+              "source": "MANUAL",
+              "importBatchId": null,
+              "note": "Avant le petit-déjeuner",
+              "updatedAt": "2026-10-07T08:30:00+01:00",
+              "deletedAt": null
+            }
+          ],
+          "events": [],
+          "nextCursor": "MjAyNi0xMC0wN1QwNzozMDowMFp8M2Yy",
+          "hasMore": false,
+          "serverTime": "2026-10-07T07:30:00Z"
+        }
+      },
+      "ImportColumnMapping": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string"
+          },
+          "time": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          },
+          "unit": {
+            "type": "string"
+          },
+          "context": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "date",
+          "value"
+        ],
+        "description": "Noms des colonnes du fichier.",
+        "example": {
+          "date": "date",
+          "time": "heure",
+          "value": "glycemie",
+          "context": "contexte"
+        }
+      },
+      "ImportPreviewRequest": {
+        "type": "object",
+        "properties": {
+          "file": {
+            "type": "string",
+            "format": "binary",
+            "description": "Fichier .csv ou .xlsx (5 Mo et 5 000 lignes maximum)."
+          },
+          "defaultUnit": {
+            "$ref": "#/components/schemas/GlucoseUnit"
+          },
+          "mapping": {
+            "type": "string",
+            "description": "JSON SÉRIALISÉ en texte (champ multipart) : correspondance de colonnes, voir `ImportColumnMapping`. Absent : détection automatique."
+          }
+        },
+        "required": [
+          "file",
+          "defaultUnit"
+        ],
+        "example": {
+          "defaultUnit": "G_L",
+          "mapping": "{\"date\":\"date\",\"time\":\"heure\",\"value\":\"glycemie\",\"context\":\"contexte\"}"
+        }
+      },
+      "ImportRowReport": {
+        "type": "object",
+        "properties": {
+          "line": {
+            "type": "integer",
+            "description": "Numéro de ligne du fichier (l'en-tête est la ligne 1)."
+          },
+          "status": {
+            "$ref": "#/components/schemas/ImportRowStatus"
+          },
+          "rawValue": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "line",
+          "status",
+          "rawValue"
+        ]
+      },
+      "ImportReport": {
+        "type": "object",
+        "properties": {
+          "batchId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "analyzed": {
+            "type": "integer"
+          },
+          "valid": {
+            "type": "integer"
+          },
+          "duplicates": {
+            "type": "integer"
+          },
+          "inconsistent": {
+            "type": "integer"
+          },
+          "errors": {
+            "type": "integer"
+          },
+          "rows": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ImportRowReport"
+            },
+            "description": "Seules les lignes NON valides sont détaillées."
+          }
+        },
+        "required": [
+          "batchId",
+          "analyzed",
+          "valid",
+          "duplicates",
+          "inconsistent",
+          "errors",
+          "rows"
+        ],
+        "description": "Rien n'est écrit dans les mesures avant `POST /imports/{id}/commit`.",
+        "example": {
+          "batchId": "3f2b8c1e-6a4d-4e1b-9c7a-1d2e3f4a5b6c",
+          "analyzed": 147,
+          "valid": 139,
+          "duplicates": 5,
+          "inconsistent": 3,
+          "errors": 0,
+          "rows": [
+            {
+              "line": 42,
+              "status": "INCONSISTENT",
+              "rawValue": "18,70",
+              "message": "Valeur inhabituelle : vérifier l'unité"
+            }
+          ]
+        }
+      },
+      "ImportDecision": {
+        "type": "object",
+        "properties": {
+          "line": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "action": {
+            "type": "string",
+            "enum": [
+              "CORRECT",
+              "IGNORE",
+              "ACCEPT"
+            ]
+          },
+          "correctedValue": {
+            "type": "number",
+            "exclusiveMinimum": true,
+            "minimum": 0,
+            "description": "Obligatoire si `action` = CORRECT."
+          },
+          "correctedUnit": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GlucoseUnit"
+              }
+            ],
+            "description": "Absente : l'unité par défaut de l'aperçu s'applique."
+          }
+        },
+        "required": [
+          "line",
+          "action"
+        ]
+      },
+      "ImportCommitRequest": {
+        "type": "object",
+        "properties": {
+          "decisions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ImportDecision"
+            },
+            "default": [],
+            "description": "Une seule décision par ligne. Lignes sans décision : valides importées, doublons ignorés, incohérentes ignorées."
+          }
+        },
+        "example": {
+          "decisions": [
+            {
+              "line": 42,
+              "action": "CORRECT",
+              "correctedValue": 1.87,
+              "correctedUnit": "G_L"
+            },
+            {
+              "line": 90,
+              "action": "IGNORE"
+            }
+          ]
+        }
+      },
+      "ImportCommitResponse": {
+        "type": "object",
+        "properties": {
+          "batchId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "imported": {
+            "type": "integer"
+          },
+          "skipped": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "batchId",
+          "imported",
+          "skipped"
+        ],
+        "example": {
+          "batchId": "3f2b8c1e-6a4d-4e1b-9c7a-1d2e3f4a5b6c",
+          "imported": 140,
+          "skipped": 7
+        }
+      },
+      "ImportRevertResponse": {
+        "type": "object",
+        "properties": {
+          "reverted": {
+            "type": "integer",
+            "description": "Nombre de mesures supprimées avec le lot."
+          }
+        },
+        "required": [
+          "reverted"
+        ],
+        "example": {
+          "reverted": 140
+        }
+      },
+      "RangeStats": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "integer"
+          },
+          "meanMgDl": {
+            "type": "number",
+            "nullable": true
+          },
+          "sdMgDl": {
+            "type": "number",
+            "nullable": true
+          },
+          "cvPercent": {
+            "type": "number",
+            "nullable": true
+          },
+          "timeInRangePct": {
+            "type": "number",
+            "nullable": true
+          },
+          "timeAbovePct": {
+            "type": "number",
+            "nullable": true
+          },
+          "timeBelowPct": {
+            "type": "number",
+            "nullable": true
+          }
+        },
+        "required": [
+          "count",
+          "meanMgDl",
+          "sdMgDl",
+          "cvPercent",
+          "timeInRangePct",
+          "timeAbovePct",
+          "timeBelowPct"
+        ]
+      },
+      "QualityScore": {
+        "type": "object",
+        "properties": {
+          "score": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100
+          },
+          "level": {
+            "$ref": "#/components/schemas/QualityLevel"
+          },
+          "coverage": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100
+          },
+          "density": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100
+          },
+          "freshness": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100
+          },
+          "analyzable": {
+            "type": "boolean",
+            "description": "Faux sous 10 mesures sur la période : aucune analyse n'est produite."
+          },
+          "daysInPeriod": {
+            "type": "integer"
+          },
+          "daysWithData": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "score",
+          "level",
+          "coverage",
+          "density",
+          "freshness",
+          "analyzable",
+          "daysInPeriod",
+          "daysWithData"
+        ],
+        "example": {
+          "score": 96,
+          "level": "GOOD",
+          "coverage": 100,
+          "density": 94,
+          "freshness": 100,
+          "analyzable": true,
+          "daysInPeriod": 30,
+          "daysWithData": 30
+        }
+      },
+      "Insight": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/InsightType"
+          },
+          "severity": {
+            "$ref": "#/components/schemas/InsightSeverity"
+          },
+          "facts": {
+            "type": "object",
+            "additionalProperties": {
+              "oneOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Faits chiffrés calculés par le moteur (jamais par un modèle de langage)."
+          },
+          "evidenceIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Mesures qui justifient l'observation (« Voir les mesures concernées »)."
+          },
+          "text": {
+            "type": "string",
+            "description": "Phrase en français : descriptive, jamais un diagnostic, une dose ou une cause affirmée."
+          }
+        },
+        "required": [
+          "type",
+          "severity",
+          "facts",
+          "evidenceIds",
+          "text"
+        ],
+        "example": {
+          "type": "TIME_OF_DAY_PATTERN",
+          "severity": "INFO",
+          "facts": {
+            "slot": "EVENING",
+            "slotAbovePct": 100,
+            "globalAbovePct": 33
+          },
+          "evidenceIds": [
+            "3f2b8c1e-6a4d-4e1b-9c7a-1d2e3f4a5b6c"
+          ],
+          "text": "Les valeurs hautes sont plus fréquentes sur le créneau « soir »."
+        }
+      },
+      "Period": {
+        "type": "object",
+        "properties": {
+          "from": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-10-07T08:30:00+01:00"
+          },
+          "to": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-10-07T08:30:00+01:00"
+          }
+        },
+        "required": [
+          "from",
+          "to"
+        ]
+      },
+      "InsightsResponse": {
+        "type": "object",
+        "properties": {
+          "period": {
+            "$ref": "#/components/schemas/Period"
+          },
+          "quality": {
+            "$ref": "#/components/schemas/QualityScore"
+          },
+          "stats": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/RangeStats"
+              }
+            ]
+          },
+          "previousStats": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/RangeStats"
+              }
+            ]
+          },
+          "insights": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Insight"
+            }
+          },
+          "disclaimer": {
+            "type": "string",
+            "description": "Rappel : observations statistiques, pas un diagnostic."
+          }
+        },
+        "required": [
+          "period",
+          "quality",
+          "stats",
+          "previousStats",
+          "insights",
+          "disclaimer"
+        ]
+      },
+      "AskInsightRequest": {
+        "type": "object",
+        "properties": {
+          "question": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 500
+          },
+          "period": {
+            "type": "integer",
+            "enum": [
+              7,
+              14,
+              30,
+              90
+            ],
+            "default": 30
+          }
+        },
+        "required": [
+          "question"
+        ],
+        "example": {
+          "question": "Pourquoi mon graphique montre autant de variations cette semaine ?",
+          "period": 7
+        }
+      },
+      "AskInsightResponse": {
+        "type": "object",
+        "properties": {
+          "answer": {
+            "type": "string"
+          },
+          "refused": {
+            "type": "boolean",
+            "description": "Vrai si la question sort du périmètre (diagnostic, dose, urgence…) : réponse de renvoi vers le médecin."
+          },
+          "evidenceIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "disclaimer": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "answer",
+          "refused",
+          "evidenceIds",
+          "disclaimer"
+        ],
+        "example": {
+          "answer": "J'observe que plusieurs variations apparaissent après les repas enregistrés. Ces données ne permettent pas d'établir que les repas en sont la cause.",
+          "refused": false,
+          "evidenceIds": [
+            "3f2b8c1e-6a4d-4e1b-9c7a-1d2e3f4a5b6c"
+          ],
+          "disclaimer": "Observations statistiques, pas un diagnostic."
+        }
+      },
+      "CreateShareRequest": {
+        "type": "object",
+        "properties": {
+          "categories": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ShareCategory"
+            },
+            "minItems": 1,
+            "uniqueItems": true,
+            "description": "Au moins une catégorie, sans doublon. PERSONAL_NOTES est décochée par défaut côté app."
+          },
+          "duration": {
+            "$ref": "#/components/schemas/ShareDuration"
+          }
+        },
+        "required": [
+          "categories",
+          "duration"
+        ],
+        "example": {
+          "categories": [
+            "GLUCOSE_HISTORY",
+            "TREATMENTS",
+            "MEALS",
+            "ACTIVITY",
+            "AI_SUMMARY"
+          ],
+          "duration": "MIN_5"
+        }
+      },
+      "ShareToken": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "description": "Contenu du QR : jeton opaque (≥ 32 octets), JAMAIS de donnée médicale. Seul son hash est stocké."
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-10-07T08:30:00+01:00",
+            "description": "Le jeton tourne toutes les 60 secondes et n'est utilisable qu'une fois."
+          }
+        },
+        "required": [
+          "token",
+          "expiresAt"
+        ],
+        "example": {
+          "token": "k3Zt9Qw2Vx7LpR4mNc8YbH1sDfG6jAe5UoI0TyXvWzE",
+          "expiresAt": "2026-10-07T08:30:00+01:00"
+        }
+      },
+      "DoctorIdentity": {
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "institution": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "firstName",
+          "lastName",
+          "institution"
+        ]
+      },
+      "ShareSession": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ShareStatus"
+          },
+          "categories": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ShareCategory"
+            }
+          },
+          "duration": {
+            "$ref": "#/components/schemas/ShareDuration"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-10-07T08:30:00+01:00"
+          },
+          "claimedAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-10-07T08:30:00+01:00",
+            "nullable": true
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-10-07T08:30:00+01:00",
+            "description": "Fixée au scan : claimedAt + durée.",
+            "nullable": true
+          },
+          "revokedAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-10-07T08:30:00+01:00",
+            "nullable": true
+          },
+          "doctor": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DoctorIdentity"
+              }
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "status",
+          "categories",
+          "duration",
+          "createdAt",
+          "claimedAt",
+          "expiresAt",
+          "revokedAt",
+          "doctor"
+        ]
+      },
+      "CreateShareResponse": {
+        "type": "object",
+        "properties": {
+          "session": {
+            "$ref": "#/components/schemas/ShareSession"
+          },
+          "token": {
+            "$ref": "#/components/schemas/ShareToken"
+          }
+        },
+        "required": [
+          "session",
+          "token"
+        ]
+      },
+      "ShareStatusResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "$ref": "#/components/schemas/ShareStatus"
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-10-07T08:30:00+01:00",
+            "nullable": true
+          },
+          "claimedAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-10-07T08:30:00+01:00",
+            "nullable": true
+          },
+          "doctor": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DoctorIdentity"
+              }
+            ]
+          },
+          "remainingSeconds": {
+            "type": "integer",
+            "description": "Calculé par le serveur (horloge de référence).",
+            "nullable": true
+          }
+        },
+        "required": [
+          "status",
+          "expiresAt",
+          "claimedAt",
+          "doctor",
+          "remainingSeconds"
+        ],
+        "example": {
+          "status": "ACTIVE",
+          "expiresAt": "2026-10-07T08:30:00+01:00",
+          "claimedAt": "2026-10-07T08:30:00+01:00",
+          "doctor": {
+            "firstName": "Aline",
+            "lastName": "Demo",
+            "institution": "Clinique de démonstration"
+          },
+          "remainingSeconds": 277
+        }
+      },
+      "ClaimShareRequest": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "minLength": 20,
+            "maxLength": 200
+          }
+        },
+        "required": [
+          "token"
+        ],
+        "example": {
+          "token": "k3Zt9Qw2Vx7LpR4mNc8YbH1sDfG6jAe5UoI0TyXvWzE"
+        }
+      },
+      "PatientPublicIdentity": {
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "type": "string"
+          },
+          "diabetesType": {
+            "$ref": "#/components/schemas/DiabetesType"
+          }
+        },
+        "required": [
+          "firstName",
+          "diabetesType"
+        ]
+      },
+      "ClaimShareResponse": {
+        "type": "object",
+        "properties": {
+          "sessionId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-10-07T08:30:00+01:00"
+          },
+          "categories": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ShareCategory"
+            }
+          },
+          "patient": {
+            "$ref": "#/components/schemas/PatientPublicIdentity"
+          }
+        },
+        "required": [
+          "sessionId",
+          "expiresAt",
+          "categories",
+          "patient"
+        ],
+        "example": {
+          "sessionId": "3f2b8c1e-6a4d-4e1b-9c7a-1d2e3f4a5b6c",
+          "expiresAt": "2026-10-07T08:30:00+01:00",
+          "categories": [
+            "GLUCOSE_HISTORY",
+            "MEALS"
+          ],
+          "patient": {
+            "firstName": "Jean",
+            "diabetesType": "TYPE_2"
+          }
+        }
+      },
+      "AccessLogEntry": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "action": {
+            "$ref": "#/components/schemas/AccessAction"
+          },
+          "at": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-10-07T08:30:00+01:00"
+          },
+          "sessionId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "actorName": {
+            "type": "string",
+            "description": "Nom du médecin ; nul pour un accès d'urgence anonyme.",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "action",
+          "at",
+          "sessionId",
+          "actorName"
+        ]
+      },
+      "AccessLogList": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AccessLogEntry"
+            }
+          },
+          "nextCursor": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "items",
+          "nextCursor"
+        ]
+      },
+      "DoctorSession": {
+        "type": "object",
+        "properties": {
+          "sessionId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ShareStatus"
+          },
+          "claimedAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-10-07T08:30:00+01:00"
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-10-07T08:30:00+01:00",
+            "nullable": true
+          },
+          "categories": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ShareCategory"
+            }
+          },
+          "patient": {
+            "$ref": "#/components/schemas/PatientPublicIdentity"
+          },
+          "lastMeasurementAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-10-07T08:30:00+01:00",
+            "nullable": true
+          },
+          "quality": {
+            "type": "object",
+            "properties": {
+              "score": {
+                "type": "integer"
+              },
+              "level": {
+                "$ref": "#/components/schemas/QualityLevel"
+              }
+            },
+            "required": [
+              "score",
+              "level"
+            ],
+            "nullable": true
+          }
+        },
+        "required": [
+          "sessionId",
+          "status",
+          "claimedAt",
+          "expiresAt",
+          "categories",
+          "patient",
+          "lastMeasurementAt",
+          "quality"
+        ]
+      },
+      "DoctorSessionList": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DoctorSession"
+            }
+          }
+        },
+        "required": [
+          "items"
+        ]
+      },
+      "DoctorSummary": {
+        "type": "object",
+        "properties": {
+          "session": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "status": {
+                "$ref": "#/components/schemas/ShareStatus"
+              },
+              "expiresAt": {
+                "type": "string",
+                "format": "date-time",
+                "example": "2026-10-07T08:30:00+01:00",
+                "nullable": true
+              },
+              "categories": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ShareCategory"
+                }
+              }
+            },
+            "required": [
+              "id",
+              "status",
+              "expiresAt",
+              "categories"
+            ]
+          },
+          "patient": {
+            "type": "object",
+            "properties": {
+              "firstName": {
+                "type": "string"
+              },
+              "diabetesType": {
+                "$ref": "#/components/schemas/DiabetesType"
+              },
+              "diagnosisYear": {
+                "type": "integer",
+                "nullable": true
+              },
+              "preferredUnit": {
+                "$ref": "#/components/schemas/GlucoseUnit"
+              },
+              "thresholds": {
+                "$ref": "#/components/schemas/Thresholds"
+              }
+            },
+            "required": [
+              "firstName",
+              "diabetesType",
+              "diagnosisYear",
+              "preferredUnit",
+              "thresholds"
+            ]
+          },
+          "quality": {
+            "$ref": "#/components/schemas/QualityScore"
+          },
+          "stats": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/RangeStats"
+              }
+            ]
+          },
+          "insights": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Insight"
+            },
+            "description": "Présent uniquement si la catégorie AI_SUMMARY est partagée."
+          }
+        },
+        "required": [
+          "session",
+          "patient",
+          "quality",
+          "stats"
+        ]
+      },
+      "TimelineItem": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "$ref": "#/components/schemas/TimelineKind"
+          },
+          "at": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-10-07T08:30:00+01:00"
+          },
+          "label": {
+            "type": "string"
+          },
+          "valueMgDl": {
+            "type": "integer",
+            "nullable": true
+          },
+          "state": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GlucoseState"
+              }
+            ]
+          },
+          "source": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MeasurementSource"
+              }
+            ]
+          }
+        },
+        "required": [
+          "kind",
+          "at",
+          "label",
+          "valueMgDl",
+          "state",
+          "source"
+        ]
+      },
+      "TimelineList": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TimelineItem"
+            }
+          },
+          "nextCursor": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "items",
+          "nextCursor"
+        ]
+      },
+      "EmergencyCardRequest": {
+        "type": "object",
+        "properties": {
+          "fullName": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "diabetesType": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "declaredTreatment": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "allergies": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "bloodGroup": {
+            "type": "string",
+            "enum": [
+              "A+",
+              "A-",
+              "B+",
+              "B-",
+              "AB+",
+              "AB-",
+              "O+",
+              "O-"
+            ]
+          },
+          "lastKnownGlucoseMgDl": {
+            "type": "integer",
+            "minimum": 20,
+            "maximum": 600
+          },
+          "emergencyContactName": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "emergencyContactPhone": {
+            "type": "string",
+            "maxLength": 30
+          },
+          "enabled": {
+            "type": "boolean",
+            "default": false,
+            "description": "Faux : le QR d'urgence est inopérant."
+          }
+        },
+        "description": "Chaque champ est choisi par le patient. Un champ absent n'est jamais affiché. JAMAIS d'historique glycémique.",
+        "example": {
+          "fullName": "Jean Demo",
+          "diabetesType": "Type 2",
+          "declaredTreatment": "Metformine",
+          "allergies": "Pénicilline",
+          "bloodGroup": "O+",
+          "lastKnownGlucoseMgDl": 132,
+          "emergencyContactName": "Marie Demo",
+          "emergencyContactPhone": "+243810000000",
+          "enabled": true
+        }
+      },
+      "EmergencyCardResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/EmergencyCardRequest"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "updatedAt": {
+                "type": "string",
+                "format": "date-time",
+                "example": "2026-10-07T08:30:00+01:00"
+              },
+              "qrActive": {
+                "type": "boolean",
+                "description": "Vrai si un QR d'urgence a été généré. Le jeton n'est montré qu'à la génération : l'app le conserve (stockage sécurisé)."
+              }
+            },
+            "required": [
+              "updatedAt",
+              "qrActive"
+            ]
+          }
+        ]
+      },
+      "EmergencyQrResponse": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "description": "Jeton à conserver côté app : le serveur ne stocke que son hash."
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "description": "Adresse à encoder dans le QR (page publique du portail) : lisible avec n'importe quel téléphone."
+          }
+        },
+        "required": [
+          "token",
+          "url"
+        ],
+        "example": {
+          "token": "k3Zt9Qw2Vx7LpR4mNc8YbH1sDfG6jAe5UoI0TyXvWzE",
+          "url": "https://portail.example.com/e/k3Zt9Qw2Vx7LpR4mNc8YbH1sDfG6jAe5UoI0TyXvWzE"
+        }
+      },
+      "EmergencyCardPublic": {
+        "type": "object",
+        "properties": {
+          "fullName": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "diabetesType": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "declaredTreatment": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "allergies": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "bloodGroup": {
+            "type": "string",
+            "enum": [
+              "A+",
+              "A-",
+              "B+",
+              "B-",
+              "AB+",
+              "AB-",
+              "O+",
+              "O-"
+            ]
+          },
+          "lastKnownGlucoseMgDl": {
+            "type": "integer",
+            "minimum": 20,
+            "maximum": 600
+          },
+          "emergencyContactName": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "emergencyContactPhone": {
+            "type": "string",
+            "maxLength": 30
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-10-07T08:30:00+01:00"
+          }
+        },
+        "required": [
+          "updatedAt"
+        ],
+        "description": "Uniquement les champs renseignés par le patient."
+      },
+      "NotificationPreferences": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "object",
+            "description": "Activation par catégorie. Une catégorie absente est considérée comme activée.",
+            "properties": {
+              "MEASUREMENT_REMINDER": {
+                "type": "boolean"
+              },
+              "GLUCOSE_ALERT": {
+                "type": "boolean"
+              },
+              "DATA_GAP": {
+                "type": "boolean"
+              },
+              "SHARE_ACTIVITY": {
+                "type": "boolean"
+              },
+              "EMERGENCY_ACCESS": {
+                "type": "boolean"
+              },
+              "IMPORT_DONE": {
+                "type": "boolean"
+              }
+            }
+          },
+          "showValuesOnLockScreen": {
+            "type": "boolean",
+            "default": false,
+            "description": "Désactivé par défaut : aucune valeur de santé sur l'écran verrouillé."
+          },
+          "quietHours": {
+            "type": "object",
+            "properties": {
+              "start": {
+                "type": "string",
+                "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$",
+                "example": "22:00"
+              },
+              "end": {
+                "type": "string",
+                "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$",
+                "example": "06:30"
+              }
+            },
+            "required": [
+              "start",
+              "end"
+            ]
+          },
+          "reminders": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "time": {
+                  "type": "string",
+                  "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$",
+                  "example": "07:00"
+                },
+                "label": {
+                  "type": "string",
+                  "maxLength": 60
+                },
+                "days": {
+                  "type": "array",
+                  "items": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 7
+                  },
+                  "description": "Jours de la semaine, 1 = lundi … 7 = dimanche."
+                }
+              },
+              "required": [
+                "time",
+                "label",
+                "days"
+              ]
+            },
+            "maxItems": 8,
+            "default": []
+          },
+          "dataGapHours": {
+            "type": "integer",
+            "minimum": 6,
+            "maximum": 168,
+            "default": 24,
+            "description": "Alerte « pas de mesure depuis X heures »."
+          }
+        },
+        "required": [
+          "enabled"
+        ],
+        "example": {
+          "enabled": {
+            "MEASUREMENT_REMINDER": true,
+            "GLUCOSE_ALERT": true,
+            "DATA_GAP": true,
+            "SHARE_ACTIVITY": true,
+            "EMERGENCY_ACCESS": true,
+            "IMPORT_DONE": true
+          },
+          "showValuesOnLockScreen": false,
+          "quietHours": {
+            "start": "22:00",
+            "end": "06:30"
+          },
+          "reminders": [
+            {
+              "time": "07:00",
+              "label": "Glycémie à jeun",
+              "days": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7
+              ]
+            }
+          ],
+          "dataGapHours": 24
+        }
+      },
+      "RegisterDeviceRequest": {
+        "type": "object",
+        "properties": {
+          "deviceId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Identifiant de l'installation (aussi utilisé par la synchronisation)."
+          },
+          "expoPushToken": {
+            "type": "string",
+            "minLength": 10,
+            "maxLength": 200
+          },
+          "platform": {
+            "type": "string",
+            "enum": [
+              "android",
+              "ios"
+            ]
+          }
+        },
+        "required": [
+          "deviceId",
+          "expoPushToken",
+          "platform"
+        ],
+        "example": {
+          "deviceId": "9a8b7c6d-5e4f-4a3b-8c2d-1e0f9a8b7c6d",
+          "expoPushToken": "ExponentPushToken[xxxxxxxxxxxxxxxxxxxxxx]",
+          "platform": "android"
+        }
+      },
+      "DataExport": {
+        "type": "object",
+        "properties": {
+          "exportedAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-10-07T08:30:00+01:00"
+          },
+          "profile": {
+            "$ref": "#/components/schemas/PatientProfile"
+          },
+          "measurements": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Measurement"
+            }
+          },
+          "events": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LifeEvent"
+            }
+          }
+        },
+        "required": [
+          "exportedAt",
+          "profile",
+          "measurements",
+          "events"
+        ]
+      }
+    }
+  }
+}

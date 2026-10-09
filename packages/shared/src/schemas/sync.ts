@@ -6,17 +6,34 @@ import { SYNC_ENTITIES, SYNC_OP_TYPES } from '../enums';
 import { createMeasurementSchema } from './measurement';
 import { createLifeEventSchema } from './event';
 
-export const syncOpSchema = z.object({
-  /** Identifiant unique de l'opération : le serveur la traite une seule fois (idempotence). */
-  opId: z.string().uuid(),
-  entity: z.enum(SYNC_ENTITIES),
-  type: z.enum(SYNC_OP_TYPES),
-  entityId: z.string().uuid(),
-  /** Horloge de l'appareil au moment de la modification (règle : dernière écriture gagne). */
-  clientUpdatedAt: z.string().datetime({ offset: true }),
-  /** Absent pour un delete */
-  payload: z.union([createMeasurementSchema, createLifeEventSchema]).optional(),
-});
+export const syncOpSchema = z
+  .object({
+    /** Identifiant unique de l'opération : le serveur la traite une seule fois (idempotence). */
+    opId: z.string().uuid(),
+    entity: z.enum(SYNC_ENTITIES),
+    type: z.enum(SYNC_OP_TYPES),
+    entityId: z.string().uuid(),
+    /** Horloge de l'appareil au moment de la modification (règle : dernière écriture gagne). */
+    clientUpdatedAt: z.string().datetime({ offset: true }),
+    /** Obligatoire pour un upsert ; absent (ou null) pour un delete. */
+    payload: z.union([createMeasurementSchema, createLifeEventSchema]).nullish(),
+  })
+  .superRefine((op, ctx) => {
+    const fail = (message: string, path: string[] = ['payload']) =>
+      ctx.addIssue({ code: z.ZodIssueCode.custom, message, path });
+
+    if (op.type === 'delete') {
+      if (op.payload != null) fail('Une suppression ne contient pas de payload');
+      return;
+    }
+    if (op.payload == null) return fail('Un upsert exige un payload');
+
+    // Le payload doit correspondre à l'entité annoncée, et à l'identifiant de l'opération.
+    const schema = op.entity === 'measurement' ? createMeasurementSchema : createLifeEventSchema;
+    const parsed = schema.safeParse(op.payload);
+    if (!parsed.success) return fail(`payload invalide pour l'entité « ${op.entity} »`);
+    if (parsed.data.id !== op.entityId) fail('payload.id doit être égal à entityId', ['entityId']);
+  });
 export type SyncOp = z.infer<typeof syncOpSchema>;
 
 export const syncPushRequestSchema = z.object({

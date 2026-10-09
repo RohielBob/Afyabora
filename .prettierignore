@@ -7,3 +7,6 @@ coverage
 pnpm-lock.yaml
 expo-env.d.ts
 apps/api/prisma/migrations
+
+docs/api/openapi.v0.json
+docs/api/openapi.generated.json
