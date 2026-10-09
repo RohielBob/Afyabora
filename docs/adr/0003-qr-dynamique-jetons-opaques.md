@@ -1,6 +1,6 @@
 # ADR-0003 — QR dynamique : jetons opaques, rotatifs, à usage unique
 
-- **Statut :** Proposé
+- **Statut :** Accepté — réunion du 2026-10-09 (ticket L0-09)
 - **Date :** 2026-10-04
 
 ## Contexte

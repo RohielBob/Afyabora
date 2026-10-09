@@ -1,0 +1,64 @@
+# État d'avancement — Afyabora
+
+> Document vivant. **Mis à jour à la fin de chaque ticket** (voir `CLAUDE.md` §8). En cas de doute, la réalité est dans `git log origin/develop --oneline -20` et dans l'onglet « Pull requests » de GitHub : ce fichier peut avoir du retard.
+> Dernière mise à jour : 2026-10-09 (après la fusion de L0-07 et L0-08 ; ADR acceptés en réunion ; audit du dépôt avec Claude Code).
+
+## Où on en est (jour J1 du plan)
+
+Le socle technique est posé et vérifié par la CI : monorepo, lint/format/commitlint, Docker, base PostgreSQL migrée, route `/health`, contrat d'API gelé. **Aucune fonctionnalité métier n'est encore codée côté API** (seule `/health` existe) ; côté mobile il y a trois écrans provisoires (accueil, connexion, inscription) qui ne parlent pas encore au serveur.
+
+## Tickets du lot L0
+
+| Ticket                                                    | État                                                             | Preuve / remarque                                                                                                                                                                                                            |
+| --------------------------------------------------------- | ---------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| L0-01 GitHub (protections, labels, Kanban, jalons J1–J10) | **En pause (à finir à la fin)**                                  | Vérifié le 2026-10-09 : 36 labels (type, prio, lot, area) et 10 jalons J1–J10 présents. La **protection de `develop` est impossible** : dépôt privé + compte gratuit (HTTP 403). Reste : Kanban. Scripts : `scripts/github/` |
+| L0-02 Versions Expo alignées                              | Fait                                                             | PR `fix/l0-02-versions-expo` fusionnée (RN 0.81.5, netinfo 11.4.1)                                                                                                                                                           |
+| L0-03 ESLint, Prettier, Husky, commitlint                 | Fait                                                             | PR #107                                                                                                                                                                                                                      |
+| L0-04 `/health` + test                                    | Fait                                                             | PR #110 (200 si la base répond, 503 sans détail interne sinon)                                                                                                                                                               |
+| L0-05 Docker (compose + image API)                        | Fait                                                             | PR #109 ; workflow `.github/workflows/docker.yml`                                                                                                                                                                            |
+| L0-06 Migration Prisma initiale                           | Fait                                                             | PR #108 ; 18 tables ; validation stricte de la config                                                                                                                                                                        |
+| (hors ticket) Identité Afyabora                           | Fait                                                             | PR #111 ; ADR-0007 ; logo, palette, icônes provisoires                                                                                                                                                                       |
+| L0-07 Contrat OpenAPI v0                                  | Fait                                                             | `docs/api/openapi.v0.json` (49 routes) + tests de cohérence avec Zod et avec le code ; PR fusionnée, CI verte                                                                                                                |
+| L0-08 Relecture des schémas                               | Corrections faites ; **validation par les responsables à finir** | Voir `docs/api/REVUE-SCHEMAS.md` : chaque responsable de lot coche sa liste dans la PR                                                                                                                                       |
+| L0-09 Relire et accepter les ADR 0001–0006                | Fait (PR à fusionner)                                            | Réunion du 2026-10-09 : tous acceptés, 0001/0005/0006 avec précision, 0004 avec 8 modifications. Compte rendu : `docs/team/compte-rendu-2026-10-09-adr.md`                                                                   |
+| L8-01 Valider l'ADR-0004 (local-first)                    | Fait (PR à fusionner)                                            | Même réunion ; les 8 modifications sont dans l'ADR-0004, chacune rattachée à son ticket                                                                                                                                      |
+| (hors ticket) `main` à jour                               | PR #115 ouverte (`develop` → `main`)                             | 11 fichiers en conflit (ancienne L0-03 #106 dans `main`) : garder la version de `develop`, fusionner par « merge commit »                                                                                                    |
+| L0-10 Déploiement d'un environnement de test              | Plus tard (J5)                                                   |                                                                                                                                                                                                                              |
+| L0-11 APK « development build » EAS                       | **À faire (J2)**                                                 | Demande un compte Expo et `eas login` interactif (l'utilisateur) ; nécessaire pour le push et le chiffrement SQLite                                                                                                          |
+
+## Ce qui reste à créer ou vérifier (issu de la PR L0-07)
+
+- Ticket **L5-15** « API : routes de lecture du médecin (sessions, summary, measurements, timeline, report) » : à créer sur GitHub s'il n'existe pas (5 routes sans ticket jusque-là).
+- Le portail n'a pas de page publique `/e/:token` (carte d'urgence) : ticket à créer.
+- Toujours à vérifier : Kanban (L0-01, en pause). Labels et jalons vérifiés le 2026-10-09.
+- Ticket à créer : « portail : page `/verify-email` » (le lien de l'email de vérification pointe vers `PORTAL_URL/verify-email?token=…`, décision L1-01).
+- `scripts/github/create-issues-local.sh` est **suivi par Git** depuis la PR L0-07 (il était présenté comme fichier personnel non suivi). Vérifié : aucun jeton dedans. Ne pas le modifier ; décider plus tard s'il doit sortir du dépôt.
+
+## À confirmer contre `docs/api/openapi.v0.json` avant d'implémenter L1 / L2 / L8
+
+Points relevés lors d'une revue indépendante des schémas partagés. Ils peuvent déjà être traités ; **lis le contrat et les schémas avant de coder**, puis tranche avec l'utilisateur.
+
+1. **Synchronisation** (tranché : ADR-0004, modification 1, ticket L8-04) : si `POST /sync/push` valide tout le corps avec le schéma strict, **une seule opération invalide fait échouer tout le lot (400)**, ce qui contredit le CDC (F11 : rejeter l'opération fautive sans bloquer les autres). Valider l'enveloppe seulement, puis chaque opération individuellement avec un résultat `REJECTED` + raison.
+2. **Qui suis-je ?** Constat de l'audit : **`GET /me` n'existe pas** dans le contrat (seulement `/me/profile`). À trancher avant L1-06/L1-07 (changement de contrat). Il faut un moyen de connaître le rôle, l'état du profil (profil complet ? onboarding ?) et le statut d'un médecin (en attente / approuvé) après la connexion : vérifier que `GET /me` existe dans le contrat.
+3. **Erreurs** : format unique et codes lisibles par machine (`EMAIL_NOT_VERIFIED`, `ACCOUNT_LOCKED`, …) ; réponses identiques pour « email inconnu » et « mot de passe faux » ; inscription et mot de passe oublié **sans énumération de comptes**.
+4. **Dates** : réponses en UTC (`Z`) ; en paramètre d'URL, `+01:00` casse si le `+` n'est pas encodé : préférer UTC pour `from`/`to`.
+5. **Validation de mesure** : valeur hors bornes sans `confirmedUnusual`, date future (> 5 min), « valeur sans unité » en modification : vérifier que c'est bien appliqué (par le schéma partagé ou par le service).
+6. `diagnosisYear` plafonné avec `new Date().getFullYear()` évalué au chargement du module : à remplacer par une validation au moment de la requête.
+7. Les routes du contrat doivent correspondre aux préfixes réels des contrôleurs Nest (ex. `GET /e/:token`, `GET /quality`, `POST /devices` ne doivent pas devenir `/emergency/e/…`, `/insights/quality`, `/notifications/devices`).
+
+## Prochaines étapes (ordre conseillé)
+
+1. ~~L0-09 + L8-01~~ : fait (réunion du 2026-10-09). Compléter les noms des présents dans le compte rendu.
+2. **L1-01** (en cours) API : inscription patient + email de vérification (Mailpit). Dépend de L0-06 (fait). Spécification : `apps/api/src/modules/auth/README.md`, CDC F1, contrat.
+3. L1-02 connexion / refresh rotatif / déconnexion / verrouillage après 5 échecs → L1-03 mot de passe oublié → L1-04 garde JWT global et rôles → L1-05 profil patient et seuils → L1-13 tests d'authentification.
+4. En parallèle (autre personne ou autre session) : L0-11 (APK EAS), L7-03/L7-05 (palette finale, composants UI), L1-06/L1-07 (écrans et session mobile), L8-02/L8-03 (base locale SQLCipher, dépôts).
+   Chemin critique du projet : base locale + synchronisation (L8) et partage QR (L5). Si l'un dérape, tout le reste attend.
+
+## Historique des décisions importantes
+
+- Monorepo pnpm + Turborepo, `node-linker=hoisted` (ADR-0001) ; Node 20 ; React 19.1.0 épinglé dans le mobile et le portail (exception : React 18.3.1 dans l'API pour les PDF, ADR-0001).
+- Nom **Afyabora** décidé par le groupe ; identifiants internes `glyka` conservés pour ne pas tout renommer (ADR-0007) ; les identifiants Android/iOS `com.glyka.app` deviennent **définitifs à la première publication** : à décider avant le premier build EAS de production.
+- Palette : bleu marine `#0B3366` (action), rouge corail `#F83E44` et rouge goutte `#E4002B` réservés au logo/accents ; logo vectoriel provisoire redessiné d'après le JPEG du groupe (demander le vectoriel au créateur).
+- La CI exécute `prisma generate` avant le typecheck ; `nest build` utilise `tsconfig.build.json` ; les tests de l'API n'ont pas besoin de base de données.
+- 2026-10-09 : ADR 0001–0006 acceptés (compte rendu `docs/team/compte-rendu-2026-10-09-adr.md`). L1-01 : lien de vérification vers le portail, jeton 24 h à usage unique, renvoi du lien en se réinscrivant (pas de nouvelle route), inscription médecin incluse.
+- Contrat d'API écrit à la main et comparé automatiquement aux schémas Zod et au code (plutôt qu'exporté d'un code encore vide).

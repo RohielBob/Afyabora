@@ -1,6 +1,6 @@
 # ADR-0006 — Notifications : locales d'abord, push serveur ensuite, sans valeur de santé par défaut
 
-- **Statut :** Proposé
+- **Statut :** Accepté avec une correction — réunion du 2026-10-09 (ticket L0-09)
 - **Date :** 2026-10-04
 
 ## Contexte
@@ -11,7 +11,7 @@ Les notifications sont une exigence validée du MVP : rappels de mesure, alertes
 
 - **Notifications locales** (`expo-notifications`, planifiées sur le téléphone) pour : rappels de mesure programmables, alerte de seuil franchi, « pas de mesure depuis X heures ». Elles marchent **hors-ligne**.
 - **Push serveur** (Expo Push) pour les événements côté serveur : un médecin consulte / l'accès se termine, la carte d'urgence est ouverte, un import est terminé. Jeton d'appareil enregistré via `POST /devices` ; file `NotificationOutbox` traitée par une tâche planifiée.
-- **Confidentialité :** par défaut, **aucune valeur de santé** dans le texte (« Nouvelle alerte Glyka — ouvrez l'app »). Option explicite pour l'afficher sur l'écran verrouillé.
+- **Confidentialité :** par défaut, **aucune valeur de santé** dans le texte (« Nouvelle alerte Afyabora — ouvrez l'app » ; nom visible corrigé à l'acceptation, voir ADR-0007). Option explicite pour l'afficher sur l'écran verrouillé.
 - Préférences par catégorie et **heures calmes**.
 
 ## Conséquences
