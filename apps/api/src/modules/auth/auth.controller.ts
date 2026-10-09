@@ -13,10 +13,12 @@ import {
 } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
 import {
+  forgotPasswordSchema,
   loginSchema,
   refreshSchema,
   registerDoctorSchema,
   registerPatientSchema,
+  resetPasswordSchema,
   verifyEmailSchema,
   type LoginInput,
   type RegisterDoctorInput,
@@ -26,6 +28,7 @@ import { CurrentUser, type AuthUser } from '../../common/decorators/current-user
 import { Public } from '../../common/decorators/public.decorator';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
 import { AuthService } from './auth.service';
+import { PasswordService } from './password.service';
 import { SessionService } from './session.service';
 
 // Limites par adresse IP, plus strictes que la limite globale (120/min) : routes publiques et sensibles.
@@ -34,11 +37,14 @@ const VERIFY_LIMIT = { default: { limit: 10, ttl: 60_000 } };
 // Connexion : la protection principale est le verrouillage du COMPTE (5 échecs) ; ceci limite en plus par IP.
 const LOGIN_LIMIT = { default: { limit: 10, ttl: 60_000 } };
 const REFRESH_LIMIT = { default: { limit: 30, ttl: 60_000 } };
+// Mot de passe oublié : limite basse pour qu'on ne puisse pas inonder une boîte mail de liens.
+const FORGOT_LIMIT = { default: { limit: 5, ttl: 60_000 } };
+const RESET_LIMIT = { default: { limit: 10, ttl: 60_000 } };
 
 /**
  * Le contrôleur ne contient aucune logique métier : il valide l'entrée avec un schéma Zod de @glyka/shared
  * (réponse 400 + détail des champs si invalide), puis délègue à AuthService (inscription)
- * ou SessionService (connexion, rafraîchissement, déconnexion).
+ * SessionService (connexion, rafraîchissement, déconnexion) ou PasswordService (mot de passe oublié).
  */
 @ApiTags('auth')
 @Controller('auth')
@@ -46,6 +52,7 @@ export class AuthController {
   constructor(
     private readonly auth: AuthService,
     private readonly sessions: SessionService,
+    private readonly passwords: PasswordService,
   ) {}
 
   @Public()
@@ -129,5 +136,33 @@ export class AuthController {
     await this.sessions.logout(user.id, body.refreshToken);
   }
 
-  // TODO(L1-03) POST /auth/forgot-password · POST /auth/reset-password
+  @Public()
+  @Post('forgot-password')
+  @HttpCode(HttpStatus.ACCEPTED)
+  @Throttle(FORGOT_LIMIT)
+  @ApiOperation({ summary: 'Demander un lien de réinitialisation du mot de passe (L1-03)' })
+  @ApiAcceptedResponse({ description: 'Toujours 202, que le compte existe ou non' })
+  @ApiBadRequestResponse({ description: 'Données invalides' })
+  @ApiTooManyRequestsResponse({ description: 'Trop de demandes' })
+  forgotPassword(@Body(new ZodValidationPipe(forgotPasswordSchema)) body: { email: string }) {
+    return this.passwords.forgotPassword(body.email);
+  }
+
+  @Public()
+  @Post('reset-password')
+  @HttpCode(HttpStatus.OK)
+  @Throttle(RESET_LIMIT)
+  @ApiOperation({
+    summary: 'Choisir un nouveau mot de passe ; toutes les sessions sont fermées (L1-03)',
+  })
+  @ApiOkResponse({ description: 'Mot de passe modifié' })
+  @ApiBadRequestResponse({
+    description: 'Données invalides ou lien invalide / expiré (TOKEN_INVALID)',
+  })
+  @ApiTooManyRequestsResponse({ description: 'Trop de tentatives' })
+  resetPassword(
+    @Body(new ZodValidationPipe(resetPasswordSchema)) body: { token: string; password: string },
+  ) {
+    return this.passwords.resetPassword(body.token, body.password);
+  }
 }

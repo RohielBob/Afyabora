@@ -48,3 +48,43 @@ export function buildVerifyEmailMail({
     ].join(''),
   };
 }
+
+export interface ResetPasswordMailInput {
+  to: string;
+  /** Lien complet vers la page « nouveau mot de passe » du portail (contient le jeton). */
+  link: string;
+  validityMinutes: number;
+}
+
+/** Email « mot de passe oublié » (L1-03). Ne contient jamais l'ancien ni le nouveau mot de passe. */
+export function buildResetPasswordMail({
+  to,
+  link,
+  validityMinutes,
+}: ResetPasswordMailInput): OutgoingMail {
+  return {
+    to,
+    subject: 'Afyabora : réinitialisation de votre mot de passe',
+    text: [
+      'Bonjour,',
+      '',
+      'Vous avez demandé à changer le mot de passe de votre compte Afyabora. Ouvrez ce lien pour en choisir un nouveau :',
+      link,
+      '',
+      `Ce lien est valable ${validityMinutes} minutes et ne fonctionne qu'une seule fois.`,
+      'Après le changement, toutes vos sessions ouvertes seront fermées : il faudra vous reconnecter.',
+      "Si vous n'avez rien demandé, ignorez cet email : votre mot de passe actuel reste valable.",
+      '',
+      "L'équipe Afyabora",
+    ].join('\n'),
+    html: [
+      '<p>Bonjour,</p>',
+      '<p>Vous avez demandé à changer le mot de passe de votre compte Afyabora.</p>',
+      `<p><a href="${link}">Choisir un nouveau mot de passe</a></p>`,
+      `<p>Ce lien est valable ${validityMinutes} minutes et ne fonctionne qu'une seule fois.</p>`,
+      '<p>Après le changement, toutes vos sessions ouvertes seront fermées : il faudra vous reconnecter.</p>',
+      "<p>Si vous n'avez rien demandé, ignorez cet email : votre mot de passe actuel reste valable.</p>",
+      "<p>L'équipe Afyabora</p>",
+    ].join(''),
+  };
+}
