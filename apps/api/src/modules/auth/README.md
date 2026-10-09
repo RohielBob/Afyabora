@@ -10,7 +10,7 @@ Comptes, sessions et sécurité des accès (patients et médecins).
 - POST /auth/register-doctor : inscription médecin (statut « en attente ») — **fait (L1-01)**
 - POST /auth/verify-email — **fait (L1-01)**
 - POST /auth/login · POST /auth/refresh · POST /auth/logout — **faits (L1-02)**
-- POST /auth/forgot-password · POST /auth/reset-password
+- POST /auth/forgot-password · POST /auth/reset-password — **faits (L1-03)**
 
 ## Règles de gestion
 
@@ -20,6 +20,15 @@ Comptes, sessions et sécurité des accès (patients et médecins).
 - Jeton d'accès 15 min ; jeton de rafraîchissement rotatif, stocké haché (`RefreshToken`), détection de réutilisation (famille révoquée).
 - Un médecin `PENDING` ne peut pas utiliser `/shares/claim`.
 - Messages d'erreur identiques pour « email inconnu » et « mauvais mot de passe ».
+
+### Mot de passe oublié (L1-03)
+
+- `forgot-password` : **toujours 202, même message**, que le compte existe ou non ; un email n'est envoyé que si le compte existe. Une nouvelle demande annule le lien précédent.
+- Lien : `PORTAL_URL/reset-password?token=…` (page portail à créer, comme `/verify-email`). Jeton opaque de 32 octets, **seul son hash est stocké** (`EmailToken`, type `RESET_PASSWORD`), valable **1 heure**, **usage unique**.
+- `reset-password` : nouveau mot de passe ≥ 12 caractères (argon2id) ; **toutes les sessions du compte sont révoquées** ; un verrouillage en cours est levé ; un compte jamais vérifié devient vérifié (recevoir le lien prouve qu'on lit cette boîte mail).
+- Un mot de passe invalide (400) ne consomme **pas** le lien. Jeton inconnu, expiré, déjà utilisé ou de vérification d'email : 400 `TOKEN_INVALID`.
+- Limite : un jeton d'accès déjà émis reste valable jusqu'à son expiration (15 min au plus) ; c'est le refresh qui est coupé tout de suite.
+- Limites par IP : 5 demandes / min, 10 réinitialisations / min.
 
 ### Connexion et sessions (L1-02)
 
@@ -60,16 +69,20 @@ Comptes, sessions et sécurité des accès (patients et médecins).
 - [x] (L1-02) Bon mot de passe refusé pendant le verrouillage ; `Retry-After` ; seuls les échecs des 10 dernières minutes comptent.
 - [x] (L1-02) Une réutilisation ne touche pas les autres sessions ; refresh expiré / inconnu refusé.
 - [x] (L1-02) Déconnexion : jeton d'accès exigé ; session révoquée ; impossible de fermer la session d'un autre.
+- [x] (L1-03) Mot de passe oublié : même 202 pour un compte inconnu, sans email ; lien 1 h, hash seul en base ; nouvelle demande = ancien lien annulé ; 429 à la 6e demande.
+- [x] (L1-03) Réinitialisation : seul le nouveau mot de passe fonctionne ; toutes les sessions du compte révoquées (pas celles des autres) ; verrouillage levé ; compte non vérifié vérifié.
+- [x] (L1-03) Lien à usage unique, expiré refusé, jeton de vérification refusé ; mot de passe trop court refusé sans consommer le lien.
 
 ## Fichiers
 
-| Fichier              | Rôle                                                                                                   |
-| -------------------- | ------------------------------------------------------------------------------------------------------ |
-| `auth.module.ts`     | Déclaration du module NestJS                                                                           |
-| `auth.controller.ts` | Routes HTTP : validation Zod (`ZodValidationPipe` + schémas de `@glyka/shared`), pas de logique métier |
-| `auth.service.ts`    | Inscription et vérification d'email (L1-01)                                                            |
-| `session.service.ts` | Connexion, rafraîchissement rotatif, déconnexion, verrouillage (L1-02)                                 |
-| `auth.mails.ts`      | Contenu des emails du module (texte + HTML, nom « Afyabora »)                                          |
+| Fichier               | Rôle                                                                                                   |
+| --------------------- | ------------------------------------------------------------------------------------------------------ |
+| `auth.module.ts`      | Déclaration du module NestJS                                                                           |
+| `auth.controller.ts`  | Routes HTTP : validation Zod (`ZodValidationPipe` + schémas de `@glyka/shared`), pas de logique métier |
+| `auth.service.ts`     | Inscription et vérification d'email (L1-01)                                                            |
+| `session.service.ts`  | Connexion, rafraîchissement rotatif, déconnexion, verrouillage (L1-02)                                 |
+| `password.service.ts` | Mot de passe oublié et réinitialisation (L1-03)                                                        |
+| `auth.mails.ts`       | Contenu des emails du module (texte + HTML, nom « Afyabora »)                                          |
 
 Service d'envoi partagé : `src/common/mail/mail.service.ts` (SMTP ; Mailpit en local, http://localhost:8025).
 
