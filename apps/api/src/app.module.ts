@@ -7,6 +7,7 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { validateEnv } from './config/env';
 import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
 import { RolesGuard } from './common/guards/roles.guard';
+import { MailModule } from './common/mail/mail.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { AuditModule } from './modules/audit/audit.module';
 import { AuthModule } from './modules/auth/auth.module';
@@ -34,6 +35,7 @@ import { SyncModule } from './modules/sync/sync.module';
     ThrottlerModule.forRoot([{ ttl: 60_000, limit: 120 }]), // limites plus strictes par route sensible
     ScheduleModule.forRoot(),
     PrismaModule,
+    MailModule,
     HealthModule,
     AuthModule,
     PatientsModule,
