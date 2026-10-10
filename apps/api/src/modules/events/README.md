@@ -30,8 +30,9 @@ Mêmes règles que les mesures (L2-01), avec les outils communs de `src/common/d
 - **PUT** : seuls les champs envoyés changent ; condition « non supprimé » dans l'écriture.
 - **DELETE** : tombstone **et texte libre effacé** ; 204 même si déjà supprimé ; un rejeu de la
   création ne le fait pas revivre.
-- ⚠️ À décider : `details` est stocké **en clair** (schéma actuel), alors que la note d'une mesure est
-  chiffrée. Le chiffrer demanderait une migration (`detailsEncrypted`) — voir la PR L2-02.
+- **Texte libre chiffré** (2026-10-10, décision d'équipe) : colonne `detailsEncrypted` (AES-256-GCM,
+  migration `chiffre_details_evenement`), comme la note d'une mesure ; rendu en clair au patient (API et
+  export L1-14). Texte illisible (clé changée) : `details: null`, sans bloquer la liste.
 
 ## Tests obligatoires
 
@@ -42,6 +43,7 @@ Mêmes règles que les mesures (L2-01), avec les outils communs de `src/common/d
 - [x] (L2-02) Modification partielle, texte effacé, 404 pour l'événement d'un autre / supprimé / inconnu.
 - [x] (L2-02) Suppression : tombstone, texte effacé, idempotente, pas de résurrection.
 - [x] (L2-02) Aucun libellé ni texte libre dans les journaux.
+- [x] Texte libre chiffré en base, rendu en clair ; texte illisible ⇒ null sans erreur.
 - 6 erreurs introduites volontairement : 5 détectées par les tests ; la 6e (« modifier un supprimé »)
   est aussi bloquée par la condition dans l'écriture (double protection, comportement inchangé).
 
