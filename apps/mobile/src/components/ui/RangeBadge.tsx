@@ -1,44 +1,63 @@
 // Badge d'état glycémique : COULEUR + SYMBOLE + LIBELLÉ (jamais la couleur seule).
+// Palette des états SANS rouge (ADR-0008) : le rouge est la couleur de la marque, pas une alarme.
+// Les états extrêmes (très bas / très haut) sont pleins et contrastés ; les autres sont doux.
 import { View } from 'react-native';
+import Animated, { ZoomIn } from 'react-native-reanimated';
 import {
   classifyGlucose,
   STATE_SYMBOLS,
-  type GlucoseThresholds,
   type GlucoseState,
+  type GlucoseThresholds,
 } from '@glyka/shared';
-import { colors, radii, spacing } from '@/theme';
+import { durations, easing, radii, spacing, useReducedMotion, useTheme } from '@/theme';
 import { Text } from './Text';
 
-const STATE_COLOR: Record<GlucoseState, string> = {
-  VERY_LOW: colors.state.veryLow,
-  LOW: colors.state.low,
-  IN_RANGE: colors.state.inRange,
-  HIGH: colors.state.high,
-  VERY_HIGH: colors.state.veryHigh,
-};
+export interface RangeBadgeProps {
+  /** Valeur en mg/dL (l'état est calculé avec les seuils) … */
+  mgDl?: number;
+  thresholds?: GlucoseThresholds;
+  /** … ou état déjà connu. */
+  state?: GlucoseState;
+  size?: 'sm' | 'md';
+}
 
-export function RangeBadge({ mgDl, thresholds }: { mgDl: number; thresholds?: GlucoseThresholds }) {
-  const state = classifyGlucose(mgDl, thresholds);
-  const { symbol, label } = STATE_SYMBOLS[state];
+export function RangeBadge({ mgDl, thresholds, state, size = 'md' }: RangeBadgeProps) {
+  const { states } = useTheme();
+  const reduced = useReducedMotion();
+  const current: GlucoseState = state ?? classifyGlucose(mgDl ?? 0, thresholds);
+  const { symbol, label } = STATE_SYMBOLS[current];
+  const c = states[current];
+
   return (
-    <View
-      accessible
-      accessibilityLabel={label}
-      style={{
-        flexDirection: 'row',
-        gap: spacing.xs,
-        alignItems: 'center',
-        alignSelf: 'flex-start',
-        backgroundColor: STATE_COLOR[state],
-        borderRadius: radii.pill,
-        paddingHorizontal: spacing.md,
-        paddingVertical: spacing.xs,
-      }}
+    <Animated.View
+      // Petite apparition « posée » quand l'état change (key) : l'œil remarque le nouvel état.
+      key={current}
+      entering={reduced ? undefined : ZoomIn.duration(durations.base).easing(easing.decelerate)}
+      style={{ alignSelf: 'flex-start' }}
     >
-      <Text style={{ color: '#FFFFFF', fontWeight: '700' }}>{symbol}</Text>
-      <Text variant="caption" style={{ color: '#FFFFFF', fontWeight: '600' }}>
-        {label}
-      </Text>
-    </View>
+      <View
+        accessible
+        accessibilityRole="text"
+        accessibilityLabel={`État : ${label}`}
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          gap: spacing.xs + 2,
+          backgroundColor: c.bg,
+          borderColor: c.border,
+          borderWidth: 1,
+          borderRadius: radii.pill,
+          paddingHorizontal: size === 'sm' ? spacing.sm + 2 : spacing.md,
+          paddingVertical: size === 'sm' ? 2 : spacing.xs + 1,
+        }}
+      >
+        <Text variant="caption" style={{ color: c.fg, fontSize: size === 'sm' ? 10 : 11 }}>
+          {symbol}
+        </Text>
+        <Text variant={size === 'sm' ? 'caption' : 'label'} style={{ color: c.fg }}>
+          {label}
+        </Text>
+      </View>
+    </Animated.View>
   );
 }

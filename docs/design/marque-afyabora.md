@@ -11,21 +11,22 @@ Document provisoire (lot L7). Il décrit ce qui est **déjà appliqué dans le c
 
 ## Couleurs (source unique : `packages/ui-tokens/src/colors.ts`)
 
-| Nom                          | Valeur                | Rôle                                                                       | Contraste sur blanc                  |
-| ---------------------------- | --------------------- | -------------------------------------------------------------------------- | ------------------------------------ |
-| Bleu marine (`brand.navy`)   | `#0B3366`             | Couleur principale de l'interface : boutons, liens, onglet actif, « Afya » | 12,5:1                               |
-| Rouge corail (`brand.coral`) | `#F83E44`             | « bora », grands titres, accents                                           | 3,6:1 — **grands textes uniquement** |
-| Rouge goutte (`brand.red`)   | `#E4002B`             | Goutte (milieu du dégradé) ; seul rouge utilisable en petit texte          | 4,8:1                                |
-| Rouge clair / foncé          | `#FF3A4A` / `#A80024` | Extrémités du dégradé de la goutte                                         | —                                    |
+| Nom                          | Valeur                | Rôle                                                                                      | Contraste sur blanc                  |
+| ---------------------------- | --------------------- | ----------------------------------------------------------------------------------------- | ------------------------------------ |
+| Rouge goutte (`brand.red`)   | `#E4002B`             | **Couleur principale de l'interface** (ADR-0008) : boutons, liens, élément actif ; goutte | 4,8:1 (texte blanc dessus : 4,85:1)  |
+| Bleu marine (`brand.navy`)   | `#0B3366`             | « Afya » ; couleur du thème d'accent « Marine »                                           | 12,5:1                               |
+| Rouge corail (`brand.coral`) | `#F83E44`             | « bora », grands titres, accents                                                          | 3,6:1 — **grands textes uniquement** |
+| Rouge clair / foncé          | `#FF3A4A` / `#A80024` | Extrémités du dégradé de la goutte                                                        | —                                    |
 
-Mode sombre : le bleu marine devient `#3E73C4` (sinon il disparaît sur fond sombre).
+Les autres couleurs (neutres, thèmes d'accent, états glycémiques, mode sombre) sont décrites dans [`systeme-de-design.md`](systeme-de-design.md).
 
 ## Règles
 
-1. **Le rouge de la marque ne désigne jamais un état de santé.** Les états glycémiques gardent leurs couleurs propres (`colors.state.*`) et sont toujours exprimés par couleur + symbole + libellé. Cela respecte le principe de `README.md` : « pas de rouge criard hors urgence réelle ».
-2. Le bleu marine est la couleur d'action (boutons, liens). Le rouge reste réservé au logo et à de rares accents.
-3. Pas de petit texte en corail (contraste insuffisant) ; utiliser le bleu marine ou le gris `textMuted`.
-4. Ne pas déformer la goutte (le composant `LogoMark` garde les proportions).
+1. **Rouge et blanc sont les couleurs principales** (ADR-0008, 2026-10-10) : bouton principal rouge sur fond blanc dans le thème par défaut (Clair · Rubis).
+2. **Le rouge ne désigne jamais un état de santé.** Les états glycémiques ont leur propre palette sans rouge (violets, vert, ambre, orange brûlé) et sont toujours exprimés par couleur + symbole + libellé. Un test automatique le vérifie.
+3. Pas de petit texte en corail (contraste insuffisant) ; utiliser `primaryText` ou `textMuted`.
+4. En mode sombre, « Afya » passe en blanc cassé (le bleu marine y serait illisible).
+5. Ne pas déformer la goutte (le composant `LogoMark` garde les proportions).
 
 ## Où c'est utilisé
 
@@ -34,6 +35,7 @@ Mode sombre : le bleu marine devient `#3E73C4` (sinon il disparaît sur fond som
 | Composants `LogoMark` et `Wordmark`                  | `apps/mobile/src/components/brand/` |
 | Icône, icône adaptative, écran de lancement, favicon | `apps/mobile/assets/`               |
 | Favicon du portail                                   | `apps/portal/public/favicon.svg`    |
-| Palette                                              | `packages/ui-tokens/src/colors.ts`  |
+| Palette et thèmes                                    | `packages/ui-tokens/src/colors.ts`  |
+| Écran de lancement animé, écran de chargement        | `apps/mobile/src/components/brand/` |
 
 Après toute modification de la palette, reconstruire le package : `pnpm --filter @glyka/ui-tokens build`.

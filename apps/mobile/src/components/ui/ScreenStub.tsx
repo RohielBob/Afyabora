@@ -1,6 +1,6 @@
 // Écran provisoire : indique le ticket à réaliser. À SUPPRIMER écran par écran au fil du développement.
-import { Screen } from './Screen';
 import { Card } from './Card';
+import { Screen } from './Screen';
 import { Text } from './Text';
 
 export function ScreenStub({
@@ -15,11 +15,11 @@ export function ScreenStub({
   return (
     <Screen>
       <Text variant="title">{title}</Text>
-      <Card>
-        <Text variant="caption" muted>
+      <Card variant="outlined">
+        <Text variant="overline" tone="primary">
           À réaliser : {ticket}
         </Text>
-        <Text>{description}</Text>
+        <Text tone="muted">{description}</Text>
       </Card>
     </Screen>
   );
