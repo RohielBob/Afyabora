@@ -5,7 +5,7 @@ import { useSession } from '@/features/auth';
 //   pas de session            → accueil (/welcome), ou connexion si la session vient d'expirer
 //   session, profil incomplet → assistant de profil
 //   session, profil complet   → onglets (accueil de l'app)
-// TODO(L1-09) : verrouillage biométrique avant d'entrer dans l'app.
+// Le verrouillage (L1-09) s'affiche par-dessus, depuis app/_layout.tsx.
 export default function Index() {
   const session = useSession();
   if (session.status === 'loading') return null; // l'écran de lancement est encore affiché

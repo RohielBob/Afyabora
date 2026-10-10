@@ -4,7 +4,8 @@ import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { AnimatedSplash } from '@/components/brand';
-import { initSession, useSession } from '@/features/auth';
+import { initSession, signOut, useSession } from '@/features/auth';
+import { LockScreen, initAppLock, resetAppLock, useAppLock } from '@/features/security';
 import { AppProviders } from '@/providers/AppProviders';
 import { useTheme } from '@/theme';
 import { appFonts } from '@/theme/fonts';
@@ -44,7 +45,13 @@ function RootNavigator() {
   const { colors, mode } = useTheme();
   const session = useSession();
   const signedIn = session.status === 'signedIn';
+  const lock = useAppLock();
   const [splashDone, setSplashDone] = useState(false);
+
+  // Le verrouillage appartient au compte : il est effacé quand la session se termine (déconnexion, expiration).
+  useEffect(() => {
+    if (session.status === 'signedOut' && lock.settings.enabled) void resetAppLock();
+  }, [session.status, lock.settings.enabled]);
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.background }}>
@@ -85,6 +92,10 @@ function RootNavigator() {
           <Stack.Screen name="settings/design" />
         </Stack.Protected>
       </Stack>
+      {/* Verrouillage (L1-09) : par-dessus l'app, rien n'est visible derrière tant qu'il n'est pas levé. */}
+      {signedIn && lock.locked ? (
+        <LockScreen pinLength={lock.settings.pinLength} onForgot={signOut} />
+      ) : null}
       {/* Animation de lancement, par-dessus l'app, jouée une seule fois. */}
       {!splashDone ? <AnimatedSplash onFinish={() => setSplashDone(true)} /> : null}
     </View>
@@ -94,12 +105,15 @@ function RootNavigator() {
 export default function RootLayout() {
   const [fontsLoaded, fontError] = useFonts(appFonts);
   const session = useSession();
+  const lock = useAppLock();
   const fontsReady = fontsLoaded || !!fontError; // police indisponible : on continue avec la police système
-  const ready = fontsReady && session.status !== 'loading';
+  // On attend aussi le verrouillage : l'app ne doit jamais s'afficher une fraction de seconde avant lui.
+  const ready = fontsReady && session.status !== 'loading' && lock.ready;
 
-  // Rouvre la session enregistrée (lecture du coffre sécurisé : rapide, et sans réseau).
+  // Rouvre la session enregistrée et lit les réglages de verrouillage (coffre sécurisé : rapide, sans réseau).
   useEffect(() => {
     void initSession();
+    void initAppLock();
   }, []);
 
   useEffect(() => {
