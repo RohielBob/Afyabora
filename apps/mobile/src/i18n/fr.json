@@ -646,6 +646,79 @@
     "a11y": {
       "measurement": "{{time}}, glycémie {{value}}, {{state}}, {{context}}",
       "event": "{{time}}, {{label}}, {{meta}}"
+    },
+    "addEvent": "Ajouter"
+  },
+  "event": {
+    "overline": "Ajout rapide",
+    "title": "Nouvel événement",
+    "close": "Fermer sans enregistrer",
+    "typeLabel": "Type",
+    "type": {
+      "MEAL": "Repas",
+      "ACTIVITY": "Activité",
+      "TREATMENT": "Traitement"
+    },
+    "typeHint": {
+      "MEAL": "Ce que vous avez mangé, et quand",
+      "ACTIVITY": "Une activité physique et sa durée",
+      "TREATMENT": "Un traitement que vous avez pris, tel que vous le déclarez"
+    },
+    "chooseFirst": "Choisissez d’abord le type d’événement.",
+    "label": {
+      "MEAL": "Repas",
+      "ACTIVITY": "Activité",
+      "TREATMENT": "Nom du traitement"
+    },
+    "placeholder": {
+      "MEAL": "Ex. déjeuner, riz et haricots",
+      "ACTIVITY": "Ex. marche",
+      "TREATMENT": "Ex. insuline lente, metformine"
+    },
+    "suggestionsLabel": "Suggestions",
+    "suggestion": {
+      "breakfast": "Petit-déjeuner",
+      "lunch": "Déjeuner",
+      "dinner": "Dîner",
+      "snack": "Collation",
+      "walk": "Marche",
+      "run": "Course",
+      "bike": "Vélo",
+      "football": "Football",
+      "dance": "Danse",
+      "housework": "Ménage"
+    },
+    "durationLabel": "Durée",
+    "durationOther": "Autre durée (minutes)",
+    "minutes_one": "{{count}} min",
+    "minutes_other": "{{count}} min",
+    "details": {
+      "MEAL": "Détails (facultatif)",
+      "ACTIVITY": "Détails (facultatif)",
+      "TREATMENT": "Note (facultatif)"
+    },
+    "detailsPlaceholder": {
+      "MEAL": "Ex. portion plus grande que d’habitude",
+      "ACTIVITY": "Ex. autour du quartier",
+      "TREATMENT": "Ex. comme d’habitude le soir"
+    },
+    "detailsHint": "Visible par vous ; partagée seulement si vous le choisissez.",
+    "treatmentTitle": "Déclaré par vous",
+    "treatmentInfo": "Afyabora enregistre ce que vous indiquez, sans calculer ni conseiller de dose. Suivez les consignes de votre équipe soignante.",
+    "save": "Enregistrer",
+    "error": "L'événement n'a pas pu être enregistré sur ce téléphone. Réessayez.",
+    "problem": {
+      "type": "Choisissez le type d’événement.",
+      "label": "Indiquez un libellé.",
+      "labelTooLong": "{{max}} caractères au plus.",
+      "duration": "Durée en minutes, de 1 à 1440.",
+      "future": "Cette heure est dans le futur."
+    },
+    "saved": {
+      "title": "Événement enregistré",
+      "local": "Gardé sur ce téléphone, il sera envoyé dès que la connexion le permet.",
+      "another": "Ajouter un autre événement",
+      "done": "Terminé"
     }
   }
 }

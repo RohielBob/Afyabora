@@ -48,13 +48,29 @@ export default function TimelineScreen() {
 
   const header = (
     <View style={{ gap: spacing.lg, paddingBottom: spacing.sm }}>
-      <View style={{ gap: spacing.xs }}>
-        <Text variant="overline" tone="primary">
-          {t('timeline.overline')}
-        </Text>
-        <Text variant="title" accessibilityRole="header">
-          {t('timeline.title')}
-        </Text>
+      <View style={{ flexDirection: 'row', alignItems: 'flex-end', gap: spacing.md }}>
+        <View style={{ flex: 1, gap: spacing.xs }}>
+          <Text variant="overline" tone="primary">
+            {t('timeline.overline')}
+          </Text>
+          <Text variant="title" accessibilityRole="header">
+            {t('timeline.title')}
+          </Text>
+        </View>
+        {/* Ajout rapide d'un événement (L2-10) : le type suit le filtre choisi (Repas → repas…). */}
+        <Button
+          label={t('timeline.addEvent')}
+          variant="secondary"
+          size="sm"
+          icon={<Ionicons name="add" size={18} color={colors.primaryText} />}
+          onPress={() =>
+            router.push(
+              filter === 'MEAL' || filter === 'ACTIVITY' || filter === 'TREATMENT'
+                ? { pathname: '/event/new', params: { type: filter } }
+                : '/event/new',
+            )
+          }
+        />
       </View>
       <FilterChips value={filter} onChange={setFilter} />
     </View>

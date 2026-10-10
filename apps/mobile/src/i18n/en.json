@@ -646,6 +646,79 @@
     "a11y": {
       "measurement": "{{time}}, glucose {{value}}, {{state}}, {{context}}",
       "event": "{{time}}, {{label}}, {{meta}}"
+    },
+    "addEvent": "Add"
+  },
+  "event": {
+    "overline": "Quick add",
+    "title": "New event",
+    "close": "Close without saving",
+    "typeLabel": "Type",
+    "type": {
+      "MEAL": "Meal",
+      "ACTIVITY": "Activity",
+      "TREATMENT": "Treatment"
+    },
+    "typeHint": {
+      "MEAL": "What you ate, and when",
+      "ACTIVITY": "A physical activity and its duration",
+      "TREATMENT": "A treatment you took, as you declare it"
+    },
+    "chooseFirst": "First choose the type of event.",
+    "label": {
+      "MEAL": "Meal",
+      "ACTIVITY": "Activity",
+      "TREATMENT": "Treatment name"
+    },
+    "placeholder": {
+      "MEAL": "e.g. lunch, rice and beans",
+      "ACTIVITY": "e.g. walk",
+      "TREATMENT": "e.g. long-acting insulin, metformin"
+    },
+    "suggestionsLabel": "Suggestions",
+    "suggestion": {
+      "breakfast": "Breakfast",
+      "lunch": "Lunch",
+      "dinner": "Dinner",
+      "snack": "Snack",
+      "walk": "Walk",
+      "run": "Run",
+      "bike": "Cycling",
+      "football": "Football",
+      "dance": "Dance",
+      "housework": "Housework"
+    },
+    "durationLabel": "Duration",
+    "durationOther": "Other duration (minutes)",
+    "minutes_one": "{{count}} min",
+    "minutes_other": "{{count}} min",
+    "details": {
+      "MEAL": "Details (optional)",
+      "ACTIVITY": "Details (optional)",
+      "TREATMENT": "Note (optional)"
+    },
+    "detailsPlaceholder": {
+      "MEAL": "e.g. bigger portion than usual",
+      "ACTIVITY": "e.g. around the neighbourhood",
+      "TREATMENT": "e.g. as usual in the evening"
+    },
+    "detailsHint": "Visible to you; shared only if you choose to.",
+    "treatmentTitle": "Declared by you",
+    "treatmentInfo": "Afyabora records what you enter, without calculating or advising any dose. Follow your care team’s instructions.",
+    "save": "Save",
+    "error": "The event could not be saved on this phone. Please try again.",
+    "problem": {
+      "type": "Choose the type of event.",
+      "label": "Enter a label.",
+      "labelTooLong": "{{max}} characters at most.",
+      "duration": "Duration in minutes, from 1 to 1440.",
+      "future": "This time is in the future."
+    },
+    "saved": {
+      "title": "Event saved",
+      "local": "Kept on this phone, it will be sent as soon as the connection allows.",
+      "another": "Add another event",
+      "done": "Done"
     }
   }
 }
