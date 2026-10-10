@@ -553,6 +553,30 @@
       "a11y_other": "Graphique de la glycémie sur {{days}} jours : {{count}} mesures.",
       "a11yHint": "Balayez vers le haut ou le bas pour passer d’une mesure à l’autre.",
       "a11yPoint": "{{value}}, {{state}}. {{detail}}"
+    },
+    "stats": {
+      "title": "Statistiques",
+      "count_one": "{{count}} mesure · {{days}} j",
+      "count_other": "{{count}} mesures · {{days}} j",
+      "insufficientTitle": "Données insuffisantes",
+      "insufficient_one": "Il faut au moins {{min}} mesures sur ces {{days}} jours pour des chiffres fiables. Vous en avez {{count}}.",
+      "insufficient_other": "Il faut au moins {{min}} mesures sur ces {{days}} jours pour des chiffres fiables. Vous en avez {{count}}.",
+      "shareA11y": "Répartition des mesures : {{below}} % en dessous, {{inRange}} % dans la plage, {{above}} % au-dessus.",
+      "mean": "Moyenne",
+      "sd": "Écart-type",
+      "cv": "Variabilité",
+      "compareTitle": "Par rapport aux {{days}} jours précédents",
+      "tirChange": "Temps dans la cible : {{value}}",
+      "meanChange": "Moyenne : {{value}}",
+      "points_one": "{{sign}}{{count}} point",
+      "points_other": "{{sign}}{{count}} points",
+      "stable": "stable",
+      "direction": {
+        "up": "en hausse",
+        "down": "en baisse",
+        "flat": "stable"
+      },
+      "noPrevious": "Pas assez de mesures sur les {{days}} jours précédents pour comparer."
     }
   }
 }

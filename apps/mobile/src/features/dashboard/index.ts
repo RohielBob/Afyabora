@@ -8,9 +8,20 @@ export {
   type ChartPeriod,
   type ChartPoint,
 } from './chart';
+export {
+  meanChange,
+  periodStats,
+  previousBounds,
+  roundedPercents,
+  timeInRangeChange,
+  type Change,
+  type Direction,
+  type PeriodStats,
+} from './stats';
 export { useDashboard, type DashboardState } from './useDashboard';
 export { DashboardSkeleton } from './components/DashboardSkeleton';
 export { EmptyLatest } from './components/EmptyLatest';
 export { GlucoseChart } from './components/GlucoseChart';
 export { LatestReading } from './components/LatestReading';
+export { StatsCard } from './components/StatsCard';
 export { SyncStatus } from './components/SyncStatus';

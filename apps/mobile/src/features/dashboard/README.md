@@ -8,7 +8,7 @@ Dernière mesure, graphique, statistiques, qualité des données, comparaison de
 
 - **L2-05** — Mobile : tableau de bord — dernière mesure et badge d'état (forme + libellé + couleur) — **fait**
 - **L2-06** — Mobile : graphique d'évolution 7/14/30/90 jours avec bande cible — **fait**
-- **L2-07** — Mobile : statistiques et comparaison avec la période précédente
+- **L2-07** — Mobile : statistiques et comparaison avec la période précédente — **fait**
 - **L2-08** — Mobile : score de qualité des données et phrase d'explication
 - **L8-11** — Tableau de bord et analyse calculés depuis la base locale (moteur sur le téléphone)
 
@@ -80,9 +80,40 @@ présent, aucune dépendance ajoutée) :
 - [x] Courbe coupée après plus de 2 jours sans mesure.
 - [x] Mesure la plus proche du doigt ; tracé et longueur (animation de dessin).
 
+## Statistiques (L2-07)
+
+Carte « Statistiques » sous le graphique (`components/StatsCard.tsx`), **pour la même période que le
+graphique** : la période est choisie par l'écran et partagée (CDC : « changer de période met à jour tous les
+chiffres »).
+
+- Chiffres calculés par le moteur **`@glyka/analytics`** (`computeRangeStats`, ADR-0005) ; `stats.ts` ne
+  fait que choisir les mesures et préparer l'affichage.
+- **Moins de 10 mesures** sur la période : « Données insuffisantes » + combien il en manque, aucun
+  pourcentage (CDC F3).
+- **Répartition** en dessous / dans la plage / au-dessus : barre qui se remplit (≈ 0,4 s) + pourcentages
+  qui font toujours 100 (plus grand reste), avec symbole ▼ ● ▲ et libellé.
+- **Moyenne, écart-type, variabilité** (coefficient de variation) dans l'unité du patient.
+- **Comparaison** avec les N jours précédents (même durée, sans recouvrement ; elle aussi ≥ 10 mesures) :
+  temps dans la cible en points (« stable » sous 5 points), moyenne (« stable » sous 5 %). Flèches ↑ ↓ →
+  **neutres** (ni vert ni rouge) : on décrit, on ne juge pas.
+- Une seule lecture locale de 180 jours (90 + les 90 d'avant) pour toutes les périodes.
+
+| Fichier                    | Rôle                                                                |
+| -------------------------- | ------------------------------------------------------------------- |
+| `stats.ts`                 | Période précédente, règle des 10 mesures, pourcentages, flèches     |
+| `components/StatsCard.tsx` | Carte : répartition, tuiles, comparaison, « Données insuffisantes » |
+| `__tests__/stats.test.ts`  | Tests de la logique                                                 |
+
+## Tests obligatoires (L2-07)
+
+- [x] Période précédente : les N jours juste avant, sans recouvrement.
+- [x] Moins de 10 mesures : pas de statistiques (nombre connu) ; période précédente aussi soumise à la règle.
+- [x] Statistiques du moteur (moyenne, temps dans / au-dessus de la cible).
+- [x] Pourcentages qui font 100.
+- [x] Comparaison : hausse / baisse / stable, seuils exacts (5 points, 5 %).
+
 ## Fichiers prévus (suite)
 
-- `StatsCards.tsx`
 - `QualityCard.tsx`
 - `useLocalAnalysis.ts` : lit SQLite → GlucosePoint[] → @glyka/analytics
 

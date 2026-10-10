@@ -553,6 +553,30 @@
       "a11y_other": "Glucose chart over {{days}} days: {{count}} readings.",
       "a11yHint": "Swipe up or down to move from one reading to another.",
       "a11yPoint": "{{value}}, {{state}}. {{detail}}"
+    },
+    "stats": {
+      "title": "Statistics",
+      "count_one": "{{count}} reading · {{days}} d",
+      "count_other": "{{count}} readings · {{days}} d",
+      "insufficientTitle": "Not enough data",
+      "insufficient_one": "At least {{min}} readings over these {{days}} days are needed for reliable figures. You have {{count}}.",
+      "insufficient_other": "At least {{min}} readings over these {{days}} days are needed for reliable figures. You have {{count}}.",
+      "shareA11y": "Distribution of readings: {{below}} % below, {{inRange}} % in range, {{above}} % above.",
+      "mean": "Average",
+      "sd": "Std. deviation",
+      "cv": "Variability",
+      "compareTitle": "Compared with the previous {{days}} days",
+      "tirChange": "Time in range: {{value}}",
+      "meanChange": "Average: {{value}}",
+      "points_one": "{{sign}}{{count}} point",
+      "points_other": "{{sign}}{{count}} points",
+      "stable": "stable",
+      "direction": {
+        "up": "up",
+        "down": "down",
+        "flat": "stable"
+      },
+      "noPrevious": "Not enough readings over the previous {{days}} days to compare."
     }
   }
 }
