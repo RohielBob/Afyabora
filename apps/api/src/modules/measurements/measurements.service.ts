@@ -14,7 +14,6 @@ import {
   BadRequestException,
   Injectable,
   Logger,
-  NotFoundException,
   UnauthorizedException,
   UnprocessableEntityException,
 } from '@nestjs/common';
@@ -31,11 +30,17 @@ import {
   type UpdateMeasurementInput,
 } from '@glyka/shared';
 import { decryptField, encryptField } from '../../common/crypto/field-encryption';
+import {
+  afterCursor,
+  decodeCursor,
+  encodeCursor,
+  hasPrismaCode,
+  invalidField,
+  notFound as notFoundError,
+  notInFuture,
+} from '../../common/data/owned-records';
 import { UNAUTHORIZED_MESSAGE } from '../../common/guards/jwt-auth.guard';
 import { PrismaService } from '../../prisma/prisma.service';
-
-/** Tolérance sur l'heure du téléphone, souvent légèrement en avance. */
-export const FUTURE_TOLERANCE_MS = 5 * 60 * 1000;
 
 export const UNUSUAL_VALUE_MESSAGE =
   'Valeur inhabituelle : vérifiez la saisie, puis confirmez-la si elle est correcte.';
@@ -123,17 +128,14 @@ export class MeasurementsService {
     } catch (error) {
       // P2002 = identifiant déjà pris. Deux envois SIMULTANÉS de la même mesure : le second arrive ici
       // après la création du premier → c'est un rejeu, on renvoie la mesure créée.
-      if (hasCode(error, 'P2002')) {
+      if (hasPrismaCode(error, 'P2002')) {
         const winner = await this.findOwned(input.id, patientId);
         if (winner) return { measurement: this.toDto(winner), created: false };
         // L'identifiant appartient à un AUTRE patient (collision ou tentative) : refus neutre.
-        throw new BadRequestException({
-          message: 'Données invalides',
-          issues: [{ path: 'id', message: 'Identifiant déjà utilisé : générez-en un nouveau.' }],
-        });
+        throw invalidField('id', 'Identifiant déjà utilisé : générez-en un nouveau.');
       }
       // P2003 = clé étrangère : pas de profil médical (ou compte supprimé, jeton encore valable).
-      if (hasCode(error, 'P2003')) throw await this.noProfile(patientId);
+      if (hasPrismaCode(error, 'P2003')) throw await this.noProfile(patientId);
       throw error;
     }
   }
@@ -155,14 +157,7 @@ export class MeasurementsService {
           ...(query.to ? { lt: new Date(query.to) } : {}),
         },
         // Page suivante : strictement « après » la dernière mesure de la page précédente (date, puis id).
-        ...(after
-          ? {
-              OR: [
-                { measuredAt: { lt: after.measuredAt } },
-                { measuredAt: after.measuredAt, id: { lt: after.id } },
-              ],
-            }
-          : {}),
+        ...(after ? afterCursor('measuredAt', after) : {}),
       },
       orderBy: [{ measuredAt: 'desc' }, { id: 'desc' }],
       take: query.limit + 1, // une de plus : savoir s'il existe une page suivante
@@ -173,7 +168,7 @@ export class MeasurementsService {
     const last = page[page.length - 1];
     return {
       items: page.map((row) => this.toDto(row)),
-      nextCursor: rows.length > query.limit && last ? encodeCursor(last) : null,
+      nextCursor: rows.length > query.limit && last ? encodeCursor(last.measuredAt, last.id) : null,
     };
   }
 
@@ -242,14 +237,7 @@ export class MeasurementsService {
 
   /** Date ISO avec fuseau → Date ; refusée si plus de 5 minutes dans le futur. */
   private checkDate(iso: string, now: Date): Date {
-    const date = new Date(iso);
-    if (date.getTime() > now.getTime() + FUTURE_TOLERANCE_MS) {
-      throw new BadRequestException({
-        message: 'Données invalides',
-        issues: [{ path: 'measuredAt', message: 'La date de la mesure est dans le futur.' }],
-      });
-    }
-    return date;
+    return notInFuture(iso, 'measuredAt', now, 'La date de la mesure est dans le futur.');
   }
 
   /** Conversion en mg/dL entier ; valeur hors bornes refusée sans confirmation (422 UNUSUAL_VALUE). */
@@ -265,12 +253,7 @@ export class MeasurementsService {
       });
     }
     // Même confirmée, une valeur doit tenir dans une colonne entière raisonnable.
-    if (mgDl < 1 || mgDl > 5000) {
-      throw new BadRequestException({
-        message: 'Données invalides',
-        issues: [{ path: 'value', message: 'Valeur impossible.' }],
-      });
-    }
+    if (mgDl < 1 || mgDl > 5000) throw invalidField('value', 'Valeur impossible.');
     return mgDl;
   }
 
@@ -320,42 +303,6 @@ export class MeasurementsService {
   }
 }
 
-function notFound(): NotFoundException {
-  return new NotFoundException({ message: 'Mesure introuvable.' });
-}
-
-// Curseur opaque : date + identifiant de la dernière mesure de la page, en base64url.
-function encodeCursor(row: { measuredAt: Date; id: string }): string {
-  return Buffer.from(JSON.stringify([row.measuredAt.toISOString(), row.id])).toString('base64url');
-}
-
-function decodeCursor(cursor: string): { measuredAt: Date; id: string } {
-  try {
-    const [iso, id] = JSON.parse(Buffer.from(cursor, 'base64url').toString('utf8')) as unknown[];
-    const measuredAt = new Date(String(iso));
-    if (
-      typeof id !== 'string' ||
-      !/^[0-9a-f-]{36}$/i.test(id) ||
-      Number.isNaN(measuredAt.getTime())
-    ) {
-      throw new Error('curseur');
-    }
-    return { measuredAt, id };
-  } catch {
-    throw new BadRequestException({
-      message: 'Données invalides',
-      issues: [
-        { path: 'cursor', message: 'Curseur invalide : recommencez depuis la première page.' },
-      ],
-    });
-  }
-}
-
-function hasCode(error: unknown, code: string): boolean {
-  return (
-    typeof error === 'object' &&
-    error !== null &&
-    'code' in error &&
-    (error as { code?: unknown }).code === code
-  );
+function notFound() {
+  return notFoundError('Mesure introuvable.');
 }

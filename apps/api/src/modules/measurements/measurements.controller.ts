@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -7,7 +6,6 @@ import {
   HttpCode,
   HttpStatus,
   Param,
-  ParseUUIDPipe,
   Post,
   Put,
   Query,
@@ -35,19 +33,14 @@ import {
   type ListQuery,
   type UpdateMeasurementInput,
 } from '@glyka/shared';
+import { uuidParam } from '../../common/data/owned-records';
 import { CurrentUser, type AuthUser } from '../../common/decorators/current-user.decorator';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
 import { MeasurementsService } from './measurements.service';
 
 /** Identifiant de mesure dans l'URL : un UUID, sinon 400 au même format que les autres erreurs. */
-const MEASUREMENT_ID = new ParseUUIDPipe({
-  exceptionFactory: () =>
-    new BadRequestException({
-      message: 'Données invalides',
-      issues: [{ path: 'id', message: 'Identifiant invalide.' }],
-    }),
-});
+const MEASUREMENT_ID = uuidParam();
 
 /**
  * Mesures de glycémie du patient (L2-01). Le contrôleur ne contient aucune logique : il valide l'entrée

@@ -19,6 +19,8 @@ Création, lecture, modification et suppression des mesures de glycémie.
 
 ### Détail (L2-01, décisions du 2026-10-10)
 
+Outils partagés avec les événements (L2-02) : `src/common/data/owned-records.ts`.
+
 - Rôle **PATIENT** ; le patient vient toujours du jeton. La mesure d'un autre patient répond **404**
   (comme une mesure inconnue) : on ne révèle jamais qu'elle existe.
 - **POST** : `201` si créée, **`200` si l'identifiant existe déjà pour ce patient** (rejeu : la mesure
