@@ -1,6 +1,6 @@
 # Module `auth`
 
-**Lot : L1 · Fonctionnalité : F1 · Tickets : L1-01 à L1-04**
+**Lot : L1 · Fonctionnalité : F1 · Tickets : L1-01 à L1-04, L1-13 (tests de sécurité)**
 
 Comptes, sessions et sécurité des accès (patients et médecins).
 
@@ -39,6 +39,20 @@ Comptes, sessions et sécurité des accès (patients et médecins).
 - `logout` : exige le jeton d'accès ; révoque la famille du jeton fourni **s'il appartient à l'utilisateur connecté** ; toujours 204 (idempotent).
 - Limites par IP : 10 connexions / min, 30 rafraîchissements / min.
 
+### Sécurité face aux requêtes simultanées (L1-13, décisions du 2026-10-10)
+
+- **Compteur d'échecs atomique** : il est modifié par la base (`updateMany` + `increment`, avec une
+  condition sur `updatedAt` pour la fenêtre de 10 min), jamais « lu puis réécrit ». Défaut corrigé :
+  5 mauvais mots de passe envoyés **en même temps** lisaient tous la même valeur et écrivaient « 1 »,
+  le compte n'était jamais verrouillé (reproduit sur l'API locale, puis par un test).
+- **Renouvellements simultanés** : si une réutilisation est détectée pendant qu'un autre renouvellement
+  crée son nouveau jeton, ce jeton est révoqué aussi (il échappait à la révocation de la famille).
+  Résultat : deux renouvellements simultanés du même jeton ferment toujours la session (règle L1-02).
+- **`Cache-Control: no-store` + `Pragma: no-cache`** sur les réponses de `login` et `refresh` (elles
+  contiennent des jetons ; exigence RFC 6749 §5.1). Ce sont des en-têtes : le contrat (corps des
+  réponses) ne change pas.
+- Le JWT d'accès ne contient que `sub`, `role`, `iat`, `exp`. Aucun mot de passe ni jeton dans les journaux.
+
 ### Inscription et vérification d'email (L1-01, décisions du 2026-10-09)
 
 - `register` et `register-doctor` répondent **toujours 202 avec le même message**, que l'adresse soit nouvelle, déjà inscrite ou déjà vérifiée (pas d'énumération de comptes). Le mot de passe est haché dans tous les cas pour que le temps de réponse ne trahisse rien.
@@ -72,6 +86,13 @@ Comptes, sessions et sécurité des accès (patients et médecins).
 - [x] (L1-03) Mot de passe oublié : même 202 pour un compte inconnu, sans email ; lien 1 h, hash seul en base ; nouvelle demande = ancien lien annulé ; 429 à la 6e demande.
 - [x] (L1-03) Réinitialisation : seul le nouveau mot de passe fonctionne ; toutes les sessions du compte révoquées (pas celles des autres) ; verrouillage levé ; compte non vérifié vérifié.
 - [x] (L1-03) Lien à usage unique, expiré refusé, jeton de vérification refusé ; mot de passe trop court refusé sans consommer le lien.
+- [x] (L1-13) 5 mauvais mots de passe **simultanés** verrouillent le compte ; une rafale après une longue pause est comptée en entier (`test/auth-security.test.ts`).
+- [x] (L1-13) Pendant le verrouillage : rien n'est vérifié ni prolongé ; après : le compteur repart de 1 ; un compte verrouillé ne touche pas les autres ; email inconnu = même réponse et aucune écriture.
+- [x] (L1-13) Email non vérifié : aucun jeton créé ; les mauvais mots de passe comptent aussi ; email reconnu quelle que soit la casse.
+- [x] (L1-13) JWT minimal ; `no-store` sur login et refresh ; jeton d'accès refusé comme jeton de rafraîchissement ; réutilisation pendant un renouvellement ⇒ aucun jeton ne survit ; déconnexion idempotente.
+- [x] (L1-13) Limites par IP : 429 à la 11e connexion (sans verrouiller le compte) et au 31e renouvellement en une minute.
+- [x] (L1-13) Aucun mot de passe ni jeton dans les journaux.
+- Les tests marqués « avant la correction » **échouent** sur l'ancien code (vérifié en le remettant temporairement en place).
 
 ## Fichiers
 

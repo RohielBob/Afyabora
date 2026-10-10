@@ -20,6 +20,7 @@ import {
   PASSWORD_RESET_MESSAGE,
 } from '../src/modules/auth/password.service';
 import { PrismaService } from '../src/prisma/prisma.service';
+import { userUpdateMany } from './support/fake-prisma-ops';
 
 const PORTAL_URL = 'http://portail.test';
 const OLD_PASSWORD = 'ancien-mot-de-passe-2026';
@@ -70,6 +71,9 @@ const fakePrisma = {
       Object.assign(u, data, { updatedAt: new Date() });
       return u;
     },
+    // Comptage atomique des échecs de connexion (L1-13), voir support/fake-prisma-ops.ts.
+    updateMany: async (args: Parameters<typeof userUpdateMany>[1]) =>
+      userUpdateMany(db.users, args),
   },
   emailToken: {
     findUnique: async ({ where }: { where: { tokenHash: string } }) =>

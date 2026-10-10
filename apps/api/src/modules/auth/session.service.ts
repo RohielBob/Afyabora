@@ -77,7 +77,6 @@ export class SessionService {
         emailVerifiedAt: true,
         failedLogins: true,
         lockedUntil: true,
-        updatedAt: true,
         patientProfile: { select: { userId: true } },
         doctorProfile: { select: { verificationStatus: true } },
       },
@@ -162,7 +161,20 @@ export class SessionService {
       throw invalidSession();
     }
 
-    return this.issueTokens(stored.userId, stored.user.role, stored.familyId);
+    const tokens = await this.issueTokens(stored.userId, stored.user.role, stored.familyId);
+
+    // Correction L1-13 : pendant qu'on créait le nouveau jeton, une requête simultanée a pu détecter une
+    // réutilisation et révoquer la famille. Le nouveau jeton, créé APRÈS cette révocation, y échappait
+    // (reproduit sur l'API locale : deux renouvellements simultanés, le jeton du « gagnant » restait
+    // valable). La famille est morte : on révoque aussi ce jeton et on refuse.
+    const familyRevoked = await this.prisma.refreshToken.count({
+      where: { familyId: stored.familyId, revokedAt: { not: null } },
+    });
+    if (familyRevoked > 0) {
+      await this.revokeFamily(stored.familyId, new Date());
+      throw invalidSession();
+    }
+    return tokens;
   }
 
   /**
@@ -179,29 +191,50 @@ export class SessionService {
     await this.revokeFamily(stored.familyId, new Date());
   }
 
-  /** Échec de mot de passe : compte les échecs sur 10 minutes ; au 5e, verrouille 10 minutes. */
-  private async recordFailure(
-    user: { id: string; failedLogins: number; updatedAt: Date },
-    now: Date,
-  ): Promise<never> {
+  /**
+   * Échec de mot de passe : compte les échecs sur 10 minutes ; au 5e, verrouille 10 minutes.
+   *
+   * Correction L1-13 : le compteur est modifié PAR LA BASE (opérations atomiques), et non plus
+   * « lu puis réécrit ». Avant, 5 essais envoyés EN MÊME TEMPS lisaient tous la même valeur et
+   * écrivaient tous « 1 » : le compte n'était jamais verrouillé (reproduit sur l'API locale).
+   */
+  private async recordFailure(user: { id: string }, now: Date): Promise<never> {
     // Pas de colonne « date du 1er échec » dans le schéma : on utilise updatedAt (mis à jour à chaque échec).
-    // Dernier échec il y a plus de 10 minutes → le compteur repart de 1.
-    const recent = now.getTime() - user.updatedAt.getTime() < FAILURE_WINDOW_MS;
-    const failures = (recent ? user.failedLogins : 0) + 1;
+    const windowStart = new Date(now.getTime() - FAILURE_WINDOW_MS);
+    const users = this.prisma.user;
 
-    if (failures >= LOGIN_MAX_FAILURES) {
+    // 1. Dernier échec il y a moins de 10 minutes : +1, en une seule opération (aucun essai perdu).
+    const counted = await users.updateMany({
+      where: { id: user.id, updatedAt: { gt: windowStart } },
+      data: { failedLogins: { increment: 1 }, updatedAt: now },
+    });
+    if (counted.count === 0) {
+      // 2. Sinon, la fenêtre est terminée : le compteur repart de 1…
+      const restarted = await users.updateMany({
+        where: { id: user.id, updatedAt: { lte: windowStart } },
+        data: { failedLogins: 1, updatedAt: now },
+      });
+      // 3. … sauf si un essai simultané vient de le faire : alors on ajoute le nôtre.
+      if (restarted.count === 0) {
+        await users.updateMany({
+          where: { id: user.id },
+          data: { failedLogins: { increment: 1 }, updatedAt: now },
+        });
+      }
+    }
+
+    const current = await users.findUnique({
+      where: { id: user.id },
+      select: { failedLogins: true },
+    });
+    if ((current?.failedLogins ?? 0) >= LOGIN_MAX_FAILURES) {
       const lockedUntil = new Date(now.getTime() + LOGIN_LOCK_MINUTES * 60 * 1000);
-      await this.prisma.user.update({
+      await users.updateMany({
         where: { id: user.id },
-        data: { failedLogins: 0, lockedUntil },
+        data: { failedLogins: 0, lockedUntil, updatedAt: now },
       });
       throw accountLocked(lockedUntil, now);
     }
-
-    await this.prisma.user.update({
-      where: { id: user.id },
-      data: { failedLogins: failures },
-    });
     throw new UnauthorizedException({ message: INVALID_CREDENTIALS_MESSAGE });
   }
 
