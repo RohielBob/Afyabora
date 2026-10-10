@@ -49,11 +49,14 @@ test/                               # tests transverses (crypto, e2e)
 
 - Un contrôleur **ne contient pas de logique métier** : il valide (Zod), appelle le service, renvoie.
 - Chaque route vérifie le **rôle** et la **propriété** de la donnée.
+- **Chaque route porte `@Public()` OU `@Roles(...)`, exactement comme l'extension `x-roles` du contrat** (`docs/api/openapi.v0.json`). Le test `test/roles-contract.test.ts` le vérifie pour toutes les routes codées : une route sans décorateur, ou avec d'autres rôles, fait échouer la CI.
+- Sans `@Public()`, une route exige un jeton d'accès valide (garde globale, sécurité par défaut). Ordre des gardes : limite de débit → `JwtAuthGuard` (401 « qui es-tu ? ») → `RolesGuard` (403 « as-tu le droit ? »).
+- `JwtAuthGuard` n'accepte que des JWT **HS256** signés avec notre secret, non expirés, contenant `sub` (UUID) et `role` (PATIENT, DOCTOR ou ADMIN) ; toute autre forme → 401 avec un message unique.
 - Les chiffres médicaux viennent de `@glyka/analytics`, jamais recalculés à la main.
 - Aucun secret ni donnée de santé dans les logs.
 - Tests : `pnpm --filter @glyka/api test` (Vitest + SWC).
 
 ## État actuel
 
-Squelette : modules, contrôleurs et services sont **à implémenter** selon le backlog (`docs/team/backlog.md`).
-La route `GET /health`, la validation d'environnement, les guards, les helpers de chiffrement et le schéma Prisma sont déjà en place.
+Faits : `GET /health` (L0-04), authentification complète (`auth` : L1-01 à L1-03), gardes JWT et rôles renforcées et testées (L1-04), envoi d'emails (`common/mail`, Mailpit en local).
+Les autres modules sont **à implémenter** selon le backlog (`docs/team/backlog.md`).

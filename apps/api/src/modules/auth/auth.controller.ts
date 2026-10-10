@@ -26,6 +26,7 @@ import {
 } from '@glyka/shared';
 import { CurrentUser, type AuthUser } from '../../common/decorators/current-user.decorator';
 import { Public } from '../../common/decorators/public.decorator';
+import { Roles } from '../../common/decorators/roles.decorator';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
 import { AuthService } from './auth.service';
 import { PasswordService } from './password.service';
@@ -121,8 +122,9 @@ export class AuthController {
     return this.sessions.refresh(body.refreshToken);
   }
 
-  /** Pas de @Public : il faut un jeton d'accès valide (JwtAuthGuard), donc tout utilisateur connecté. */
+  /** Pas de @Public : il faut un jeton d'accès valide (JwtAuthGuard) ; tous les rôles (contrat). */
   @Post('logout')
+  @Roles('PATIENT', 'DOCTOR', 'ADMIN')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Se déconnecter : révoque la session (L1-02)' })

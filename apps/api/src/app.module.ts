@@ -30,7 +30,11 @@ import { SyncModule } from './modules/sync/sync.module';
     JwtModule.register({
       global: true,
       secret: process.env.JWT_ACCESS_SECRET,
-      signOptions: { expiresIn: Number(process.env.ACCESS_TOKEN_TTL_SECONDS ?? 900) },
+      // HS256 explicite : JwtAuthGuard n'accepte que cet algorithme.
+      signOptions: {
+        algorithm: 'HS256',
+        expiresIn: Number(process.env.ACCESS_TOKEN_TTL_SECONDS ?? 900),
+      },
     }),
     ThrottlerModule.forRoot([{ ttl: 60_000, limit: 120 }]), // limites plus strictes par route sensible
     ScheduleModule.forRoot(),
