@@ -1,5 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 import type { ComponentProps } from 'react';
 import { fontFiles, useTheme } from '@/theme';
 
@@ -13,6 +14,7 @@ const icon =
   );
 
 export default function TabsLayout() {
+  const { t } = useTranslation();
   const { colors } = useTheme();
   return (
     <Tabs
@@ -33,23 +35,26 @@ export default function TabsLayout() {
     >
       <Tabs.Screen
         name="index"
-        options={{ title: 'Accueil', tabBarIcon: icon('home', 'home-outline') }}
+        options={{ title: t('tabs.home'), tabBarIcon: icon('home', 'home-outline') }}
       />
       <Tabs.Screen
         name="timeline"
-        options={{ title: 'Chronologie', tabBarIcon: icon('time', 'time-outline') }}
+        options={{ title: t('tabs.timeline'), tabBarIcon: icon('time', 'time-outline') }}
       />
       <Tabs.Screen
         name="insights"
-        options={{ title: 'Analyse', tabBarIcon: icon('analytics', 'analytics-outline') }}
+        options={{ title: t('tabs.insights'), tabBarIcon: icon('analytics', 'analytics-outline') }}
       />
       <Tabs.Screen
         name="share"
-        options={{ title: 'Partager', tabBarIcon: icon('qr-code', 'qr-code-outline') }}
+        options={{ title: t('tabs.share'), tabBarIcon: icon('qr-code', 'qr-code-outline') }}
       />
       <Tabs.Screen
         name="profile"
-        options={{ title: 'Profil', tabBarIcon: icon('person-circle', 'person-circle-outline') }}
+        options={{
+          title: t('tabs.profile'),
+          tabBarIcon: icon('person-circle', 'person-circle-outline'),
+        }}
       />
     </Tabs>
   );

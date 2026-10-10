@@ -1,5 +1,6 @@
 // Réglages → Apparence (ADR-0008) : thème clair (par défaut), sombre ou automatique, et couleur d'accent
 // parmi des thèmes préparés. L'aperçu se met à jour immédiatement ; le choix est mémorisé sur le téléphone.
+import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 import {
   Button,
@@ -20,13 +21,10 @@ import {
   type ThemePreference,
 } from '@/theme';
 
-const MODES = [
-  { value: 'light', label: 'Clair' },
-  { value: 'dark', label: 'Sombre' },
-  { value: 'system', label: 'Automatique' },
-] as const satisfies readonly { value: ThemePreference; label: string }[];
+const MODES: readonly ThemePreference[] = ['light', 'dark', 'system'];
 
 export default function AppearanceScreen() {
+  const { t } = useTranslation();
   const { mode } = useTheme();
   const { preference, accent, setPreference, setAccent } = useAppearance();
 
@@ -34,34 +32,34 @@ export default function AppearanceScreen() {
     <Screen>
       <View style={{ gap: 4 }}>
         <Text variant="overline" tone="primary">
-          Paramètres
+          {t('appearance.overline')}
         </Text>
-        <Text variant="title">Apparence</Text>
-        <Text tone="muted">
-          Choisissez l'ambiance d'Afyabora. Les textes restent toujours lisibles.
-        </Text>
+        <Text variant="title">{t('appearance.title')}</Text>
+        <Text tone="muted">{t('appearance.intro')}</Text>
       </View>
 
       <View style={{ gap: spacing.md }}>
-        <Text variant="subheading">Thème</Text>
+        <Text variant="subheading">{t('appearance.theme')}</Text>
         <SegmentedControl
-          accessibilityLabel="Thème de l'application"
-          options={MODES}
+          accessibilityLabel={t('appearance.themeA11y')}
+          options={MODES.map((value) => ({ value, label: t(`appearance.${value}`) }))}
           value={preference}
           onChange={setPreference}
         />
         {preference === 'system' ? (
           <Text variant="caption" tone="muted">
-            Suit le réglage du téléphone (actuellement : {mode === 'dark' ? 'sombre' : 'clair'}).
+            {t('appearance.systemHint', {
+              mode: t(mode === 'dark' ? 'appearance.systemDark' : 'appearance.systemLight'),
+            })}
           </Text>
         ) : null}
       </View>
 
       <View style={{ gap: spacing.md }}>
-        <Text variant="subheading">Couleur d'accent</Text>
+        <Text variant="subheading">{t('appearance.accent')}</Text>
         <View
           accessibilityRole="radiogroup"
-          accessibilityLabel="Couleur d'accent"
+          accessibilityLabel={t('appearance.accent')}
           style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' }}
         >
           {ACCENT_NAMES.map((name) => (
@@ -78,10 +76,10 @@ export default function AppearanceScreen() {
       </View>
 
       <View style={{ gap: spacing.md }}>
-        <Text variant="subheading">Aperçu</Text>
+        <Text variant="subheading">{t('appearance.preview')}</Text>
         <Card index={2}>
           <Text variant="overline" tone="primary">
-            Dernière mesure · exemple
+            {t('appearance.previewOverline')}
           </Text>
           <View style={{ flexDirection: 'row', alignItems: 'baseline', gap: spacing.sm }}>
             <Text variant="metric">1,12</Text>
@@ -91,7 +89,7 @@ export default function AppearanceScreen() {
           </View>
           <RangeBadge state="IN_RANGE" />
           <View style={{ height: spacing.sm }} />
-          <Button label="Ajouter une mesure" onPress={() => undefined} />
+          <Button label={t('appearance.previewButton')} onPress={() => undefined} />
         </Card>
       </View>
     </Screen>
