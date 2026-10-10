@@ -82,9 +82,11 @@ function RootNavigator() {
             name="measurement/new"
             options={{ presentation: 'modal', animation: 'slide_from_bottom' }}
           />
+          {/* Ajout d'un événement (L2-10) : même présentation que la saisie d'une mesure ; l'écran a son
+              propre en-tête traduit (plus de titre en dur ici). */}
           <Stack.Screen
             name="event/new"
-            options={{ presentation: 'modal', headerShown: true, title: 'Nouvel événement' }}
+            options={{ presentation: 'modal', animation: 'slide_from_bottom' }}
           />
         </Stack.Protected>
 
