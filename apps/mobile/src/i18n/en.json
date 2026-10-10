@@ -11,6 +11,17 @@
     "retry": "Retry"
   },
   "disclaimer": "Afyabora is a self-monitoring aid. It does not replace the advice of a healthcare professional.",
+  "glucose": {
+    "unusualConfirm": "This value is unusual. Is it correct?"
+  },
+  "sync": {
+    "pending_one": "{{count}} reading waiting to sync",
+    "pending_other": "{{count}} readings waiting to sync",
+    "offline": "Offline — your data is saved on this phone"
+  },
+  "safety": {
+    "extreme": "Follow your care team's instructions. If you feel unwell, get help immediately."
+  },
   "errors": {
     "network": "Cannot reach the server. Check your internet connection and try again.",
     "server": "The service is having trouble. Please try again in a moment.",
@@ -50,7 +61,8 @@
       "passwordLength": "The password must be at least 12 characters long.",
       "passwordRequired": "Enter your password.",
       "consent": "Your consent is required to create an account.",
-      "link": "This link is not recognised. Copy the full link from the email."
+      "link": "This link is not recognised. Copy the full link from the email.",
+      "disclaimer": "Please confirm that you understand the disclaimer to continue."
     },
     "errors": {
       "invalidCredentials": "Incorrect email address or password.",
@@ -63,11 +75,15 @@
     "signUp": {
       "title": "Create an account",
       "subtitle": "A few seconds to start tracking your glucose.",
-      "consent": "I agree that Afyabora stores my health data for my follow-up, and I understand that the app does not replace the advice of a healthcare professional.",
+      "consent": "I agree that Afyabora stores and processes my health data for my follow-up, as described in the privacy policy.",
       "consentA11y": "Consent to the processing of my health data",
       "submit": "Create my account",
       "haveAccount": "Already have an account?",
-      "signIn": "Sign in"
+      "signIn": "Sign in",
+      "consentLink": "Read the privacy policy",
+      "disclaimer": "I understand that Afyabora is a self-monitoring aid: it does not diagnose, does not give treatment doses and does not replace the advice of a healthcare professional.",
+      "disclaimerA11y": "I understand that the app does not replace medical advice",
+      "disclaimerLink": "Read the disclaimer"
     },
     "verify": {
       "title": "Check your inbox",
@@ -142,6 +158,7 @@
     "security": "Security",
     "securityHint": "Biometric or passcode unlock",
     "about": "About",
+    "aboutHint": "Version, disclaimer, privacy",
     "design": "Style board",
     "designHint": "Visible in development: colours, text, components"
   },
@@ -325,6 +342,88 @@
       "tips": "Your code is never stored in plain text. After 5 errors, you must wait before trying again. Forgot your code? You can sign out and sign in again with your password.",
       "soonTitle": "Coming soon",
       "soon": "Export your data and delete your account (ticket L1-14)."
+    }
+  },
+  "legal": {
+    "updated": "Version {{version}} · updated on {{date}}",
+    "date": "October 10, 2026",
+    "close": "Close",
+    "emergencyTitle": "In an emergency",
+    "emergency": "If you feel unwell, or your blood glucose is very low or very high with symptoms, don't wait for the app: call emergency services or go to the nearest health centre.",
+    "disclaimer": {
+      "overline": "Disclaimer",
+      "title": "A support tool, not medical advice",
+      "short": "Afyabora helps you track your blood glucose. It does not diagnose and does not replace the advice of a healthcare professional.",
+      "more": "Learn more",
+      "moreA11y": "Read the full disclaimer",
+      "intro": "Afyabora is a support tool for diabetes self-monitoring. Before using it, it is important to know what it does, and above all what it does not do.",
+      "does": {
+        "title": "What Afyabora does",
+        "body": "It records your readings, even offline. It computes simple figures from your own data (averages, time in your target range, high or low episodes). It helps you prepare your appointment and share your history with the doctor you choose."
+      },
+      "doesNot": {
+        "title": "What it does not do",
+        "body": "It never makes a diagnosis. It never suggests an insulin dose or any medication. It never states the cause of a high or low reading: its observations are leads to discuss with a professional."
+      },
+      "quality": {
+        "title": "Results depend on your entries",
+        "body": "The figures are only as accurate as the readings: a mistyped value or days without readings change the results. The app tells you when there is too little data to draw conclusions."
+      },
+      "treatment": {
+        "title": "Your treatment",
+        "body": "Never change your treatment based on the app alone. Talk to your doctor or care team first."
+      },
+      "alerts": {
+        "title": "Reminders and alerts",
+        "body": "Reminders and alerts may not arrive (phone off, empty battery, notifications disabled). They do not replace your own vigilance or that of your relatives."
+      }
+    },
+    "privacy": {
+      "overline": "Privacy",
+      "title": "Privacy policy",
+      "intro": "Your health data belongs to you. This page explains, simply, what we store, why, where, and who can see it.",
+      "prototype": "Afyabora is currently a prototype built as part of a training programme. This policy will be reviewed with our supervisors before any public release.",
+      "data": {
+        "title": "The data we store",
+        "body": "Your account: email address and password (never stored in plain text). Your profile: name, date of birth, sex, diabetes type, year of diagnosis, chosen unit and thresholds. If you wish: a relative to contact and your doctor. Your follow-up: blood glucose readings, events (meals, activity, treatment…) and notes."
+      },
+      "purpose": {
+        "title": "Why",
+        "body": "Only for your follow-up: showing your history, computing your statistics and preparing your appointments. No advertising. Your data is never sold or rented."
+      },
+      "storage": {
+        "title": "Where it is kept",
+        "body": "First on your phone, so the app works offline, then on our server as soon as a connection is available. Exchanges are encrypted, your personal notes are encrypted on the server, and you can lock the app with a code or your fingerprint. When you sign out, the data is erased from the phone."
+      },
+      "sharing": {
+        "title": "Sharing with a doctor",
+        "body": "Nothing is shared without your action. You generate a QR code, valid for a short time and only once; only a signed-in, verified doctor can scan it. You choose what they see and for how long, you can stop sharing at any time, and every access appears in your access log."
+      },
+      "emergency": {
+        "title": "The emergency card",
+        "body": "If you turn it on, the emergency card can be read without an account: that is its purpose, for first responders. It only contains the information you chose, never your history. Every opening is reported to you, and you can turn it off or renew it at any time."
+      },
+      "analysis": {
+        "title": "Analyses",
+        "body": "Figures and observations are computed by the app using fixed, verifiable rules, from your data only. If automatic rewording of texts is ever enabled, it will only receive summarised figures, without your name or contact details."
+      },
+      "retention": {
+        "title": "How long",
+        "body": "Your data is kept as long as your account exists. Deleting the account erases your data from our servers."
+      },
+      "rights": {
+        "title": "Your rights",
+        "body": "You can get a copy of your data, correct it and delete your account. The consent given at sign-up can be withdrawn by deleting your account. You are never required to share your data with a doctor."
+      }
+    },
+    "about": {
+      "overline": "Settings",
+      "title": "About",
+      "version": "Version {{version}}",
+      "legalTitle": "Legal information",
+      "privacyHint": "What we store and who can see it",
+      "disclaimerHint": "What the app does, and what it does not",
+      "credits": "PBL 5 project · MEO. Designed for people living with diabetes."
     }
   }
 }

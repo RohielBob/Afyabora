@@ -9,7 +9,7 @@
 - **L1-06** — Mobile : écrans bienvenue, inscription, vérification email, connexion, mot de passe oublié — **fait**
 - **L1-07** — Mobile : stockage sécurisé des jetons et rafraîchissement automatique de session — **fait**
 - **L1-09** — Mobile : verrouillage de l'app par biométrie ou code — **fait** (feature `security`)
-- **L1-10** — Mobile : consentement explicite et avertissement « outil d'aide, pas un avis médical »
+- **L1-10** — Mobile : consentement explicite et avertissement « outil d'aide, pas un avis médical » — **fait** (feature `legal`)
 
 ## Parcours (L1-06)
 
@@ -22,7 +22,7 @@ Accueil ─► Créer un compte ─► Vérifiez votre boîte mail ─► Adress
           profil incomplet ─► Assistant de profil (L1-08)   ·   profil complet ─► Accueil (onglets)
 ```
 
-- **Inscription** : email, mot de passe (règles affichées en direct), consentement **jamais pré-coché**. Mêmes règles que le serveur (schémas Zod de `@glyka/shared`).
+- **Inscription** : email, mot de passe (règles affichées en direct), **deux cases jamais pré-cochées** (données de santé / avertissement médical, L1-10) avec un lien vers chaque texte. Mêmes règles que le serveur (schémas Zod de `@glyka/shared`).
 - **Vérification** : le lien de l'email ouvre la page du portail (à créer). En attendant, on **colle le lien (ou le code)** dans l'app. « Renvoyer l'email » refait l'inscription avec les données gardées **en mémoire seulement** (`pending-registration.ts`), avec 60 s d'attente entre deux envois.
 - **Connexion** : messages selon la réponse du serveur (identifiants incorrects, email non vérifié + bouton « Vérifier mon adresse », compte bloqué + durée). Un compte **médecin ou admin** est orienté vers le portail et **aucun jeton n'est gardé** sur le téléphone.
 - **Mot de passe oublié** : 3 étapes sur un écran (demande → lien + nouveau mot de passe → réussite).

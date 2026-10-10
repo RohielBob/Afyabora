@@ -7,6 +7,7 @@ import { View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { LogoMark, Wordmark } from '@/components/brand';
 import { Button, Card, RangeBadge, Screen, Text } from '@/components/ui';
+import { MedicalDisclaimer } from '@/features/legal';
 import { enterFromBelow, spacing, useReducedMotion, useTheme } from '@/theme';
 
 export default function WelcomeScreen() {
@@ -96,10 +97,10 @@ export default function WelcomeScreen() {
             variant="outline"
             onPress={() => router.push('/(auth)/sign-in')}
           />
-          {/* Avertissement d'usage (exigence du cahier des charges) */}
-          <Text variant="caption" tone="muted" align="center" style={{ marginTop: spacing.xs }}>
-            {t('disclaimer')}
-          </Text>
+          {/* Avertissement d'usage (CDC F1, L1-10) avec lien vers le texte complet */}
+          <View style={{ marginTop: spacing.xs }}>
+            <MedicalDisclaimer variant="compact" />
+          </View>
         </Animated.View>
       </View>
     </Screen>

@@ -28,6 +28,7 @@ import {
   markProfileCompleted,
   type ErrorMessage,
 } from '@/features/auth';
+import { MedicalDisclaimer } from '@/features/legal';
 import {
   STEPS,
   THRESHOLD_KEYS,
@@ -374,7 +375,11 @@ export default function ProfileSetupScreen() {
         ) : null}
 
         {step === 'summary' ? (
-          <Summary draft={draft} onEdit={(s) => goTo(STEPS.indexOf(s))} />
+          <>
+            <Summary draft={draft} onEdit={(s) => goTo(STEPS.indexOf(s))} />
+            {/* Rappel avant d'enregistrer : les seuils servent au suivi, pas à décider d'un traitement. */}
+            <MedicalDisclaimer index={4} />
+          </>
         ) : null}
       </Animated.View>
 
