@@ -33,6 +33,7 @@
 
 ## API / base de données
 
+- **Paquets partagés compilés** : l'API, le mobile et le portail lisent `@glyka/shared`, `@glyka/analytics` et `@glyka/ui-tokens` dans leur dossier `dist/`. Après un `git switch` ou un `git pull` qui modifie un de ces paquets, le recompiler (`pnpm --filter @glyka/shared build`, etc.) ou passer par `pnpm test` / `pnpm typecheck` (turbo recompile tout seul). Les **tests de l'API** lisent directement le code source de `@glyka/shared` (alias dans `apps/api/vitest.config.ts`) : ils ne peuvent plus tester un ancien schéma.
 - `nest build` lit `tsconfig.build.json` (déclaré dans `nest-cli.json`) : sans lui, le dossier `dist` contient `src/` et `test/` et `node dist/main.js` ne trouve rien.
 - Dans Docker, `localhost` est le conteneur lui-même : `docker-compose.yml` surcharge `DATABASE_URL` (`@db:5432`) et `SMTP_HOST` (`mailpit`).
 - `docker compose down` **sans `-v`** : `-v` supprime la base locale. `prisma migrate reset` aussi efface tout (dev uniquement, sur accord).
