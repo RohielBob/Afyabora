@@ -1,18 +1,24 @@
 // Onglet Accueil = tableau de bord (CDC F3). L2-05 : dernière mesure avec son état (couleur + symbole +
 // libellé, seuils du patient), date et heure, indicateur de synchronisation. L2-06 : graphique d'évolution
-// 7/14/30/90 jours avec la bande cible, interactif. Tout vient de la base LOCALE : l'écran marche sans
-// réseau. Statistiques (L2-07) et qualité des données (L2-08) viendront s'ajouter sous le graphique.
+// 7/14/30/90 jours avec la bande cible, interactif. L2-07 : statistiques et comparaison avec la période
+// précédente, pour LA MÊME période que le graphique (changer de période met à jour tous les chiffres).
+// Tout vient de la base LOCALE : l'écran marche sans réseau. Qualité des données : L2-08.
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 import { InlineAlert, Screen, Text } from '@/components/ui';
 import {
+  DEFAULT_PERIOD,
   DashboardSkeleton,
   EmptyLatest,
   GlucoseChart,
   LatestReading,
+  StatsCard,
   SyncStatus,
   greetingKey,
+  periodStats,
   useDashboard,
+  type ChartPeriod,
 } from '@/features/dashboard';
 import { MedicalDisclaimer } from '@/features/legal';
 import { spacing } from '@/theme';
@@ -20,7 +26,16 @@ import { spacing } from '@/theme';
 export default function DashboardScreen() {
   const { t, i18n } = useTranslation();
   const { state, reload } = useDashboard();
+  // Une seule période pour le graphique et les statistiques.
+  const [period, setPeriod] = useState<ChartPeriod>(DEFAULT_PERIOD);
   const now = state.status === 'ready' ? state.now : new Date();
+  const stats = useMemo(
+    () =>
+      state.status === 'ready'
+        ? periodStats(state.points, period, state.now, state.thresholds)
+        : null,
+    [state, period],
+  );
   // « Samedi 10 octobre » : la date du jour, en tête, dans la langue de l'application.
   const today = now.toLocaleDateString(i18n.language, {
     weekday: 'long',
@@ -66,13 +81,18 @@ export default function DashboardScreen() {
                 thresholds={state.thresholds}
                 unit={state.unit}
                 now={state.now}
+                period={period}
+                onPeriodChange={setPeriod}
                 index={1}
               />
+              {stats ? (
+                <StatsCard data={stats} period={period} unit={state.unit} index={2} />
+              ) : null}
             </>
           ) : (
             <EmptyLatest index={0} />
           )}
-          <SyncStatus pending={state.pending} index={2} />
+          <SyncStatus pending={state.pending} index={3} />
         </>
       ) : null}
 

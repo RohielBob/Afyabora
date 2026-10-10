@@ -5,6 +5,7 @@
 //    pour très haut / très bas) et sa couleur : l'état n'est jamais dit par la couleur seule ;
 //  - la courbe se dessine de gauche à droite (≈ 0,4 s), puis les points apparaissent en fondu ; changer de
 //    période redessine. « Réduire les animations » : tout s'affiche directement ;
+//  - la période est choisie par l'écran (partagée avec les statistiques, L2-07) ;
 //  - toucher ou glisser le doigt sur le graphique sélectionne la mesure la plus proche : trait vertical,
 //    point entouré, détail au-dessus (valeur, état, contexte, jour et heure). Lecteur d'écran : balayer
 //    vers le haut / le bas passe d'une mesure à l'autre ;
@@ -31,7 +32,6 @@ import { formatClock, formatReading } from '@/features/measurements';
 import { durations, easing, radii, spacing, useReducedMotion, useTheme } from '@/theme';
 import {
   CHART_PERIODS,
-  DEFAULT_PERIOD,
   DENSE_POINTS,
   nearestIndex,
   periodBounds,
@@ -100,10 +100,15 @@ export function GlucoseChart({
   thresholds,
   unit,
   now,
+  period,
+  onPeriodChange,
   index = 0,
 }: {
-  /** Mesures des 90 derniers jours (la plus longue période), dans n'importe quel ordre. */
+  /** Mesures (au moins celles des 90 derniers jours), dans n'importe quel ordre. */
   points: readonly ChartPoint[];
+  /** Période affichée, choisie par l'écran : changer de période met à jour TOUS les chiffres (CDC F3). */
+  period: ChartPeriod;
+  onPeriodChange: (period: ChartPeriod) => void;
   thresholds: GlucoseThresholds;
   unit: GlucoseUnit;
   now: Date;
@@ -112,7 +117,6 @@ export function GlucoseChart({
   const { t, i18n } = useTranslation();
   const { colors, states } = useTheme();
   const reduced = useReducedMotion();
-  const [period, setPeriod] = useState<ChartPeriod>(DEFAULT_PERIOD);
   const [width, setWidth] = useState(0);
   const [selected, setSelected] = useState(-1);
   const touchStart = useRef({ x: 0, y: 0 });
@@ -169,7 +173,7 @@ export function GlucoseChart({
   };
 
   const choosePeriod = (next: ChartPeriod) => {
-    setPeriod(next);
+    onPeriodChange(next);
     setSelected(-1);
   };
 

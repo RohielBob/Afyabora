@@ -5,6 +5,7 @@ import { useFocusEffect } from 'expo-router';
 import { useCallback, useRef, useState } from 'react';
 import type { GlucoseThresholds, GlucoseUnit } from '@glyka/shared';
 import { CHART_PERIODS, periodBounds, type ChartPoint } from './chart';
+import { previousBounds } from './stats';
 import { localMeasurements, readUnit, type LatestMeasurement } from '@/features/measurements';
 import { readThresholds } from '@/features/profile';
 
@@ -15,7 +16,10 @@ export type DashboardState =
       status: 'ready';
       latest: LatestMeasurement | null;
       pending: number;
-      /** Mesures de la plus longue période du graphique (90 jours), de la plus ancienne à la plus récente. */
+      /**
+       * Mesures de la plus longue période (90 jours) ET de la période précédente (90 jours d'avant, pour la
+       * comparaison L2-07), de la plus ancienne à la plus récente.
+       */
       points: ChartPoint[];
       thresholds: GlucoseThresholds;
       unit: GlucoseUnit;
@@ -32,8 +36,13 @@ export function useDashboard(): { state: DashboardState; reload: () => void } {
   const load = useCallback(() => {
     const id = ++lastLoad.current;
     const now = new Date();
-    // Une seule lecture pour toutes les périodes : on prend la plus longue, chaque période filtre ensuite.
-    const longest = periodBounds(CHART_PERIODS[CHART_PERIODS.length - 1] as 90, now);
+    // Une seule lecture pour toutes les périodes : la plus longue et celle d'avant (comparaison),
+    // chaque période filtre ensuite en mémoire.
+    const longestDays = CHART_PERIODS[CHART_PERIODS.length - 1] as 90;
+    const longest = {
+      from: previousBounds(longestDays, now).from,
+      to: periodBounds(longestDays, now).to,
+    };
     Promise.all([
       localMeasurements.latest(),
       localMeasurements.pendingCount(),
