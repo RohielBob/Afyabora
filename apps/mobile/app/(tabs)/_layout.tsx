@@ -2,6 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import type { ComponentProps } from 'react';
+import { AddTabButton } from '@/features/measurements';
 import { fontFiles, useTheme } from '@/theme';
 
 type IconName = ComponentProps<typeof Ionicons>['name'];
@@ -29,7 +30,10 @@ export default function TabsLayout() {
           paddingTop: 6,
           paddingBottom: 8,
         },
-        tabBarLabelStyle: { fontFamily: fontFiles.semibold, fontSize: 11 },
+        // 6 emplacements avec le « + » central (L2-03) : libellés un peu plus petits et sans marge
+        // intérieure ; l'onglet chronologie s'appelle « Historique » (plus court, tient sur 375 px).
+        tabBarLabelStyle: { fontFamily: fontFiles.semibold, fontSize: 10, letterSpacing: -0.1 },
+        tabBarItemStyle: { paddingHorizontal: 0 },
         animation: 'shift', // léger glissement entre onglets
       }}
     >
@@ -40,6 +44,11 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="timeline"
         options={{ title: t('tabs.timeline'), tabBarIcon: icon('time', 'time-outline') }}
+      />
+      {/* « + » au centre : ouvre la saisie d'une mesure (L2-03, CDC F2). */}
+      <Tabs.Screen
+        name="add"
+        options={{ title: t('tabs.add'), tabBarButton: () => <AddTabButton /> }}
       />
       <Tabs.Screen
         name="insights"

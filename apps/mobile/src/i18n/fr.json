@@ -141,10 +141,11 @@
   },
   "tabs": {
     "home": "Accueil",
-    "timeline": "Chronologie",
+    "timeline": "Historique",
     "insights": "Analyse",
     "share": "Partager",
-    "profile": "Profil"
+    "profile": "Profil",
+    "add": "Ajouter"
   },
   "settings": {
     "overline": "Réglages",
@@ -425,5 +426,64 @@
       "disclaimerHint": "Ce que fait l'application, et ce qu'elle ne fait pas",
       "credits": "Projet PBL 5 · MEO. Conçu pour les personnes vivant avec un diabète."
     }
+  },
+  "measurement": {
+    "overline": "Saisie",
+    "title": "Nouvelle mesure",
+    "close": "Fermer sans enregistrer",
+    "valueLabel": "Glycémie",
+    "valueA11y": "Valeur de la glycémie, en {{unit}}",
+    "equals": "soit {{values}}",
+    "unitLabel": "Unité",
+    "when": {
+      "label": "Quand ?",
+      "now": "Maintenant",
+      "minus30": "−30 min",
+      "minus60": "−1 h",
+      "custom": "Autre",
+      "today": "Aujourd'hui",
+      "yesterday": "Hier",
+      "dayBefore": "Avant-hier",
+      "time": "Heure de la mesure",
+      "hourMinus": "Une heure plus tôt",
+      "hourPlus": "Une heure plus tard",
+      "minuteMinus": "Cinq minutes plus tôt",
+      "minutePlus": "Cinq minutes plus tard",
+      "summary": "{{day}}, {{time}}"
+    },
+    "context": {
+      "label": "Contexte",
+      "FASTING": "À jeun",
+      "BEFORE_MEAL": "Avant repas",
+      "AFTER_MEAL": "Après repas",
+      "BEDTIME": "Au coucher",
+      "NIGHT": "La nuit",
+      "OTHER": "Autre"
+    },
+    "noteLabel": "Note (facultatif)",
+    "notePlaceholder": "Ex. après une marche, repas tardif…",
+    "noteHint": "Visible par vous ; partagée seulement si vous le choisissez.",
+    "save": "Enregistrer",
+    "problem": {
+      "empty": "Saisissez la valeur mesurée.",
+      "invalid": "Valeur illisible : utilisez seulement des chiffres.",
+      "zero": "La valeur doit être supérieure à zéro.",
+      "decimals": "Trop de décimales pour cette unité : vérifiez la saisie.",
+      "unusual": "Valeur inhabituelle : vérifiez la valeur et l’unité choisie.",
+      "future": "Cette heure est dans le futur.",
+      "context": "Choisissez le contexte de la mesure."
+    },
+    "duplicateTitle": "Déjà enregistrée ?",
+    "duplicate": "Une mesure de même valeur existe déjà à cette heure.",
+    "duplicateConfirm": "Enregistrer quand même",
+    "error": "La mesure n'a pas pu être enregistrée sur ce téléphone. Réessayez.",
+    "saved": {
+      "title": "Mesure enregistrée",
+      "detail": "{{value}} · {{context}} · {{when}}",
+      "local": "Gardée sur ce téléphone, elle sera envoyée dès que la connexion le permet.",
+      "another": "Ajouter une autre mesure",
+      "done": "Terminé"
+    },
+    "addA11y": "Ajouter une mesure de glycémie"
   }
 }

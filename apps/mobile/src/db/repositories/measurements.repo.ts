@@ -87,4 +87,21 @@ export async function deleteMeasurement(id: string): Promise<void> {
     });
   });
 }
+/**
+ * Mesures non supprimées dans la même minute que `measuredAt` (L2-03 : avertissement de doublon exact).
+ * Comparaison sur la minute UTC : les dates sont stockées en ISO UTC (« …T08:30:00.000Z »).
+ */
+export async function measurementsInMinute(
+  measuredAt: string,
+): Promise<{ valueMgDl: number; measuredAt: string }[]> {
+  const db = await getDb();
+  const minute = measuredAt.slice(0, 16); // « AAAA-MM-JJTHH:MM »
+  return db.getAllAsync<{ valueMgDl: number; measuredAt: string }>(
+    `SELECT value_mgdl AS valueMgDl, measured_at AS measuredAt
+     FROM measurements
+     WHERE deleted_at IS NULL AND substr(measured_at, 1, 16) = ?`,
+    minute,
+  );
+}
+
 // TODO(L8-03) : updateMeasurement, repositories d'événements (events.repo.ts), mapping vers GlucosePoint.

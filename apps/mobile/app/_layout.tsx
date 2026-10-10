@@ -77,9 +77,10 @@ function RootNavigator() {
           {PRIVATE_SCREENS.map((name) => (
             <Stack.Screen key={name} name={name} />
           ))}
+          {/* Saisie d'une mesure (L2-03) : fenêtre qui monte du bas ; l'écran a son propre en-tête traduit. */}
           <Stack.Screen
             name="measurement/new"
-            options={{ presentation: 'modal', headerShown: true, title: 'Nouvelle mesure' }}
+            options={{ presentation: 'modal', animation: 'slide_from_bottom' }}
           />
           <Stack.Screen
             name="event/new"
