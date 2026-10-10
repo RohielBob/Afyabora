@@ -45,6 +45,7 @@ import {
   updateMeasurementSchema,
   USER_ROLES,
   verifyEmailSchema,
+  lifeEventDtoSchema,
 } from '@glyka/shared';
 
 // Le contrat est un document JSON arbitraire : `any` est volontaire ici (permis dans les tests).
@@ -319,6 +320,13 @@ describe('contrat OpenAPI : requêtes identiques aux schémas Zod', () => {
     });
     expect(Object.keys(schemas.ImportPreviewRequest.properties).sort()).toEqual(
       ['defaultUnit', 'file', 'mapping'].sort(),
+    );
+  });
+
+  it('LifeEvent : exemple et champs identiques à lifeEventDtoSchema (L2-02)', () => {
+    expect(lifeEventDtoSchema.safeParse(schemas.LifeEvent.example).success).toBe(true);
+    expect(Object.keys(schemas.LifeEvent.properties).sort()).toEqual(
+      Object.keys(lifeEventDtoSchema.shape).sort(),
     );
   });
 
