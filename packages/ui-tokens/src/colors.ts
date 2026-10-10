@@ -156,7 +156,7 @@ export interface ThemeColors {
   primarySoft: string; // fond teinté (sélection, puce active)
   primarySoftBorder: string;
   primaryText: string; // liens et texte d'accent posés sur `background`
-  focus: string; // anneau de focus / champ actif
+  focus: string; // champ actif : encre neutre (jamais rouge, pour ne pas ressembler à une erreur)
   overlay: string; // voile derrière une feuille modale
   skeleton: string; // base des blocs de chargement
   skeletonHighlight: string; // reflet qui glisse sur le squelette
@@ -200,7 +200,8 @@ export function buildTheme(mode: ColorMode, accent: AccentName = DEFAULT_ACCENT)
         primarySoft: a[50],
         primarySoftBorder: a[200],
         primaryText: graphite ? a[800] : a[700],
-        focus: graphite ? a[700] : a[500],
+        // Champ actif en encre foncée : avec un rouge principal, un focus rouge passerait pour une erreur.
+        focus: ink[800],
         overlay: 'rgba(16, 19, 24, 0.45)',
         skeleton: ink[100],
         skeletonHighlight: ink[50],
@@ -235,7 +236,7 @@ export function buildTheme(mode: ColorMode, accent: AccentName = DEFAULT_ACCENT)
       primarySoft: graphite ? a[900] : a[950],
       primarySoftBorder: graphite ? a[700] : a[800],
       primaryText: a[300],
-      focus: a[400],
+      focus: ink[300],
       overlay: 'rgba(0, 0, 0, 0.6)',
       skeleton: ink[850],
       skeletonHighlight: ink[800],

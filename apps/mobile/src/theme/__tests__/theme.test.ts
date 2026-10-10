@@ -33,6 +33,7 @@ describe('contrastes AA de chaque thème (2 modes × 4 couleurs d’accent)', ()
       ['erreur / fond', c.danger, c.background, AA_TEXT],
       ['erreur / fond d’erreur', c.danger, c.dangerSoft, AA_TEXT],
       ['bouton / fond (forme)', c.primary, c.background, AA_NON_TEXT],
+      ['bordure du champ actif / surface', c.focus, c.surface, AA_NON_TEXT],
       ['texte discret / fond (grand texte)', c.textSubtle, c.background, AA_NON_TEXT],
     ];
     const failures = pairs

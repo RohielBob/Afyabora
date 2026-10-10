@@ -2,6 +2,7 @@
 // (thème, composants) : il suit automatiquement le thème clair / sombre et la couleur d'accent.
 // Entrée en cascade : logo, carte d'exemple, message, puis boutons (≈ 0,5 s au total).
 import { router } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { LogoMark, Wordmark } from '@/components/brand';
@@ -9,6 +10,7 @@ import { Button, Card, RangeBadge, Screen, Text } from '@/components/ui';
 import { enterFromBelow, spacing, useReducedMotion, useTheme } from '@/theme';
 
 export default function WelcomeScreen() {
+  const { t } = useTranslation();
   const { colors } = useTheme();
   const reduced = useReducedMotion();
 
@@ -21,20 +23,17 @@ export default function WelcomeScreen() {
             <Wordmark size={36} />
           </View>
           <Text variant="bodySmall" tone="muted" align="center">
-            Suivez. Comprenez. Partagez.
+            {t('app.tagline')}
           </Text>
         </Animated.View>
 
         {/* Aperçu d'une carte de suivi (données fictives, signalées comme telles). */}
-        <Card
-          index={1}
-          accessibilityLabel="Exemple de dernière mesure : 1,12 gramme par litre, dans la plage"
-        >
+        <Card index={1} accessibilityLabel={t('welcome.demoA11y')}>
           <View
             style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}
           >
             <Text variant="overline" tone="primary">
-              Dernière mesure
+              {t('welcome.lastMeasurement')}
             </Text>
             <Text
               variant="caption"
@@ -47,7 +46,7 @@ export default function WelcomeScreen() {
                 overflow: 'hidden',
               }}
             >
-              Exemple fictif
+              {t('welcome.demoTag')}
             </Text>
           </View>
           <View style={{ flexDirection: 'row', alignItems: 'baseline', gap: spacing.sm }}>
@@ -68,40 +67,38 @@ export default function WelcomeScreen() {
             }}
           >
             <Text variant="caption" tone="muted">
-              Enregistrée même sans réseau
+              {t('welcome.offlineSaved')}
             </Text>
             <Text variant="caption" tone="success">
-              ✓ Sur ce téléphone
+              {t('welcome.onThisPhone')}
             </Text>
           </View>
         </Card>
 
         <Animated.View entering={enterFromBelow(2, reduced)} style={{ gap: spacing.sm }}>
           <Text variant="title" align="center">
-            Votre historique glycémique, toujours avec vous.
+            {t('welcome.title')}
           </Text>
           <Text tone="muted" align="center">
-            Enregistrez vos mesures, comprenez votre évolution et choisissez qui voit quoi, et
-            pendant combien de temps.
+            {t('welcome.description')}
           </Text>
         </Animated.View>
 
         <Animated.View entering={enterFromBelow(3, reduced)} style={{ gap: spacing.md }}>
           <Button
-            label="Créer un compte"
+            label={t('welcome.createAccount')}
             size="lg"
             onPress={() => router.push('/(auth)/sign-up')}
           />
           <Button
-            label="Se connecter"
+            label={t('welcome.signIn')}
             size="lg"
             variant="outline"
             onPress={() => router.push('/(auth)/sign-in')}
           />
           {/* Avertissement d'usage (exigence du cahier des charges) */}
           <Text variant="caption" tone="muted" align="center" style={{ marginTop: spacing.xs }}>
-            Afyabora est un outil d'aide au suivi. Il ne remplace pas l'avis d'un professionnel de
-            santé.
+            {t('disclaimer')}
           </Text>
         </Animated.View>
       </View>

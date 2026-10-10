@@ -16,5 +16,103 @@
   },
   "safety": {
     "extreme": "Suivez les consignes de votre équipe soignante. En cas de malaise, demandez de l'aide immédiatement."
+  },
+  "errors": {
+    "network": "Impossible de joindre le serveur. Vérifiez votre connexion internet puis réessayez.",
+    "server": "Le service rencontre un problème. Réessayez dans quelques instants.",
+    "tooManyRequests": "Trop de tentatives. Patientez une minute avant de réessayer.",
+    "invalidData": "Certaines informations ne sont pas valides. Vérifiez le formulaire.",
+    "unexpected": "Une erreur inattendue est survenue. Réessayez."
+  },
+  "welcome": {
+    "lastMeasurement": "Dernière mesure",
+    "demoTag": "Exemple fictif",
+    "demoA11y": "Exemple de dernière mesure : 1,12 gramme par litre, dans la plage",
+    "offlineSaved": "Enregistrée même sans réseau",
+    "onThisPhone": "✓ Sur ce téléphone",
+    "title": "Votre historique glycémique, toujours avec vous.",
+    "description": "Enregistrez vos mesures, comprenez votre évolution et choisissez qui voit quoi, et pendant combien de temps.",
+    "createAccount": "Créer un compte",
+    "signIn": "Se connecter"
+  },
+  "auth": {
+    "fields": {
+      "email": "Adresse email",
+      "emailPlaceholder": "nom@exemple.com",
+      "password": "Mot de passe",
+      "newPassword": "Nouveau mot de passe",
+      "link": "Lien ou code reçu par email",
+      "linkPlaceholder": "Collez ici le lien de l'email"
+    },
+    "password": {
+      "rulesTitle": "Règles du mot de passe",
+      "ruleLength": "Au moins {{count}} caractères",
+      "ruleOk": "respectée",
+      "ruleTodo": "à respecter",
+      "hint": "Une phrase facile à retenir est plus sûre qu'un mot compliqué."
+    },
+    "validation": {
+      "email": "Saisissez une adresse email valide.",
+      "passwordLength": "Le mot de passe doit contenir au moins 12 caractères.",
+      "passwordRequired": "Saisissez votre mot de passe.",
+      "consent": "Votre accord est nécessaire pour créer un compte.",
+      "link": "Ce lien n'est pas reconnu. Copiez le lien complet de l'email."
+    },
+    "errors": {
+      "invalidCredentials": "Adresse email ou mot de passe incorrect.",
+      "emailNotVerified": "Votre adresse email n'est pas encore vérifiée.",
+      "locked": "Trop d'essais : par sécurité, votre compte est bloqué pendant {{minutes}} min.",
+      "verifyLinkInvalid": "Ce lien de vérification est invalide, déjà utilisé ou expiré. Demandez un nouvel email.",
+      "resetLinkInvalid": "Ce lien est invalide, déjà utilisé ou expiré (1 heure). Faites une nouvelle demande.",
+      "notPatient": "Ce compte est un compte professionnel. Connectez-vous sur le portail Afyabora."
+    },
+    "signUp": {
+      "title": "Créer un compte",
+      "subtitle": "Quelques secondes pour commencer à suivre votre glycémie.",
+      "consent": "J'accepte qu'Afyabora enregistre mes données de santé pour mon suivi, et je comprends que l'application ne remplace pas l'avis d'un professionnel de santé.",
+      "consentA11y": "Consentement au traitement de mes données de santé",
+      "submit": "Créer mon compte",
+      "haveAccount": "Déjà un compte ?",
+      "signIn": "Se connecter"
+    },
+    "verify": {
+      "title": "Vérifiez votre boîte mail",
+      "subtitle": "Nous avons envoyé un lien de confirmation à {{email}}. Il est valable 24 heures.",
+      "subtitleNoEmail": "Ouvrez l'email de confirmation que nous vous avons envoyé. Le lien est valable 24 heures.",
+      "steps": "Ouvrez l'email « Afyabora : confirmez votre adresse email » et appuyez sur le lien. Pas reçu ? Regardez dans les courriers indésirables.",
+      "pasteTitle": "Le lien ne s'ouvre pas dans l'app ?",
+      "pasteHelp": "Copiez le lien de l'email et collez-le ci-dessous.",
+      "submit": "Confirmer mon adresse",
+      "resend": "Renvoyer l'email",
+      "resendIn": "Renvoyer l'email dans {{seconds}} s",
+      "resent": "Un nouvel email vient d'être envoyé. L'ancien lien ne fonctionne plus.",
+      "resendUnavailable": "Pour recevoir un nouvel email, recommencez l'inscription avec la même adresse.",
+      "successTitle": "Adresse vérifiée",
+      "successMessage": "Votre compte est activé. Vous pouvez maintenant vous connecter.",
+      "goToSignIn": "Se connecter"
+    },
+    "signIn": {
+      "title": "Bon retour",
+      "subtitle": "Connectez-vous pour retrouver votre suivi.",
+      "forgot": "Mot de passe oublié ?",
+      "submit": "Se connecter",
+      "noAccount": "Pas encore de compte ?",
+      "signUp": "Créer un compte",
+      "verifyAction": "Vérifier mon adresse",
+      "success": "Connexion réussie"
+    },
+    "forgot": {
+      "title": "Mot de passe oublié",
+      "subtitle": "Indiquez votre adresse : si un compte existe, vous recevrez un lien pour choisir un nouveau mot de passe.",
+      "submit": "Recevoir le lien",
+      "sentTitle": "Email envoyé",
+      "sentMessage": "Si un compte existe pour {{email}}, un lien valable 1 heure vient d'être envoyé.",
+      "resetTitle": "Choisir un nouveau mot de passe",
+      "resetHelp": "Collez le lien reçu par email, puis choisissez votre nouveau mot de passe.",
+      "resetSubmit": "Enregistrer le nouveau mot de passe",
+      "successTitle": "Mot de passe modifié",
+      "successMessage": "Pour votre sécurité, vos autres sessions ont été fermées. Connectez-vous avec votre nouveau mot de passe.",
+      "changeEmail": "Utiliser une autre adresse"
+    }
   }
 }

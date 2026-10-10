@@ -1,7 +1,7 @@
 // Cadre d'un écran : fond du thème, zones sûres (encoche), défilement, largeur de lecture limitée,
 // et apparition en fondu du contenu.
 import type { ReactNode } from 'react';
-import { ScrollView, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { fadeIn, spacing, useReducedMotion, useTheme } from '@/theme';
@@ -34,17 +34,24 @@ export function Screen({
   );
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
-      {scroll ? (
-        <ScrollView
-          contentContainerStyle={{ flexGrow: 1 }}
-          keyboardShouldPersistTaps="handled"
-          showsVerticalScrollIndicator={false}
-        >
-          {content}
-        </ScrollView>
-      ) : (
-        <View style={{ flex: 1 }}>{content}</View>
-      )}
+      {/* iOS : le contenu remonte au-dessus du clavier (Android le fait tout seul). */}
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      >
+        {scroll ? (
+          <ScrollView
+            contentContainerStyle={{ flexGrow: 1 }}
+            keyboardShouldPersistTaps="handled"
+            keyboardDismissMode="on-drag"
+            showsVerticalScrollIndicator={false}
+          >
+            {content}
+          </ScrollView>
+        ) : (
+          <View style={{ flex: 1 }}>{content}</View>
+        )}
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }

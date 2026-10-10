@@ -1,7 +1,7 @@
 // Champ de saisie : libellé au-dessus (toujours visible), bordure qui s'anime au focus et en erreur,
 // message d'aide ou d'erreur qui apparaît en fondu, bouton « Afficher » pour les mots de passe.
 import { forwardRef, useEffect, useState } from 'react';
-import { Pressable, TextInput, View, type TextInputProps } from 'react-native';
+import { Platform, Pressable, TextInput, View, type TextInputProps } from 'react-native';
 import Animated, {
   interpolateColor,
   useAnimatedStyle,
@@ -77,7 +77,12 @@ export const TextField = forwardRef<TextInput, TextFieldProps>(function TextFiel
             focus.value = withTiming(0, { duration: durations.fast, easing: easing.standard });
             onBlur?.(e);
           }}
-          style={[textStyle('body'), { flex: 1, color: colors.text, paddingVertical: spacing.md }]}
+          style={[
+            textStyle('body'),
+            { flex: 1, color: colors.text, paddingVertical: spacing.md },
+            // Web : retire le cadre ajouté par le navigateur (la bordure animée du champ suffit).
+            Platform.OS === 'web' ? ({ outlineStyle: 'none' } as object) : null,
+          ]}
         />
         {secret ? (
           <Pressable

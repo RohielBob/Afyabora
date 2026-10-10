@@ -1,5 +1,6 @@
 // Logo Afyabora : goutte rouge, cœur blanc et tracé de pouls. Dessiné en vectoriel (react-native-svg)
 // d'après le logo validé par le groupe — voir docs/design/marque-afyabora.md.
+import { useId } from 'react';
 import { Text, View } from 'react-native';
 import Svg, { Defs, LinearGradient, Path, Polyline, Stop } from 'react-native-svg';
 import { brand, fontFiles, useTheme } from '@/theme';
@@ -39,6 +40,9 @@ export function DropGradient({ id = 'afyaDrop' }: { id?: string }) {
 /** La goutte seule. `size` est la HAUTEUR en points ; la largeur suit les proportions du logo. */
 export function LogoMark({ size = 96 }: { size?: number }) {
   const width = (size * MARK_WIDTH) / MARK_HEIGHT;
+  // Identifiant de dégradé UNIQUE par logo : avec un nom fixe, deux logos à l'écran (ex. écran précédent
+  // encore présent sur le web) se disputent le même dégradé et la goutte devient invisible.
+  const gradientId = `afyaDrop${useId().replace(/[^A-Za-z0-9]/g, '')}`;
   return (
     <View
       accessible
@@ -47,8 +51,8 @@ export function LogoMark({ size = 96 }: { size?: number }) {
       style={{ width, height: size }}
     >
       <Svg width={width} height={size} viewBox={`0 0 ${MARK_WIDTH} ${MARK_HEIGHT}`}>
-        <DropGradient />
-        <Path d={DROP_PATH} fill="url(#afyaDrop)" />
+        <DropGradient id={gradientId} />
+        <Path d={DROP_PATH} fill={`url(#${gradientId})`} />
         <Path d={HEART_PATH} fill="#FFFFFF" />
         <Polyline
           points={PULSE_POINTS}
