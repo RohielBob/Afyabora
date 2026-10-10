@@ -136,4 +136,43 @@ export async function latestMeasurement(): Promise<LatestMeasurement | null> {
   return row ? { ...row, pendingSync: row.pendingSync === 1 } : null;
 }
 
+/** Point du graphique d'évolution (L2-06). */
+export interface MeasurementPoint {
+  id: string;
+  /** Instant de la mesure (ms depuis epoch). */
+  at: number;
+  mgDl: number;
+  context: MeasurementContext;
+}
+
+/**
+ * Mesures non supprimées entre deux dates ISO UTC (début inclus, fin incluse), de la plus ancienne à la plus
+ * récente. Seules les colonnes utiles au graphique sont lues (rapide même avec des milliers de mesures).
+ */
+export async function measurementPoints(
+  fromIso: string,
+  toIso: string,
+): Promise<MeasurementPoint[]> {
+  const db = await getDb();
+  const rows = await db.getAllAsync<{
+    id: string;
+    measuredAt: string;
+    mgDl: number;
+    context: MeasurementContext;
+  }>(
+    `SELECT id, measured_at AS measuredAt, value_mgdl AS mgDl, context
+     FROM measurements
+     WHERE deleted_at IS NULL AND measured_at >= ? AND measured_at <= ?
+     ORDER BY measured_at ASC`,
+    fromIso,
+    toIso,
+  );
+  return rows.map((r) => ({
+    id: r.id,
+    at: Date.parse(r.measuredAt),
+    mgDl: r.mgDl,
+    context: r.context,
+  }));
+}
+
 // TODO(L8-03) : updateMeasurement, repositories d'événements (events.repo.ts), mapping vers GlucosePoint.

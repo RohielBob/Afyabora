@@ -13,6 +13,13 @@ export interface LatestMeasurement {
   pendingSync: boolean;
 }
 
+export interface MeasurementPoint {
+  id: string;
+  at: number;
+  mgDl: number;
+  context: MeasurementContext;
+}
+
 const memory: LatestMeasurement[] = [];
 
 export const localMeasurements = {
@@ -35,4 +42,14 @@ export const localMeasurements = {
       null,
     ),
   pendingCount: async (): Promise<number> => memory.length,
+  between: async (from: number, to: number): Promise<MeasurementPoint[]> =>
+    memory
+      .map((m) => ({
+        id: m.id,
+        at: Date.parse(m.measuredAt),
+        mgDl: m.valueMgDl,
+        context: m.context,
+      }))
+      .filter((p) => p.at >= from && p.at <= to)
+      .sort((a, b) => a.at - b.at),
 };

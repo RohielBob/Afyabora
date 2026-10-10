@@ -538,6 +538,21 @@
       "text": "Notez votre première glycémie : elle reste sur ce téléphone, même sans réseau.",
       "action": "Noter ma première mesure"
     },
-    "error": "Vos mesures n'ont pas pu être lues sur ce téléphone."
+    "error": "Vos mesures n'ont pas pu être lues sur ce téléphone.",
+    "chart": {
+      "title": "Évolution",
+      "periodLabel": "Période du graphique",
+      "period_one": "{{count}} j",
+      "period_other": "{{count}} j",
+      "summary_one": "{{count}} mesure sur {{days}} jours",
+      "summary_other": "{{count}} mesures sur {{days}} jours",
+      "hint": "Touchez la courbe pour voir le détail d’une mesure.",
+      "empty": "Aucune mesure sur ces {{days}} jours.",
+      "target": "Plage cible : {{min}} – {{max}}",
+      "a11y_one": "Graphique de la glycémie sur {{days}} jours : {{count}} mesure.",
+      "a11y_other": "Graphique de la glycémie sur {{days}} jours : {{count}} mesures.",
+      "a11yHint": "Balayez vers le haut ou le bas pour passer d’une mesure à l’autre.",
+      "a11yPoint": "{{value}}, {{state}}. {{detail}}"
+    }
   }
 }
