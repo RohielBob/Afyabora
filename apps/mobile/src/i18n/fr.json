@@ -172,5 +172,111 @@
     "preview": "Aperçu",
     "previewOverline": "Dernière mesure · exemple",
     "previewButton": "Ajouter une mesure"
+  },
+  "onboarding": {
+    "progress": "Étape {{current}} sur {{total}}",
+    "next": "Continuer",
+    "review": "Vérifier mes informations",
+    "privacy": "Vos informations restent privées : vous seul choisissez qui peut les voir.",
+    "identity": {
+      "title": "Qui êtes-vous ?",
+      "intro": "Ces informations permettent à votre médecin de vous reconnaître et d'interpréter vos mesures.",
+      "firstName": "Prénom",
+      "lastName": "Nom",
+      "birthDate": "Date de naissance",
+      "birthDatePlaceholder": "JJ/MM/AAAA",
+      "sex": "Sexe",
+      "sexF": "Femme",
+      "sexM": "Homme",
+      "sexOther": "Autre"
+    },
+    "diabetes": {
+      "title": "Votre diabète",
+      "intro": "Le type de diabète aide à lire votre suivi. En cas de doute, choisissez « Autre » : vous pourrez le changer plus tard.",
+      "type": "Type de diabète",
+      "type1": "Type 1",
+      "type2": "Type 2",
+      "gestational": "Gestationnel",
+      "other": "Autre",
+      "year": "Année du diagnostic",
+      "yearHint": "Facultatif. Une estimation suffit."
+    },
+    "thresholds": {
+      "title": "Unité et seuils",
+      "intro": "Choisissez l'unité de votre lecteur et vérifiez votre plage cible.",
+      "unit": "Unité de mesure",
+      "doctorNote": "Valeurs habituelles proposées par défaut : à définir avec votre médecin. Afyabora ne donne jamais de conseil de traitement.",
+      "veryLowMgDl": "Très bas en dessous de",
+      "targetMinMgDl": "Plage cible : début",
+      "targetMaxMgDl": "Plage cible : fin",
+      "veryHighMgDl": "Très haut au-dessus de",
+      "reset": "Revenir aux valeurs par défaut",
+      "reviewed": "Ces seuils ont été définis avec mon médecin.",
+      "barCaption": "Très bas · bas · plage cible · haut · très haut",
+      "barA11y": "Plage cible de {{min}} à {{max}} milligrammes par décilitre",
+      "rangeTitle": "Plage cible",
+      "alertTitle": "Seuils d'alerte",
+      "rangeHint": "Les valeurs entre ces deux nombres sont « dans la plage ».",
+      "alertHint": "En dessous du très bas ou au-dessus du très haut, Afyabora vous alertera.",
+      "short": {
+        "targetMinMgDl": "De",
+        "targetMaxMgDl": "À",
+        "veryLowMgDl": "Très bas",
+        "veryHighMgDl": "Très haut"
+      }
+    },
+    "contacts": {
+      "title": "Vos contacts",
+      "intro": "Facultatif, mais utile en cas de besoin. Vous pourrez les modifier plus tard.",
+      "relativeTitle": "Un proche à prévenir",
+      "relativeHint": "Il figurera sur votre carte d'urgence si vous l'activez.",
+      "name": "Nom",
+      "phone": "Téléphone",
+      "relation": "Lien (facultatif)",
+      "relationPlaceholder": "Épouse, fils, ami…",
+      "doctorTitle": "Votre médecin",
+      "doctorHint": "Le médecin qui suit votre diabète.",
+      "doctorName": "Nom du médecin",
+      "doctorNamePlaceholder": "Dr …"
+    },
+    "summary": {
+      "overline": "Dernière étape",
+      "title": "Tout est correct ?",
+      "intro": "Vérifiez vos informations avant de les enregistrer.",
+      "edit": "Modifier",
+      "name": "Nom",
+      "target": "Plage cible",
+      "none": "Non renseigné",
+      "save": "Enregistrer mon profil"
+    },
+    "done": {
+      "title": "Bienvenue, {{name}} !",
+      "message": "Votre profil est prêt. Vous pouvez enregistrer votre première mesure.",
+      "action": "Découvrir Afyabora"
+    },
+    "errors": {
+      "firstName": "Saisissez votre prénom.",
+      "lastName": "Saisissez votre nom.",
+      "birthDate": "Date invalide : utilisez le format JJ/MM/AAAA (pas de date future).",
+      "sex": "Choisissez une option.",
+      "diabetesType": "Choisissez le type de diabète.",
+      "diagnosisYear": "Année entre 1950 et aujourd'hui, après votre naissance.",
+      "preferredUnit": "Choisissez une unité.",
+      "thresholds": {
+        "veryLowMgDl": "Valeur invalide : elle doit être inférieure au début de la plage cible.",
+        "targetMinMgDl": "Valeur invalide ou hors des limites (20 à 600 mg/dL).",
+        "targetMaxMgDl": "Valeur invalide : la fin de la plage doit être au-dessus du début.",
+        "veryHighMgDl": "Valeur invalide : elle doit être supérieure à la fin de la plage cible."
+      },
+      "emergencyContact": {
+        "name": "Saisissez le nom de votre proche.",
+        "phone": "Saisissez un numéro de téléphone (6 caractères au moins).",
+        "relation": "Texte trop long."
+      },
+      "doctorContact": {
+        "name": "Saisissez le nom de votre médecin.",
+        "phone": "Saisissez un numéro de téléphone (6 caractères au moins)."
+      }
+    }
   }
 }
