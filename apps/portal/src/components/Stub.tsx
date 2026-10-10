@@ -9,11 +9,13 @@ export function Stub({
   description: string;
 }) {
   return (
-    <section className="mx-auto max-w-3xl p-6">
-      <h1 className="text-2xl font-bold">{title}</h1>
-      <div className="mt-4 rounded-xl border border-line bg-surface p-4">
-        <p className="text-sm text-muted">À réaliser : {ticket}</p>
-        <p className="mt-2">{description}</p>
+    <section className="animate-enter flex max-w-3xl flex-col gap-4">
+      <h1 className="text-[28px] font-bold tracking-[-0.5px] text-ink">{title}</h1>
+      <div className="rounded-2xl border border-dashed border-line-strong bg-surface p-5">
+        <p className="text-[11px] font-bold tracking-[1.2px] text-primary-text uppercase">
+          À réaliser : {ticket}
+        </p>
+        <p className="mt-2 text-[15px] text-muted">{description}</p>
       </div>
     </section>
   );

@@ -1,23 +1,161 @@
 @import 'tailwindcss';
 
-/* Identité Glyka : valeurs alignées sur @glyka/ui-tokens (L7-03 les met à jour). */
-@theme {
-  --color-primary: #0b6e6e;
-  --color-primary-dark: #084f4f;
-  --color-primary-light: #d7eeee;
-  --color-accent: #e9a23b;
-  --color-surface: #ffffff;
-  --color-page: #f7fafa;
-  --color-ink: #10231f;
-  --color-muted: #52665f;
-  --color-line: #d6e2e0;
-  --color-state-low: #d9534f;
-  --color-state-in: #2e8b57;
-  --color-state-high: #e9a23b;
+/*
+ * Système de design du portail (ADR-0008) — mêmes jetons que l'application mobile.
+ * Les valeurs (--afy-*) sont générées depuis @glyka/ui-tokens par src/theme/theme.ts, en clair et en
+ * sombre. Ici, on ne fait que les brancher sur Tailwind : `bg-primary`, `text-muted`, `border-line`…
+ * Aucune couleur écrite en dur dans les pages.
+ */
+
+/* Police « Plus Jakarta Sans » hébergée avec le portail (licence OFL : public/fonts/OFL.txt).
+   Pas de Google Fonts : aucune requête vers un service tiers depuis un poste de consultation. */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  src: url('/fonts/PlusJakartaSans_400Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  src: url('/fonts/PlusJakartaSans_500Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  src: url('/fonts/PlusJakartaSans_600SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  src: url('/fonts/PlusJakartaSans_700Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  src: url('/fonts/PlusJakartaSans_800ExtraBold.ttf') format('truetype');
+  font-weight: 800;
+  font-display: swap;
 }
 
-body {
-  background: var(--color-page);
-  color: var(--color-ink);
-  font-family: Inter, system-ui, sans-serif;
+@theme inline {
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  --color-page: var(--afy-background);
+  --color-surface: var(--afy-surface);
+  --color-surface-muted: var(--afy-surface-muted);
+  --color-surface-raised: var(--afy-surface-raised);
+  --color-line: var(--afy-border);
+  --color-line-strong: var(--afy-border-strong);
+  --color-ink: var(--afy-text);
+  --color-muted: var(--afy-text-muted);
+  --color-subtle: var(--afy-text-subtle);
+  --color-primary: var(--afy-primary);
+  --color-primary-pressed: var(--afy-primary-pressed);
+  --color-on-primary: var(--afy-on-primary);
+  --color-primary-soft: var(--afy-primary-soft);
+  --color-primary-soft-border: var(--afy-primary-soft-border);
+  --color-primary-text: var(--afy-primary-text);
+  --color-focus: var(--afy-focus);
+  --color-skeleton: var(--afy-skeleton);
+  --color-danger: var(--afy-danger);
+  --color-danger-soft: var(--afy-danger-soft);
+  --color-success: var(--afy-success);
+  --color-warning: var(--afy-warning);
+  --color-info: var(--afy-info);
+
+  --ease-standard: var(--afy-ease-standard);
+  --ease-decelerate: var(--afy-ease-decelerate);
+  --ease-accelerate: var(--afy-ease-accelerate);
+}
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    background: var(--color-page);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: 1.5;
+  }
+  /* Focus clavier visible et neutre (jamais rouge : ne doit pas ressembler à une erreur). */
+  :focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+  }
+}
+
+/* Animations : modérées (≤ 380 ms), mêmes durées et courbes que le mobile. */
+@keyframes afy-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes afy-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes afy-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes afy-pulse-ring {
+  0% {
+    transform: scale(0.9);
+    opacity: 0.55;
+  }
+  70%,
+  100% {
+    transform: scale(1.35);
+    opacity: 0;
+  }
+}
+
+@utility animate-enter {
+  animation: afy-enter var(--afy-duration-slow) var(--afy-ease-decelerate) both;
+}
+@utility animate-fade {
+  animation: afy-fade var(--afy-duration-base) var(--afy-ease-standard) both;
+}
+@utility animate-spin-smooth {
+  animation: afy-spin 0.8s linear infinite;
+}
+@utility animate-pulse-ring {
+  animation: afy-pulse-ring 2.4s var(--afy-ease-decelerate) infinite;
+}
+@utility transition-afy {
+  transition-property: color, background-color, border-color, box-shadow, transform, opacity;
+  transition-duration: var(--afy-duration-fast);
+  transition-timing-function: var(--afy-ease-standard);
+}
+
+/* Réglage « réduire les animations » de l'ordinateur : tout devient instantané (sauf l'indicateur de
+   chargement, ralenti, qui doit rester visible). */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+  }
+  .animate-spin-smooth {
+    animation: afy-spin 1.6s linear infinite !important;
+  }
 }

@@ -24,7 +24,7 @@ Comptes, sessions et sécurité des accès (patients et médecins).
 ### Mot de passe oublié (L1-03)
 
 - `forgot-password` : **toujours 202, même message**, que le compte existe ou non ; un email n'est envoyé que si le compte existe. Une nouvelle demande annule le lien précédent.
-- Lien : `PORTAL_URL/reset-password?token=…` (page portail à créer, comme `/verify-email`). Jeton opaque de 32 octets, **seul son hash est stocké** (`EmailToken`, type `RESET_PASSWORD`), valable **1 heure**, **usage unique**.
+- Lien : `PORTAL_URL/reset-password?token=…` (page du portail, faite avec L1-11). Jeton opaque de 32 octets, **seul son hash est stocké** (`EmailToken`, type `RESET_PASSWORD`), valable **1 heure**, **usage unique**.
 - `reset-password` : nouveau mot de passe ≥ 12 caractères (argon2id) ; **toutes les sessions du compte sont révoquées** ; un verrouillage en cours est levé ; un compte jamais vérifié devient vérifié (recevoir le lien prouve qu'on lit cette boîte mail).
 - Un mot de passe invalide (400) ne consomme **pas** le lien. Jeton inconnu, expiré, déjà utilisé ou de vérification d'email : 400 `TOKEN_INVALID`.
 - Limite : un jeton d'accès déjà émis reste valable jusqu'à son expiration (15 min au plus) ; c'est le refresh qui est coupé tout de suite.
@@ -44,7 +44,7 @@ Comptes, sessions et sécurité des accès (patients et médecins).
 - `register` et `register-doctor` répondent **toujours 202 avec le même message**, que l'adresse soit nouvelle, déjà inscrite ou déjà vérifiée (pas d'énumération de comptes). Le mot de passe est haché dans tous les cas pour que le temps de réponse ne trahisse rien.
 - Adresse inscrite mais non vérifiée : un **nouveau lien** est envoyé et l'ancien est supprimé ; le mot de passe existant n'est **pas** modifié. C'est aussi la façon de « renvoyer le lien » (pas de route dédiée dans le contrat).
 - Adresse déjà vérifiée : rien n'est fait, aucun email.
-- Lien : `PORTAL_URL/verify-email?token=…` (page portail à créer). Jeton opaque de 32 octets, **seul son hash SHA-256 est stocké** (`EmailToken`), valable **24 h**, **usage unique** (consommation atomique).
+- Lien : `PORTAL_URL/verify-email?token=…` (page du portail, faite avec L1-11). Jeton opaque de 32 octets, **seul son hash SHA-256 est stocké** (`EmailToken`), valable **24 h**, **usage unique** (consommation atomique).
 - Jeton inconnu, expiré, déjà utilisé ou d'un autre type : 400 `TOKEN_INVALID`, message identique.
 - Envoi de l'email non bloquant : une panne SMTP ne change pas la réponse ; elle est journalisée sans adresse ni jeton.
 - Limites par IP : 5 inscriptions / min, 10 vérifications / min (429 au-delà).
