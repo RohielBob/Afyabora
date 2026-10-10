@@ -482,8 +482,24 @@
       "detail": "{{value}} · {{context}} · {{when}}",
       "local": "Gardée sur ce téléphone, elle sera envoyée dès que la connexion le permet.",
       "another": "Ajouter une autre mesure",
-      "done": "Terminé"
+      "done": "Terminé",
+      "confirmedUnusual": "Valeur inhabituelle confirmée par vous."
     },
-    "addA11y": "Ajouter une mesure de glycémie"
+    "addA11y": "Ajouter une mesure de glycémie",
+    "unusual": {
+      "question": "{{value}} : est-ce correct ?",
+      "explain": "Cette valeur est inhabituelle : un lecteur de glycémie affiche en général entre {{min}} et {{max}}.",
+      "unitHint": "Erreur d'unité ? Gardez le nombre, changez l'unité :",
+      "switchUnit": "C'était en {{unit}}",
+      "confirm": "Oui, c'est correct",
+      "fix": "Corriger la valeur"
+    },
+    "safety": {
+      "title": {
+        "VERY_LOW": "Valeur très basse",
+        "VERY_HIGH": "Valeur très haute"
+      },
+      "message": "Suivez les consignes de votre équipe soignante. En cas de malaise, demandez de l'aide immédiatement."
+    }
   }
 }

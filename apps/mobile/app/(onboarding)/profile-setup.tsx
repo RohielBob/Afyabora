@@ -42,6 +42,7 @@ import {
   initialDraft,
   maskBirthDate,
   profileApi,
+  saveThresholds,
   validateStep,
   type ProfileDraft,
   type Step,
@@ -105,6 +106,8 @@ export default function ProfileSetupScreen() {
     try {
       await profileApi.save(payload);
       writeUnit(draft.unit); // la saisie des mesures (L2-03) s'ouvrira dans l'unité choisie
+      // Seuils gardés sur le téléphone : message de sécurité hors-ligne à la saisie (L2-04).
+      await saveThresholds(payload.thresholds);
       setDone(true);
     } catch (e) {
       setApiError(authErrorMessage(e, 'register'));

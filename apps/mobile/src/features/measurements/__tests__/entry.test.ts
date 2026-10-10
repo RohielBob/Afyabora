@@ -1,12 +1,18 @@
-// Ticket L2-03 : logique de la saisie rapide d'une mesure (sans interface).
+// Tickets L2-03 et L2-04 : logique de la saisie rapide d'une mesure (sans interface).
+import { DEFAULT_THRESHOLDS } from '@glyka/shared';
 import {
   convertText,
+  formatReading,
+  formatTyped,
   initialWhen,
   isExactDuplicate,
   isInFuture,
+  likelyUnits,
   otherUnits,
   parseValue,
+  plausibleRange,
   resolveWhen,
+  safetyLevel,
   shiftTime,
   toCreateInput,
   validateEntry,
@@ -24,6 +30,7 @@ const draft = (overrides: Partial<EntryDraft> = {}): EntryDraft => ({
   when: initialWhen(NOW),
   context: 'FASTING',
   note: '',
+  confirmedUnusual: false,
   ...overrides,
 });
 
@@ -174,5 +181,80 @@ describe('doublon exact (CDC F2 : avertissement)', () => {
         { valueMgDl: 148, measuredAt: '2026-10-10T07:18:00.000Z' },
       ]),
     ).toBe(false);
+  });
+});
+
+/** Espace fine insécable (séparateur des milliers à la française). */
+const NNBSP = String.fromCharCode(0x202f);
+
+describe('valeur inhabituelle : confirmation (L2-04, CDC F2)', () => {
+  it('18,7 g/L : refusée tant qu’elle n’est pas confirmée, acceptée une fois confirmée', () => {
+    expect(validateEntry(draft({ text: '18,7' }), NOW)).toEqual({
+      value: 'measurement.problem.unusual',
+    });
+    expect(validateEntry(draft({ text: '18,7', confirmedUnusual: true }), NOW)).toEqual({});
+  });
+
+  it('la confirmation n’efface pas les autres erreurs de la valeur (vide, illisible, décimales)', () => {
+    expect(validateEntry(draft({ text: '', confirmedUnusual: true }), NOW).value).toBe(
+      'measurement.problem.empty',
+    );
+    expect(validateEntry(draft({ text: '1,485', confirmedUnusual: true }), NOW).value).toBe(
+      'measurement.problem.decimals',
+    );
+  });
+
+  it('confirmedUnusual envoyé à vrai SEULEMENT pour une valeur réellement inhabituelle', () => {
+    expect(toCreateInput(draft({ text: '18,7', confirmedUnusual: true }), NOW)).toMatchObject({
+      value: 18.7,
+      unit: 'G_L',
+      confirmedUnusual: true,
+    });
+    // Confirmation restée d'une ancienne saisie, valeur normale : rien à confirmer.
+    expect(
+      toCreateInput(draft({ text: '1,48', confirmedUnusual: true }), NOW).confirmedUnusual,
+    ).toBe(false);
+  });
+
+  it('erreur d’unité probable : même nombre plausible dans une autre unité', () => {
+    expect(likelyUnits('18,7', 'G_L')).toEqual(['MMOL_L']); // 18,7 mmol/L = 337 mg/dL
+    expect(likelyUnits('148', 'G_L')).toEqual(['MG_DL']);
+    expect(likelyUnits('5', 'MG_DL')).toEqual(['G_L', 'MMOL_L']); // 500 mg/dL ou 90 mg/dL
+    expect(likelyUnits('1870', 'MG_DL')).toEqual([]); // aucune unité ne lui donne un sens
+    expect(likelyUnits('1,48', 'G_L')).toEqual([]); // valeur normale : rien à proposer
+  });
+
+  it('textes : milliers séparés à la française, plage plausible dans l’unité choisie', () => {
+    expect(formatReading(1870, 'MG_DL')).toBe('1\u202F870 mg/dL');
+    expect(formatReading(1870, 'G_L')).toBe('18,70 g/L');
+    expect(formatReading(148, 'MG_DL')).toBe('148 mg/dL');
+    // Question : la valeur telle que tapée, pas arrondie par la conversion (187 et non 187,0).
+    expect(formatTyped('187', 'MMOL_L')).toBe('187 mmol/L');
+    expect(formatTyped('18.7', 'G_L')).toBe('18,7 g/L');
+    expect(formatTyped('1870', 'MG_DL')).toBe(`1${NNBSP}870 mg/dL`);
+    expect(plausibleRange('G_L')).toEqual({ min: '0,20 g/L', max: '6,00 g/L' });
+    expect(plausibleRange('MMOL_L')).toEqual({ min: '1,1 mmol/L', max: '33,3 mmol/L' });
+  });
+});
+
+describe('message de sécurité (L2-04, CDC F2)', () => {
+  const own = { veryLowMgDl: 60, targetMinMgDl: 80, targetMaxMgDl: 160, veryHighMgDl: 220 };
+
+  it('seuils par défaut : très bas sous 54, très haut au-dessus de 250, sinon rien', () => {
+    expect(safetyLevel(53, DEFAULT_THRESHOLDS)).toBe('VERY_LOW');
+    expect(safetyLevel(54, DEFAULT_THRESHOLDS)).toBeNull();
+    expect(safetyLevel(148, DEFAULT_THRESHOLDS)).toBeNull();
+    expect(safetyLevel(250, DEFAULT_THRESHOLDS)).toBeNull();
+    expect(safetyLevel(251, DEFAULT_THRESHOLDS)).toBe('VERY_HIGH');
+  });
+
+  it('seuils du patient : ce sont les siens qui comptent', () => {
+    expect(safetyLevel(58, own)).toBe('VERY_LOW'); // 58 < 60 (mais pas < 54)
+    expect(safetyLevel(230, own)).toBe('VERY_HIGH'); // 230 > 220 (mais pas > 250)
+    expect(safetyLevel(70, own)).toBeNull(); // simplement bas : pas de message
+  });
+
+  it('valeur inhabituelle confirmée très haute : message aussi (1 870 mg/dL)', () => {
+    expect(safetyLevel(1870, DEFAULT_THRESHOLDS)).toBe('VERY_HIGH');
   });
 });

@@ -34,6 +34,7 @@
 - **Écrans protégés** (`Stack.Protected`) : quand un écran est refusé, Expo Router revient à l'écran « ancre » de la pile. Sans `export const unstable_settings = { anchor: 'index' }` dans `app/_layout.tsx`, il prend le premier écran par ordre alphabétique (ex. `forgot-password`) : comportement incohérent.
 - **expo-sqlite sur le web** : l'ouverture de la base peut rester bloquée sans erreur (le navigateur exige des en-têtes de sécurité que le serveur de dev ne fournit pas). Les accès à la base locale passent par `src/db/reset.ts` (ignorés sur le web, limite de temps sur téléphone) : un bouton ne doit jamais attendre une base qui ne répond pas.
 - **Clés React en double** (`key`) entre éléments voisins : React garde un « fantôme » de l'ancien élément (vu avec deux en-têtes affichés en même temps). Deux voisins ne partagent jamais la même `key`.
+- **Clavier fermé tout seul dans l'aperçu web** : sur le web, un `ScrollView` avec `keyboardDismissMode="on-drag"` (notre `Screen`) ferme le clavier à **chaque** défilement, même quand la page rapetisse (ex. une carte qui disparaît). Sur téléphone, seul un glissement du doigt le ferme : ne pas « corriger » `Screen` pour l'aperçu (vu avec « Corriger la valeur », L2-04).
 
 ## API / base de données
 

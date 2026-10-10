@@ -482,8 +482,24 @@
       "detail": "{{value}} · {{context}} · {{when}}",
       "local": "Kept on this phone, it will be sent as soon as the connection allows.",
       "another": "Add another reading",
-      "done": "Done"
+      "done": "Done",
+      "confirmedUnusual": "Unusual value confirmed by you."
     },
-    "addA11y": "Add a blood glucose reading"
+    "addA11y": "Add a blood glucose reading",
+    "unusual": {
+      "question": "{{value}}: is this correct?",
+      "explain": "This value is unusual: a glucose meter usually shows between {{min}} and {{max}}.",
+      "unitHint": "Wrong unit? Keep the number, change the unit:",
+      "switchUnit": "It was in {{unit}}",
+      "confirm": "Yes, it is correct",
+      "fix": "Correct the value"
+    },
+    "safety": {
+      "title": {
+        "VERY_LOW": "Very low value",
+        "VERY_HIGH": "Very high value"
+      },
+      "message": "Follow your care team’s instructions. If you feel unwell, ask for help immediately."
+    }
   }
 }
