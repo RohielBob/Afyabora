@@ -69,7 +69,8 @@ export class AccountService {
   /**
    * GET /me/export : profil, mesures et événements du patient, dans les formats du contrat.
    *  - les éléments supprimés (« tombstones » gardés pour la synchronisation) ne sont PAS exportés ;
-   *  - les notes, chiffrées en base (AES-256-GCM), sont rendues lisibles ;
+   *  - les notes des mesures et les détails des événements, chiffrés en base (AES-256-GCM), sont rendus
+   *    lisibles ;
    *  - tri chronologique, dates en UTC.
    */
   async exportData(userId: string): Promise<DataExport> {
@@ -104,7 +105,7 @@ export class AccountService {
           type: true,
           occurredAt: true,
           label: true,
-          details: true,
+          detailsEncrypted: true,
           durationMinutes: true,
           updatedAt: true,
         },
@@ -145,7 +146,7 @@ export class AccountService {
         type: e.type,
         occurredAt: e.occurredAt.toISOString(),
         label: e.label,
-        details: e.details,
+        details: readNote(e.detailsEncrypted),
         durationMinutes: e.durationMinutes,
         updatedAt: e.updatedAt.toISOString(),
         deletedAt: null,
