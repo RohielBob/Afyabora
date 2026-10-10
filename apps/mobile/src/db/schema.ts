@@ -54,6 +54,14 @@ export const MIGRATIONS: string[] = [
     value TEXT NOT NULL
   );
   `,
+  // v2 (L8-03) : on garde la confirmation « valeur inhabituelle » (L2-04). Sans elle, MODIFIER une mesure
+  // confirmée (ex. sa note) renverrait confirmedUnusual = false et le serveur refuserait l'opération.
+  // Les mesures déjà enregistrées : 1 si leur valeur est hors 20–600 mg/dL (elles n'ont pu être
+  // enregistrées qu'après confirmation), 0 sinon.
+  `
+  ALTER TABLE measurements ADD COLUMN confirmed_unusual INTEGER NOT NULL DEFAULT 0;
+  UPDATE measurements SET confirmed_unusual = 1 WHERE value_mgdl < 20 OR value_mgdl > 600;
+  `,
 ];
 
 export const SCHEMA_VERSION = MIGRATIONS.length;
