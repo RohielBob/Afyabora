@@ -24,6 +24,21 @@ export const updateMeasurementSchema = createMeasurementSchema
   });
 export type UpdateMeasurementInput = z.infer<typeof updateMeasurementSchema>;
 
+/**
+ * Réponse 422 « valeur inhabituelle » de POST / PUT /measurements (contrat 0.2.1, validé en équipe le
+ * 2026-10-10). Le mobile la lit pour afficher « 1 870 mg/dL : est-ce correct ? » puis renvoyer la mesure
+ * avec `confirmedUnusual: true`.
+ */
+export const unusualValueErrorSchema = z.object({
+  message: z.string(),
+  code: z.literal('UNUSUAL_VALUE'),
+  /** Valeur saisie, convertie en mg/dL entier. */
+  valueMgDl: z.number().int(),
+  plausibleMinMgDl: z.number().int(),
+  plausibleMaxMgDl: z.number().int(),
+});
+export type UnusualValueError = z.infer<typeof unusualValueErrorSchema>;
+
 export const measurementDtoSchema = z.object({
   id: z.string().uuid(),
   valueMgDl: z.number().int(),

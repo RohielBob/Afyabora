@@ -2,7 +2,7 @@
   "openapi": "3.0.3",
   "info": {
     "title": "Glyka API",
-    "version": "0.2.0",
+    "version": "0.2.1",
     "description": "Contrat de l'API Glyka — **version 0 (gelée)**. Les écrans du mobile et du portail se développent contre ce document avant que l'API soit prête.\n\n## Conventions\n- **Format** : JSON en UTF-8. Dates en ISO 8601 avec fuseau. Identifiants en UUID.\n- **Glycémie** : stockée et renvoyée en **mg/dL entier** (`valueMgDl`) ; la valeur saisie et son unité d'origine sont conservées (`originalValue`, `originalUnit`). 1 g/L = 100 mg/dL.\n- **Authentification** : `Authorization: Bearer <jeton d'accès>` (15 minutes). Les routes publiques sont marquées `security: []`.\n- **Identifiants créés par le client** : mesures et événements portent un UUID généré sur l'appareil, ce qui rend les envois répétables sans doublon.\n- **Erreurs** : corps `{ message, code?, issues?, retryAfterSeconds? }`. Jamais de détail interne ni de donnée de santé.\n- **Pagination** : `limit` et `cursor` opaque ; réponse `{ items, nextCursor }`. `nextCursor` nul = dernière page.\n- **Extensions** : `x-roles`, `x-lot`, `x-ticket`, `x-priority` (P0/P1), `x-status` (`implemented` / `planned`).\n\n## Règle de changement\nAjouter une route ou un champ optionnel est compatible. Tout autre changement est une **rupture** : annoncée à l'équipe, consignée dans `docs/api/CHANGELOG.md`, validée par le lead technique.\n",
     "x-contract-status": "frozen-v0",
     "x-frozen-on": "2026-10-07"
@@ -1598,19 +1598,7 @@
             "$ref": "#/components/responses/Unauthorized"
           },
           "422": {
-            "description": "Valeur hors des bornes plausibles sans confirmation (code UNUSUAL_VALUE).",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                },
-                "example": {
-                  "message": "Cette valeur est inhabituelle, est-ce correct ?",
-                  "code": "UNUSUAL_VALUE",
-                  "statusCode": 422
-                }
-              }
-            }
+            "$ref": "#/components/responses/UnusualValue"
           }
         },
         "x-roles": [
@@ -1665,7 +1653,7 @@
             "$ref": "#/components/responses/NotFound"
           },
           "422": {
-            "$ref": "#/components/responses/UnprocessableEntity"
+            "$ref": "#/components/responses/UnusualValue"
           }
         },
         "x-roles": [
@@ -2449,6 +2437,16 @@
           }
         }
       },
+      "UnusualValue": {
+        "description": "Valeur hors des bornes plausibles sans confirmation (code UNUSUAL_VALUE).",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/UnusualValueError"
+            }
+          }
+        }
+      },
       "TooManyRequests": {
         "description": "Trop de requêtes : réessayez plus tard.",
         "content": {
@@ -2749,6 +2747,44 @@
               "message": "Le mot de passe doit contenir au moins 12 caractères"
             }
           ]
+        }
+      },
+      "UnusualValueError": {
+        "description": "Réponse 422 `UNUSUAL_VALUE` (mesures) : la valeur convertie et les bornes plausibles, pour que l'application affiche « 1 870 mg/dL : est-ce correct ? » puis renvoie la mesure avec `confirmedUnusual: true`.",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Error"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "valueMgDl": {
+                "type": "integer",
+                "description": "Valeur saisie, convertie en mg/dL entier."
+              },
+              "plausibleMinMgDl": {
+                "type": "integer",
+                "description": "Borne basse plausible (20 mg/dL)."
+              },
+              "plausibleMaxMgDl": {
+                "type": "integer",
+                "description": "Borne haute plausible (600 mg/dL)."
+              }
+            },
+            "required": [
+              "code",
+              "valueMgDl",
+              "plausibleMinMgDl",
+              "plausibleMaxMgDl"
+            ]
+          }
+        ],
+        "example": {
+          "message": "Valeur inhabituelle : vérifiez la saisie, puis confirmez-la si elle est correcte.",
+          "code": "UNUSUAL_VALUE",
+          "valueMgDl": 1870,
+          "plausibleMinMgDl": 20,
+          "plausibleMaxMgDl": 600
         }
       },
       "MessageResponse": {
