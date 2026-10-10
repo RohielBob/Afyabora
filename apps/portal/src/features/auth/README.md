@@ -10,7 +10,7 @@ liens envoyés par email (vérification d'adresse, nouveau mot de passe).
 - **L1-11** — Portail : inscription et connexion médecin, page « compte en attente » — **fait**
 - (avec L1-11) pages `/verify-email` et `/reset-password` du portail, demandées par les emails de l'API
   (L1-01, L1-03) — **faites**
-- **L1-12** — Script d'administration : approuver un compte médecin (à faire)
+- **L1-12** — Script d'administration : approuver un compte médecin — **fait** (`pnpm admin:doctors`, voir `scripts/README.md`)
 
 ## Parcours
 
@@ -87,4 +87,4 @@ Pages : `src/routes/login.tsx`, `register.tsx`, `verify-email.tsx`, `forgot-pass
 2. Créer un compte, ouvrir le lien dans Mailpit (http://localhost:8025) : la page `/verify-email` du
    portail confirme l'adresse.
 3. Se connecter ⇒ « compte en attente ». Ouvrir `/patients` à la main ⇒ retour à `/pending`.
-4. Approuver le compte (L1-12, ou en base de développement), puis « me reconnecter » ⇒ « Mes patients ».
+4. `pnpm admin:doctors approve <email>` (L1-12), puis « me reconnecter » ⇒ « Mes patients ».
