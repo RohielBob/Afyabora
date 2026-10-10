@@ -58,8 +58,8 @@ export function ChoiceGroup<T extends string>({
                 minHeight: 52,
                 flexDirection: 'row',
                 alignItems: 'center',
-                paddingLeft: spacing.md,
-                paddingRight: spacing.lg, // place pour la coche du coin
+                paddingLeft: columns === 3 ? spacing.sm : spacing.md,
+                paddingRight: columns === 3 ? spacing.md : spacing.lg, // place pour la coche du coin
                 paddingVertical: spacing.sm,
                 borderRadius: radii.md,
                 borderWidth: selected ? 2 : 1,
@@ -73,7 +73,8 @@ export function ChoiceGroup<T extends string>({
             >
               <View style={{ flex: 1 }}>
                 <Text
-                  variant="bodyStrong"
+                  // Pastilles étroites (3 par ligne) : texte un peu plus petit pour ne pas être coupé.
+                  variant={columns === 3 ? 'label' : 'bodyStrong'}
                   numberOfLines={1}
                   adjustsFontSizeToFit
                   style={{ color: selected ? colors.primaryText : colors.text }}

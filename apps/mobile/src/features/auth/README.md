@@ -8,7 +8,7 @@
 
 - **L1-06** — Mobile : écrans bienvenue, inscription, vérification email, connexion, mot de passe oublié — **fait**
 - **L1-07** — Mobile : stockage sécurisé des jetons et rafraîchissement automatique de session — **fait**
-- **L1-09** — Mobile : verrouillage de l'app par biométrie ou code
+- **L1-09** — Mobile : verrouillage de l'app par biométrie ou code — **fait** (feature `security`)
 - **L1-10** — Mobile : consentement explicite et avertissement « outil d'aide, pas un avis médical »
 
 ## Parcours (L1-06)

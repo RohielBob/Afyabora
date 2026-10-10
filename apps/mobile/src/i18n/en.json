@@ -267,5 +267,64 @@
         "phone": "Enter a phone number (at least 6 characters)."
       }
     }
+  },
+  "security": {
+    "pad": {
+      "progress": "{{count}} of {{total}} digits entered",
+      "delete": "Delete"
+    },
+    "lock": {
+      "title": "Afyabora is locked",
+      "prompt": "Enter your code to continue.",
+      "wrong": "Wrong code. Try again.",
+      "wait": "Too many attempts. Try again in {{seconds}} s.",
+      "bioPrompt": "Unlock Afyabora",
+      "useCode": "Use my code",
+      "useFace": "Unlock with face",
+      "useFinger": "Unlock with fingerprint",
+      "forgot": "Forgot your code?",
+      "forgotTitle": "Sign out to reset",
+      "forgotText": "You will need to sign in again with your email and password. Data not yet sent will be lost on this phone.",
+      "forgotConfirm": "Sign out"
+    },
+    "settings": {
+      "title": "Security",
+      "intro": "Protect access to your health data on this phone.",
+      "lockLabel": "Lock the app",
+      "lockHint": "A code (and your fingerprint if you wish) will be asked when opening.",
+      "bioFinger": "Unlock with fingerprint",
+      "bioFace": "Unlock with face",
+      "bioHint": "Your code can always be used.",
+      "bioUnavailable": "Fingerprint or face unavailable on this phone: the code will be asked.",
+      "timeoutLabel": "Lock again after",
+      "timeout": {
+        "immediate": "At once",
+        "1min": "1 min",
+        "5min": "5 min"
+      },
+      "change": "Change the code",
+      "lengthTitle": "Choose your code",
+      "lengthLabel": "Code length",
+      "four": "4 digits",
+      "fourHint": "Quicker to type",
+      "six": "6 digits",
+      "sixHint": "Harder to guess",
+      "createTitle": "Enter a new code",
+      "confirmTitle": "Enter it again",
+      "verifyTitle": "Enter your current code",
+      "mismatch": "The two codes do not match. Start again.",
+      "problem": {
+        "length": "The code must have 4 to 6 digits.",
+        "digits": "The code only contains digits.",
+        "tooSimple": "Code too easy to guess (e.g. 1234, 0000). Choose another one."
+      },
+      "enabled": "Lock enabled.",
+      "changed": "Code changed.",
+      "disabled": "Lock disabled.",
+      "tipsTitle": "Good to know",
+      "tips": "Your code is never stored in plain text. After 5 errors, you must wait before trying again. Forgot your code? You can sign out and sign in again with your password.",
+      "soonTitle": "Coming soon",
+      "soon": "Export your data and delete your account (ticket L1-14)."
+    }
   }
 }

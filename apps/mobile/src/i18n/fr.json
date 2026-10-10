@@ -278,5 +278,64 @@
         "phone": "Saisissez un numéro de téléphone (6 caractères au moins)."
       }
     }
+  },
+  "security": {
+    "pad": {
+      "progress": "{{count}} chiffre(s) saisi(s) sur {{total}}",
+      "delete": "Effacer"
+    },
+    "lock": {
+      "title": "Afyabora est verrouillé",
+      "prompt": "Saisissez votre code pour continuer.",
+      "wrong": "Code incorrect. Réessayez.",
+      "wait": "Trop d'essais. Réessayez dans {{seconds}} s.",
+      "bioPrompt": "Déverrouiller Afyabora",
+      "useCode": "Utiliser mon code",
+      "useFace": "Déverrouiller avec le visage",
+      "useFinger": "Déverrouiller avec l'empreinte",
+      "forgot": "Code oublié ?",
+      "forgotTitle": "Se déconnecter pour réinitialiser",
+      "forgotText": "Vous devrez vous reconnecter avec votre email et votre mot de passe. Les données qui n'ont pas encore été envoyées seront perdues sur ce téléphone.",
+      "forgotConfirm": "Se déconnecter"
+    },
+    "settings": {
+      "title": "Sécurité",
+      "intro": "Protégez l'accès à vos données de santé sur ce téléphone.",
+      "lockLabel": "Verrouiller l'application",
+      "lockHint": "Un code (et votre empreinte si vous le souhaitez) sera demandé à l'ouverture.",
+      "bioFinger": "Déverrouiller avec l'empreinte",
+      "bioFace": "Déverrouiller avec le visage",
+      "bioHint": "Votre code reste toujours utilisable.",
+      "bioUnavailable": "Empreinte ou visage indisponibles sur ce téléphone : le code sera demandé.",
+      "timeoutLabel": "Reverrouiller après",
+      "timeout": {
+        "immediate": "Aussitôt",
+        "1min": "1 min",
+        "5min": "5 min"
+      },
+      "change": "Changer le code",
+      "lengthTitle": "Choisissez votre code",
+      "lengthLabel": "Longueur du code",
+      "four": "4 chiffres",
+      "fourHint": "Plus rapide à taper",
+      "six": "6 chiffres",
+      "sixHint": "Plus difficile à deviner",
+      "createTitle": "Saisissez un nouveau code",
+      "confirmTitle": "Saisissez-le à nouveau",
+      "verifyTitle": "Saisissez votre code actuel",
+      "mismatch": "Les deux codes ne sont pas identiques. Recommencez.",
+      "problem": {
+        "length": "Le code doit contenir 4 à 6 chiffres.",
+        "digits": "Le code ne contient que des chiffres.",
+        "tooSimple": "Code trop simple à deviner (ex. 1234, 0000). Choisissez-en un autre."
+      },
+      "enabled": "Verrouillage activé.",
+      "changed": "Code modifié.",
+      "disabled": "Verrouillage désactivé.",
+      "tipsTitle": "Bon à savoir",
+      "tips": "Votre code n'est jamais enregistré en clair. Après 5 erreurs, il faut patienter avant de réessayer. Code oublié ? Vous pourrez vous déconnecter puis vous reconnecter avec votre mot de passe.",
+      "soonTitle": "Bientôt",
+      "soon": "Exporter vos données et supprimer votre compte (ticket L1-14)."
+    }
   }
 }
