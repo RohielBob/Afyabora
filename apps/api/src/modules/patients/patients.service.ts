@@ -19,8 +19,8 @@ export interface PatientProfileResponse {
   updatedAt: string; // UTC, suffixe Z (règle du projet)
 }
 
-// Champs lus en base : ni plus ni moins que ce que la réponse expose.
-const PROFILE_SELECT = {
+// Champs lus en base : ni plus ni moins que ce que la réponse expose (réutilisés par l'export, L1-14).
+export const PROFILE_SELECT = {
   firstName: true,
   lastName: true,
   birthDate: true,
@@ -41,7 +41,7 @@ const PROFILE_SELECT = {
   updatedAt: true,
 } as const;
 
-type ProfileRow = {
+export type ProfileRow = {
   firstName: string;
   lastName: string;
   birthDate: Date;
@@ -127,7 +127,7 @@ export class PatientsService {
   }
 }
 
-function toResponse(row: ProfileRow): PatientProfileResponse {
+export function toResponse(row: ProfileRow): PatientProfileResponse {
   return {
     firstName: row.firstName,
     lastName: row.lastName,
