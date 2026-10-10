@@ -1,6 +1,7 @@
 // Tests du ticket L1-05 : GET et PUT /me/profile (profil médical du patient et seuils d'alerte).
 // Vrai serveur HTTP (port 0), vraies gardes JWT et rôles ; base de données SIMULÉE en mémoire.
 import type { INestApplication } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { Test } from '@nestjs/testing';
@@ -100,8 +101,13 @@ describe('L1-05 : profil patient et seuils d’alerte (/me/profile)', () => {
         {
           module: FakeInfraModule,
           global: true,
-          providers: [{ provide: PrismaService, useValue: fakePrisma }],
-          exports: [PrismaService],
+          providers: [
+            { provide: PrismaService, useValue: fakePrisma },
+            // Le module patients contient aussi l'export (L1-14), qui lit la clé de chiffrement : dans
+            // l'application, ConfigService est global ; ici, une fausse configuration vide suffit.
+            { provide: ConfigService, useValue: { get: () => undefined, getOrThrow: () => '' } },
+          ],
+          exports: [PrismaService, ConfigService],
         },
         PatientsModule,
       ],
