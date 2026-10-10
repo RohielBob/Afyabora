@@ -600,5 +600,52 @@
       "formula": "Score = 50 % jours mesurés + 30 % mesures par jour + 20 % fraîcheur.",
       "a11y": "Qualité des données : {{score}} sur 100, {{level}}. {{sentence}}"
     }
+  },
+  "timeline": {
+    "overline": "Chronologie",
+    "title": "Historique",
+    "filtersLabel": "Filtrer la chronologie",
+    "filter": {
+      "all": "Tout",
+      "glucose": "Glycémie",
+      "MEAL": "Repas",
+      "ACTIVITY": "Activité",
+      "TREATMENT": "Traitements",
+      "alerts": "Alertes"
+    },
+    "type": {
+      "MEAL": "Repas",
+      "ACTIVITY": "Activité",
+      "TREATMENT": "Traitement"
+    },
+    "duration_one": "{{type}} · {{count}} min",
+    "duration_other": "{{type}} · {{count}} min",
+    "declared": "Déclaré par vous",
+    "pending": "Pas encore envoyée",
+    "source": {
+      "MANUAL": "Saisie",
+      "IMPORT": "Import",
+      "DEVICE": "Appareil",
+      "importBatch": "Import · lot {{batch}}",
+      "a11y": "Provenance : {{label}}"
+    },
+    "count_one": "{{count}} élément",
+    "count_other": "{{count}} éléments",
+    "more": "Voir les {{days}} jours précédents",
+    "end": "Rien de plus ancien sur ce téléphone.",
+    "empty": {
+      "title": "Votre historique est vide",
+      "text": "Vos mesures, repas, activités et traitements apparaîtront ici, jour par jour.",
+      "action": "Noter une mesure"
+    },
+    "emptyFilter": {
+      "title": "Rien à afficher",
+      "text": "Aucun élément « {{filter}} » sur les {{days}} derniers jours."
+    },
+    "error": "L'historique n'a pas pu être lu sur ce téléphone.",
+    "a11y": {
+      "measurement": "{{time}}, glycémie {{value}}, {{state}}, {{context}}",
+      "event": "{{time}}, {{label}}, {{meta}}"
+    }
   }
 }
