@@ -12,12 +12,21 @@
   },
   "disclaimer": "Afyabora est un outil d'aide au suivi. Il ne remplace pas l'avis d'un professionnel de santé.",
   "glucose": {
-    "unusualConfirm": "Cette valeur est inhabituelle, est-ce correct ?"
+    "unusualConfirm": "Cette valeur est inhabituelle, est-ce correct ?",
+    "state": {
+      "VERY_LOW": "Très bas",
+      "LOW": "En dessous",
+      "IN_RANGE": "Dans la plage",
+      "HIGH": "Au-dessus",
+      "VERY_HIGH": "Très haut"
+    },
+    "stateA11y": "État : {{label}}"
   },
   "sync": {
     "pending_one": "{{count}} mesure en attente de synchronisation",
     "pending_other": "{{count}} mesures en attente de synchronisation",
-    "offline": "Hors ligne — vos données sont enregistrées sur ce téléphone"
+    "offline": "Hors ligne — vos données sont enregistrées sur ce téléphone",
+    "upToDate": "Tout est à jour"
   },
   "safety": {
     "extreme": "Suivez les consignes de votre équipe soignante. En cas de malaise, demandez de l'aide immédiatement."
@@ -501,5 +510,34 @@
       },
       "message": "Suivez les consignes de votre équipe soignante. En cas de malaise, demandez de l'aide immédiatement."
     }
+  },
+  "dashboard": {
+    "greeting": {
+      "morning": "Bonjour",
+      "evening": "Bonsoir"
+    },
+    "latest": {
+      "title": "Dernière mesure",
+      "today": "Aujourd'hui",
+      "yesterday": "Hier",
+      "when": "{{day}}, {{time}}",
+      "age": {
+        "justNow": "À l'instant",
+        "minutes_one": "Il y a {{count}} min",
+        "minutes_other": "Il y a {{count}} min",
+        "hours_one": "Il y a {{count}} h",
+        "hours_other": "Il y a {{count}} h",
+        "days_one": "Il y a {{count}} jour",
+        "days_other": "Il y a {{count}} jours"
+      },
+      "a11y": "Dernière mesure : {{value}}, {{state}}. {{context}}, {{when}}.",
+      "add": "Nouvelle mesure"
+    },
+    "empty": {
+      "title": "Aucune mesure pour le moment",
+      "text": "Notez votre première glycémie : elle reste sur ce téléphone, même sans réseau.",
+      "action": "Noter ma première mesure"
+    },
+    "error": "Vos mesures n'ont pas pu être lues sur ce téléphone."
   }
 }

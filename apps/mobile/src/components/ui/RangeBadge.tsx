@@ -1,6 +1,8 @@
 // Badge d'état glycémique : COULEUR + SYMBOLE + LIBELLÉ (jamais la couleur seule).
 // Palette des états SANS rouge (ADR-0008) : le rouge est la couleur de la marque, pas une alarme.
 // Les états extrêmes (très bas / très haut) sont pleins et contrastés ; les autres sont doux.
+// Libellés traduits (`glucose.state.*`, L2-05) ; le symbole reste celui de @glyka/shared.
+import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 import Animated, { ZoomIn } from 'react-native-reanimated';
 import {
@@ -22,10 +24,12 @@ export interface RangeBadgeProps {
 }
 
 export function RangeBadge({ mgDl, thresholds, state, size = 'md' }: RangeBadgeProps) {
+  const { t } = useTranslation();
   const { states } = useTheme();
   const reduced = useReducedMotion();
   const current: GlucoseState = state ?? classifyGlucose(mgDl ?? 0, thresholds);
-  const { symbol, label } = STATE_SYMBOLS[current];
+  const { symbol } = STATE_SYMBOLS[current];
+  const label = t(`glucose.state.${current}`);
   const c = states[current];
 
   return (
@@ -38,7 +42,7 @@ export function RangeBadge({ mgDl, thresholds, state, size = 'md' }: RangeBadgeP
       <View
         accessible
         accessibilityRole="text"
-        accessibilityLabel={`État : ${label}`}
+        accessibilityLabel={t('glucose.stateA11y', { label })}
         style={{
           flexDirection: 'row',
           alignItems: 'center',

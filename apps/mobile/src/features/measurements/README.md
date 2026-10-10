@@ -39,18 +39,18 @@ opération de synchronisation dans la même transaction (`db/repositories/measur
 L'envoi au serveur viendra avec le moteur de synchronisation (L8-06). Écran de réussite : coche animée,
 résumé (valeur, contexte, moment), « gardée sur ce téléphone », puis « Ajouter une autre » ou « Terminé ».
 
-| Fichier                           | Rôle                                                                            |
-| --------------------------------- | ------------------------------------------------------------------------------- |
-| `entry.ts`                        | Logique sans interface : lecture, conversion, « quand ? », validation, doublon  |
-| `local-store.ts` / `.web.ts`      | Écriture locale (SQLite) ; en mémoire dans l'aperçu web (SQLite n'y marche pas) |
-| `unit-preference.ts` / `.web.ts`  | Unité mémorisée (stockage séparé des données de santé)                          |
-| `components/ValueField.tsx`       | Grand champ de valeur + conversion en direct                                    |
-| `components/WhenPicker.tsx`       | « Quand ? »                                                                     |
-| `components/SavedState.tsx`       | Écran de réussite animé                                                         |
-| `components/AddTabButton.tsx`     | Bouton « + » de la barre d'onglets                                              |
-| `components/UnusualValueCard.tsx` | Question « est-ce correct ? » (L2-04)                                           |
-| `components/SafetyNotice.tsx`     | Message de sécurité très bas / très haut (L2-04)                                |
-| `__tests__/entry.test.ts`         | Tests de la logique                                                             |
+| Fichier                           | Rôle                                                                           |
+| --------------------------------- | ------------------------------------------------------------------------------ |
+| `entry.ts`                        | Logique sans interface : lecture, conversion, « quand ? », validation, doublon |
+| `local-store.ts` / `.web.ts`      | Écriture et lecture locales (SQLite), dont `latest` et `pendingCount` (L2-05)  |
+| `unit-preference.ts` / `.web.ts`  | Unité mémorisée (stockage séparé des données de santé)                         |
+| `components/ValueField.tsx`       | Grand champ de valeur + conversion en direct                                   |
+| `components/WhenPicker.tsx`       | « Quand ? »                                                                    |
+| `components/SavedState.tsx`       | Écran de réussite animé                                                        |
+| `components/AddTabButton.tsx`     | Bouton « + » de la barre d'onglets                                             |
+| `components/UnusualValueCard.tsx` | Question « est-ce correct ? » (L2-04)                                          |
+| `components/SafetyNotice.tsx`     | Message de sécurité très bas / très haut (L2-04)                               |
+| `__tests__/entry.test.ts`         | Tests de la logique                                                            |
 
 ## Valeur inhabituelle et message de sécurité (L2-04)
 
