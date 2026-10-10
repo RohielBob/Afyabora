@@ -71,6 +71,7 @@ const profile = {
   thresholds: { veryLowMgDl: 54, targetMinMgDl: 70, targetMaxMgDl: 180, veryHighMgDl: 250 },
   thresholdsReviewedByClinician: true,
   emergencyContact: { name: 'Marie Demo', phone: '+243810000000', relation: 'Épouse' },
+  doctorContact: { name: 'Dr Kabila Demo', phone: '+243820000000' },
 };
 
 describe('L1-05 : profil patient et seuils d’alerte (/me/profile)', () => {
@@ -156,7 +157,12 @@ describe('L1-05 : profil patient et seuils d’alerte (/me/profile)', () => {
 
   it('PUT remplace tout le profil : un champ facultatif absent est effacé', async () => {
     await request('PUT', tokenFor(jean), profile);
-    const { emergencyContact: _contact, diagnosisYear: _year, ...withoutOptional } = profile;
+    const {
+      emergencyContact: _contact,
+      doctorContact: _doctor,
+      diagnosisYear: _year,
+      ...withoutOptional
+    } = profile;
 
     const res = await request('PUT', tokenFor(jean), withoutOptional);
     const body = (await res.json()) as Record<string, unknown>;
@@ -165,6 +171,8 @@ describe('L1-05 : profil patient et seuils d’alerte (/me/profile)', () => {
     expect(body).not.toHaveProperty('emergencyContact');
     expect(body).not.toHaveProperty('diagnosisYear');
     expect(profiles.get(jean)!.emergencyContactPhone).toBeNull();
+    expect(body).not.toHaveProperty('doctorContact');
+    expect(profiles.get(jean)!.doctorPhone).toBeNull();
   });
 
   it('applique les valeurs par défaut : unité g/L, seuils non relus par un professionnel', async () => {

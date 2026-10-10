@@ -25,11 +25,13 @@ Profil médical du patient, seuils d'alerte, export et suppression de compte.
 - Seuils en **mg/dL entiers** (colonnes `veryLowMgDl`…), unité préférée stockée à part.
 - Validation (`patientProfileSchema`, `@glyka/shared`) : ordre des seuils avec le champ fautif dans l'erreur ; date de naissance ni future ni avant 1900 ; année du diagnostic ni future ni avant la naissance, **calculée à chaque requête** (corrige le défaut « année figée au chargement du module »).
 - Compte supprimé alors que le jeton est encore valide : 401 (au lieu d'une erreur 500).
+- **Médecin traitant** (L1-08, contrat 0.2.0) : `doctorContact { name, phone }` facultatif, colonnes `doctorName` / `doctorPhone`. Comme le contact d'urgence, il est effacé si un `PUT` ne le contient pas.
 
 ## Tests obligatoires
 
 - [x] Seuils incohérents refusés (`test/patients-profile.test.ts`, `packages/shared/test/profile.test.ts`).
 - [x] Un patient ne peut pas lire le profil d'un autre (`test/patients-profile.test.ts`).
+- [x] (L1-08) Médecin traitant enregistré, relu, et effacé quand il est absent du `PUT`.
 - [x] (L1-05) 404 avant création ; création puis relecture identique ; remplacement complet ; valeurs par défaut ; 403 médecin/admin ; 401 sans jeton.
 
 ## Fichiers

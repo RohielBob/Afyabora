@@ -161,5 +161,111 @@
     "preview": "Preview",
     "previewOverline": "Last reading · sample",
     "previewButton": "Add a reading"
+  },
+  "onboarding": {
+    "progress": "Step {{current}} of {{total}}",
+    "next": "Continue",
+    "review": "Review my information",
+    "privacy": "Your information stays private: only you choose who can see it.",
+    "identity": {
+      "title": "Who are you?",
+      "intro": "This information helps your doctor recognise you and interpret your readings.",
+      "firstName": "First name",
+      "lastName": "Last name",
+      "birthDate": "Date of birth",
+      "birthDatePlaceholder": "DD/MM/YYYY",
+      "sex": "Sex",
+      "sexF": "Female",
+      "sexM": "Male",
+      "sexOther": "Other"
+    },
+    "diabetes": {
+      "title": "Your diabetes",
+      "intro": "The type of diabetes helps read your follow-up. If unsure, choose “Other”: you can change it later.",
+      "type": "Type of diabetes",
+      "type1": "Type 1",
+      "type2": "Type 2",
+      "gestational": "Gestational",
+      "other": "Other",
+      "year": "Year of diagnosis",
+      "yearHint": "Optional. An estimate is enough."
+    },
+    "thresholds": {
+      "title": "Unit and thresholds",
+      "intro": "Choose your meter's unit and check your target range.",
+      "unit": "Unit",
+      "doctorNote": "Usual values proposed by default: to be set with your doctor. Afyabora never gives treatment advice.",
+      "veryLowMgDl": "Very low below",
+      "targetMinMgDl": "Target range: start",
+      "targetMaxMgDl": "Target range: end",
+      "veryHighMgDl": "Very high above",
+      "reset": "Back to default values",
+      "reviewed": "These thresholds were set with my doctor.",
+      "barCaption": "Very low · low · target range · high · very high",
+      "barA11y": "Target range from {{min}} to {{max}} milligrams per decilitre",
+      "rangeTitle": "Target range",
+      "alertTitle": "Alert thresholds",
+      "rangeHint": "Values between these two numbers are “in range”.",
+      "alertHint": "Below very low or above very high, Afyabora will alert you.",
+      "short": {
+        "targetMinMgDl": "From",
+        "targetMaxMgDl": "To",
+        "veryLowMgDl": "Very low",
+        "veryHighMgDl": "Very high"
+      }
+    },
+    "contacts": {
+      "title": "Your contacts",
+      "intro": "Optional, but useful if needed. You can change them later.",
+      "relativeTitle": "A relative to notify",
+      "relativeHint": "Shown on your emergency card if you enable it.",
+      "name": "Name",
+      "phone": "Phone",
+      "relation": "Relationship (optional)",
+      "relationPlaceholder": "Wife, son, friend…",
+      "doctorTitle": "Your doctor",
+      "doctorHint": "The doctor who follows your diabetes.",
+      "doctorName": "Doctor's name",
+      "doctorNamePlaceholder": "Dr …"
+    },
+    "summary": {
+      "overline": "Last step",
+      "title": "Is everything correct?",
+      "intro": "Check your information before saving it.",
+      "edit": "Edit",
+      "name": "Name",
+      "target": "Target range",
+      "none": "Not provided",
+      "save": "Save my profile"
+    },
+    "done": {
+      "title": "Welcome, {{name}}!",
+      "message": "Your profile is ready. You can log your first reading.",
+      "action": "Discover Afyabora"
+    },
+    "errors": {
+      "firstName": "Enter your first name.",
+      "lastName": "Enter your last name.",
+      "birthDate": "Invalid date: use DD/MM/YYYY (no future date).",
+      "sex": "Choose an option.",
+      "diabetesType": "Choose the type of diabetes.",
+      "diagnosisYear": "Year between 1950 and today, after your birth.",
+      "preferredUnit": "Choose a unit.",
+      "thresholds": {
+        "veryLowMgDl": "Invalid value: it must be below the start of the target range.",
+        "targetMinMgDl": "Invalid value or out of limits (20 to 600 mg/dL).",
+        "targetMaxMgDl": "Invalid value: the end of the range must be above the start.",
+        "veryHighMgDl": "Invalid value: it must be above the end of the target range."
+      },
+      "emergencyContact": {
+        "name": "Enter your relative's name.",
+        "phone": "Enter a phone number (at least 6 characters).",
+        "relation": "Text too long."
+      },
+      "doctorContact": {
+        "name": "Enter your doctor's name.",
+        "phone": "Enter a phone number (at least 6 characters)."
+      }
+    }
   }
 }

@@ -15,6 +15,7 @@ export interface PatientProfileResponse {
   thresholds: PatientProfileInput['thresholds'];
   thresholdsReviewedByClinician: boolean;
   emergencyContact?: { name: string; phone: string; relation?: string };
+  doctorContact?: { name: string; phone: string };
   updatedAt: string; // UTC, suffixe Z (règle du projet)
 }
 
@@ -35,6 +36,8 @@ const PROFILE_SELECT = {
   emergencyContactName: true,
   emergencyContactPhone: true,
   emergencyContactRelation: true,
+  doctorName: true,
+  doctorPhone: true,
   updatedAt: true,
 } as const;
 
@@ -54,6 +57,8 @@ type ProfileRow = {
   emergencyContactName: string | null;
   emergencyContactPhone: string | null;
   emergencyContactRelation: string | null;
+  doctorName: string | null;
+  doctorPhone: string | null;
   updatedAt: Date;
 };
 
@@ -101,6 +106,8 @@ export class PatientsService {
       emergencyContactName: input.emergencyContact?.name ?? null,
       emergencyContactPhone: input.emergencyContact?.phone ?? null,
       emergencyContactRelation: input.emergencyContact?.relation ?? null,
+      doctorName: input.doctorContact?.name ?? null,
+      doctorPhone: input.doctorContact?.phone ?? null,
     };
 
     try {
@@ -144,6 +151,9 @@ function toResponse(row: ProfileRow): PatientProfileResponse {
             ...(row.emergencyContactRelation ? { relation: row.emergencyContactRelation } : {}),
           },
         }
+      : {}),
+    ...(row.doctorName && row.doctorPhone
+      ? { doctorContact: { name: row.doctorName, phone: row.doctorPhone } }
       : {}),
     updatedAt: row.updatedAt.toISOString(),
   };

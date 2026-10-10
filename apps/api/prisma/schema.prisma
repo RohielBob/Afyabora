@@ -116,6 +116,8 @@ model PatientProfile {
   emergencyContactName          String?
   emergencyContactPhone         String?
   emergencyContactRelation      String?
+  doctorName                    String? // médecin traitant (L1-08, facultatif)
+  doctorPhone                   String?
   timezoneOffsetMinutes         Int          @default(60) // Kinshasa : UTC+1
   updatedAt                     DateTime     @updatedAt
 

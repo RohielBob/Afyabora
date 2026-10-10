@@ -1,6 +1,7 @@
 export * from './Button';
 export * from './Card';
 export * from './Checkbox';
+export * from './ChoiceGroup';
 export * from './ColorSwatch';
 export * from './InlineAlert';
 export * from './ListRow';

@@ -1,6 +1,6 @@
 // Cadre d'un écran : fond du thème, zones sûres (encoche), défilement, largeur de lecture limitée,
 // et apparition en fondu du contenu.
-import type { ReactNode } from 'react';
+import { useEffect, useRef, type ReactNode } from 'react';
 import { KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -10,13 +10,21 @@ export function Screen({
   children,
   scroll = true,
   padded = true,
+  scrollKey,
 }: {
   children: ReactNode;
   scroll?: boolean;
   padded?: boolean;
+  /** Quand cette valeur change (ex. étape d'un assistant), l'écran remonte en haut. */
+  scrollKey?: string | number;
 }) {
   const { colors } = useTheme();
   const reduced = useReducedMotion();
+  const scrollRef = useRef<ScrollView>(null);
+
+  useEffect(() => {
+    if (scrollKey !== undefined) scrollRef.current?.scrollTo({ y: 0, animated: !reduced });
+  }, [scrollKey, reduced]);
   const content = (
     <Animated.View
       entering={fadeIn(reduced)}
@@ -41,6 +49,7 @@ export function Screen({
       >
         {scroll ? (
           <ScrollView
+            ref={scrollRef}
             contentContainerStyle={{ flexGrow: 1 }}
             keyboardShouldPersistTaps="handled"
             keyboardDismissMode="on-drag"
