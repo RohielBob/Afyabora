@@ -61,7 +61,8 @@
       "passwordLength": "Le mot de passe doit contenir au moins 12 caractères.",
       "passwordRequired": "Saisissez votre mot de passe.",
       "consent": "Votre accord est nécessaire pour créer un compte.",
-      "link": "Ce lien n'est pas reconnu. Copiez le lien complet de l'email."
+      "link": "Ce lien n'est pas reconnu. Copiez le lien complet de l'email.",
+      "disclaimer": "Confirmez que vous avez compris l'avertissement pour continuer."
     },
     "errors": {
       "invalidCredentials": "Adresse email ou mot de passe incorrect.",
@@ -74,11 +75,15 @@
     "signUp": {
       "title": "Créer un compte",
       "subtitle": "Quelques secondes pour commencer à suivre votre glycémie.",
-      "consent": "J'accepte qu'Afyabora enregistre mes données de santé pour mon suivi, et je comprends que l'application ne remplace pas l'avis d'un professionnel de santé.",
+      "consent": "J'accepte qu'Afyabora enregistre et traite mes données de santé pour mon suivi, comme décrit dans la politique de confidentialité.",
       "consentA11y": "Consentement au traitement de mes données de santé",
       "submit": "Créer mon compte",
       "haveAccount": "Déjà un compte ?",
-      "signIn": "Se connecter"
+      "signIn": "Se connecter",
+      "consentLink": "Lire la politique de confidentialité",
+      "disclaimer": "J'ai compris qu'Afyabora est un outil d'aide au suivi : il ne pose pas de diagnostic, ne donne pas de dose de traitement et ne remplace pas l'avis d'un professionnel de santé.",
+      "disclaimerA11y": "Je comprends que l'application ne remplace pas un avis médical",
+      "disclaimerLink": "Lire l'avertissement"
     },
     "verify": {
       "title": "Vérifiez votre boîte mail",
@@ -153,6 +158,7 @@
     "security": "Sécurité",
     "securityHint": "Déverrouillage biométrique ou code",
     "about": "À propos",
+    "aboutHint": "Version, avertissement, confidentialité",
     "design": "Planche de style",
     "designHint": "Visible en développement : couleurs, textes, composants"
   },
@@ -336,6 +342,88 @@
       "tips": "Votre code n'est jamais enregistré en clair. Après 5 erreurs, il faut patienter avant de réessayer. Code oublié ? Vous pourrez vous déconnecter puis vous reconnecter avec votre mot de passe.",
       "soonTitle": "Bientôt",
       "soon": "Exporter vos données et supprimer votre compte (ticket L1-14)."
+    }
+  },
+  "legal": {
+    "updated": "Version {{version}} · mise à jour le {{date}}",
+    "date": "10 octobre 2026",
+    "close": "Fermer",
+    "emergencyTitle": "En cas d'urgence",
+    "emergency": "En cas de malaise, ou de glycémie très basse ou très haute avec des symptômes, n'attendez pas l'application : appelez les secours ou rendez-vous au centre de santé le plus proche.",
+    "disclaimer": {
+      "overline": "Avertissement",
+      "title": "Outil d'aide, pas un avis médical",
+      "short": "Afyabora vous aide à suivre votre glycémie. Il ne pose pas de diagnostic et ne remplace pas l'avis d'un professionnel de santé.",
+      "more": "En savoir plus",
+      "moreA11y": "Lire l'avertissement complet",
+      "intro": "Afyabora est un outil d'aide au suivi du diabète. Avant de l'utiliser, il est important de savoir ce qu'il fait, et surtout ce qu'il ne fait pas.",
+      "does": {
+        "title": "Ce que fait Afyabora",
+        "body": "Il enregistre vos mesures, même sans réseau. Il calcule des chiffres simples à partir de vos propres données (moyennes, temps dans votre plage cible, épisodes hauts ou bas). Il vous aide à préparer votre consultation et à partager votre historique avec le médecin que vous choisissez."
+      },
+      "doesNot": {
+        "title": "Ce qu'il ne fait pas",
+        "body": "Il ne pose aucun diagnostic. Il ne propose aucune dose d'insuline ni aucun médicament. Il n'affirme jamais la cause d'une glycémie haute ou basse : ses observations sont des pistes à discuter avec un professionnel."
+      },
+      "quality": {
+        "title": "Des résultats qui dépendent de vos saisies",
+        "body": "Les calculs ne sont justes que si les mesures le sont : une valeur mal recopiée ou des jours sans mesure changent les résultats. L'application vous signale quand les données sont trop peu nombreuses pour conclure."
+      },
+      "treatment": {
+        "title": "Votre traitement",
+        "body": "Ne modifiez jamais votre traitement à partir de l'application seule. Parlez-en d'abord avec votre médecin ou votre équipe soignante."
+      },
+      "alerts": {
+        "title": "Rappels et alertes",
+        "body": "Les rappels et alertes peuvent ne pas arriver (téléphone éteint, batterie vide, notifications coupées). Ils ne remplacent pas votre vigilance ni celle de vos proches."
+      }
+    },
+    "privacy": {
+      "overline": "Confidentialité",
+      "title": "Politique de confidentialité",
+      "intro": "Vos données de santé vous appartiennent. Cette page explique, simplement, ce que nous enregistrons, pourquoi, où, et qui peut les voir.",
+      "prototype": "Afyabora est aujourd'hui un prototype réalisé dans un cadre de formation. Cette politique sera revue avec l'encadrement avant toute mise à disposition du public.",
+      "data": {
+        "title": "Les données enregistrées",
+        "body": "Votre compte : adresse email et mot de passe (jamais conservé en clair). Votre profil : nom, date de naissance, sexe, type de diabète, année du diagnostic, unité et seuils choisis. Si vous le souhaitez : un proche à prévenir et votre médecin traitant. Votre suivi : mesures de glycémie, événements (repas, activité, traitement…) et notes."
+      },
+      "purpose": {
+        "title": "Pourquoi",
+        "body": "Uniquement pour votre suivi : afficher votre historique, calculer vos statistiques et préparer vos consultations. Pas de publicité. Vos données ne sont jamais vendues ni louées."
+      },
+      "storage": {
+        "title": "Où sont-elles conservées",
+        "body": "D'abord sur votre téléphone, pour fonctionner sans réseau, puis sur notre serveur dès qu'une connexion est disponible. Les échanges sont chiffrés, vos notes personnelles sont chiffrées sur le serveur, et vous pouvez verrouiller l'application par un code ou votre empreinte. À la déconnexion, les données sont effacées du téléphone."
+      },
+      "sharing": {
+        "title": "Le partage avec un médecin",
+        "body": "Rien n'est partagé sans votre action. Vous générez un QR code, valable peu de temps et une seule fois ; seul un médecin connecté et vérifié peut le scanner. Vous choisissez ce qu'il voit et pendant combien de temps, vous pouvez arrêter le partage à tout moment, et chaque consultation apparaît dans votre journal d'accès."
+      },
+      "emergency": {
+        "title": "La carte d'urgence",
+        "body": "Si vous l'activez, la carte d'urgence peut être lue sans compte : c'est son but, pour les secours. Elle ne contient que les informations que vous avez choisies, jamais votre historique. Chaque ouverture vous est signalée, et vous pouvez la désactiver ou la renouveler à tout moment."
+      },
+      "analysis": {
+        "title": "Les analyses",
+        "body": "Les chiffres et observations sont calculés par l'application selon des règles fixes et vérifiables, à partir de vos seules données. Si une reformulation automatique des textes est un jour activée, elle ne recevra que des chiffres résumés, sans votre nom ni vos coordonnées."
+      },
+      "retention": {
+        "title": "Combien de temps",
+        "body": "Vos données sont conservées tant que votre compte existe. La suppression du compte efface vos données de nos serveurs."
+      },
+      "rights": {
+        "title": "Vos droits",
+        "body": "Vous pouvez obtenir une copie de vos données, les corriger et supprimer votre compte. Votre accord donné à l'inscription peut être retiré en supprimant votre compte. Vous n'êtes jamais obligé de partager vos données avec un médecin."
+      }
+    },
+    "about": {
+      "overline": "Paramètres",
+      "title": "À propos",
+      "version": "Version {{version}}",
+      "legalTitle": "Informations légales",
+      "privacyHint": "Ce que nous enregistrons et qui peut le voir",
+      "disclaimerHint": "Ce que fait l'application, et ce qu'elle ne fait pas",
+      "credits": "Projet PBL 5 · MEO. Conçu pour les personnes vivant avec un diabète."
     }
   }
 }

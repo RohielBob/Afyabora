@@ -87,6 +87,10 @@ function RootNavigator() {
           />
         </Stack.Protected>
 
+        {/* Textes légaux (L1-10) : lisibles avec ou sans compte (avant l'inscription comme après). */}
+        <Stack.Screen name="legal/privacy" />
+        <Stack.Screen name="legal/disclaimer" />
+
         {/* Planche de style : visible sans compte en développement uniquement. */}
         <Stack.Protected guard={__DEV__ || signedIn}>
           <Stack.Screen name="settings/design" />

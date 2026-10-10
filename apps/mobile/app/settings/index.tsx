@@ -51,6 +51,7 @@ export default function SettingsScreen() {
         <ListRow
           icon={ico('information-circle-outline')}
           title={t('settings.about')}
+          subtitle={t('settings.aboutHint')}
           onPress={() => router.push('/settings/about')}
         />
       </Card>

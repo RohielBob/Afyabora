@@ -9,12 +9,28 @@ import { passwordChecks, validateSignIn, validateSignUp } from '../validation';
 const TOKEN = 'k3Zt9Qw2Vx7LpR4mNc8YbH1sDfG6jAe5UoI0TyXvWzE';
 
 describe('validation des formulaires (mêmes règles que le serveur)', () => {
-  it('inscription : refuse email invalide, mot de passe de 8 caractères et consentement absent', () => {
+  it('inscription : refuse email invalide, mot de passe de 8 caractères et cases non cochées', () => {
     expect(
-      validateSignUp({ email: 'pas-une-adresse', password: 'abcdefgh', consent: false }),
+      validateSignUp({
+        email: 'pas-une-adresse',
+        password: 'abcdefgh',
+        consent: false,
+        disclaimer: false,
+      }),
     ).toEqual({
       email: 'auth.validation.email',
       password: 'auth.validation.passwordLength',
+      consent: 'auth.validation.consent',
+      disclaimer: 'auth.validation.disclaimer',
+    });
+  });
+
+  it('inscription (L1-10) : chaque case est exigée séparément', () => {
+    const valid = { email: 'jean@example.com', password: 'une-phrase-solide-2026' };
+    expect(validateSignUp({ ...valid, consent: true, disclaimer: false })).toEqual({
+      disclaimer: 'auth.validation.disclaimer',
+    });
+    expect(validateSignUp({ ...valid, consent: false, disclaimer: true })).toEqual({
       consent: 'auth.validation.consent',
     });
   });
@@ -25,6 +41,7 @@ describe('validation des formulaires (mêmes règles que le serveur)', () => {
         email: 'jean@example.com',
         password: 'une-phrase-solide-2026',
         consent: true,
+        disclaimer: true,
       }),
     ).toEqual({});
   });

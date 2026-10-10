@@ -20,19 +20,25 @@ export function validateNewPassword(password: string): string | undefined {
   return passwordSchema.safeParse(password).success ? undefined : 'auth.validation.passwordLength';
 }
 
+// Deux cases distinctes (L1-10), jamais pré-cochées : l'accord sur les données de santé, et la lecture de
+// l'avertissement « outil d'aide, pas un avis médical ». Le serveur ne reçoit qu'un `consent: true`
+// (contrat inchangé), envoyé seulement quand les DEUX sont cochées.
 export function validateSignUp(values: {
   email: string;
   password: string;
   consent: boolean;
-}): FieldErrors<'email' | 'password' | 'consent'> {
-  const errors: FieldErrors<'email' | 'password' | 'consent'> = {};
+  disclaimer: boolean;
+}): FieldErrors<'email' | 'password' | 'consent' | 'disclaimer'> {
+  const errors: FieldErrors<'email' | 'password' | 'consent' | 'disclaimer'> = {};
   const email = validateEmail(values.email);
   const password = validateNewPassword(values.password);
   if (email) errors.email = email;
   if (password) errors.password = password;
   if (!values.consent) errors.consent = 'auth.validation.consent';
+  if (!values.disclaimer) errors.disclaimer = 'auth.validation.disclaimer';
   // Vérification finale par le schéma complet du serveur (garde-fou si une règle y est ajoutée).
-  if (!Object.keys(errors).length && !registerPatientSchema.safeParse(values).success) {
+  const payload = { email: values.email, password: values.password, consent: values.consent };
+  if (!Object.keys(errors).length && !registerPatientSchema.safeParse(payload).success) {
     errors.email = 'errors.invalidData';
   }
   return errors;
