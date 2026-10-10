@@ -1,4 +1,109 @@
 {
   "app": { "name": "Afyabora", "tagline": "Track. Control. Understand." },
-  "common": { "save": "Save", "cancel": "Cancel", "next": "Next", "back": "Back", "retry": "Retry" }
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "next": "Next",
+    "back": "Back",
+    "retry": "Retry"
+  },
+  "disclaimer": "Afyabora is a self-monitoring aid. It does not replace the advice of a healthcare professional.",
+  "errors": {
+    "network": "Cannot reach the server. Check your internet connection and try again.",
+    "server": "The service is having trouble. Please try again in a moment.",
+    "tooManyRequests": "Too many attempts. Please wait a minute before trying again.",
+    "invalidData": "Some information is not valid. Please check the form.",
+    "unexpected": "An unexpected error occurred. Please try again."
+  },
+  "welcome": {
+    "lastMeasurement": "Last reading",
+    "demoTag": "Sample",
+    "demoA11y": "Sample last reading: 1.12 grams per litre, in range",
+    "offlineSaved": "Saved even offline",
+    "onThisPhone": "✓ On this phone",
+    "title": "Your glucose history, always with you.",
+    "description": "Log your readings, understand your trends and choose who sees what, and for how long.",
+    "createAccount": "Create an account",
+    "signIn": "Sign in"
+  },
+  "auth": {
+    "fields": {
+      "email": "Email address",
+      "emailPlaceholder": "name@example.com",
+      "password": "Password",
+      "newPassword": "New password",
+      "link": "Link or code received by email",
+      "linkPlaceholder": "Paste the link from the email here"
+    },
+    "password": {
+      "rulesTitle": "Password rules",
+      "ruleLength": "At least {{count}} characters",
+      "ruleOk": "met",
+      "ruleTodo": "not met yet",
+      "hint": "An easy-to-remember sentence is safer than a complicated word."
+    },
+    "validation": {
+      "email": "Enter a valid email address.",
+      "passwordLength": "The password must be at least 12 characters long.",
+      "passwordRequired": "Enter your password.",
+      "consent": "Your consent is required to create an account.",
+      "link": "This link is not recognised. Copy the full link from the email."
+    },
+    "errors": {
+      "invalidCredentials": "Incorrect email address or password.",
+      "emailNotVerified": "Your email address has not been verified yet.",
+      "locked": "Too many attempts: for your security, your account is locked for {{minutes}} min.",
+      "verifyLinkInvalid": "This verification link is invalid, already used or expired. Request a new email.",
+      "resetLinkInvalid": "This link is invalid, already used or expired (1 hour). Make a new request.",
+      "notPatient": "This is a professional account. Please sign in on the Afyabora portal."
+    },
+    "signUp": {
+      "title": "Create an account",
+      "subtitle": "A few seconds to start tracking your glucose.",
+      "consent": "I agree that Afyabora stores my health data for my follow-up, and I understand that the app does not replace the advice of a healthcare professional.",
+      "consentA11y": "Consent to the processing of my health data",
+      "submit": "Create my account",
+      "haveAccount": "Already have an account?",
+      "signIn": "Sign in"
+    },
+    "verify": {
+      "title": "Check your inbox",
+      "subtitle": "We sent a confirmation link to {{email}}. It is valid for 24 hours.",
+      "subtitleNoEmail": "Open the confirmation email we sent you. The link is valid for 24 hours.",
+      "steps": "Open the email “Afyabora: confirm your email address” and tap the link. Not received? Check your spam folder.",
+      "pasteTitle": "The link does not open in the app?",
+      "pasteHelp": "Copy the link from the email and paste it below.",
+      "submit": "Confirm my address",
+      "resend": "Resend the email",
+      "resendIn": "Resend the email in {{seconds}} s",
+      "resent": "A new email has just been sent. The previous link no longer works.",
+      "resendUnavailable": "To receive a new email, sign up again with the same address.",
+      "successTitle": "Address verified",
+      "successMessage": "Your account is active. You can now sign in.",
+      "goToSignIn": "Sign in"
+    },
+    "signIn": {
+      "title": "Welcome back",
+      "subtitle": "Sign in to find your follow-up.",
+      "forgot": "Forgot your password?",
+      "submit": "Sign in",
+      "noAccount": "No account yet?",
+      "signUp": "Create an account",
+      "verifyAction": "Verify my address",
+      "success": "Signed in"
+    },
+    "forgot": {
+      "title": "Forgot password",
+      "subtitle": "Enter your address: if an account exists, you will receive a link to choose a new password.",
+      "submit": "Get the link",
+      "sentTitle": "Email sent",
+      "sentMessage": "If an account exists for {{email}}, a link valid for 1 hour has just been sent.",
+      "resetTitle": "Choose a new password",
+      "resetHelp": "Paste the link received by email, then choose your new password.",
+      "resetSubmit": "Save the new password",
+      "successTitle": "Password changed",
+      "successMessage": "For your security, your other sessions have been closed. Sign in with your new password.",
+      "changeEmail": "Use another address"
+    }
+  }
 }

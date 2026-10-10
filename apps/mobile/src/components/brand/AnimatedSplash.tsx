@@ -5,6 +5,7 @@
 //  4. le tout s'efface en fondu et laisse place à l'application.
 // Durée totale ≈ 1,6 s. Animations réduites : logo fixe, simple fondu court.
 import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 import Animated, {
   runOnJS,
@@ -36,6 +37,7 @@ const LOGO_HEIGHT = 112;
 const LOGO_WIDTH = (LOGO_HEIGHT * MARK_WIDTH) / MARK_HEIGHT;
 
 export function AnimatedSplash({ onFinish }: { onFinish: () => void }) {
+  const { t } = useTranslation();
   const { colors } = useTheme();
   const reduced = useReducedMotion();
 
@@ -119,7 +121,7 @@ export function AnimatedSplash({ onFinish }: { onFinish: () => void }) {
         <Wordmark size={34} />
         <View style={{ marginTop: 4 }}>
           <Text variant="bodySmall" tone="muted" align="center">
-            Suivez. Comprenez. Partagez.
+            {t('app.tagline')}
           </Text>
         </View>
       </Animated.View>
