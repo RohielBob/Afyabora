@@ -19,6 +19,7 @@ import {
   INVALID_SESSION_MESSAGE,
 } from '../src/modules/auth/session.service';
 import { PrismaService } from '../src/prisma/prisma.service';
+import { refreshCount, userUpdateMany } from './support/fake-prisma-ops';
 
 const JWT_SECRET = 'secret-de-test-uniquement-0123456789abcdef';
 const PASSWORD = 'un-mot-de-passe-solide-2026';
@@ -51,8 +52,10 @@ const db = { users: [] as UserRow[], refresh: [] as RefreshRow[] };
 
 const fakePrisma = {
   user: {
-    findUnique: async ({ where }: { where: { email: string } }) => {
-      const u = db.users.find((row) => row.email === where.email);
+    findUnique: async ({ where }: { where: { email?: string; id?: string } }) => {
+      const u = db.users.find((row) =>
+        where.email !== undefined ? row.email === where.email : row.id === where.id,
+      );
       if (!u) return null;
       return {
         ...u,
@@ -65,6 +68,9 @@ const fakePrisma = {
       Object.assign(u, data, { updatedAt: new Date() }); // comme @updatedAt de Prisma
       return u;
     },
+    // Comptage atomique des échecs de connexion (L1-13), voir support/fake-prisma-ops.ts.
+    updateMany: async (args: Parameters<typeof userUpdateMany>[1]) =>
+      userUpdateMany(db.users, args),
   },
   refreshToken: {
     findUnique: async ({ where }: { where: { tokenHash: string } }) => {
@@ -95,6 +101,8 @@ const fakePrisma = {
       rows.forEach((r) => Object.assign(r, data));
       return { count: rows.length };
     },
+    // Famille révoquée pendant un renouvellement (L1-13).
+    count: async (args: Parameters<typeof refreshCount>[1]) => refreshCount(db.refresh, args),
   },
 };
 
