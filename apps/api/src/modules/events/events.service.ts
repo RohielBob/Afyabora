@@ -5,9 +5,12 @@
 //  - date plus de 5 minutes dans le futur refusée ; dates rendues en UTC ;
 //  - suppression = « tombstone » (`deletedAt`) pour la synchronisation, texte libre effacé tout de suite ;
 //  - l'événement d'un autre patient est « introuvable » (404), jamais révélé.
+// Texte libre (`details`, ex. « 500 mg, matin ») : CHIFFRÉ en base (AES-256-GCM), comme la note d'une
+// mesure ; rendu en clair au patient seulement.
 // Traitement : on enregistre ce que le patient DÉCLARE (« Metformine 500 mg, matin »). Aucun calcul de
 // dose, aucun conseil, aucune vérification médicale (CDC : jamais de dose ni de diagnostic).
-import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger, UnauthorizedException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import type {
   CreateLifeEventInput,
   LifeEventDto,
@@ -23,6 +26,7 @@ import {
   notFound as notFoundError,
   notInFuture,
 } from '../../common/data/owned-records';
+import { decryptOptionalText, encryptOptionalText } from '../../common/crypto/field-encryption';
 import { UNAUTHORIZED_MESSAGE } from '../../common/guards/jwt-auth.guard';
 import { PrismaService } from '../../prisma/prisma.service';
 
@@ -32,7 +36,7 @@ const SELECT = {
   type: true,
   occurredAt: true,
   label: true,
-  details: true,
+  detailsEncrypted: true,
   durationMinutes: true,
   updatedAt: true,
   deletedAt: true,
@@ -44,7 +48,7 @@ type Row = {
   type: LifeEventDto['type'];
   occurredAt: Date;
   label: string;
-  details: string | null;
+  detailsEncrypted: string | null;
   durationMinutes: number | null;
   updatedAt: Date;
   deletedAt: Date | null;
@@ -64,12 +68,17 @@ const FUTURE_MESSAGE = 'La date de l’événement est dans le futur.';
 
 @Injectable()
 export class EventsService {
-  constructor(private readonly prisma: PrismaService) {}
+  private readonly logger = new Logger('Events');
+
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly config: ConfigService,
+  ) {}
 
   /** POST /events : 201 si créé, 200 si l'identifiant existe déjà pour ce patient (rejeu). */
   async create(patientId: string, input: CreateLifeEventInput): Promise<CreateResult> {
     const existing = await this.findOwned(input.id, patientId);
-    if (existing) return { event: toDto(existing), created: false };
+    if (existing) return { event: this.toDto(existing), created: false };
 
     const now = new Date();
     try {
@@ -80,18 +89,18 @@ export class EventsService {
           type: input.type,
           occurredAt: notInFuture(input.occurredAt, 'occurredAt', now, FUTURE_MESSAGE),
           label: input.label,
-          details: cleanText(input.details),
+          detailsEncrypted: this.encrypt(input.details),
           durationMinutes: input.durationMinutes ?? null,
           clientUpdatedAt: now,
         },
         select: SELECT,
       });
-      return { event: toDto(row), created: true };
+      return { event: this.toDto(row), created: true };
     } catch (error) {
       // Deux envois simultanés du même événement : le second relit celui du premier (200).
       if (hasPrismaCode(error, 'P2002')) {
         const winner = await this.findOwned(input.id, patientId);
-        if (winner) return { event: toDto(winner), created: false };
+        if (winner) return { event: this.toDto(winner), created: false };
         throw invalidField('id', 'Identifiant déjà utilisé : générez-en un nouveau.');
       }
       if (hasPrismaCode(error, 'P2003')) throw await this.noProfile(patientId);
@@ -119,7 +128,7 @@ export class EventsService {
     const page = rows.slice(0, query.limit);
     const last = page[page.length - 1];
     return {
-      items: page.map(toDto),
+      items: page.map((row) => this.toDto(row)),
       nextCursor: rows.length > query.limit && last ? encodeCursor(last.occurredAt, last.id) : null,
     };
   }
@@ -136,9 +145,9 @@ export class EventsService {
       data.occurredAt = notInFuture(input.occurredAt, 'occurredAt', now, FUTURE_MESSAGE);
     }
     if (input.label !== undefined) data.label = input.label;
-    if (input.details !== undefined) data.details = cleanText(input.details);
+    if (input.details !== undefined) data.detailsEncrypted = this.encrypt(input.details);
     if (input.durationMinutes !== undefined) data.durationMinutes = input.durationMinutes;
-    if (Object.keys(data).length === 0) return toDto(current);
+    if (Object.keys(data).length === 0) return this.toDto(current);
 
     // Condition « non supprimé » dans l'écriture : une suppression simultanée gagne.
     const changed = await this.prisma.lifeEvent.updateMany({
@@ -148,7 +157,7 @@ export class EventsService {
     if (changed.count === 0) throw notFound();
     const updated = await this.findOwned(id, patientId);
     if (!updated) throw notFound();
-    return toDto(updated);
+    return this.toDto(updated);
   }
 
   /** DELETE /events/:id : tombstone, texte libre effacé ; 204 même si déjà supprimé, 404 si inconnu. */
@@ -156,10 +165,34 @@ export class EventsService {
     const now = new Date();
     const removed = await this.prisma.lifeEvent.updateMany({
       where: { id, patientId, deletedAt: null },
-      data: { deletedAt: now, details: null, clientUpdatedAt: now },
+      data: { deletedAt: now, detailsEncrypted: null, clientUpdatedAt: now },
     });
     if (removed.count === 1) return;
     if (!(await this.findOwned(id, patientId))) throw notFound();
+  }
+
+  private key(): string {
+    return this.config.getOrThrow<string>('FIELD_ENCRYPTION_KEY');
+  }
+
+  private encrypt(text: string | undefined): string | null {
+    return encryptOptionalText(text, this.key());
+  }
+
+  private toDto(row: Row): LifeEventDto {
+    return {
+      id: row.id,
+      type: row.type,
+      occurredAt: row.occurredAt.toISOString(),
+      label: row.label,
+      // Texte illisible (clé changée, donnée abîmée) : null, et seulement un avertissement sans contenu.
+      details: decryptOptionalText(row.detailsEncrypted, this.key(), () =>
+        this.logger.warn('Détail d’événement illisible ignoré.'),
+      ),
+      durationMinutes: row.durationMinutes,
+      updatedAt: row.updatedAt.toISOString(),
+      deletedAt: row.deletedAt ? row.deletedAt.toISOString() : null,
+    };
   }
 
   private async findOwned(id: string, patientId: string): Promise<Row | null> {
@@ -181,23 +214,4 @@ export class EventsService {
 
 function notFound() {
   return notFoundError('Événement introuvable.');
-}
-
-/** Texte libre : espaces retirés ; vide = pas de texte. */
-function cleanText(text: string | undefined): string | null {
-  const value = text?.trim();
-  return value ? value : null;
-}
-
-function toDto(row: Row): LifeEventDto {
-  return {
-    id: row.id,
-    type: row.type,
-    occurredAt: row.occurredAt.toISOString(),
-    label: row.label,
-    details: row.details,
-    durationMinutes: row.durationMinutes,
-    updatedAt: row.updatedAt.toISOString(),
-    deletedAt: row.deletedAt ? row.deletedAt.toISOString() : null,
-  };
 }

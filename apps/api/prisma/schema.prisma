@@ -121,15 +121,15 @@ model PatientProfile {
   timezoneOffsetMinutes         Int          @default(60) // Kinshasa : UTC+1
   updatedAt                     DateTime     @updatedAt
 
-  measurements   Measurement[]
-  events         LifeEvent[]
-  importBatches  ImportBatch[]
-  insights       Insight[]
-  shareSessions  ShareSession[]
-  accessLogs     AccessLog[]
-  emergencyCard  EmergencyCard?
+  measurements           Measurement[]
+  events                 LifeEvent[]
+  importBatches          ImportBatch[]
+  insights               Insight[]
+  shareSessions          ShareSession[]
+  accessLogs             AccessLog[]
+  emergencyCard          EmergencyCard?
   notificationPreference NotificationPreference?
-  syncOps        SyncOpLog[]
+  syncOps                SyncOpLog[]
 }
 
 model DoctorProfile {
@@ -173,41 +173,42 @@ model EmailToken {
 
 /// Identifiant généré par le CLIENT (UUID) : idempotence de la synchronisation hors-ligne.
 model Measurement {
-  id             String             @id @db.Uuid
-  patientId      String             @db.Uuid
-  patient        PatientProfile     @relation(fields: [patientId], references: [userId], onDelete: Cascade)
-  valueMgDl      Int
-  originalValue  Float
-  originalUnit   GlucoseUnit
-  measuredAt     DateTime
-  context        MeasurementContext @default(OTHER)
-  source         MeasurementSource  @default(MANUAL)
-  importBatchId  String?            @db.Uuid
-  importBatch    ImportBatch?       @relation(fields: [importBatchId], references: [id], onDelete: SetNull)
-  noteEncrypted  String?
+  id              String             @id @db.Uuid
+  patientId       String             @db.Uuid
+  patient         PatientProfile     @relation(fields: [patientId], references: [userId], onDelete: Cascade)
+  valueMgDl       Int
+  originalValue   Float
+  originalUnit    GlucoseUnit
+  measuredAt      DateTime
+  context         MeasurementContext @default(OTHER)
+  source          MeasurementSource  @default(MANUAL)
+  importBatchId   String?            @db.Uuid
+  importBatch     ImportBatch?       @relation(fields: [importBatchId], references: [id], onDelete: SetNull)
+  noteEncrypted   String?
   clientUpdatedAt DateTime
-  editedAt       DateTime?
-  createdAt      DateTime           @default(now())
-  updatedAt      DateTime           @updatedAt
-  deletedAt      DateTime? // tombstone : nécessaire pour propager les suppressions à la synchronisation
+  editedAt        DateTime?
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+  deletedAt       DateTime? // tombstone : nécessaire pour propager les suppressions à la synchronisation
 
   @@index([patientId, measuredAt])
   @@index([patientId, updatedAt, id])
 }
 
 model LifeEvent {
-  id              String         @id @db.Uuid
-  patientId       String         @db.Uuid
-  patient         PatientProfile @relation(fields: [patientId], references: [userId], onDelete: Cascade)
-  type            LifeEventType
-  occurredAt      DateTime
-  label           String
-  details         String?
-  durationMinutes Int?
-  clientUpdatedAt DateTime
-  createdAt       DateTime       @default(now())
-  updatedAt       DateTime       @updatedAt
-  deletedAt       DateTime?
+  id               String         @id @db.Uuid
+  patientId        String         @db.Uuid
+  patient          PatientProfile @relation(fields: [patientId], references: [userId], onDelete: Cascade)
+  type             LifeEventType
+  occurredAt       DateTime
+  label            String
+  /// Texte libre (ex. traitement déclaré) CHIFFRÉ en AES-256-GCM, comme la note d'une mesure.
+  detailsEncrypted String?
+  durationMinutes  Int?
+  clientUpdatedAt  DateTime
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  deletedAt        DateTime?
 
   @@index([patientId, occurredAt])
   @@index([patientId, updatedAt, id])
@@ -226,35 +227,35 @@ model SyncOpLog {
 }
 
 model ImportBatch {
-  id             String         @id @default(uuid()) @db.Uuid
-  patientId      String         @db.Uuid
-  patient        PatientProfile @relation(fields: [patientId], references: [userId], onDelete: Cascade)
-  fileName       String
-  status         ImportStatus   @default(PREVIEW)
-  defaultUnit    GlucoseUnit
-  parsedRows     Json // lignes analysées en attente de confirmation (PREVIEW)
-  validCount     Int            @default(0)
-  duplicateCount Int            @default(0)
-  inconsistentCount Int         @default(0)
-  errorCount     Int            @default(0)
-  createdAt      DateTime       @default(now())
-  committedAt    DateTime?
-  revertedAt     DateTime?
+  id                String         @id @default(uuid()) @db.Uuid
+  patientId         String         @db.Uuid
+  patient           PatientProfile @relation(fields: [patientId], references: [userId], onDelete: Cascade)
+  fileName          String
+  status            ImportStatus   @default(PREVIEW)
+  defaultUnit       GlucoseUnit
+  parsedRows        Json // lignes analysées en attente de confirmation (PREVIEW)
+  validCount        Int            @default(0)
+  duplicateCount    Int            @default(0)
+  inconsistentCount Int            @default(0)
+  errorCount        Int            @default(0)
+  createdAt         DateTime       @default(now())
+  committedAt       DateTime?
+  revertedAt        DateTime?
 
   measurements Measurement[]
 }
 
 model Insight {
-  id                    String         @id @default(uuid()) @db.Uuid
-  patientId             String         @db.Uuid
-  patient               PatientProfile @relation(fields: [patientId], references: [userId], onDelete: Cascade)
-  type                  String
-  severity              String
-  facts                 Json
+  id                     String         @id @default(uuid()) @db.Uuid
+  patientId              String         @db.Uuid
+  patient                PatientProfile @relation(fields: [patientId], references: [userId], onDelete: Cascade)
+  type                   String
+  severity               String
+  facts                  Json
   evidenceMeasurementIds String[]
-  periodFrom            DateTime
-  periodTo              DateTime
-  createdAt             DateTime       @default(now())
+  periodFrom             DateTime
+  periodTo               DateTime
+  createdAt              DateTime       @default(now())
 
   @@index([patientId, createdAt])
 }

@@ -186,7 +186,7 @@ function addEvent(patientId: string, overrides: Rec = {}) {
     type: 'MEAL',
     occurredAt: at('2026-10-05T12:00:00Z'),
     label: 'Déjeuner',
-    details: 'Riz, poisson',
+    detailsEncrypted: encryptField('Riz, poisson', FIELD_KEY),
     durationMinutes: null,
     updatedAt: at('2026-10-05T12:05:00Z'),
     deletedAt: null,

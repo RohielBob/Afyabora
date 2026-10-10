@@ -23,3 +23,33 @@ export function decryptField(payload: string, base64Key: string): string {
   decipher.setAuthTag(tag);
   return Buffer.concat([decipher.update(data), decipher.final()]).toString('utf8');
 }
+
+/**
+ * Texte libre facultatif (note d'une mesure, détail d'un événement) : espaces retirés ; vide → null ;
+ * sinon chiffré.
+ */
+export function encryptOptionalText(
+  text: string | undefined | null,
+  base64Key: string,
+): string | null {
+  const value = text?.trim();
+  return value ? encryptField(value, base64Key) : null;
+}
+
+/**
+ * Lecture tolérante : null si rien n'est stocké ; null aussi si le texte est illisible (clé changée,
+ * donnée abîmée), pour ne jamais bloquer une liste ou un export. `onUnreadable` permet de le compter.
+ */
+export function decryptOptionalText(
+  payload: string | null,
+  base64Key: string,
+  onUnreadable?: () => void,
+): string | null {
+  if (!payload) return null;
+  try {
+    return decryptField(payload, base64Key);
+  } catch {
+    onUnreadable?.();
+    return null;
+  }
+}

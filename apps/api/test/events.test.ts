@@ -2,13 +2,15 @@
 // Vrai serveur HTTP (port 0), vraies gardes JWT et rôles ; base SIMULÉE qui applique réellement les filtres
 // (patient, supprimés, période, curseur) et les contraintes PostgreSQL (P2002 identifiant, P2003 profil).
 import type { INestApplication } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { Test } from '@nestjs/testing';
-import { randomUUID } from 'node:crypto';
+import { randomBytes, randomUUID } from 'node:crypto';
 import type { AddressInfo } from 'node:net';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { lifeEventDtoSchema } from '@glyka/shared';
+import { decryptField, encryptField } from '../src/common/crypto/field-encryption';
 import { AllExceptionsFilter } from '../src/common/filters/all-exceptions.filter';
 import { JwtAuthGuard } from '../src/common/guards/jwt-auth.guard';
 import { RolesGuard } from '../src/common/guards/roles.guard';
@@ -17,6 +19,7 @@ import { PrismaService } from '../src/prisma/prisma.service';
 
 const SECRET = 'secret-de-test-uniquement-0123456789abcdef';
 const MINUTE = 60_000;
+const FIELD_KEY = randomBytes(32).toString('base64');
 
 // ---------- Fausse base ----------
 interface Row {
@@ -25,7 +28,7 @@ interface Row {
   type: string;
   occurredAt: Date;
   label: string;
-  details: string | null;
+  detailsEncrypted: string | null;
   durationMinutes: number | null;
   clientUpdatedAt: Date;
   updatedAt: Date;
@@ -102,6 +105,13 @@ const fakePrisma = {
     },
   },
 };
+const fakeConfig = {
+  get: () => undefined,
+  getOrThrow: (key: string) => {
+    if (key === 'FIELD_ENCRYPTION_KEY') return FIELD_KEY;
+    throw new Error(`Configuration absente du test : ${key}`);
+  },
+};
 class FakeInfraModule {}
 
 const isoIn = (ms: number) => new Date(Date.now() + ms).toISOString();
@@ -142,8 +152,11 @@ describe('L2-02 : événements de vie (/events)', () => {
         {
           module: FakeInfraModule,
           global: true,
-          providers: [{ provide: PrismaService, useValue: fakePrisma }],
-          exports: [PrismaService],
+          providers: [
+            { provide: PrismaService, useValue: fakePrisma },
+            { provide: ConfigService, useValue: fakeConfig },
+          ],
+          exports: [PrismaService, ConfigService],
         },
         EventsModule,
       ],
@@ -219,6 +232,29 @@ describe('L2-02 : événements de vie (/events)', () => {
           'updatedAt',
         ].sort(),
       ); // rien d'ajouté par le serveur (pas de « dose conseillée »)
+    });
+
+    it('texte libre CHIFFRÉ en base (ex. traitement), rendu en clair au patient', async () => {
+      const event = await json(
+        await create(meal({ type: 'TREATMENT', label: 'Metformine', details: '500 mg, matin' })),
+      );
+
+      expect(event.details).toBe('500 mg, matin');
+      const stored = rows[0]!.detailsEncrypted!;
+      expect(stored).not.toContain('500 mg');
+      expect(decryptField(stored, FIELD_KEY)).toBe('500 mg, matin');
+    });
+
+    it('texte illisible en base (clé changée) : null, sans bloquer la liste', async () => {
+      const body = meal();
+      await create(body);
+      rows[0]!.detailsEncrypted = encryptField('autre clé', randomBytes(32).toString('base64'));
+
+      const list = await json<{ items: { details: string | null }[] }>(
+        await call('GET', '/events', token(awa)),
+      );
+
+      expect(list.items[0]!.details).toBeNull();
     });
 
     it('libellé et texte libre : espaces retirés ; texte vide = pas de texte', async () => {
@@ -409,7 +445,7 @@ describe('L2-02 : événements de vie (/events)', () => {
 
       expect((await call('DELETE', path, token(awa))).status).toBe(204);
       expect(rows[0]!.deletedAt).toBeInstanceOf(Date);
-      expect(rows[0]!.details).toBeNull();
+      expect(rows[0]!.detailsEncrypted).toBeNull();
       expect((await call('DELETE', path, token(awa))).status).toBe(204);
 
       const replay = await create(body);
