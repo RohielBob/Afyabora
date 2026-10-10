@@ -7,13 +7,15 @@ import { countUnsyncedChanges } from '@/db/reset';
 import {
   createMeasurement,
   latestMeasurement,
+  listMeasurements,
   measurementPoints,
   measurementsInMinute,
   type LatestMeasurement,
+  type LocalMeasurement,
   type MeasurementPoint,
 } from '@/db/repositories/measurements.repo';
 
-export type { LatestMeasurement, MeasurementPoint };
+export type { LatestMeasurement, LocalMeasurement, MeasurementPoint };
 
 export const localMeasurements = {
   /** Enregistre la mesure sur le téléphone ; renvoie son identifiant (généré ici, hors-ligne). */
@@ -31,4 +33,9 @@ export const localMeasurements = {
   /** Mesures entre deux instants (ms), de la plus ancienne à la plus récente : graphique (L2-06). */
   between: (from: number, to: number): Promise<MeasurementPoint[]> =>
     measurementPoints(new Date(from).toISOString(), new Date(to).toISOString()),
+
+  /** Mesures complètes (provenance, lot d'import, note) entre deux dates ISO, de la plus récente à la
+   * plus ancienne : chronologie (L2-09). */
+  list: (fromIso: string, toIso: string): Promise<LocalMeasurement[]> =>
+    listMeasurements(fromIso, toIso),
 };

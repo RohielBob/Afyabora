@@ -600,5 +600,52 @@
       "formula": "Score = 50 % days with readings + 30 % readings per day + 20 % freshness.",
       "a11y": "Data quality: {{score}} out of 100, {{level}}. {{sentence}}"
     }
+  },
+  "timeline": {
+    "overline": "Timeline",
+    "title": "History",
+    "filtersLabel": "Filter the timeline",
+    "filter": {
+      "all": "All",
+      "glucose": "Glucose",
+      "MEAL": "Meals",
+      "ACTIVITY": "Activity",
+      "TREATMENT": "Treatments",
+      "alerts": "Alerts"
+    },
+    "type": {
+      "MEAL": "Meal",
+      "ACTIVITY": "Activity",
+      "TREATMENT": "Treatment"
+    },
+    "duration_one": "{{type}} · {{count}} min",
+    "duration_other": "{{type}} · {{count}} min",
+    "declared": "Declared by you",
+    "pending": "Not sent yet",
+    "source": {
+      "MANUAL": "Entered",
+      "IMPORT": "Import",
+      "DEVICE": "Device",
+      "importBatch": "Import · batch {{batch}}",
+      "a11y": "Source: {{label}}"
+    },
+    "count_one": "{{count}} item",
+    "count_other": "{{count}} items",
+    "more": "Show the previous {{days}} days",
+    "end": "Nothing older on this phone.",
+    "empty": {
+      "title": "Your history is empty",
+      "text": "Your readings, meals, activities and treatments will appear here, day by day.",
+      "action": "Log a reading"
+    },
+    "emptyFilter": {
+      "title": "Nothing to show",
+      "text": "No “{{filter}}” items over the last {{days}} days."
+    },
+    "error": "Your history could not be read on this phone.",
+    "a11y": {
+      "measurement": "{{time}}, glucose {{value}}, {{state}}, {{context}}",
+      "event": "{{time}}, {{label}}, {{meta}}"
+    }
   }
 }

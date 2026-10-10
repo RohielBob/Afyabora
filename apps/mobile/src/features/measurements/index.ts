@@ -29,7 +29,12 @@ export {
   type WhenPreset,
   type WhenState,
 } from './entry';
-export { localMeasurements, type LatestMeasurement, type MeasurementPoint } from './local-store';
+export {
+  localMeasurements,
+  type LatestMeasurement,
+  type LocalMeasurement,
+  type MeasurementPoint,
+} from './local-store';
 export { DEFAULT_UNIT, parseUnit, readUnit, writeUnit } from './unit-preference';
 export { AddTabButton } from './components/AddTabButton';
 export { SafetyNotice } from './components/SafetyNotice';
