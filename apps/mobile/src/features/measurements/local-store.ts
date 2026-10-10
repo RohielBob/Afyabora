@@ -7,11 +7,13 @@ import { countUnsyncedChanges } from '@/db/reset';
 import {
   createMeasurement,
   latestMeasurement,
+  measurementPoints,
   measurementsInMinute,
   type LatestMeasurement,
+  type MeasurementPoint,
 } from '@/db/repositories/measurements.repo';
 
-export type { LatestMeasurement };
+export type { LatestMeasurement, MeasurementPoint };
 
 export const localMeasurements = {
   /** Enregistre la mesure sur le téléphone ; renvoie son identifiant (généré ici, hors-ligne). */
@@ -25,4 +27,8 @@ export const localMeasurements = {
 
   /** Modifications pas encore envoyées au serveur (file d'envoi). 0 si la base ne répond pas. */
   pendingCount: (): Promise<number> => countUnsyncedChanges(),
+
+  /** Mesures entre deux instants (ms), de la plus ancienne à la plus récente : graphique (L2-06). */
+  between: (from: number, to: number): Promise<MeasurementPoint[]> =>
+    measurementPoints(new Date(from).toISOString(), new Date(to).toISOString()),
 };

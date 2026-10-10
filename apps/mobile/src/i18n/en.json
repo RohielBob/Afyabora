@@ -538,6 +538,21 @@
       "text": "Log your first glucose reading: it stays on this phone, even offline.",
       "action": "Log my first reading"
     },
-    "error": "Your readings could not be read on this phone."
+    "error": "Your readings could not be read on this phone.",
+    "chart": {
+      "title": "Trend",
+      "periodLabel": "Chart period",
+      "period_one": "{{count}} d",
+      "period_other": "{{count}} d",
+      "summary_one": "{{count}} reading over {{days}} days",
+      "summary_other": "{{count}} readings over {{days}} days",
+      "hint": "Touch the curve to see a reading in detail.",
+      "empty": "No readings over these {{days}} days.",
+      "target": "Target range: {{min}} – {{max}}",
+      "a11y_one": "Glucose chart over {{days}} days: {{count}} reading.",
+      "a11y_other": "Glucose chart over {{days}} days: {{count}} readings.",
+      "a11yHint": "Swipe up or down to move from one reading to another.",
+      "a11yPoint": "{{value}}, {{state}}. {{detail}}"
+    }
   }
 }

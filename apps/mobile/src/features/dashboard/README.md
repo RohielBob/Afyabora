@@ -7,7 +7,7 @@ Dernière mesure, graphique, statistiques, qualité des données, comparaison de
 ## Tickets
 
 - **L2-05** — Mobile : tableau de bord — dernière mesure et badge d'état (forme + libellé + couleur) — **fait**
-- **L2-06** — Mobile : graphique d'évolution 7/14/30/90 jours avec bande cible
+- **L2-06** — Mobile : graphique d'évolution 7/14/30/90 jours avec bande cible — **fait**
 - **L2-07** — Mobile : statistiques et comparaison avec la période précédente
 - **L2-08** — Mobile : score de qualité des données et phrase d'explication
 - **L8-11** — Tableau de bord et analyse calculés depuis la base locale (moteur sur le téléphone)
@@ -44,9 +44,44 @@ une saisie). Pendant la lecture : squelette de la carte ; base illisible : messa
 - [x] Ancienneté : à l'instant (et horloge un peu en avance), minutes, heures, jours.
 - [x] Salutation : bonjour avant 18 h, bonsoir à partir de 18 h et la nuit.
 
+## Graphique d'évolution (L2-06)
+
+Sous la dernière mesure, une carte « Évolution » (`components/GlucoseChart.tsx`, react-native-svg déjà
+présent, aucune dépendance ajoutée) :
+
+- **Périodes 7 / 14 / 30 / 90 jours** (30 à l'ouverture, comme le scénario de démo), en jours du
+  calendrier : « 7 jours » = aujourd'hui + les 6 jours d'avant.
+- **Bande verte = plage cible du patient** ; graduations rondes **dans son unité** (0,50 · 1,00 g/L ;
+  2,5 · 5,0 mmol/L ; 50 · 100 mg/dL) ; l'axe contient toujours la bande et toutes les mesures, jamais
+  sous zéro.
+- **Chaque mesure a une forme selon son état** (● dans la plage, ▲ au-dessus, ▼ en dessous, plus grande
+  pour très haut / très bas) et sa couleur : jamais la couleur seule ; légende sous le graphique.
+- **Courbe coupée après 2 jours sans mesure** : on ne dessine pas une tendance inventée.
+- **Interactif** : toucher ou glisser le doigt sélectionne la mesure la plus proche (trait vertical, point
+  agrandi, détail au-dessus : valeur, badge d'état, contexte, jour et heure). Un geste surtout vertical
+  laisse l'écran défiler. Lecteur d'écran : balayer vers le haut / le bas passe d'une mesure à l'autre.
+- **Animations** : la courbe se trace (≈ 0,4 s) puis les points apparaissent en fondu ; changer de période
+  redessine ; « réduire les animations » : affichage direct.
+- Beaucoup de mesures (plus de 120 affichées, ex. 90 jours) : points et courbe plus fins.
+- Données : une seule lecture locale des 90 derniers jours (`localMeasurements.between`), chaque période
+  filtre ensuite en mémoire.
+
+| Fichier                       | Rôle                                                                  |
+| ----------------------------- | --------------------------------------------------------------------- |
+| `chart.ts`                    | Logique : périodes, axe vertical, repères du temps, coupures, toucher |
+| `components/GlucoseChart.tsx` | Dessin, animations, interaction, légende                              |
+| `__tests__/chart.test.ts`     | Tests de la logique                                                   |
+
+## Tests obligatoires (L2-06)
+
+- [x] Période : 7 jours = aujourd'hui + 6 jours depuis minuit ; tolérance de 5 min dans le futur.
+- [x] Axe : pas ronds, plage cible toujours visible, unité du patient, jamais sous zéro.
+- [x] Repères du temps : chaque jour (7 j) … chaque semaine en partant d'aujourd'hui (30 j).
+- [x] Courbe coupée après plus de 2 jours sans mesure.
+- [x] Mesure la plus proche du doigt ; tracé et longueur (animation de dessin).
+
 ## Fichiers prévus (suite)
 
-- `GlucoseChart.tsx` (react-native-svg)
 - `StatsCards.tsx`
 - `QualityCard.tsx`
 - `useLocalAnalysis.ts` : lit SQLite → GlucosePoint[] → @glyka/analytics
