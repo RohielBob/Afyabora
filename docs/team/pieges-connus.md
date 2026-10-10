@@ -43,4 +43,11 @@
 - `docker compose down` **sans `-v`** : `-v` supprime la base locale. `prisma migrate reset` aussi efface tout (dev uniquement, sur accord).
 - Les tests de l'API (Vitest + SWC pour les décorateurs) utilisent un **faux Prisma** et un vrai serveur HTTP sur le port 0 (`fetch` sur 127.0.0.1) : aucune base nécessaire.
 - Une migration déjà fusionnée dans `develop` ne se modifie **jamais** : on en crée une nouvelle.
+- **Jamais « lire puis réécrire » un compteur ou un état partagé** (échecs de connexion, quotas, stock…) :
+  des requêtes simultanées lisent la même valeur et s'écrasent. Faire faire le calcul par la base
+  (`updateMany` avec condition, `{ increment: 1 }`) ou une consommation atomique (`updateMany` dont on
+  vérifie `count`). Trouvé en L1-13 : 5 essais simultanés ne verrouillaient pas le compte.
+- Un test de « requêtes simultanées » par HTTP dans le même processus ne reproduit pas toujours l'ordre
+  dangereux : pour un ordre précis, ajouter un point d'arrêt dans le faux Prisma (voir
+  `test/auth-security.test.ts`, `beforeRefreshCreate`), et vérifier que le test ÉCHOUE sur l'ancien code.
 - Les fichiers `docs/api/openapi.v0.json` (contrat) et `openapi.generated.json` (export Nest) sont ignorés par Prettier ; ce dernier est aussi ignoré par Git.
