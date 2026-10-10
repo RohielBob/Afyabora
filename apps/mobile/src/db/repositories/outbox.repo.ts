@@ -13,7 +13,7 @@ export interface OutboxRow {
 }
 
 /** À appeler DANS la même transaction que l'écriture de la donnée (atomicité). */
-export async function enqueue(db: SQLiteDatabase, op: SyncOp): Promise<void> {
+export async function enqueue(db: Pick<SQLiteDatabase, 'runAsync'>, op: SyncOp): Promise<void> {
   await db.runAsync(
     `INSERT INTO outbox (op_id, entity, type, entity_id, client_updated_at, payload)
      VALUES (?, ?, ?, ?, ?, ?)`,

@@ -1,66 +1,62 @@
 // Mesures : lecture/écriture LOCALE. Toute écriture empile une opération dans l'outbox,
 // dans la même transaction : jamais de mesure sans opération de synchronisation associée.
-import type { CreateMeasurementInput, MeasurementContext } from '@glyka/shared';
-import { toMgDl } from '@glyka/shared';
+// L8-03 : la logique des écritures est dans plans.ts (testée) ; ici, seulement la base de données.
+import type {
+  CreateMeasurementInput,
+  MeasurementContext,
+  MeasurementSource,
+  UpdateMeasurementInput,
+} from '@glyka/shared';
 import { newId } from '@/lib/uuid';
 import { getDb } from '../client';
-import { enqueue } from './outbox.repo';
+import {
+  planMeasurementCreate,
+  planMeasurementDelete,
+  planMeasurementUpdate,
+  type MeasurementRow,
+} from './plans';
+import { LocalNotFound, applyPlan } from './write';
 
-export interface LocalMeasurement {
-  id: string;
-  value_mgdl: number;
-  original_value: number;
-  original_unit: string;
-  measured_at: string;
-  context: string;
-  source: string;
-  note: string | null;
-  pending_sync: number;
-}
+/** Mesure telle qu'elle est gardée sur le téléphone (toutes les colonnes). */
+export type LocalMeasurement = MeasurementRow;
 
+const nowIso = () => new Date().toISOString();
+
+/**
+ * Crée une mesure sur le téléphone ; renvoie son identifiant (généré ici, hors-ligne). Saisie manuelle
+ * par défaut ; l'import (L4) précisera la provenance et son lot.
+ */
 export async function createMeasurement(
   input: Omit<CreateMeasurementInput, 'id'>,
+  origin: { source?: MeasurementSource; importBatchId?: string | null } = {},
 ): Promise<string> {
   const db = await getDb();
-  const id = newId();
-  const now = new Date().toISOString();
-  const payload: CreateMeasurementInput = { ...input, id };
-  await db.withTransactionAsync(async () => {
-    await db.runAsync(
-      `INSERT INTO measurements
-        (id, value_mgdl, original_value, original_unit, measured_at, context, source, note,
-         client_updated_at, updated_at, pending_sync)
-       VALUES (?, ?, ?, ?, ?, ?, 'MANUAL', ?, ?, ?, 1)`,
-      id,
-      toMgDl(input.value, input.unit),
-      input.value,
-      input.unit,
-      input.measuredAt,
-      input.context,
-      input.note ?? null,
-      now,
-      now,
-    );
-    await enqueue(db, {
-      opId: newId(),
-      entity: 'measurement',
-      type: 'upsert',
-      entityId: id,
-      clientUpdatedAt: now,
-      payload,
-    });
-  });
-  return id;
+  const plan = planMeasurementCreate(
+    { ...input, id: newId() },
+    { opId: newId(), now: nowIso() },
+    origin,
+  );
+  await db.withTransactionAsync(() => applyPlan(db, 'measurements', plan));
+  return plan.row.id;
 }
 
+/** Mesure non supprimée, ou null. */
+export async function getMeasurement(id: string): Promise<LocalMeasurement | null> {
+  const db = await getDb();
+  return db.getFirstAsync<LocalMeasurement>(
+    'SELECT * FROM measurements WHERE id = ? AND deleted_at IS NULL',
+    id,
+  );
+}
+
+/** Mesures non supprimées entre deux dates ISO UTC (début inclus, fin exclue), de la plus récente à la plus ancienne. */
 export async function listMeasurements(
   fromIso: string,
   toIso: string,
 ): Promise<LocalMeasurement[]> {
   const db = await getDb();
   return db.getAllAsync<LocalMeasurement>(
-    `SELECT id, value_mgdl, original_value, original_unit, measured_at, context, source, note, pending_sync
-     FROM measurements
+    `SELECT * FROM measurements
      WHERE deleted_at IS NULL AND measured_at >= ? AND measured_at < ?
      ORDER BY measured_at DESC`,
     fromIso,
@@ -68,23 +64,40 @@ export async function listMeasurements(
   );
 }
 
-export async function deleteMeasurement(id: string): Promise<void> {
+/**
+ * Modifie une mesure (champs donnés seulement ; valeur et unité ensemble). L'objet COMPLET part à la
+ * synchronisation (« la dernière écriture gagne »), confirmation « inhabituelle » comprise.
+ */
+export async function updateMeasurement(id: string, patch: UpdateMeasurementInput): Promise<void> {
   const db = await getDb();
-  const now = new Date().toISOString();
   await db.withTransactionAsync(async () => {
-    await db.runAsync(
-      'UPDATE measurements SET deleted_at = ?, updated_at = ?, pending_sync = 1 WHERE id = ?',
-      now,
-      now,
+    const current = await db.getFirstAsync<MeasurementRow>(
+      'SELECT * FROM measurements WHERE id = ? AND deleted_at IS NULL',
       id,
     );
-    await enqueue(db, {
-      opId: newId(),
-      entity: 'measurement',
-      type: 'delete',
-      entityId: id,
-      clientUpdatedAt: now,
-    });
+    if (!current) throw new LocalNotFound('Mesure', id);
+    await applyPlan(
+      db,
+      'measurements',
+      planMeasurementUpdate(current, patch, { opId: newId(), now: nowIso() }),
+    );
+  });
+}
+
+/** Supprime une mesure (pierre tombale, note effacée). Déjà supprimée ou absente : rien à faire. */
+export async function deleteMeasurement(id: string): Promise<void> {
+  const db = await getDb();
+  await db.withTransactionAsync(async () => {
+    const current = await db.getFirstAsync<MeasurementRow>(
+      'SELECT * FROM measurements WHERE id = ? AND deleted_at IS NULL',
+      id,
+    );
+    if (!current) return;
+    await applyPlan(
+      db,
+      'measurements',
+      planMeasurementDelete(current, { opId: newId(), now: nowIso() }),
+    );
   });
 }
 /**
@@ -174,5 +187,3 @@ export async function measurementPoints(
     context: r.context,
   }));
 }
-
-// TODO(L8-03) : updateMeasurement, repositories d'événements (events.repo.ts), mapping vers GlucosePoint.
