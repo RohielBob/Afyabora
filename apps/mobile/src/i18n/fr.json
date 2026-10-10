@@ -577,6 +577,28 @@
         "flat": "stable"
       },
       "noPrevious": "Pas assez de mesures sur les {{days}} jours précédents pour comparer."
+    },
+    "quality": {
+      "title": "Qualité des données",
+      "level": {
+        "GOOD": "Bonne",
+        "PARTIAL": "Partielle",
+        "INSUFFICIENT": "Insuffisante"
+      },
+      "reason": {
+        "empty": "Aucune mesure sur ces {{days}} jours : rien à évaluer pour le moment.",
+        "good": "Mesures régulières : {{covered}} jours mesurés sur {{days}}, {{perDay}} par jour en moyenne.",
+        "coverage": "Mesures sur {{covered}} jours seulement sur {{days}} : plus de jours mesurés rendent l’analyse plus fiable.",
+        "freshness_one": "Dernière mesure il y a {{count}} jour : les chiffres reflètent moins la situation actuelle.",
+        "freshness_other": "Dernière mesure il y a {{count}} jours : les chiffres reflètent moins la situation actuelle.",
+        "density_one": "{{perDay}} mesure par jour mesuré en moyenne : la cible est de {{target}} pour une image plus complète.",
+        "density_other": "{{perDay}} mesures par jour mesuré en moyenne : la cible est de {{target}} pour une image plus complète."
+      },
+      "coverage": "Jours mesurés",
+      "density": "Mesures par jour",
+      "freshness": "Fraîcheur",
+      "formula": "Score = 50 % jours mesurés + 30 % mesures par jour + 20 % fraîcheur.",
+      "a11y": "Qualité des données : {{score}} sur 100, {{level}}. {{sentence}}"
     }
   }
 }

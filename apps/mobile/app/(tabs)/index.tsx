@@ -2,7 +2,8 @@
 // libellé, seuils du patient), date et heure, indicateur de synchronisation. L2-06 : graphique d'évolution
 // 7/14/30/90 jours avec la bande cible, interactif. L2-07 : statistiques et comparaison avec la période
 // précédente, pour LA MÊME période que le graphique (changer de période met à jour tous les chiffres).
-// Tout vient de la base LOCALE : l'écran marche sans réseau. Qualité des données : L2-08.
+// L2-08 : score de qualité des données (même période) avec une phrase d'explication.
+// Tout vient de la base LOCALE : l'écran marche sans réseau.
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
@@ -13,9 +14,11 @@ import {
   EmptyLatest,
   GlucoseChart,
   LatestReading,
+  QualityCard,
   StatsCard,
   SyncStatus,
   greetingKey,
+  periodQuality,
   periodStats,
   useDashboard,
   type ChartPeriod,
@@ -34,6 +37,10 @@ export default function DashboardScreen() {
       state.status === 'ready'
         ? periodStats(state.points, period, state.now, state.thresholds)
         : null,
+    [state, period],
+  );
+  const quality = useMemo(
+    () => (state.status === 'ready' ? periodQuality(state.points, period, state.now) : null),
     [state, period],
   );
   // « Samedi 10 octobre » : la date du jour, en tête, dans la langue de l'application.
@@ -88,11 +95,12 @@ export default function DashboardScreen() {
               {stats ? (
                 <StatsCard data={stats} period={period} unit={state.unit} index={2} />
               ) : null}
+              {quality ? <QualityCard data={quality} period={period} index={3} /> : null}
             </>
           ) : (
             <EmptyLatest index={0} />
           )}
-          <SyncStatus pending={state.pending} index={3} />
+          <SyncStatus pending={state.pending} index={4} />
         </>
       ) : null}
 

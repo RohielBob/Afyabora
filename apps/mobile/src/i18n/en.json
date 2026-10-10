@@ -577,6 +577,28 @@
         "flat": "stable"
       },
       "noPrevious": "Not enough readings over the previous {{days}} days to compare."
+    },
+    "quality": {
+      "title": "Data quality",
+      "level": {
+        "GOOD": "Good",
+        "PARTIAL": "Partial",
+        "INSUFFICIENT": "Insufficient"
+      },
+      "reason": {
+        "empty": "No readings over these {{days}} days: nothing to assess yet.",
+        "good": "Regular readings: {{covered}} days with readings out of {{days}}, {{perDay}} per day on average.",
+        "coverage": "Readings on only {{covered}} days out of {{days}}: more days with readings make the analysis more reliable.",
+        "freshness_one": "Last reading {{count}} day ago: the figures reflect the current situation less well.",
+        "freshness_other": "Last reading {{count}} days ago: the figures reflect the current situation less well.",
+        "density_one": "{{perDay}} reading per day on average: the target is {{target}} for a more complete picture.",
+        "density_other": "{{perDay}} readings per day on average: the target is {{target}} for a more complete picture."
+      },
+      "coverage": "Days with readings",
+      "density": "Readings per day",
+      "freshness": "Freshness",
+      "formula": "Score = 50 % days with readings + 30 % readings per day + 20 % freshness.",
+      "a11y": "Data quality: {{score}} out of 100, {{level}}. {{sentence}}"
     }
   }
 }

@@ -9,7 +9,7 @@ Dernière mesure, graphique, statistiques, qualité des données, comparaison de
 - **L2-05** — Mobile : tableau de bord — dernière mesure et badge d'état (forme + libellé + couleur) — **fait**
 - **L2-06** — Mobile : graphique d'évolution 7/14/30/90 jours avec bande cible — **fait**
 - **L2-07** — Mobile : statistiques et comparaison avec la période précédente — **fait**
-- **L2-08** — Mobile : score de qualité des données et phrase d'explication
+- **L2-08** — Mobile : score de qualité des données et phrase d'explication — **fait**
 - **L8-11** — Tableau de bord et analyse calculés depuis la base locale (moteur sur le téléphone)
 
 ## Dernière mesure (L2-05)
@@ -111,6 +111,33 @@ chiffres »).
 - [x] Statistiques du moteur (moyenne, temps dans / au-dessus de la cible).
 - [x] Pourcentages qui font 100.
 - [x] Comparaison : hausse / baisse / stable, seuils exacts (5 points, 5 %).
+
+## Qualité des données (L2-08)
+
+Carte « Qualité des données » sous les statistiques (`components/QualityCard.tsx`), même période.
+
+- Score du moteur **`@glyka/analytics`** (`computeQuality`, §5.3) : 50 % jours mesurés + 30 % mesures
+  par jour (cible 3) + 20 % fraîcheur. Niveaux Bonne ≥ 75 · Partielle 40–74 · Insuffisante < 40.
+- Appel correct depuis le téléphone (`quality.ts`) : période en **jours entiers** (jusqu'à la fin
+  d'aujourd'hui, sinon « 7 jours » compterait pour 6) et **fuseau du téléphone** (le moteur suppose UTC+1).
+- **Une phrase** : ce qui fait le plus baisser le score (jours mesurés, mesures par jour ou ancienneté de
+  la dernière mesure). « Mesures régulières » seulement si les trois composantes sont à 80 % ou plus :
+  un score « Bonne » peut cacher 57 jours mesurés sur 90, on le dit au lieu de rassurer à tort.
+- Anneau qui se remplit jusqu'au score + les trois composantes en barres + la formule : calcul transparent.
+  Couleur du niveau (vert, ambre, gris) toujours avec icône et libellé, **jamais rouge** (ce n'est pas une
+  alerte de santé).
+
+| Fichier                      | Rôle                                                       |
+| ---------------------------- | ---------------------------------------------------------- |
+| `quality.ts`                 | Appel du moteur, mesures par jour, phrase (cause du score) |
+| `components/QualityCard.tsx` | Anneau, niveau, phrase, composantes, formule               |
+| `__tests__/quality.test.ts`  | Tests de la logique                                        |
+
+## Tests obligatoires (L2-08)
+
+- [x] « 7 jours » = 7 jours entiers ; jours comptés dans le fuseau du téléphone.
+- [x] Bonne qualité (3 par jour, tous les jours) ; aucune mesure ; couverture, densité, fraîcheur comme cause.
+- [x] Composante la plus faible pondérée comme la formule, ordre fixe en cas d'égalité.
 
 ## Fichiers prévus (suite)
 
