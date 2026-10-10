@@ -46,6 +46,7 @@ import {
   USER_ROLES,
   verifyEmailSchema,
   lifeEventDtoSchema,
+  unusualValueErrorSchema,
 } from '@glyka/shared';
 
 // Le contrat est un document JSON arbitraire : `any` est volontaire ici (permis dans les tests).
@@ -335,6 +336,18 @@ describe('contrat OpenAPI : requêtes identiques aux schémas Zod', () => {
     expect(Object.keys(schemas.Measurement.properties).sort()).toEqual(
       Object.keys(measurementDtoSchema.shape).sort(),
     );
+  });
+
+  it('UnusualValueError (0.2.1) : exemple et champs identiques à unusualValueErrorSchema', () => {
+    const error = schemas.UnusualValueError;
+    expect(unusualValueErrorSchema.safeParse(error.example).success).toBe(true);
+    const extra = error.allOf[1];
+    expect(Object.keys(extra.properties).sort()).toEqual(
+      ['plausibleMaxMgDl', 'plausibleMinMgDl', 'valueMgDl'].sort(),
+    );
+    // Toutes les clés du schéma Zod sont décrites (Error : message, code ; + les trois nombres).
+    const documented = [...Object.keys(schemas.Error.properties), ...Object.keys(extra.properties)];
+    for (const key of Object.keys(unusualValueErrorSchema.shape)) expect(documented).toContain(key);
   });
 
   it('chaque corps de requête JSON du contrat est couvert par un schéma Zod', () => {

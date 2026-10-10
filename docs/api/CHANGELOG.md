@@ -2,6 +2,21 @@
 
 Format : une section par version. Une **rupture** est signalée en tête de section.
 
+## 0.2.1 : 2026-10-10 (suite de L2-01, validé en équipe)
+
+### Précisé
+
+- Réponse **422 `UNUSUAL_VALUE`** de `POST /measurements` et `PUT /measurements/{id}` : nouveau schéma
+  `UnusualValueError` (champs d'`Error` + `valueMgDl`, `plausibleMinMgDl`, `plausibleMaxMgDl`, tous
+  présents) et réponse réutilisable `UnusualValue`. Le mobile affiche « 1 870 mg/dL : est-ce
+  correct ? » puis renvoie la mesure avec `confirmedUnusual: true`.
+- `@glyka/shared` : `unusualValueErrorSchema` et type `UnusualValueError` (lecture côté mobile, L2-04).
+
+### Pas de rupture
+
+L'API renvoyait déjà ces champs depuis L2-01 ; le contrat les décrit désormais. Un client qui ne les
+lit pas fonctionne comme avant.
+
 ## 0.2.0 : 2026-10-10 (L1-08, accord du lead technique)
 
 ### Ajouté
