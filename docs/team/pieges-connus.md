@@ -27,9 +27,13 @@
 
 - Expo Go **n'affiche pas** la nouvelle icône ni l'écran de lancement ; il faut un build. Le push et le chiffrement SQLite exigent un **development build** (L0-11).
 - Metro lit `@glyka/*` dans `dist/` : après une modification de `packages/ui-tokens` (ou `shared`, `analytics`), reconstruire ce paquet, sinon écran blanc ou erreur « Unable to resolve ».
-- `app/index.tsx` est seulement une redirection vers `/(auth)/welcome` (une page statique à cet endroit masquait tous les écrans et ses « boutons » n'étaient que des `View`).
+- `app/index.tsx` choisit le premier écran selon la session (L1-07) : accueil, connexion, assistant de profil ou onglets.
 - `expo install --fix` aligne les versions natives sur le SDK : ne pas mettre `react-native` à jour à la main.
 - Ne jamais comparer des dates SQLite en texte si les décalages horaires diffèrent (`+01:00` vs `Z`) : normaliser en UTC à l'écriture.
+
+- **Écrans protégés** (`Stack.Protected`) : quand un écran est refusé, Expo Router revient à l'écran « ancre » de la pile. Sans `export const unstable_settings = { anchor: 'index' }` dans `app/_layout.tsx`, il prend le premier écran par ordre alphabétique (ex. `forgot-password`) : comportement incohérent.
+- **expo-sqlite sur le web** : l'ouverture de la base peut rester bloquée sans erreur (le navigateur exige des en-têtes de sécurité que le serveur de dev ne fournit pas). Les accès à la base locale passent par `src/db/reset.ts` (ignorés sur le web, limite de temps sur téléphone) : un bouton ne doit jamais attendre une base qui ne répond pas.
+- **Clés React en double** (`key`) entre éléments voisins : React garde un « fantôme » de l'ancien élément (vu avec deux en-têtes affichés en même temps). Deux voisins ne partagent jamais la même `key`.
 
 ## API / base de données
 
