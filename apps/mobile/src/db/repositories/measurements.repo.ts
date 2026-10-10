@@ -1,6 +1,6 @@
 // Mesures : lecture/écriture LOCALE. Toute écriture empile une opération dans l'outbox,
 // dans la même transaction : jamais de mesure sans opération de synchronisation associée.
-import type { CreateMeasurementInput } from '@glyka/shared';
+import type { CreateMeasurementInput, MeasurementContext } from '@glyka/shared';
 import { toMgDl } from '@glyka/shared';
 import { newId } from '@/lib/uuid';
 import { getDb } from '../client';
@@ -102,6 +102,38 @@ export async function measurementsInMinute(
      WHERE deleted_at IS NULL AND substr(measured_at, 1, 16) = ?`,
     minute,
   );
+}
+
+/** Dernière mesure (la plus récente par date de mesure), pour le tableau de bord (L2-05). */
+export interface LatestMeasurement {
+  id: string;
+  valueMgDl: number;
+  measuredAt: string;
+  context: MeasurementContext;
+  /** Pas encore envoyée au serveur. */
+  pendingSync: boolean;
+}
+
+/**
+ * Mesure non supprimée la plus récente, ou null s'il n'y en a aucune. Les dates sont en ISO UTC
+ * (« …Z ») : l'ordre du texte est l'ordre chronologique, et l'index sur measured_at sert.
+ */
+export async function latestMeasurement(): Promise<LatestMeasurement | null> {
+  const db = await getDb();
+  const row = await db.getFirstAsync<{
+    id: string;
+    valueMgDl: number;
+    measuredAt: string;
+    context: MeasurementContext;
+    pendingSync: number;
+  }>(
+    `SELECT id, value_mgdl AS valueMgDl, measured_at AS measuredAt, context, pending_sync AS pendingSync
+     FROM measurements
+     WHERE deleted_at IS NULL
+     ORDER BY measured_at DESC
+     LIMIT 1`,
+  );
+  return row ? { ...row, pendingSync: row.pendingSync === 1 } : null;
 }
 
 // TODO(L8-03) : updateMeasurement, repositories d'événements (events.repo.ts), mapping vers GlucosePoint.

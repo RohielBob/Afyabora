@@ -12,12 +12,21 @@
   },
   "disclaimer": "Afyabora is a self-monitoring aid. It does not replace the advice of a healthcare professional.",
   "glucose": {
-    "unusualConfirm": "This value is unusual. Is it correct?"
+    "unusualConfirm": "This value is unusual. Is it correct?",
+    "state": {
+      "VERY_LOW": "Very low",
+      "LOW": "Below range",
+      "IN_RANGE": "In range",
+      "HIGH": "Above range",
+      "VERY_HIGH": "Very high"
+    },
+    "stateA11y": "Status: {{label}}"
   },
   "sync": {
     "pending_one": "{{count}} reading waiting to sync",
     "pending_other": "{{count}} readings waiting to sync",
-    "offline": "Offline — your data is saved on this phone"
+    "offline": "Offline — your data is saved on this phone",
+    "upToDate": "Everything is up to date"
   },
   "safety": {
     "extreme": "Follow your care team's instructions. If you feel unwell, get help immediately."
@@ -501,5 +510,34 @@
       },
       "message": "Follow your care team’s instructions. If you feel unwell, ask for help immediately."
     }
+  },
+  "dashboard": {
+    "greeting": {
+      "morning": "Good morning",
+      "evening": "Good evening"
+    },
+    "latest": {
+      "title": "Latest reading",
+      "today": "Today",
+      "yesterday": "Yesterday",
+      "when": "{{day}}, {{time}}",
+      "age": {
+        "justNow": "Just now",
+        "minutes_one": "{{count}} min ago",
+        "minutes_other": "{{count}} min ago",
+        "hours_one": "{{count}} h ago",
+        "hours_other": "{{count}} h ago",
+        "days_one": "{{count}} day ago",
+        "days_other": "{{count}} days ago"
+      },
+      "a11y": "Latest reading: {{value}}, {{state}}. {{context}}, {{when}}.",
+      "add": "New reading"
+    },
+    "empty": {
+      "title": "No readings yet",
+      "text": "Log your first glucose reading: it stays on this phone, even offline.",
+      "action": "Log my first reading"
+    },
+    "error": "Your readings could not be read on this phone."
   }
 }
