@@ -3,18 +3,23 @@
 // (maintenant par défaut) → contexte → note facultative → Enregistrer.
 // Écriture LOCALE d'abord (ADR-0004) : la mesure et son opération de synchronisation sont gardées sur le
 // téléphone ; l'envoi au serveur viendra avec le moteur de synchronisation (L8-06).
-// Valeur hors des bornes plausibles : à vérifier (la confirmation « c'est correct » arrive avec L2-04).
+// L2-04 : valeur hors des bornes plausibles ⇒ question « 1 870 mg/dL : est-ce correct ? » (avec l'unité
+// probable si c'est une erreur d'unité) ; très basse ou très haute selon les seuils du patient ⇒ message de
+// sécurité sobre sur l'écran de réussite. Les seuils sont lus sur le téléphone (hors-ligne).
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { View, type TextInput } from 'react-native';
+import { Keyboard, View, type TextInput } from 'react-native';
 import Animated from 'react-native-reanimated';
 import {
+  DEFAULT_THRESHOLDS,
   GLUCOSE_UNITS,
   MEASUREMENT_CONTEXTS,
   UNIT_LABELS,
-  formatGlucose,
+  classifyGlucose,
+  type GlucoseState,
+  type GlucoseThresholds,
   type GlucoseUnit,
   type MeasurementContext,
 } from '@glyka/shared';
@@ -30,25 +35,38 @@ import {
 } from '@/components/ui';
 import {
   SavedState,
+  UnusualValueCard,
   ValueField,
   WhenPicker,
   convertText,
   formatClock,
+  formatReading,
   initialWhen,
   isExactDuplicate,
+  likelyUnits,
   localMeasurements,
   parseValue,
   readUnit,
   resolveWhen,
+  safetyLevel,
   toCreateInput,
   validateEntry,
   writeUnit,
   type EntryDraft,
+  type SafetyLevel,
 } from '@/features/measurements';
+import { readThresholds } from '@/features/profile';
 import { enterFromBelow, radii, spacing, useReducedMotion, useTheme } from '@/theme';
 
 function newDraft(): EntryDraft {
-  return { text: '', unit: readUnit(), when: initialWhen(new Date()), context: null, note: '' };
+  return {
+    text: '',
+    unit: readUnit(),
+    when: initialWhen(new Date()),
+    context: null,
+    note: '',
+    confirmedUnusual: false,
+  };
 }
 
 export default function NewMeasurementScreen() {
@@ -62,10 +80,31 @@ export default function NewMeasurementScreen() {
   const [saving, setSaving] = useState(false);
   const [duplicate, setDuplicate] = useState(false);
   const [failed, setFailed] = useState(false);
-  const [saved, setSaved] = useState<{ value: string; detail: string } | null>(null);
+  // Question « est-ce correct ? » affichée (après un essai d'enregistrement d'une valeur inhabituelle).
+  const [asking, setAsking] = useState(false);
+  const [thresholds, setThresholds] = useState<GlucoseThresholds>(DEFAULT_THRESHOLDS);
+  const [saved, setSaved] = useState<{
+    value: string;
+    detail: string;
+    state: GlucoseState;
+    safety: SafetyLevel | null;
+    confirmedUnusual: boolean;
+  } | null>(null);
+
+  // Seuils du patient (profil), gardés sur le téléphone : pas besoin de réseau.
+  useEffect(() => {
+    let alive = true;
+    void readThresholds().then((value) => alive && setThresholds(value));
+    return () => {
+      alive = false;
+    };
+  }, []);
 
   const update = (patch: Partial<EntryDraft>) => {
-    setDraft((d) => ({ ...d, ...patch }));
+    // Nouvelle valeur ou nouvelle unité : la confirmation portait sur l'ancienne, elle ne vaut plus.
+    const valueChanged = 'text' in patch || 'unit' in patch;
+    setDraft((d) => ({ ...d, ...patch, ...(valueChanged ? { confirmedUnusual: false } : {}) }));
+    if (valueChanged) setAsking(false);
     setDuplicate(false); // la saisie a changé : l'avertissement de doublon ne vaut plus
     setFailed(false);
   };
@@ -89,14 +128,32 @@ export default function NewMeasurementScreen() {
     });
   };
 
-  const save = async (allowDuplicate = false) => {
+  const save = async ({
+    allowDuplicate = false,
+    confirmUnusual = false,
+  }: { allowDuplicate?: boolean; confirmUnusual?: boolean } = {}) => {
     setSubmitted(true);
     const now = new Date();
-    if (Object.keys(validateEntry(draft, now)).length) {
-      if (parseValue(draft.text, draft.unit).problem) valueRef.current?.focus();
+    // « Oui, c'est correct » : on enregistre tout de suite avec la confirmation (l'état React ne sera à jour
+    // qu'au prochain rendu, d'où cette copie).
+    const entry = confirmUnusual ? { ...draft, confirmedUnusual: true } : draft;
+    if (confirmUnusual) setDraft(entry);
+    const problems = validateEntry(entry, now);
+    if (Object.keys(problems).length) {
+      if (problems.value === 'measurement.problem.unusual') {
+        // On pose la question ; le clavier est fermé pour qu'elle soit bien visible.
+        Keyboard.dismiss();
+        setAsking(true);
+      } else {
+        // Valeur confirmée (ou autre souci) : la question est réglée, on laisse voir les autres erreurs
+        // (ex. contexte oublié).
+        setAsking(false);
+        if (problems.value) valueRef.current?.focus();
+      }
       return;
     }
-    const input = toCreateInput(draft, now);
+    setAsking(false);
+    const input = toCreateInput(entry, now);
     setSaving(true);
     try {
       // Doublon exact (même minute, même valeur) : on prévient, la personne décide (CDC F2).
@@ -111,9 +168,13 @@ export default function NewMeasurementScreen() {
       }
       await localMeasurements.save(input);
       writeUnit(draft.unit); // la prochaine saisie s'ouvre dans la même unité
+      const mgDl = parsed.mgDl ?? 0;
       setSaved({
-        value: formatGlucose(parsed.mgDl ?? 0, draft.unit),
+        value: formatReading(mgDl, draft.unit), // « 1 870 mg/dL »
         detail: `${t(`measurement.context.${input.context}`)} · ${describeWhen(resolveWhen(draft.when, now))}`,
+        state: classifyGlucose(mgDl, thresholds),
+        safety: safetyLevel(mgDl, thresholds),
+        confirmedUnusual: input.confirmedUnusual,
       });
     } catch {
       setFailed(true);
@@ -130,10 +191,14 @@ export default function NewMeasurementScreen() {
         <SavedState
           value={saved.value}
           detail={saved.detail}
+          state={saved.state}
+          safety={saved.safety}
+          confirmedUnusual={saved.confirmedUnusual}
           onDone={close}
           onAnother={() => {
             setSaved(null);
             setSubmitted(false);
+            setAsking(false);
             setDraft((d) => ({ ...newDraft(), unit: d.unit }));
           }}
         />
@@ -177,9 +242,27 @@ export default function NewMeasurementScreen() {
           onChangeText={(text) => update({ text })}
           unit={draft.unit}
           mgDl={parsed.mgDl}
-          error={errors.value && t(errors.value)}
+          // Pendant la question, pas de message d'erreur en double : la carte dit tout.
+          error={!asking && errors.value ? t(errors.value) : undefined}
+          attention={asking}
         />
       </Animated.View>
+
+      {asking && parsed.problem === 'unusual' ? (
+        <UnusualValueCard
+          text={draft.text}
+          unit={draft.unit}
+          likely={likelyUnits(draft.text, draft.unit)}
+          saving={saving}
+          // Le nombre reste le même, seule l'unité change (≠ conversion) : 18,7 g/L → 18,7 mmol/L.
+          onSwitchUnit={(unit) => update({ unit })}
+          onFix={() => {
+            setAsking(false);
+            valueRef.current?.focus();
+          }}
+          onConfirm={() => void save({ confirmUnusual: true })}
+        />
+      ) : null}
 
       <Animated.View entering={enterFromBelow(1, reduced)} style={{ gap: spacing.sm }}>
         <Text variant="label" tone="muted">
@@ -235,7 +318,7 @@ export default function NewMeasurementScreen() {
           title={t('measurement.duplicateTitle')}
           message={t('measurement.duplicate')}
           actionLabel={t('measurement.duplicateConfirm')}
-          onAction={() => void save(true)}
+          onAction={() => void save({ allowDuplicate: true })}
         />
       ) : null}
       {failed ? <InlineAlert tone="danger" message={t('measurement.error')} /> : null}

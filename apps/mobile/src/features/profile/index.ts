@@ -15,5 +15,6 @@ export {
   type StepErrors,
   type ThresholdKey,
 } from './wizard';
+export { readThresholds, saveThresholds } from './local-thresholds';
 export { StepProgress } from './components/StepProgress';
 export { ThresholdBar } from './components/ThresholdBar';

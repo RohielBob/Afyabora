@@ -1,16 +1,24 @@
 // Mesure enregistrée (L2-03) : un cercle vert apparaît avec un léger ressort, la coche suit, puis une carte
 // résume ce qui a été noté (valeur en grand, contexte, moment) et rappelle qu'elle est GARDÉE SUR CE
 // TÉLÉPHONE (synchronisation plus tard, ADR-0004). Deux actions : en ajouter une autre, ou terminer.
+// L2-04 : badge d'état (couleur + symbole + libellé, seuils du patient), mention « valeur inhabituelle
+// confirmée » et, si la valeur est très basse ou très haute, le message de sécurité (SafetyNotice).
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 import Animated, { FadeInDown, ZoomIn } from 'react-native-reanimated';
-import { Button, Card, Text } from '@/components/ui';
+import type { GlucoseState } from '@glyka/shared';
+import { Button, Card, RangeBadge, Text } from '@/components/ui';
 import { durations, easing, spacing, springs, useReducedMotion, useTheme } from '@/theme';
+import type { SafetyLevel } from '../entry';
+import { SafetyNotice } from './SafetyNotice';
 
 export function SavedState({
   value,
   detail,
+  state,
+  safety,
+  confirmedUnusual,
   onAnother,
   onDone,
 }: {
@@ -18,6 +26,12 @@ export function SavedState({
   value: string;
   /** Ex. « À jeun · Aujourd'hui, 08:30 » */
   detail: string;
+  /** État de la mesure selon les seuils du patient. */
+  state: GlucoseState;
+  /** Très basse ou très haute : message de sécurité. */
+  safety: SafetyLevel | null;
+  /** La personne a confirmé une valeur inhabituelle. */
+  confirmedUnusual: boolean;
   onAnother: () => void;
   onDone: () => void;
 }) {
@@ -82,9 +96,17 @@ export function SavedState({
           <Text variant="display" style={{ fontVariant: ['tabular-nums'] }}>
             {value}
           </Text>
+          <View style={{ alignItems: 'center' }}>
+            <RangeBadge state={state} />
+          </View>
           <Text tone="muted" align="center">
             {detail}
           </Text>
+          {confirmedUnusual ? (
+            <Text variant="caption" tone="muted" align="center">
+              {t('measurement.saved.confirmedUnusual')}
+            </Text>
+          ) : null}
           <View
             style={{
               flexDirection: 'row',
@@ -100,6 +122,9 @@ export function SavedState({
           </View>
         </Card>
       </Animated.View>
+
+      {/* Après le résumé : on lit d'abord ce qui a été noté, puis le message. */}
+      {safety ? <SafetyNotice level={safety} delay={reduced ? 0 : 7} /> : null}
 
       <Animated.View entering={enter(380)} style={{ gap: spacing.sm }}>
         <Button label={t('measurement.saved.another')} size="lg" onPress={onAnother} />
