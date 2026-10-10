@@ -1,32 +1,55 @@
-import { Text as RNText, type TextProps } from 'react-native';
-import { fontSizes, useTheme } from '@/theme';
+// Texte de l'application : UN style de l'échelle typographique (jetons `textStyles`) + une couleur de rôle.
+import { Text as RNText, type TextProps, type TextStyle } from 'react-native';
+import {
+  fontFiles,
+  textStyles,
+  useTheme,
+  type TextStyleToken,
+  type TextVariant,
+  type ThemeColors,
+} from '@/theme';
 
-type Variant = 'title' | 'heading' | 'body' | 'caption';
-const SIZE: Record<Variant, number> = {
-  title: fontSizes.xxl,
-  heading: fontSizes.xl,
-  body: fontSizes.md,
-  caption: fontSizes.sm,
+type Tone = 'default' | 'muted' | 'subtle' | 'primary' | 'onPrimary' | 'danger' | 'success';
+
+const TONE: Record<Tone, keyof ThemeColors> = {
+  default: 'text',
+  muted: 'textMuted',
+  subtle: 'textSubtle',
+  primary: 'primaryText',
+  onPrimary: 'onPrimary',
+  danger: 'danger',
+  success: 'success',
 };
 
-export function Text({
-  variant = 'body',
-  muted,
-  style,
-  ...rest
-}: TextProps & { variant?: Variant; muted?: boolean }) {
-  const theme = useTheme();
+/** Style complet d'une variante (utile aussi hors du composant, ex. champ de saisie). */
+export function textStyle(variant: TextVariant): TextStyle {
+  const t: TextStyleToken = textStyles[variant];
+  return {
+    fontFamily: fontFiles[t.weight],
+    fontSize: t.fontSize,
+    lineHeight: t.lineHeight,
+    letterSpacing: t.letterSpacing,
+    ...(t.uppercase ? { textTransform: 'uppercase' } : {}),
+    ...(t.tabular ? { fontVariant: ['tabular-nums'] } : {}),
+  };
+}
+
+export interface AppTextProps extends TextProps {
+  variant?: TextVariant;
+  tone?: Tone;
+  /** @deprecated utiliser tone="muted" */
+  muted?: boolean;
+  align?: TextStyle['textAlign'];
+}
+
+export function Text({ variant = 'body', tone, muted, align, style, ...rest }: AppTextProps) {
+  const { colors } = useTheme();
+  const color = colors[TONE[tone ?? (muted ? 'muted' : 'default')]];
   return (
     <RNText
+      maxFontSizeMultiplier={1.6} // suit la taille de police du téléphone, sans casser la mise en page
       {...rest}
-      style={[
-        {
-          fontSize: SIZE[variant],
-          color: muted ? theme.textMuted : theme.text,
-          fontWeight: variant === 'body' ? '400' : '700',
-        },
-        style,
-      ]}
+      style={[textStyle(variant), { color }, align ? { textAlign: align } : null, style]}
     />
   );
 }

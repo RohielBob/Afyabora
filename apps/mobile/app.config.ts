@@ -24,7 +24,7 @@ const config: ExpoConfig = {
     'expo-localization',
     // TODO(L8-02) : valider le chiffrement de la base locale (SQLCipher) puis passer useSQLCipher à true.
     ['expo-sqlite', { useSQLCipher: false }],
-    ['expo-notifications', { color: '#0B3366' }],
+    ['expo-notifications', { color: '#E4002B' }], // couleur d'accent des notifications Android (ADR-0008)
     ['expo-local-authentication', { faceIDPermission: 'Afyabora protège vos données de santé.' }],
   ],
   experiments: { typedRoutes: true },
