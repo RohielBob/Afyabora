@@ -3,7 +3,17 @@ export { authApi, type LoginResponse } from './api';
 export { authErrorMessage, type ErrorMessage } from './errors';
 export { extractToken } from './link-token';
 export { pendingRegistration } from './pending-registration';
-export { completeLogin, type LoginDestination } from './session';
+export {
+  initSession,
+  markProfileCompleted,
+  refreshSession,
+  signIn,
+  signOut,
+  useSession,
+  type LoginDestination,
+  type SessionState,
+  type SessionUser,
+} from './session';
 export {
   PASSWORD_MIN_LENGTH,
   passwordChecks,

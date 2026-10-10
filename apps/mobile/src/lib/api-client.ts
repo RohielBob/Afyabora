@@ -1,4 +1,4 @@
-// Client HTTP de l'application. TODO(L1-07) : rafraîchissement automatique du jeton sur réponse 401.
+// Client HTTP de l'application.
 // Toute erreur devient une ApiError : statut HTTP, code stable du serveur (ex. EMAIL_NOT_VERIFIED),
 // détail des champs invalides. Un problème de réseau (serveur injoignable, délai dépassé) a le statut 0.
 import { API_URL } from './config';
@@ -39,10 +39,38 @@ export class ApiError extends Error {
   }
 }
 
-export async function api<T>(
-  path: string,
-  init: Omit<RequestInit, 'body'> & { auth?: boolean; body?: unknown } = {},
-): Promise<T> {
+/**
+ * Renouvellement de session (L1-07), fourni par la session au démarrage de l'app (injection : le client
+ * HTTP ne dépend pas de la session). Résultat : jetons renouvelés, session expirée, ou serveur injoignable.
+ */
+export type TokenRefresher = () => Promise<'refreshed' | 'expired' | 'offline'>;
+let refresher: TokenRefresher | null = null;
+export function setTokenRefresher(fn: TokenRefresher | null): void {
+  refresher = fn;
+}
+
+type ApiInit = Omit<RequestInit, 'body'> & { auth?: boolean; body?: unknown };
+
+/**
+ * Requête vers l'API. Si une route protégée répond 401 (jeton d'accès expiré, 15 min), la session est
+ * renouvelée UNE fois puis la requête rejouée. Les routes publiques (`auth: false`) ne déclenchent jamais
+ * de renouvellement (pas de boucle avec /auth/refresh).
+ */
+export async function api<T>(path: string, init: ApiInit = {}): Promise<T> {
+  try {
+    return await send<T>(path, init);
+  } catch (error) {
+    if (!(error instanceof ApiError) || error.status !== 401 || init.auth === false || !refresher) {
+      throw error;
+    }
+    const outcome = await refresher();
+    if (outcome === 'offline') throw new ApiError(0, 'Serveur injoignable');
+    if (outcome === 'expired') throw error; // la session est fermée : l'écran de connexion s'affiche
+    return send<T>(path, init); // nouveau jeton : on rejoue une seule fois
+  }
+}
+
+async function send<T>(path: string, init: ApiInit): Promise<T> {
   const { auth, body, ...rest } = init;
   const headers = new Headers(rest.headers);
   headers.set('Accept', 'application/json');

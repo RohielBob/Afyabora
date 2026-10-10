@@ -7,7 +7,7 @@
 ## Tickets
 
 - **L1-06** — Mobile : écrans bienvenue, inscription, vérification email, connexion, mot de passe oublié — **fait**
-- **L1-07** — Mobile : stockage sécurisé des jetons et rafraîchissement automatique de session
+- **L1-07** — Mobile : stockage sécurisé des jetons et rafraîchissement automatique de session — **fait**
 - **L1-09** — Mobile : verrouillage de l'app par biométrie ou code
 - **L1-10** — Mobile : consentement explicite et avertissement « outil d'aide, pas un avis médical »
 
@@ -28,7 +28,13 @@ Accueil ─► Créer un compte ─► Vérifiez votre boîte mail ─► Adress
 - **Mot de passe oublié** : 3 étapes sur un écran (demande → lien + nouveau mot de passe → réussite).
 - Tous les textes sont dans `src/i18n/fr.json` (et `en.json`).
 
-## Fichiers
+## Session (L1-07)
+
+- **Démarrage** : si une session est enregistrée (coffre sécurisé), l'app s'ouvre **tout de suite** connectée, même **hors-ligne** (ADR-0004), puis renouvelle les jetons en arrière-plan. Si le serveur refuse (session révoquée/expirée) : retour à « Se connecter » avec le message « session expirée ».
+- **Renouvellement automatique** : une route protégée qui répond 401 → `refreshSession()` puis la requête est rejouée une fois. **Un seul renouvellement à la fois** : plusieurs requêtes expirées attendent le même (deux renouvellements parallèles seraient vus comme un vol de session, voir L1-02). Hors-ligne : la session est gardée.
+- **Déconnexion** (onglet Profil) : confirmation dans la page, avec avertissement s'il reste des modifications non envoyées ; session révoquée côté serveur si possible ; jetons, session **et base locale** effacés (ADR-0004 : un téléphone = un compte à la fois).
+- **Écrans protégés** (`app/_layout.tsx`, `Stack.Protected`) : sans session, les onglets, réglages, mesures… sont refusés et l'app revient à `index` (réglage `unstable_settings.anchor`) ; connecté, les écrans de connexion sont refusés. La planche de style reste ouverte en développement.
+- `app/index.tsx` choisit le premier écran : accueil / connexion (session expirée) / assistant de profil / onglets.
 
 | Fichier                   | Rôle                                                                                    |
 | ------------------------- | --------------------------------------------------------------------------------------- |

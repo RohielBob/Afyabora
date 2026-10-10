@@ -3,6 +3,7 @@
 // Sur téléphone, c'est secure-storage.ts (Keystore / Keychain) qui est utilisé, jamais ce fichier.
 const ACCESS = 'glyka.accessToken';
 const REFRESH = 'glyka.refreshToken';
+const SESSION = 'glyka.session';
 
 const store = (): Storage | undefined => globalThis.sessionStorage;
 
@@ -22,4 +23,16 @@ export async function getRefreshToken(): Promise<string | null> {
 export async function clearTokens(): Promise<void> {
   store()?.removeItem(ACCESS);
   store()?.removeItem(REFRESH);
+}
+
+export async function saveSessionInfo(json: string): Promise<void> {
+  store()?.setItem(SESSION, json);
+}
+
+export async function getSessionInfo(): Promise<string | null> {
+  return store()?.getItem(SESSION) ?? null;
+}
+
+export async function clearSessionInfo(): Promise<void> {
+  store()?.removeItem(SESSION);
 }

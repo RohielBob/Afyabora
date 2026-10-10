@@ -1,26 +1,10 @@
 // Ticket L1-06 : logique des écrans d'authentification (sans interface) — validation, lien collé,
-// messages d'erreur, et décision après connexion.
+// messages d'erreur. La session (connexion, renouvellement, déconnexion) est testée dans session.test.ts.
 import { ApiError } from '@/lib/api-client';
 import { authErrorMessage } from '../errors';
 import { extractToken } from '../link-token';
 import { pendingRegistration } from '../pending-registration';
-import { completeLogin } from '../session';
 import { passwordChecks, validateSignIn, validateSignUp } from '../validation';
-
-// Stockage sécurisé simulé : on vérifie ce que l'app y écrit, sans téléphone.
-const saved: { access?: string; refresh?: string } = {};
-jest.mock('@/lib/secure-storage', () => ({
-  saveTokens: jest.fn(async (access: string, refresh: string) => {
-    saved.access = access;
-    saved.refresh = refresh;
-  }),
-  clearTokens: jest.fn(async () => {
-    delete saved.access;
-    delete saved.refresh;
-  }),
-  getAccessToken: jest.fn(async () => saved.access ?? null),
-  getRefreshToken: jest.fn(async () => saved.refresh ?? null),
-}));
 
 const TOKEN = 'k3Zt9Qw2Vx7LpR4mNc8YbH1sDfG6jAe5UoI0TyXvWzE';
 
@@ -120,35 +104,6 @@ describe('messages d’erreur (ce que voit la personne)', () => {
 
   it('erreur qui ne vient pas de l’API', () => {
     expect(authErrorMessage(new Error('boom'), 'login')).toEqual({ key: 'errors.unexpected' });
-  });
-});
-
-describe('après une connexion réussie', () => {
-  const response = (role: 'PATIENT' | 'DOCTOR' | 'ADMIN', profileCompleted: boolean) => ({
-    accessToken: 'acces',
-    refreshToken: 'rafraichissement',
-    expiresInSeconds: 900,
-    user: { id: 'u1', role, profileCompleted, doctorVerificationStatus: null },
-  });
-
-  beforeEach(() => {
-    delete saved.access;
-    delete saved.refresh;
-  });
-
-  it('patient sans profil : jetons enregistrés, direction l’assistant de profil', async () => {
-    expect(await completeLogin(response('PATIENT', false))).toBe('onboarding');
-    expect(saved).toEqual({ access: 'acces', refresh: 'rafraichissement' });
-  });
-
-  it('patient avec profil : direction l’accueil', async () => {
-    expect(await completeLogin(response('PATIENT', true))).toBe('home');
-  });
-
-  it('médecin ou admin : orienté vers le portail, AUCUN jeton gardé sur le téléphone', async () => {
-    expect(await completeLogin(response('DOCTOR', true))).toBe('notPatient');
-    expect(await completeLogin(response('ADMIN', true))).toBe('notPatient');
-    expect(saved).toEqual({});
   });
 });
 
