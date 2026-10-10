@@ -1,11 +1,11 @@
 # État d'avancement — Afyabora
 
 > Document vivant. **Mis à jour à la fin de chaque ticket** (voir `CLAUDE.md` §8). En cas de doute, la réalité est dans `git log origin/develop --oneline -20` et dans l'onglet « Pull requests » de GitHub : ce fichier peut avoir du retard.
-> Dernière mise à jour : 2026-10-10 (L0-09/L8-01 et L1-01 à L1-03 fusionnés ; L1-04 en PR).
+> Dernière mise à jour : 2026-10-10 (L0-09/L8-01 et L1-01 à L1-04 fusionnés ; L1-05 en PR).
 
 ## Où on en est (jour J2 du plan)
 
-Le socle technique est posé et vérifié par la CI : monorepo, lint/format/commitlint, Docker, base PostgreSQL migrée, route `/health`, contrat d'API gelé. Côté API, l'**authentification** avance : inscription patient/médecin + vérification d'email (L1-01, fusionné), connexion / refresh rotatif / déconnexion / verrouillage (L1-02, fusionné), mot de passe oublié (L1-03, fusionné), gardes JWT et rôles (L1-04, en PR). Les autres modules ne sont pas encore codés ; côté mobile il y a trois écrans provisoires (accueil, connexion, inscription) qui ne parlent pas encore au serveur.
+Le socle technique est posé et vérifié par la CI : monorepo, lint/format/commitlint, Docker, base PostgreSQL migrée, route `/health`, contrat d'API gelé. Côté API, l'**authentification** avance : inscription patient/médecin + vérification d'email (L1-01, fusionné), connexion / refresh rotatif / déconnexion / verrouillage (L1-02, fusionné), mot de passe oublié (L1-03, fusionné), gardes JWT et rôles (L1-04, fusionné), profil patient et seuils (L1-05, en PR). Les autres modules ne sont pas encore codés ; côté mobile il y a trois écrans provisoires (accueil, connexion, inscription) qui ne parlent pas encore au serveur.
 
 ## Tickets du lot L0
 
@@ -43,14 +43,14 @@ Points relevés lors d'une revue indépendante des schémas partagés. Ils peuve
 3. **Erreurs** : format unique et codes lisibles par machine (`EMAIL_NOT_VERIFIED`, `ACCOUNT_LOCKED`, …) ; réponses identiques pour « email inconnu » et « mot de passe faux » ; inscription et mot de passe oublié **sans énumération de comptes**.
 4. **Dates** : réponses en UTC (`Z`) ; en paramètre d'URL, `+01:00` casse si le `+` n'est pas encodé : préférer UTC pour `from`/`to`.
 5. **Validation de mesure** : valeur hors bornes sans `confirmedUnusual`, date future (> 5 min), « valeur sans unité » en modification : vérifier que c'est bien appliqué (par le schéma partagé ou par le service).
-6. `diagnosisYear` plafonné avec `new Date().getFullYear()` évalué au chargement du module : à remplacer par une validation au moment de la requête.
+6. ~~`diagnosisYear` plafonné au chargement du module~~ : corrigé en L1-05 (validation à chaque requête).
 7. Les routes du contrat doivent correspondre aux préfixes réels des contrôleurs Nest (ex. `GET /e/:token`, `GET /quality`, `POST /devices` ne doivent pas devenir `/emergency/e/…`, `/insights/quality`, `/notifications/devices`).
 
 ## Prochaines étapes (ordre conseillé)
 
 1. ~~L0-09 + L8-01~~ : fait (réunion du 2026-10-09). Compléter les noms des présents dans le compte rendu.
 2. ~~L1-01~~ : fait (PR #117, fusionnée le 2026-10-09) : inscription patient et médecin, vérification d'email (Mailpit).
-3. ~~L1-02~~ : fait (PR #118). ~~L1-03~~ : fait (PR #119). **L1-04** (PR en cours) : gardes JWT et rôles → L1-05 profil patient et seuils → L1-13 tests d'authentification.
+3. ~~L1-02~~ : fait (PR #118). ~~L1-03~~ : fait (PR #119). ~~L1-04~~ : fait (PR #121). **L1-05** (PR en cours) : profil patient et seuils → L1-13 tests d'authentification.
 4. En parallèle (autre personne ou autre session) : L0-11 (APK EAS), L7-03/L7-05 (palette finale, composants UI), L1-06/L1-07 (écrans et session mobile), L8-02/L8-03 (base locale SQLCipher, dépôts).
    Chemin critique du projet : base locale + synchronisation (L8) et partage QR (L5). Si l'un dérape, tout le reste attend.
 
@@ -60,6 +60,7 @@ Points relevés lors d'une revue indépendante des schémas partagés. Ils peuve
 - Nom **Afyabora** décidé par le groupe ; identifiants internes `glyka` conservés pour ne pas tout renommer (ADR-0007) ; les identifiants Android/iOS `com.glyka.app` deviennent **définitifs à la première publication** : à décider avant le premier build EAS de production.
 - Palette : bleu marine `#0B3366` (action), rouge corail `#F83E44` et rouge goutte `#E4002B` réservés au logo/accents ; logo vectoriel provisoire redessiné d'après le JPEG du groupe (demander le vectoriel au créateur).
 - La CI exécute `prisma generate` avant le typecheck ; `nest build` utilise `tsconfig.build.json` ; les tests de l'API n'ont pas besoin de base de données.
+- 2026-10-10 : L1-05 : `PUT /me/profile` remplace tout le profil ; seuils en mg/dL ; validation de la date de naissance et de l'année du diagnostic à chaque requête.
 - 2026-10-10 : L1-04 : chaque route codée doit porter `@Public()` ou exactement les `@Roles` du contrat (test `roles-contract.test.ts`) ; la garde JWT impose HS256 et vérifie `sub`/`role` ; messages 401/403 en français.
 - 2026-10-10 : délai des tests de l'API porté à 20 s (PR #120) : `openapi-drift` dépassait 5 s sur un poste chargé.
 - 2026-10-10 : L1-03 : lien de réinitialisation valable 1 h ; la réinitialisation révoque toutes les sessions, lève le verrouillage et vérifie l'adresse si besoin.
