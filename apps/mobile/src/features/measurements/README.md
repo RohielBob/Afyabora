@@ -6,16 +6,59 @@ Saisie rapide, confirmation de valeur inhabituelle, message de sécurité, édit
 
 ## Tickets
 
-- **L2-03** — Mobile : saisie rapide d'une mesure (valeur, unité, date, contexte), écriture locale d'abord
+- **L2-03** — Mobile : saisie rapide d'une mesure (valeur, unité, date, contexte), écriture locale d'abord — **fait**
 - **L2-04** — Mobile : confirmation de valeur inhabituelle + message de sécurité hypo/hyper
 - **L2-11** — Mobile : modification et suppression d'une mesure
 - **L4-09** — Badge de provenance (saisie, import, appareil) sur mesure, chronologie et portail
 
-## Fichiers prévus
+## Saisie rapide (L2-03)
 
-- `MeasurementForm.tsx`
-- `useCreateMeasurement.ts` (écrit en LOCAL puis outbox)
-- `validation.ts` (schémas de @glyka/shared)
+Bouton **« + »** rouge au centre de la barre d'onglets (toujours accessible, CDC F2), qui ouvre
+`app/measurement/new.tsx` (fenêtre qui monte du bas). L'ordre de l'écran suit l'ordre de la saisie :
+
+1. **Valeur** : grand champ, clavier numérique ouvert tout de suite ; conversion en direct dessous
+   (« soit 148 mg/dL · 8,2 mmol/L »).
+2. **Unité** : g/L, mg/dL, mmol/L. **Changer d'unité convertit la valeur tapée** (CDC F2 : « 1,48 g/L
+   puis mg/dL affiche 148 mg/dL »). L'unité est mémorisée : celle du profil (assistant L1-08), puis la
+   dernière utilisée (g/L par défaut).
+3. **Quand ?** : maintenant (par défaut), −30 min, −1 h, ou « Autre » : jour (aujourd'hui, hier,
+   avant-hier) et heure réglable par pas de 5 min / 1 h. Pas de sélecteur natif (aucune dépendance
+   ajoutée).
+4. **Contexte** (obligatoire) : à jeun, avant repas, après repas, au coucher, la nuit, autre.
+5. **Note** facultative (500 caractères).
+
+Règles (les mêmes que le serveur, L2-01) :
+
+- valeur > 0, décimales adaptées à l'unité (g/L : 2, mmol/L : 1, mg/dL : 0) ;
+- **date plus de 5 minutes dans le futur refusée** ;
+- hors 20–600 mg/dL : « valeur inhabituelle, vérifiez » — **la confirmation « c'est correct » arrive
+  avec L2-04** (pour l'instant ces valeurs ne sont pas enregistrées) ;
+- **doublon exact** (même minute, même valeur) : avertissement, « Enregistrer quand même » possible.
+
+Enregistrement **sur le téléphone d'abord** (ADR-0004) : `localMeasurements.save` écrit la mesure et son
+opération de synchronisation dans la même transaction (`db/repositories/measurements.repo.ts`).
+L'envoi au serveur viendra avec le moteur de synchronisation (L8-06). Écran de réussite : coche animée,
+résumé (valeur, contexte, moment), « gardée sur ce téléphone », puis « Ajouter une autre » ou « Terminé ».
+
+| Fichier                          | Rôle                                                                            |
+| -------------------------------- | ------------------------------------------------------------------------------- |
+| `entry.ts`                       | Logique sans interface : lecture, conversion, « quand ? », validation, doublon  |
+| `local-store.ts` / `.web.ts`     | Écriture locale (SQLite) ; en mémoire dans l'aperçu web (SQLite n'y marche pas) |
+| `unit-preference.ts` / `.web.ts` | Unité mémorisée (stockage séparé des données de santé)                          |
+| `components/ValueField.tsx`      | Grand champ de valeur + conversion en direct                                    |
+| `components/WhenPicker.tsx`      | « Quand ? »                                                                     |
+| `components/SavedState.tsx`      | Écran de réussite animé                                                         |
+| `components/AddTabButton.tsx`    | Bouton « + » de la barre d'onglets                                              |
+| `__tests__/entry.test.ts`        | Tests de la logique                                                             |
+
+## Tests obligatoires
+
+- [x] 1,48 g/L = 148 mg/dL ; virgule ou point ; mmol/L et mg/dL (`__tests__/entry.test.ts`).
+- [x] Changer d'unité convertit la valeur tapée (1,48 g/L → 148 mg/dL → 8,2 mmol/L).
+- [x] Saisie vide, illisible, nulle, trop de décimales ; 18,7 g/L inhabituelle.
+- [x] « Quand ? » : maintenant à la minute, raccourcis, jour + heure, tour d'horloge, futur refusé.
+- [x] Formulaire complet / erreurs par champ ; données écrites (valeur et unité d'origine, date ISO).
+- [x] Doublon exact détecté (même minute + même valeur), pas pour une autre valeur ou minute.
 
 ## Règle importante
 

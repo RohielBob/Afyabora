@@ -144,7 +144,8 @@
     "timeline": "Timeline",
     "insights": "Insights",
     "share": "Share",
-    "profile": "Profile"
+    "profile": "Profile",
+    "add": "Add"
   },
   "settings": {
     "overline": "Preferences",
@@ -425,5 +426,64 @@
       "disclaimerHint": "What the app does, and what it does not",
       "credits": "PBL 5 project · MEO. Designed for people living with diabetes."
     }
+  },
+  "measurement": {
+    "overline": "Entry",
+    "title": "New reading",
+    "close": "Close without saving",
+    "valueLabel": "Blood glucose",
+    "valueA11y": "Blood glucose value, in {{unit}}",
+    "equals": "i.e. {{values}}",
+    "unitLabel": "Unit",
+    "when": {
+      "label": "When?",
+      "now": "Now",
+      "minus30": "−30 min",
+      "minus60": "−1 h",
+      "custom": "Other",
+      "today": "Today",
+      "yesterday": "Yesterday",
+      "dayBefore": "Day before",
+      "time": "Time of the reading",
+      "hourMinus": "One hour earlier",
+      "hourPlus": "One hour later",
+      "minuteMinus": "Five minutes earlier",
+      "minutePlus": "Five minutes later",
+      "summary": "{{day}}, {{time}}"
+    },
+    "context": {
+      "label": "Context",
+      "FASTING": "Fasting",
+      "BEFORE_MEAL": "Before a meal",
+      "AFTER_MEAL": "After a meal",
+      "BEDTIME": "At bedtime",
+      "NIGHT": "At night",
+      "OTHER": "Other"
+    },
+    "noteLabel": "Note (optional)",
+    "notePlaceholder": "E.g. after a walk, late meal…",
+    "noteHint": "Visible to you; shared only if you choose to.",
+    "save": "Save",
+    "problem": {
+      "empty": "Enter the measured value.",
+      "invalid": "Unreadable value: use digits only.",
+      "zero": "The value must be greater than zero.",
+      "decimals": "Too many decimals for this unit: check the entry.",
+      "unusual": "Unusual value: check the value and the selected unit.",
+      "future": "This time is in the future.",
+      "context": "Choose the context of the reading."
+    },
+    "duplicateTitle": "Already saved?",
+    "duplicate": "A reading with the same value already exists at this time.",
+    "duplicateConfirm": "Save anyway",
+    "error": "The reading could not be saved on this phone. Try again.",
+    "saved": {
+      "title": "Reading saved",
+      "detail": "{{value}} · {{context}} · {{when}}",
+      "local": "Kept on this phone, it will be sent as soon as the connection allows.",
+      "another": "Add another reading",
+      "done": "Done"
+    },
+    "addA11y": "Add a blood glucose reading"
   }
 }

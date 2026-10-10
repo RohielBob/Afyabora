@@ -29,6 +29,7 @@ import {
   type ErrorMessage,
 } from '@/features/auth';
 import { MedicalDisclaimer } from '@/features/legal';
+import { writeUnit } from '@/features/measurements';
 import {
   STEPS,
   THRESHOLD_KEYS,
@@ -103,6 +104,7 @@ export default function ProfileSetupScreen() {
     setApiError(null);
     try {
       await profileApi.save(payload);
+      writeUnit(draft.unit); // la saisie des mesures (L2-03) s'ouvrira dans l'unité choisie
       setDone(true);
     } catch (e) {
       setApiError(authErrorMessage(e, 'register'));
