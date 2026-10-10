@@ -1,4 +1,4 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import { Body, Controller, Header, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import {
   ApiAcceptedResponse,
   ApiBadRequestResponse,
@@ -41,6 +41,11 @@ const REFRESH_LIMIT = { default: { limit: 30, ttl: 60_000 } };
 // Mot de passe oublié : limite basse pour qu'on ne puisse pas inonder une boîte mail de liens.
 const FORGOT_LIMIT = { default: { limit: 5, ttl: 60_000 } };
 const RESET_LIMIT = { default: { limit: 10, ttl: 60_000 } };
+
+// Réponses qui contiennent des jetons (L1-13) : aucun cache ne doit les garder (navigateur, proxy
+// d'entreprise, cache d'opérateur). Exigence des jetons OAuth (RFC 6749 §5.1).
+const NO_STORE = ['Cache-Control', 'no-store'] as const;
+const NO_CACHE = ['Pragma', 'no-cache'] as const; // anciens proxys HTTP/1.0
 
 /**
  * Le contrôleur ne contient aucune logique métier : il valide l'entrée avec un schéma Zod de @glyka/shared
@@ -95,6 +100,8 @@ export class AuthController {
   @Public()
   @Post('login')
   @HttpCode(HttpStatus.OK)
+  @Header(...NO_STORE)
+  @Header(...NO_CACHE)
   @Throttle(LOGIN_LIMIT)
   @ApiOperation({ summary: 'Se connecter (L1-02)' })
   @ApiOkResponse({
@@ -113,6 +120,8 @@ export class AuthController {
   @Public()
   @Post('refresh')
   @HttpCode(HttpStatus.OK)
+  @Header(...NO_STORE)
+  @Header(...NO_CACHE)
   @Throttle(REFRESH_LIMIT)
   @ApiOperation({ summary: 'Obtenir de nouveaux jetons ; l’ancien jeton ne marche plus (L1-02)' })
   @ApiOkResponse({ description: 'Nouvelle paire de jetons' })
