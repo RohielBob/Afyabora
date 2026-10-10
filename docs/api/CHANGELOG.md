@@ -2,6 +2,19 @@
 
 Format : une section par version. Une **rupture** est signalée en tête de section.
 
+## 0.2.0 : 2026-10-10 (L1-08, accord du lead technique)
+
+### Ajouté
+
+- Schéma `DoctorContact` (`name`, `phone`) : le médecin qui suit le patient.
+- `PatientProfile.doctorContact` : **facultatif** (`PUT` et `GET /me/profile`).
+- Base : colonnes `doctorName` et `doctorPhone` (facultatives) dans `PatientProfile` (migration `ajoute_medecin_traitant_au_profil`).
+- `@glyka/shared` : `doctorContactSchema`, champ `doctorContact` dans `patientProfileSchema`.
+
+### Pas de rupture
+
+Champ facultatif : un client qui ne l'envoie pas fonctionne comme avant. Comme pour `emergencyContact`, un `PUT` qui ne le contient pas l'efface (le `PUT` remplace tout le profil).
+
 ## 0.1.0 : 2026-10-07 (contrat initial, gelé)
 
 ### Ajouté

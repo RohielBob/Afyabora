@@ -31,6 +31,12 @@ export const emergencyContactSchema = z.object({
   relation: z.string().trim().max(60).optional(),
 });
 
+/** Médecin qui suit le patient (facultatif, ajouté en L1-08 : changement de contrat 0.2.0). */
+export const doctorContactSchema = z.object({
+  name: z.string().trim().min(1).max(120),
+  phone: z.string().trim().min(6).max(30),
+});
+
 export const patientProfileSchema = z
   .object({
     firstName: z.string().trim().min(1).max(80),
@@ -46,6 +52,7 @@ export const patientProfileSchema = z
     /** true une fois les seuils relus avec un professionnel de santé */
     thresholdsReviewedByClinician: z.boolean().default(false),
     emergencyContact: emergencyContactSchema.optional(),
+    doctorContact: doctorContactSchema.optional(),
   })
   // Règles qui dépendent de la date du jour ou de plusieurs champs : évaluées à CHAQUE validation.
   .superRefine((profile, ctx) => {

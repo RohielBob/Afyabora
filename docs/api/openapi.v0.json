@@ -2,7 +2,7 @@
   "openapi": "3.0.3",
   "info": {
     "title": "Glyka API",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "description": "Contrat de l'API Glyka — **version 0 (gelée)**. Les écrans du mobile et du portail se développent contre ce document avant que l'API soit prête.\n\n## Conventions\n- **Format** : JSON en UTF-8. Dates en ISO 8601 avec fuseau. Identifiants en UUID.\n- **Glycémie** : stockée et renvoyée en **mg/dL entier** (`valueMgDl`) ; la valeur saisie et son unité d'origine sont conservées (`originalValue`, `originalUnit`). 1 g/L = 100 mg/dL.\n- **Authentification** : `Authorization: Bearer <jeton d'accès>` (15 minutes). Les routes publiques sont marquées `security: []`.\n- **Identifiants créés par le client** : mesures et événements portent un UUID généré sur l'appareil, ce qui rend les envois répétables sans doublon.\n- **Erreurs** : corps `{ message, code?, issues?, retryAfterSeconds? }`. Jamais de détail interne ni de donnée de santé.\n- **Pagination** : `limit` et `cursor` opaque ; réponse `{ items, nextCursor }`. `nextCursor` nul = dernière page.\n- **Extensions** : `x-roles`, `x-lot`, `x-ticket`, `x-priority` (P0/P1), `x-status` (`implemented` / `planned`).\n\n## Règle de changement\nAjouter une route ou un champ optionnel est compatible. Tout autre changement est une **rupture** : annoncée à l'équipe, consignée dans `docs/api/CHANGELOG.md`, validée par le lead technique.\n",
     "x-contract-status": "frozen-v0",
     "x-frozen-on": "2026-10-07"
@@ -3222,6 +3222,9 @@
           },
           "emergencyContact": {
             "$ref": "#/components/schemas/EmergencyContact"
+          },
+          "doctorContact": {
+            "$ref": "#/components/schemas/DoctorContact"
           }
         },
         "required": [
@@ -3251,6 +3254,10 @@
             "name": "Marie Demo",
             "phone": "+243810000000",
             "relation": "Épouse"
+          },
+          "doctorContact": {
+            "name": "Dr Kabila Demo",
+            "phone": "+243820000000"
           }
         }
       },
@@ -5279,6 +5286,26 @@
           "profile",
           "measurements",
           "events"
+        ]
+      },
+      "DoctorContact": {
+        "type": "object",
+        "description": "Médecin qui suit le patient (facultatif). Ajouté en 0.2.0 (L1-08).",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "phone": {
+            "type": "string",
+            "minLength": 6,
+            "maxLength": 30
+          }
+        },
+        "required": [
+          "name",
+          "phone"
         ]
       }
     }
