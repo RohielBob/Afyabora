@@ -18,10 +18,18 @@ export {
   type Direction,
   type PeriodStats,
 } from './stats';
+export {
+  TARGET_PER_DAY,
+  periodQuality,
+  weakestPart,
+  type PeriodQuality,
+  type QualityReason,
+} from './quality';
 export { useDashboard, type DashboardState } from './useDashboard';
 export { DashboardSkeleton } from './components/DashboardSkeleton';
 export { EmptyLatest } from './components/EmptyLatest';
 export { GlucoseChart } from './components/GlucoseChart';
 export { LatestReading } from './components/LatestReading';
+export { QualityCard } from './components/QualityCard';
 export { StatsCard } from './components/StatsCard';
 export { SyncStatus } from './components/SyncStatus';
