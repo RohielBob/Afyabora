@@ -23,6 +23,7 @@
     "docker:api": "docker compose --profile full up --build db mailpit api",
     "db:migrate": "pnpm --filter @glyka/api prisma:migrate",
     "db:seed": "pnpm --filter @glyka/scripts seed:demo",
+    "admin:doctors": "pnpm --filter @glyka/scripts admin:doctors",
     "prepare": "husky"
   },
   "devDependencies": {
