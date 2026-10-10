@@ -28,7 +28,8 @@ Création, lecture, modification et suppression des mesures de glycémie.
   patient : 400 neutre. Pas de profil médical : 400 explicite ; compte supprimé : 401.
 - Valeur : `toMgDl` (entier arrondi) ; hors 20–600 mg/dL sans `confirmedUnusual` ⇒ **422
   `UNUSUAL_VALUE`** avec `valueMgDl`, `plausibleMinMgDl`, `plausibleMaxMgDl` (pour le message du
-  mobile). Même confirmée, une valeur < 1 ou > 5000 mg/dL est impossible (400).
+  mobile ; décrit dans le contrat 0.2.1, schéma `UnusualValueError`, et dans `@glyka/shared`
+  `unusualValueErrorSchema`). Même confirmée, une valeur < 1 ou > 5000 mg/dL est impossible (400).
 - Date : ISO 8601 **avec fuseau** obligatoire ; plus de 5 min dans le futur ⇒ 400 (`measuredAt`).
   Toujours rendue en UTC (`Z`).
 - **GET** : période `[from ; to[`, de la plus récente à la plus ancienne, suppressions exclues,

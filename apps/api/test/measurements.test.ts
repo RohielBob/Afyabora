@@ -15,6 +15,7 @@ import { AllExceptionsFilter } from '../src/common/filters/all-exceptions.filter
 import { JwtAuthGuard } from '../src/common/guards/jwt-auth.guard';
 import { RolesGuard } from '../src/common/guards/roles.guard';
 import { MeasurementsModule } from '../src/modules/measurements/measurements.module';
+import { unusualValueErrorSchema } from '@glyka/shared';
 import { UNUSUAL_VALUE_MESSAGE } from '../src/modules/measurements/measurements.service';
 import { PrismaService } from '../src/prisma/prisma.service';
 
@@ -291,7 +292,9 @@ describe('L2-01 : mesures de glycémie (/measurements)', () => {
 
       const refused = await create(body);
       expect(refused.status).toBe(422);
-      expect(await json(refused)).toEqual({
+      const error = await json(refused);
+      expect(unusualValueErrorSchema.safeParse(error).success).toBe(true); // contrat 0.2.1
+      expect(error).toEqual({
         message: UNUSUAL_VALUE_MESSAGE,
         code: 'UNUSUAL_VALUE',
         valueMgDl: 1870,
