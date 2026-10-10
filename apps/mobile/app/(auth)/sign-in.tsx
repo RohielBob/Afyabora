@@ -15,7 +15,8 @@ import {
   FooterLink,
   authApi,
   authErrorMessage,
-  completeLogin,
+  signIn,
+  useSession,
   validateSignIn,
   type ErrorMessage,
 } from '@/features/auth';
@@ -32,6 +33,9 @@ export default function SignInScreen() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<ErrorMessage | null>(null);
+  // Arrivée après une déconnexion automatique (session expirée / révoquée) : on l'explique.
+  const session = useSession();
+  const expired = session.status === 'signedOut' && session.reason === 'expired';
 
   const fieldErrors = submitted ? validateSignIn({ email, password }) : {};
 
@@ -43,7 +47,7 @@ export default function SignInScreen() {
 
     setLoading(true);
     try {
-      const destination = await completeLogin(await authApi.login(values));
+      const destination = await signIn(await authApi.login(values));
       if (destination === 'notPatient') {
         setError({ key: 'auth.errors.notPatient' });
         return;
@@ -60,6 +64,8 @@ export default function SignInScreen() {
   return (
     <Screen>
       <AuthHeader title={t('auth.signIn.title')} subtitle={t('auth.signIn.subtitle')} />
+
+      {!error && expired ? <InlineAlert tone="info" message={t('auth.signIn.expired')} /> : null}
 
       {error ? (
         <InlineAlert

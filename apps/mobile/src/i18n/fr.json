@@ -1,5 +1,8 @@
 {
-  "app": { "name": "Afyabora", "tagline": "Suivez. Contrôlez. Comprenez." },
+  "app": {
+    "name": "Afyabora",
+    "tagline": "Suivez. Contrôlez. Comprenez."
+  },
   "common": {
     "save": "Enregistrer",
     "cancel": "Annuler",
@@ -8,7 +11,9 @@
     "retry": "Réessayer"
   },
   "disclaimer": "Afyabora est un outil d'aide au suivi. Il ne remplace pas l'avis d'un professionnel de santé.",
-  "glucose": { "unusualConfirm": "Cette valeur est inhabituelle, est-ce correct ?" },
+  "glucose": {
+    "unusualConfirm": "Cette valeur est inhabituelle, est-ce correct ?"
+  },
   "sync": {
     "pending_one": "{{count}} mesure en attente de synchronisation",
     "pending_other": "{{count}} mesures en attente de synchronisation",
@@ -99,7 +104,9 @@
       "noAccount": "Pas encore de compte ?",
       "signUp": "Créer un compte",
       "verifyAction": "Vérifier mon adresse",
-      "success": "Connexion réussie"
+      "success": "Connexion réussie",
+      "expired": "Votre session a expiré. Reconnectez-vous pour continuer.",
+      "signedOut": "Vous êtes déconnecté."
     },
     "forgot": {
       "title": "Mot de passe oublié",
@@ -114,5 +121,56 @@
       "successMessage": "Pour votre sécurité, vos autres sessions ont été fermées. Connectez-vous avec votre nouveau mot de passe.",
       "changeEmail": "Utiliser une autre adresse"
     }
+  },
+  "profile": {
+    "title": "Profil",
+    "todoTitle": "Bientôt : votre profil médical",
+    "todoText": "Identité, type de diabète, plage cible et seuils, contact d'urgence.",
+    "settings": "Paramètres",
+    "settingsHint": "Apparence, unités, notifications, sécurité",
+    "signOut": "Se déconnecter",
+    "signOutConfirmTitle": "Se déconnecter de ce téléphone ?",
+    "signOutConfirmText": "Vos données restent enregistrées sur votre compte. Elles seront retirées de ce téléphone et vous pourrez vous reconnecter à tout moment.",
+    "signOutUnsynced_one": "Attention : {{count}} modification n'a pas encore été envoyée au serveur. Elle sera perdue si vous vous déconnectez maintenant. Reconnectez-vous d'abord à internet si possible.",
+    "signOutUnsynced_other": "Attention : {{count}} modifications n'ont pas encore été envoyées au serveur. Elles seront perdues si vous vous déconnectez maintenant. Reconnectez-vous d'abord à internet si possible."
+  },
+  "tabs": {
+    "home": "Accueil",
+    "timeline": "Chronologie",
+    "insights": "Analyse",
+    "share": "Partager",
+    "profile": "Profil"
+  },
+  "settings": {
+    "overline": "Réglages",
+    "title": "Paramètres",
+    "appearance": "Apparence",
+    "appearanceHint": "Thème clair ou sombre, couleur d'accent",
+    "units": "Unités et seuils",
+    "unitsHint": "Unité préférée, plage cible, seuils d'alerte",
+    "notifications": "Notifications",
+    "notificationsHint": "Rappels, alertes, heures calmes",
+    "security": "Sécurité",
+    "securityHint": "Déverrouillage biométrique ou code",
+    "about": "À propos",
+    "design": "Planche de style",
+    "designHint": "Visible en développement : couleurs, textes, composants"
+  },
+  "appearance": {
+    "overline": "Paramètres",
+    "title": "Apparence",
+    "intro": "Choisissez l'ambiance d'Afyabora. Les textes restent toujours lisibles.",
+    "theme": "Thème",
+    "themeA11y": "Thème de l'application",
+    "light": "Clair",
+    "dark": "Sombre",
+    "system": "Automatique",
+    "systemHint": "Suit le réglage du téléphone (actuellement : {{mode}}).",
+    "systemLight": "clair",
+    "systemDark": "sombre",
+    "accent": "Couleur d'accent",
+    "preview": "Aperçu",
+    "previewOverline": "Dernière mesure · exemple",
+    "previewButton": "Ajouter une mesure"
   }
 }

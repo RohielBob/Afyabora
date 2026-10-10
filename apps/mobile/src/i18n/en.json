@@ -1,5 +1,8 @@
 {
-  "app": { "name": "Afyabora", "tagline": "Track. Control. Understand." },
+  "app": {
+    "name": "Afyabora",
+    "tagline": "Track. Control. Understand."
+  },
   "common": {
     "save": "Save",
     "cancel": "Cancel",
@@ -90,7 +93,9 @@
       "noAccount": "No account yet?",
       "signUp": "Create an account",
       "verifyAction": "Verify my address",
-      "success": "Signed in"
+      "success": "Signed in",
+      "expired": "Your session has expired. Sign in again to continue.",
+      "signedOut": "You are signed out."
     },
     "forgot": {
       "title": "Forgot password",
@@ -105,5 +110,56 @@
       "successMessage": "For your security, your other sessions have been closed. Sign in with your new password.",
       "changeEmail": "Use another address"
     }
+  },
+  "profile": {
+    "title": "Profile",
+    "todoTitle": "Coming soon: your medical profile",
+    "todoText": "Identity, diabetes type, target range and thresholds, emergency contact.",
+    "settings": "Settings",
+    "settingsHint": "Appearance, units, notifications, security",
+    "signOut": "Sign out",
+    "signOutConfirmTitle": "Sign out of this phone?",
+    "signOutConfirmText": "Your data stays saved in your account. It will be removed from this phone and you can sign in again at any time.",
+    "signOutUnsynced_one": "Warning: {{count}} change has not been sent to the server yet. It will be lost if you sign out now. Reconnect to the internet first if possible.",
+    "signOutUnsynced_other": "Warning: {{count}} changes have not been sent to the server yet. They will be lost if you sign out now. Reconnect to the internet first if possible."
+  },
+  "tabs": {
+    "home": "Home",
+    "timeline": "Timeline",
+    "insights": "Insights",
+    "share": "Share",
+    "profile": "Profile"
+  },
+  "settings": {
+    "overline": "Preferences",
+    "title": "Settings",
+    "appearance": "Appearance",
+    "appearanceHint": "Light or dark theme, accent colour",
+    "units": "Units and thresholds",
+    "unitsHint": "Preferred unit, target range, alert thresholds",
+    "notifications": "Notifications",
+    "notificationsHint": "Reminders, alerts, quiet hours",
+    "security": "Security",
+    "securityHint": "Biometric or passcode unlock",
+    "about": "About",
+    "design": "Style board",
+    "designHint": "Visible in development: colours, text, components"
+  },
+  "appearance": {
+    "overline": "Settings",
+    "title": "Appearance",
+    "intro": "Choose the look of Afyabora. Text always stays readable.",
+    "theme": "Theme",
+    "themeA11y": "App theme",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "Automatic",
+    "systemHint": "Follows the phone setting (currently: {{mode}}).",
+    "systemLight": "light",
+    "systemDark": "dark",
+    "accent": "Accent colour",
+    "preview": "Preview",
+    "previewOverline": "Last reading · sample",
+    "previewButton": "Add a reading"
   }
 }
