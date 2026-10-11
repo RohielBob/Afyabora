@@ -354,3 +354,25 @@ model NotificationOutbox {
 
   @@index([status, scheduledAt])
 }
+
+/// Journal d'audit des appels au modèle de langage (L3-10, CDC §5.5 : « journalisation des réponses de
+/// l'IA pour pouvoir les auditer »). Une ligne par appel. AUCUN identifiant de patient : les textes envoyés
+/// sont les phrases du moteur (chiffres agrégés), partagées entre patients. Textes CHIFFRÉS (AES-256-GCM,
+/// même clé que les notes). Lignes de plus de 90 jours effacées automatiquement.
+model LlmAuditLog {
+  id              String   @id @default(uuid()) @db.Uuid
+  createdAt       DateTime @default(now())
+  provider        String // « ollama »
+  model           String // « mistral-nemo »
+  kind            String // SENTENCES (phrases des observations) | SUMMARY (résumé de la période)
+  promptHash      String // empreinte de la consigne utilisée (12 premiers caractères du SHA-256)
+  outcome         String // OK | TIMEOUT | UNREACHABLE | HTTP | FORMAT | UNKNOWN
+  durationMs      Int
+  accepted        Int // textes acceptés par les garde-fous
+  refused         Int // textes refusés (le gabarit du moteur est alors affiché)
+  decisions       String[] // par texte, dans l'ordre : « accepted » ou la raison du refus (numbers, negation…)
+  inputEncrypted  String // textes envoyés au modèle (JSON), chiffrés
+  outputEncrypted String? // réponse brute du modèle, chiffrée ; null s'il n'a pas répondu
+
+  @@index([createdAt])
+}
