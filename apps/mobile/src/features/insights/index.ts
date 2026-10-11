@@ -7,10 +7,13 @@ export {
   evidenceOf,
   headlineOf,
   insightSentence,
+  joinList,
   orderInsights,
   pointsInPeriod,
+  summaryText,
   type Headline,
 } from './presentation';
+export { SummaryCard } from './components/SummaryCard';
 export { AnalysisSkeleton } from './components/AnalysisSkeleton';
 export { AnalysisSummary } from './components/AnalysisSummary';
 export { EvidenceList } from './components/EvidenceList';

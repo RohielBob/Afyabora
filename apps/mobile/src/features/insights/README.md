@@ -59,6 +59,12 @@ Onglet **Analyse** (`app/(tabs)/insights.tsx`), calculé sur le téléphone (L8-
 elles sont **mot pour mot** les gabarits du moteur (`renderInsightFr`, donc la même phrase que l'API) : un test le
 vérifie pour chaque type. L'anglais est traduit.
 
+**« En bref »** (L3-06, IA-3) : carte sous le résumé chiffré, le résumé de la période en langage clair (mêmes faits
+et mêmes mots que le champ `summary` de l'API et le futur rapport PDF), mis en mots par les traductions
+(`insights.summaryText.*`, mot pour mot le gabarit du moteur en français, vérifié pour 7 situations), carte neutre
+(pas de fond teinté de rouge, qui ressemblerait à une alerte) et mention « pas un avis médical ». La version
+reformulée par le modèle (API) arrivera sur le téléphone avec L3-09.
+
 **Pourcentages** : `displayPercents` du moteur (parts entières qui font 100), les **mêmes** que l'Accueil et que
 les phrases (« Temps dans la cible : 59 % »).
 
