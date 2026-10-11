@@ -1,6 +1,6 @@
 // Ticket L2-08 : score de qualité des données et choix de la phrase d'explication (sans interface).
 import type { ChartPoint } from '../chart';
-import { periodQuality, weakestPart } from '../quality';
+import { deviceTimeZone, periodQuality, weakestPart } from '../quality';
 
 // 10 octobre 2026, 09:17, heure LOCALE du téléphone.
 const NOW = new Date(2026, 9, 10, 9, 17);
@@ -21,6 +21,17 @@ const daily = (from: number, to: number, hours = [7, 13, 20]) =>
 describe('appel correct du moteur', () => {
   it('« 7 jours » = 7 jours entiers (pas 6), même en début de journée', () => {
     expect(periodQuality(daily(4, 10), 7, NOW).quality.daysInPeriod).toBe(7);
+  });
+
+  it('fuseau du téléphone lu pour chaque instant (hiver et été : heure d’été comprise)', () => {
+    const tz = deviceTimeZone as (at: number) => number;
+    for (const time of [
+      at(1, 12),
+      new Date(2026, 0, 15, 12).getTime(),
+      new Date(2026, 6, 15, 12).getTime(),
+    ]) {
+      expect(tz(time)).toBe(-new Date(time).getTimezoneOffset());
+    }
   });
 
   it('jours comptés dans le fuseau du téléphone : 23 h 30 et 0 h 30 = deux jours', () => {
