@@ -6,11 +6,12 @@
   "scripts": {
     "seed:demo": "node --env-file=../apps/api/.env --import tsx seed-demo/index.ts",
     "admin:doctors": "node --env-file=../apps/api/.env --import tsx admin/doctors-cli.ts",
+    "admin:llm-audit": "node --env-file=../apps/api/.env --import tsx admin/llm-audit-cli.ts",
     "admin:approve-doctor": "node --env-file=../apps/api/.env --import tsx admin/approve-doctor.ts",
     "generate:sample-import": "python3 sample-data/generate_import_demo.py",
     "typecheck": "tsc --noEmit",
     "lint": "echo \"no lint\"",
-    "test": "node --import tsx --test seed-demo/generators/glucose-series.test.ts admin/doctors.test.ts"
+    "test": "node --import tsx --test seed-demo/generators/glucose-series.test.ts admin/doctors.test.ts admin/llm-audit.test.ts"
   },
   "dependencies": {
     "@glyka/shared": "workspace:*",

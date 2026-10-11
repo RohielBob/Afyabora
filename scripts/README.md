@@ -2,12 +2,12 @@
 
 Outils pour l'équipe : données de démo, administration, GitHub.
 
-| Dossier        | Contenu                                                                                                                                                                                         | Ticket |
-| -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ |
-| `seed-demo/`   | Génère 3 patients **fictifs** (Jean 96 % Bonne, Marie 60 % Partielle, Paul 34 % Insuffisante) + un médecin approuvé. Le générateur est **déterministe** (même graine = mêmes données) et testé. | L7-07  |
-| `admin/`       | Comptes médecins : lister, voir, approuver, refuser (remplace une interface d'admin). Détails ci-dessous.                                                                                       | L1-12  |
-| `sample-data/` | Fichiers d'import de test : `import-demo-147.csv` (**139 valides / 5 doublons / 3 incohérentes**, valeur 18,7 g/L à la ligne 42), `import-windows1252.csv`, `import-corrupted.xlsx`             | L4-08  |
-| `github/`      | `create-labels.sh`, `create-issues.sh` (crée les 105 issues depuis `docs/team/backlog.csv`)                                                                                                     | L0-01  |
+| Dossier        | Contenu                                                                                                                                                                                         | Ticket       |
+| -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
+| `seed-demo/`   | Génère 3 patients **fictifs** (Jean 96 % Bonne, Marie 60 % Partielle, Paul 34 % Insuffisante) + un médecin approuvé. Le générateur est **déterministe** (même graine = mêmes données) et testé. | L7-07        |
+| `admin/`       | Comptes médecins : lister, voir, approuver, refuser (remplace une interface d'admin). Journal d'audit du modèle de langage (lecture). Détails ci-dessous.                                       | L1-12, L3-10 |
+| `sample-data/` | Fichiers d'import de test : `import-demo-147.csv` (**139 valides / 5 doublons / 3 incohérentes**, valeur 18,7 g/L à la ligne 42), `import-windows1252.csv`, `import-corrupted.xlsx`             | L4-08        |
+| `github/`      | `create-labels.sh`, `create-issues.sh` (crée les 105 issues depuis `docs/team/backlog.csv`)                                                                                                     | L0-01        |
 
 ```bash
 pnpm db:seed                                           # données de démo (DEMO_PASSWORD dans apps/api/.env)
@@ -17,6 +17,26 @@ pnpm --filter @glyka/scripts test                      # tests du générateur
 ```
 
 Les tests du générateur ont été exécutés et passent. `admin/` a été vérifié contre la base de développement (L1-12) ; `seed-demo/index.ts` reste à **valider contre la vraie base** (L7-07).
+
+## Journal d'audit du modèle de langage (`admin/llm-audit*`, L3-10)
+
+Lecture seule de la table `LlmAuditLog` (un appel au modèle par ligne). Sans option, **aucun texte n'est affiché** :
+seulement la date (UTC), le modèle, le type, le résultat, les décisions des garde-fous, la durée et l'empreinte
+de la consigne. `--details` déchiffre les textes envoyés et la réponse du modèle (clé `FIELD_ENCRYPTION_KEY` de
+`apps/api/.env`) : données de santé, pour un audit seulement.
+
+```powershell
+pnpm admin:llm-audit                      # les 20 appels les plus récents
+pnpm admin:llm-audit --problems           # seulement ceux avec un refus ou un échec du modèle
+pnpm admin:llm-audit --limit=50 --details # avec les textes déchiffrés
+pnpm admin:llm-audit help
+```
+
+| Fichier                   | Rôle                                                   |
+| ------------------------- | ------------------------------------------------------ |
+| `admin/llm-audit.ts`      | Logique sans base : arguments, mise en forme           |
+| `admin/llm-audit-cli.ts`  | Outil en ligne de commande (lecture Prisma, déchiffre) |
+| `admin/llm-audit.test.ts` | Tests avec une fausse base (aucune base requise)       |
 
 ## Comptes médecins (`admin/`, L1-12)
 

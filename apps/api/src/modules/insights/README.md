@@ -32,7 +32,7 @@ Analyse : appelle `@glyka/analytics`, produit des observations traçables, refor
 - **Résumé** (`summary`, L3-06, contrat 0.3.0) : quelques phrases en langage clair (mesures et qualité, répartition,
   comparaison, points à examiner avec le professionnel de santé, jours sans mesure), gabarit du moteur
   (`summaryFacts` + `renderSummaryFr`), éventuellement reformulé par le modèle sous les mêmes garde-fous.
-- Chaque réponse du LLM est journalisée pour audit.
+- Chaque réponse du LLM est journalisée pour audit (L3-10, table `LlmAuditLog`, voir plus bas).
 
 ## Tests obligatoires
 
@@ -145,6 +145,24 @@ $env:LLM_EVAL = "1"; pnpm --filter @glyka/api test -- insights-guardrails; Remov
 Dernier passage (`mistral-nemo`) : 10 phrases sur 10 acceptées (dont le cas piège « 0 % » bien formulé) ; résumé
 refusé (« 2 jours sur 7 » devenu « 2 jours ») : le résumé du moteur est alors affiché.
 
+## Journal d'audit du modèle de langage (L3-10)
+
+Chaque appel au modèle écrit **une ligne** dans la table `LlmAuditLog` (`llm/llm-audit.service.ts`) : fournisseur,
+modèle, type (phrases ou résumé), **empreinte de la consigne** (12 caractères du SHA-256 : deux lignes avec la même
+empreinte ont suivi les mêmes règles), résultat (`OK`, `TIMEOUT`, `UNREACHABLE`, `HTTP`, `FORMAT`, `UNKNOWN`),
+durée, et **pour chaque texte la décision des garde-fous** (`accepted` ou la raison du refus).
+
+- **Textes envoyés et réponse brute CHIFFRÉS** (AES-256-GCM, même clé que les notes) : données de santé.
+- **Aucun identifiant de patient** : les textes sont les phrases du moteur (chiffres agrégés), partagées entre
+  patients.
+- **Conservation : 90 jours** (lignes plus anciennes effacées à chaque écriture).
+- **Ne bloque jamais** l'analyse : une écriture qui échoue est signalée dans les journaux techniques, sans texte.
+- Lecture : `pnpm admin:llm-audit` (voir `scripts/README.md`) ; sans option, **aucun texte affiché** ;
+  `--details` déchiffre (pour un audit seulement).
+
+Vérifié sur la vraie base avec `mistral-nemo` (2026-10-11) : 2 lignes (phrases : 5 acceptées ; résumé : refusé
+`numbers`, « 2 jours sur 7 » devenu « 2 jours »), textes illisibles en base, relus en clair avec `--details`.
+
 ## Fichiers
 
 | Fichier                         | Rôle                                                                                                   |
@@ -156,6 +174,7 @@ refusé (« 2 jours sur 7 » devenu « 2 jours ») : le résumé du moteur est a
 | `llm/ollama.provider.ts`        | Fournisseur Ollama (modèle local)                                                                      |
 | `llm/create-provider.ts`        | Choix du fournisseur selon la configuration                                                            |
 | `llm/rephrase.ts`               | Consigne, lecture de la réponse, garde-fous                                                            |
+| `llm/llm-audit.service.ts`      | Journal d'audit : une ligne par appel, textes chiffrés, 90 jours, jamais bloquant                      |
 | `guardrails/question-guard.ts`  | Filtre des questions libres : refus poli et raison (urgence, dose, diagnostic…)                        |
 | `llm/insight-writer.service.ts` | Phrase affichée : reformulation prête et validée, sinon gabarit ; arrière-plan, mémoire, pause         |
 

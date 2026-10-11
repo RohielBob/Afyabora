@@ -7,10 +7,11 @@
 // connu ». Le jeu connu est la semaine de référence de L3-01 (packages/analytics/test/reference),
 // dont tous les résultats ont été calculés à la main et recalculés indépendamment (oracle.py).
 import { Logger, type INestApplication } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { Test } from '@nestjs/testing';
-import { randomUUID } from 'node:crypto';
+import { randomBytes, randomUUID } from 'node:crypto';
 import type { AddressInfo } from 'node:net';
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { DISCLAIMER_FR } from '@glyka/analytics';
@@ -94,6 +95,14 @@ const fakePrisma = {
   },
 };
 class FakeInfraModule {}
+/** Configuration de test (journal d'audit L3-10 : clé de chiffrement générée, jamais un vrai secret). */
+const fakeConfig = {
+  get: () => undefined,
+  getOrThrow: (key: string) => {
+    if (key === 'FIELD_ENCRYPTION_KEY') return randomBytes(32).toString('base64');
+    throw new Error(`Configuration absente du test : ${key}`);
+  },
+};
 
 // ---------- Jeu de référence (identifiants lisibles → UUID, comme en base) ----------
 const uuidOf = new Map<string, string>();
@@ -159,8 +168,11 @@ describe('L3-03 : analyse (/insights) et qualité des données (/quality)', () =
         {
           module: FakeInfraModule,
           global: true,
-          providers: [{ provide: PrismaService, useValue: fakePrisma }],
-          exports: [PrismaService],
+          providers: [
+            { provide: PrismaService, useValue: fakePrisma },
+            { provide: ConfigService, useValue: fakeConfig },
+          ],
+          exports: [PrismaService, ConfigService],
         },
         InsightsModule,
       ],

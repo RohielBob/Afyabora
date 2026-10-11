@@ -4,6 +4,7 @@ import { InsightsController } from './insights.controller';
 import { InsightsService } from './insights.service';
 import { createLlmProvider } from './llm/create-provider';
 import { InsightWriter } from './llm/insight-writer.service';
+import { LlmAuditService } from './llm/llm-audit.service';
 import { LLM_PROVIDER } from './llm/llm-provider';
 
 @Module({
@@ -11,6 +12,7 @@ import { LLM_PROVIDER } from './llm/llm-provider';
   providers: [
     InsightsService,
     InsightWriter,
+    LlmAuditService, // journal d'audit des appels au modèle (L3-10)
     // Fournisseur de modèle de langage choisi par la configuration (null = gabarits seulement).
     { provide: LLM_PROVIDER, inject: [ConfigService], useFactory: createLlmProvider },
   ],
