@@ -48,6 +48,8 @@ Profil médical du patient, seuils d'alerte, export et suppression de compte.
   - Ensuite, le jeton d'accès encore valable (15 min au plus) ne donne plus accès à rien (401).
 - ⚠️ Toute **nouvelle table** liée à un patient doit avoir `onDelete: Cascade` (ou être effacée dans
   `AccountService.deleteAccount`), sinon la suppression du compte laisse des données derrière elle.
+  Conversations de l'assistant (L9-05) : `AssistantConversation` → `PatientProfile` et `AssistantMessage` →
+  `AssistantConversation`, toutes deux en cascade (vérifié dans la base de développement).
 
 ## Tests obligatoires
 

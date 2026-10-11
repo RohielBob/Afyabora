@@ -9,6 +9,7 @@ import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
 import { RolesGuard } from './common/guards/roles.guard';
 import { MailModule } from './common/mail/mail.module';
 import { PrismaModule } from './prisma/prisma.module';
+import { AssistantModule } from './modules/assistant/assistant.module';
 import { AuditModule } from './modules/audit/audit.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { DoctorModule } from './modules/doctor/doctor.module';
@@ -40,6 +41,7 @@ import { SyncModule } from './modules/sync/sync.module';
     ScheduleModule.forRoot(),
     PrismaModule,
     MailModule,
+    AssistantModule,
     HealthModule,
     AuthModule,
     PatientsModule,
