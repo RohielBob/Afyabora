@@ -17,6 +17,9 @@ Analyse : appelle `@glyka/analytics`, produit des observations traçables, refor
 - Sans LLM ou en cas d'erreur : gabarits `templates.fr.ts` (la démo ne dépend jamais d'une API externe).
 - Garde-fous : jamais de diagnostic, de dose, de cause affirmée ; refus poli hors périmètre ; rappel de consulter lors d'une alerte.
 - Qualité insuffisante (< 10 mesures) : « Données insuffisantes », pas d'analyse.
+- Fuseau du patient (L3-02) : passer `timeZone: profile.timezoneOffsetMinutes` à `analyze()` (créneaux et jours
+  à l'heure locale). Ce décalage fixe ne suit pas l'heure d'été : suffisant à Kinshasa ; pour un patient
+  ailleurs, stocker un nom IANA (« Europe/Paris ») demanderait un changement de schéma et de contrat.
 - Chaque réponse du LLM est journalisée pour audit.
 
 ## Tests obligatoires
