@@ -155,6 +155,14 @@ export const EXPECTED = {
     '2 jour(s) sur 7 ne contiennent aucune mesure : certaines analyses peuvent être incomplètes.',
     'Temps dans la cible : 70 % (période précédente : 50 %).',
   ],
+  /** Résumé de la période (L3-06), écrit à la main à partir des chiffres ci-dessus. */
+  summary:
+    'Sur les 7 derniers jours, 20 mesures ont été analysées (qualité des données : bonne, 86/100). ' +
+    'Elles étaient dans la cible 70 % du temps, au-dessus 20 % et en dessous 10 %. ' +
+    'Sur la période précédente, le temps dans la cible était de 50 %. ' +
+    'Points à examiner avec votre professionnel de santé : des valeurs basses répétées, ' +
+    'une série de valeurs hautes et des valeurs hautes plus fréquentes le soir. ' +
+    '2 jour(s) sur 7 sans mesure : certaines analyses peuvent être incomplètes.',
 } as const;
 
 /**

@@ -7,3 +7,4 @@ export * from './timezone';
 export * from './insights';
 export * from './templates.fr';
 export * from './last-days';
+export * from './summary';
