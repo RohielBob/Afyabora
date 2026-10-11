@@ -9,19 +9,23 @@ import { View } from 'react-native';
 import { Card, Text } from '@/components/ui';
 import { spacing, useTheme } from '@/theme';
 import { summaryText } from '../presentation';
+import { RewrittenNote } from './RewrittenNote';
 
 export function SummaryCard({
   analysis,
   days,
   index = 0,
+  rewritten,
 }: {
   analysis: LastDaysAnalysis;
   days: number;
   index?: number;
+  /** Résumé reformulé par le serveur (L3-09), déjà vérifié ; sinon le résumé des traductions. */
+  rewritten?: string | null;
 }) {
   const { t } = useTranslation();
   const { colors } = useTheme();
-  const text = summaryText(t, summaryFacts(analysis, days));
+  const text = rewritten ?? summaryText(t, summaryFacts(analysis, days));
 
   return (
     <Card variant="outlined" index={index} style={{ gap: spacing.sm }}>
@@ -32,6 +36,7 @@ export function SummaryCard({
         </Text>
       </View>
       <Text variant="body">{text}</Text>
+      {rewritten ? <RewrittenNote /> : null}
       <Text variant="caption" tone="muted">
         {t('insights.summaryText.note')}
       </Text>

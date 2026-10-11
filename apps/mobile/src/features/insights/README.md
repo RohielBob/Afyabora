@@ -9,7 +9,7 @@ Observations, « Voir les mesures concernées », résumé, question libre.
 - **L8-11** — Analyse calculée sur le téléphone depuis la base locale — **fait** (données, sans écran)
 - **L3-04** — Mobile : écran Analyse avec « Voir les mesures concernées » — **fait**
 - **L3-08** — Question libre sur l'historique (IA-4)
-- **L3-09** — Mobile : analyse et gabarits calculés hors-ligne depuis la base locale
+- **L3-09** — Mobile : analyse et gabarits calculés hors-ligne depuis la base locale — **fait** (enrichissement en ligne)
 
 ## Analyse calculée sur le téléphone (L8-11)
 
@@ -88,10 +88,46 @@ les phrases (« Temps dans la cible : 59 % »).
 - [x] Aperçu web, clair et sombre, largeur téléphone : observations, dépliant, « Afficher les N autres »,
       ouverture du détail, changement de période, état « pas encore assez de mesures ».
 
+## Hors-ligne d'abord, enrichi en ligne (L3-09)
+
+L'analyse affichée est **toujours** celle du téléphone (L8-11), avec ses phrases (gabarits, traductions) : elle marche
+sans réseau. En ligne, l'écran demande aussi `GET /insights` : si le serveur a déjà **reformulé** des phrases avec
+son modèle de langage (L3-05/L3-06, sous garde-fous), le téléphone les reprend, avec la mention discrète
+« Formulation proposée par l'IA, chiffres vérifiés », **seulement si elles décrivent exactement la même chose** :
+
+- même période ; pour une observation, même type et **mêmes faits** ; pour le résumé, mêmes statistiques et même
+  qualité ;
+- et **exactement les mêmes nombres** que la phrase du téléphone (seconde vérification, côté téléphone) ;
+- une phrase identique à celle du moteur n'est pas « reprise » (pas de fausse mention IA) ;
+- application en anglais : rien n'est repris (phrases du serveur en français), aucun appel réseau.
+
+Chiffres, preuves, gravité et ordre viennent **toujours** du calcul local. Hors-ligne, serveur injoignable, session
+expirée, réponse inattendue : rien n'est repris, sans erreur. Un résultat ne s'applique qu'à l'analyse pour laquelle
+il a été calculé (changer de période ne montre jamais les phrases d'une autre période).
+
+⚠️ La synchronisation (L8-04 à L8-06) n'existe pas encore : tant que les mesures du téléphone ne sont pas sur le
+serveur, ses faits diffèrent et rien n'est repris (comportement voulu). Vérifié de bout en bout avec des mesures
+présentes des deux côtés : 2 phrases reformulées par `mistral-nemo` reprises, la 3e (identique au gabarit) gardée.
+
+| Fichier                        | Rôle                                                         |
+| ------------------------------ | ------------------------------------------------------------ |
+| `enrichment.ts`                | Règles de reprise (période, faits, nombres, langue)          |
+| `server-enrichment.ts`         | Chargement : en ligne seulement, jamais d'erreur             |
+| `api.ts`                       | `GET /insights`                                              |
+| `useEnrichment.ts`             | Hook : phrases reprises pour l'analyse affichée              |
+| `components/RewrittenNote.tsx` | Mention « Formulation proposée par l'IA, chiffres vérifiés » |
+| `__tests__/enrichment.test.ts` | Tests des règles et du chargement                            |
+
+## Tests obligatoires (L3-09)
+
+- [x] Reprise seulement à faits, période et nombres identiques ; ordre des clés et des observations sans importance.
+- [x] Résumé repris seulement à statistiques et qualité identiques ; anglais : rien ; phrase identique : rien.
+- [x] Hors-ligne, serveur injoignable, session expirée, réponse inattendue : analyse locale inchangée, sans erreur.
+- [x] 12 erreurs volontaires détectées ; aperçu clair et sombre (mention affichée) ; bout en bout avec la vraie API.
+
 ## Fichiers prévus
 
-- `useInsights.ts` : local (analytics + gabarits) puis enrichissement serveur si en ligne (L3-09)
-- `AskForm.tsx` (P1)
+- Assistant « Afyabora » (conversation, remplace L3-08) : plan à présenter.
 
 ## Règle importante
 
