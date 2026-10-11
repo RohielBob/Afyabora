@@ -18,6 +18,7 @@ import { AllExceptionsFilter } from '../src/common/filters/all-exceptions.filter
 import { JwtAuthGuard } from '../src/common/guards/jwt-auth.guard';
 import { RolesGuard } from '../src/common/guards/roles.guard';
 import { InsightsModule } from '../src/modules/insights/insights.module';
+import { LLM_PROVIDER } from '../src/modules/insights/llm/llm-provider';
 import { PrismaService } from '../src/prisma/prisma.service';
 import {
   DAY,
@@ -166,7 +167,11 @@ describe('L3-03 : analyse (/insights) et qualité des données (/quality)', () =
         { provide: APP_GUARD, useClass: JwtAuthGuard },
         { provide: APP_GUARD, useClass: RolesGuard },
       ],
-    }).compile();
+    })
+      // Sans modèle de langage (LLM_PROVIDER=none, le défaut) : les phrases sont les gabarits du moteur.
+      .overrideProvider(LLM_PROVIDER)
+      .useValue(null)
+      .compile();
     app = moduleRef.createNestApplication();
     app.useGlobalFilters(new AllExceptionsFilter());
     await app.listen(0, '127.0.0.1');

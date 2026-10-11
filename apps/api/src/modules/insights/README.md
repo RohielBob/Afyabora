@@ -45,15 +45,61 @@ Analyse : appelle `@glyka/analytics`, produit des observations traçables, refor
       ignorés, phrase manquante, colonne inutile, médecin autorisé, minuit faux…) : toutes détectées.
 - [x] Vérifié sur la vraie base (API locale + PostgreSQL) : réponse de l'API = calcul du moteur sur les mêmes
       mesures, pour 7, 14 et 30 jours.
-- [ ] LLM indisponible : repli sur les gabarits.
+- [x] LLM indisponible : repli sur les gabarits (L3-05 : injoignable, trop lent, erreur HTTP, réponse illisible,
+      mauvais nombre de phrases, phrase refusée par les garde-fous) — `test/insights-llm.test.ts`.
+
+## Modèle de langage (L3-05)
+
+Le modèle ne fait que **reformuler** les phrases du moteur (ADR-0005). Par défaut (`LLM_PROVIDER=none`) il n'y en a
+pas : phrases du moteur seulement, la démo n'en dépend jamais.
+
+- **Interface `LlmProvider`** (`llm/llm-provider.ts`) : changer de fournisseur = une autre implémentation.
+- **Ollama** (`llm/ollama.provider.ts`) : modèle **local**, sans clé ni service externe, appel HTTP avec le `fetch` de
+  Node (aucune dépendance ajoutée). On n'envoie que les phrases du moteur (faits agrégés : ni nom, ni email, ni
+  identifiant, ni date).
+- **La réponse n'attend jamais le modèle** (`llm/insight-writer.service.ts`) : `GET /insights` répond tout de suite
+  avec les phrases du moteur ; les phrases pas encore reformulées partent en arrière-plan (une génération à la
+  fois) ; les réponses suivantes utilisent la reformulation, mémorisée par phrase (1 000 au plus).
+- **Garde-fous, phrase par phrase** (`llm/rephrase.ts`) : refusée (⇒ phrase du moteur) si elle n'a pas
+  **exactement les mêmes nombres**, si elle contient un mot interdit (diagnostic, dose, insuline, traitement,
+  médicament, cause affirmée, ordre, alarme, « toujours », « jamais », lien), si elle est vide ou trop longue
+  (280 caractères). Réponse illisible ou au mauvais nombre de phrases ⇒ tout reste en phrases du moteur.
+- **Modèle en panne** (injoignable, trop lent, erreur) ⇒ phrases du moteur et nouvel essai après 1 minute.
+- **Journaux** : nombre de phrases acceptées / refusées, raisons et durée ; **jamais** les phrases (données de santé).
+- Ce sont les garde-fous de base ; le résumé (L3-06), les questions-pièges (L3-07) et le journal d'audit
+  (L3-10) viennent ensuite. Toute modification de la consigne (`REPHRASE_SYSTEM`) ⇒ rejouer L3-07.
+
+**Mesuré sur un PC sans carte graphique, avec `llama3.1` (8 milliards de paramètres)** : 20 à 45 s par lot de
+phrases (d'où l'arrière-plan) ; sur les 6 phrases de la semaine de référence, 5 reformulées et acceptées, 1 refusée
+(un nombre perdu) ; réponse de l'API en 29 ms.
+
+**Activer le modèle local** (PowerShell) :
+
+```powershell
+ollama pull llama3.1
+# puis, dans apps/api/.env : LLM_PROVIDER=ollama (et éventuellement LLM_MODEL, OLLAMA_URL, LLM_TIMEOUT_MS)
+pnpm dev:api
+```
+
+| Variable         | Défaut                   | Rôle                                                 |
+| ---------------- | ------------------------ | ---------------------------------------------------- |
+| `LLM_PROVIDER`   | `none`                   | `none` (phrases du moteur) ou `ollama`               |
+| `OLLAMA_URL`     | `http://localhost:11434` | serveur Ollama (un serveur que vous contrôlez)       |
+| `LLM_MODEL`      | `llama3.1`               | modèle installé (`ollama list`)                      |
+| `LLM_TIMEOUT_MS` | `90000`                  | durée maximale d'une reformulation (en arrière-plan) |
 
 ## Fichiers
 
-| Fichier                  | Rôle                                                                                                   |
-| ------------------------ | ------------------------------------------------------------------------------------------------------ |
-| `insights.module.ts`     | Déclaration du module NestJS                                                                           |
-| `insights.controller.ts` | Routes HTTP : validation Zod (`ZodValidationPipe` + schémas de `@glyka/shared`), pas de logique métier |
-| `insights.service.ts`    | Logique métier et accès base (Prisma)                                                                  |
+| Fichier                         | Rôle                                                                                                   |
+| ------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| `insights.module.ts`            | Déclaration du module NestJS                                                                           |
+| `insights.controller.ts`        | Routes HTTP : validation Zod (`ZodValidationPipe` + schémas de `@glyka/shared`), pas de logique métier |
+| `insights.service.ts`           | Logique métier et accès base (Prisma)                                                                  |
+| `llm/llm-provider.ts`           | Interface `LlmProvider`, jeton d'injection, erreurs                                                    |
+| `llm/ollama.provider.ts`        | Fournisseur Ollama (modèle local)                                                                      |
+| `llm/create-provider.ts`        | Choix du fournisseur selon la configuration                                                            |
+| `llm/rephrase.ts`               | Consigne, lecture de la réponse, garde-fous                                                            |
+| `llm/insight-writer.service.ts` | Phrase affichée : reformulation prête et validée, sinon gabarit ; arrière-plan, mémoire, pause         |
 
 ## Rappels
 
