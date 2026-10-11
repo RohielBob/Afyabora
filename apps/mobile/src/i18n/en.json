@@ -509,6 +509,27 @@
         "VERY_HIGH": "Very high value"
       },
       "message": "Follow your care team’s instructions. If you feel unwell, ask for help immediately."
+    },
+    "edit": {
+      "overline": "Reading",
+      "title": "Edit reading",
+      "close": "Close without saving",
+      "savedAt": "{{day}} at {{time}}",
+      "whenLabel": "Date and time",
+      "day": "Day of the reading",
+      "previousDay": "Previous day",
+      "nextDay": "Next day",
+      "save": "Save changes",
+      "saveError": "The change could not be saved on this phone. Please try again.",
+      "delete": "Delete this reading",
+      "deleteTitle": "Delete this reading?",
+      "deleteText": "It will disappear from your history and analyses, on this phone and then on the server.",
+      "deleteConfirm": "Delete",
+      "deleteError": "The reading could not be deleted on this phone. Please try again.",
+      "cancel": "Cancel",
+      "missingTitle": "Reading not found",
+      "missingText": "It may already have been deleted.",
+      "back": "Back"
     }
   },
   "dashboard": {
@@ -647,7 +668,8 @@
       "measurement": "{{time}}, glucose {{value}}, {{state}}, {{context}}",
       "event": "{{time}}, {{label}}, {{meta}}"
     },
-    "addEvent": "Add"
+    "addEvent": "Add",
+    "openHint": "Opens the details to edit or delete"
   },
   "event": {
     "overline": "Quick add",

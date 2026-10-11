@@ -509,6 +509,27 @@
         "VERY_HIGH": "Valeur très haute"
       },
       "message": "Suivez les consignes de votre équipe soignante. En cas de malaise, demandez de l'aide immédiatement."
+    },
+    "edit": {
+      "overline": "Mesure",
+      "title": "Modifier la mesure",
+      "close": "Fermer sans enregistrer",
+      "savedAt": "{{day}} à {{time}}",
+      "whenLabel": "Date et heure",
+      "day": "Jour de la mesure",
+      "previousDay": "Jour précédent",
+      "nextDay": "Jour suivant",
+      "save": "Enregistrer les modifications",
+      "saveError": "La modification n'a pas pu être enregistrée sur ce téléphone. Réessayez.",
+      "delete": "Supprimer cette mesure",
+      "deleteTitle": "Supprimer cette mesure ?",
+      "deleteText": "Elle disparaîtra de votre historique et de vos analyses, sur ce téléphone puis sur le serveur.",
+      "deleteConfirm": "Supprimer",
+      "deleteError": "La mesure n'a pas pu être supprimée sur ce téléphone. Réessayez.",
+      "cancel": "Annuler",
+      "missingTitle": "Mesure introuvable",
+      "missingText": "Elle a peut-être déjà été supprimée.",
+      "back": "Retour"
     }
   },
   "dashboard": {
@@ -647,7 +668,8 @@
       "measurement": "{{time}}, glycémie {{value}}, {{state}}, {{context}}",
       "event": "{{time}}, {{label}}, {{meta}}"
     },
-    "addEvent": "Ajouter"
+    "addEvent": "Ajouter",
+    "openHint": "Ouvre le détail pour modifier ou supprimer"
   },
   "event": {
     "overline": "Ajout rapide",
