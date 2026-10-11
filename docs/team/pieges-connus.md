@@ -44,6 +44,12 @@
 - `docker compose down` **sans `-v`** : `-v` supprime la base locale. `prisma migrate reset` aussi efface tout (dev uniquement, sur accord).
 - Les tests de l'API (Vitest + SWC pour les décorateurs) utilisent un **faux Prisma** et un vrai serveur HTTP sur le port 0 (`fetch` sur 127.0.0.1) : aucune base nécessaire.
 - Une migration déjà fusionnée dans `develop` ne se modifie **jamais** : on en crée une nouvelle.
+- **Windows : `prisma generate` échoue avec `EPERM … query_engine-windows.dll.node`** quand l'API tourne
+  (`pnpm dev:api`) : le fichier du moteur est verrouillé. Les types du client sont quand même régénérés par
+  `prisma migrate dev` ; sinon, arrêter l'API, relancer `pnpm --filter @glyka/api prisma:generate`, redémarrer
+  (L3-10).
+- Générer une migration **sans l'appliquer** pour relire le SQL d'abord :
+  `pnpm --filter @glyka/api exec prisma migrate dev --create-only --name <nom>`, puis `prisma migrate dev`.
 - **Jamais « lire puis réécrire » un compteur ou un état partagé** (échecs de connexion, quotas, stock…) :
   des requêtes simultanées lisent la même valeur et s'écrasent. Faire faire le calcul par la base
   (`updateMany` avec condition, `{ increment: 1 }`) ou une consommation atomique (`updateMany` dont on

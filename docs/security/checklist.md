@@ -39,8 +39,12 @@
 ## Notifications et IA
 
 - [ ] Aucune valeur de santé dans le texte d'une notification par défaut
-- [ ] Le modèle de langage ne reçoit ni nom, ni email, ni identifiant
-- [ ] Jeu de questions-pièges : aucun diagnostic, aucune dose, refus poli
+- [x] Le modèle de langage ne reçoit ni nom, ni email, ni identifiant (L3-05 : seulement les phrases du
+      moteur, testé dans `apps/api/test/insights-llm.test.ts`)
+- [x] Jeu de questions-pièges : aucun diagnostic, aucune dose, refus poli (L3-07, filtre des questions ;
+      à revérifier avec la question libre / l'assistant)
+- [x] Réponses du modèle journalisées pour audit : textes chiffrés, aucun identifiant de patient,
+      conservation 90 jours (L3-10)
 
 ## Dépôt
 
