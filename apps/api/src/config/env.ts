@@ -30,8 +30,14 @@ const envSchema = z.object({
   SMTP_FROM: z.string().default('Afyabora <no-reply@afyabora.local>'),
   PORTAL_URL: z.string().url().default('http://localhost:5173'),
   API_PUBLIC_URL: z.string().url().default('http://localhost:3000'),
-  LLM_PROVIDER: z.enum(['none', 'anthropic']).default('none'),
-  LLM_API_KEY: z.string().optional(),
+  // Modèle de langage (L3-05, ADR-0005) : « none » = gabarits du moteur seulement (défaut, la démo n'en
+  // dépend jamais) ; « ollama » = modèle LOCAL (https://ollama.com), sans service externe.
+  LLM_PROVIDER: z.enum(['none', 'ollama']).default('none'),
+  OLLAMA_URL: z.string().url().default('http://localhost:11434'),
+  LLM_MODEL: z.string().min(1).default('llama3.1'),
+  // Temps maximal d'une reformulation (en arrière-plan : GET /insights ne l'attend jamais).
+  LLM_TIMEOUT_MS: z.coerce.number().int().min(1000).max(600_000).default(90_000),
+  LLM_API_KEY: z.string().optional(), // réservé à un futur fournisseur hébergé
   EXPO_ACCESS_TOKEN: z.string().optional(),
 });
 

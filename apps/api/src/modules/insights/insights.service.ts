@@ -8,8 +8,9 @@
 //    affichent exactement les mêmes chiffres, observations et phrases ;
 //  - seuils personnels du patient (profil) et fuseau du profil (créneaux, jours : L3-02) ;
 //  - sous 10 mesures : `stats` nul et aucune observation (« Données insuffisantes ») ;
-//  - chaque observation garde ses preuves (`evidenceIds`) et reçoit une phrase des gabarits français
-//    (descriptive, jamais un diagnostic ; la reformulation par un modèle de langage viendra en L3-05).
+//  - chaque observation garde ses preuves (`evidenceIds`) et reçoit une phrase : celle du modèle de
+//    langage si elle est prête et a passé les garde-fous (L3-05, InsightWriter), sinon le gabarit français
+//    du moteur (descriptif, jamais un diagnostic). La réponse n'attend jamais le modèle.
 // PROPRIÉTÉ : le patient vient TOUJOURS du jeton ; seules ses mesures non supprimées sont lues.
 // Aucune valeur de santé dans les journaux.
 import { Injectable, Logger } from '@nestjs/common';
@@ -27,6 +28,7 @@ import {
 } from '@glyka/analytics';
 import { DEFAULT_THRESHOLDS, type GlucoseThresholds } from '@glyka/shared';
 import { PrismaService } from '../../prisma/prisma.service';
+import { InsightWriter } from './llm/insight-writer.service';
 
 /** Réponse de GET /insights (schéma `InsightsResponse` du contrat). */
 export type InsightsResponse = LastDaysAnalysis;
@@ -43,12 +45,16 @@ interface AnalysisInput {
 export class InsightsService {
   private readonly logger = new Logger(InsightsService.name);
 
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly writer: InsightWriter,
+  ) {}
 
   /** GET /insights?period : statistiques, comparaison, observations traçables et leurs phrases. */
   async insights(patientId: string, days: number): Promise<InsightsResponse> {
     const { points, now, thresholds, timeZone } = await this.load(patientId, days);
-    return analyzeLastDays(points, days, { now, thresholds, timeZone });
+    const analysis = analyzeLastDays(points, days, { now, thresholds, timeZone });
+    return { ...analysis, insights: this.writer.write(analysis.insights) };
   }
 
   /** GET /quality?period : score de qualité des données (couverture, densité, fraîcheur). */
