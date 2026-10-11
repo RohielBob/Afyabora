@@ -9,6 +9,7 @@ import { findAnomaliesBySlot, findHighStreaks, findLows } from './anomalies';
 import { computeQuality } from './quality';
 import { groupBySlot } from './slots';
 import { computeRangeStats, inPeriod } from './stats';
+import { resolveTimeZone, type PatientTimeZone } from './timezone';
 import type { GlucosePoint, Insight, Period, QualityScore, RangeStats } from './types';
 
 const DAY_MS = 24 * 60 * 60 * 1000;
@@ -24,7 +25,11 @@ export interface AnalysisResult {
 export interface AnalyzeOptions {
   thresholds?: GlucoseThresholds;
   now: number;
-  tzOffsetMinutes?: number;
+  /**
+   * Fuseau du patient (L3-02) : décalage fixe en minutes, nom IANA (« Europe/Paris ») ou fonction.
+   * Par défaut Kinshasa, UTC+1. Un fuseau invalide lève InvalidTimeZoneError avant tout calcul.
+   */
+  timeZone?: PatientTimeZone;
 }
 
 /**
@@ -42,7 +47,8 @@ export function analyze(
 ): AnalysisResult {
   const allPoints = [...input].sort(chronological);
   const thresholds = opts.thresholds ?? DEFAULT_THRESHOLDS;
-  const tz = opts.tzOffsetMinutes ?? 60;
+  const tz = opts.timeZone;
+  resolveTimeZone(tz); // vérifié tout de suite : pas d'analyse à moitié faite avec un fuseau faux
   const points = inPeriod(allPoints, period);
   const quality = computeQuality(allPoints, period, opts.now, tz);
 

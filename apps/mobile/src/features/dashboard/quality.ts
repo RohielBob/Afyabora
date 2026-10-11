@@ -4,11 +4,12 @@
 // Ici on l'appelle CORRECTEMENT depuis le téléphone, et on choisit la phrase d'explication :
 //  - période = des jours ENTIERS (jusqu'à la fin d'aujourd'hui), sinon « 7 jours » compterait pour 6 ;
 //  - fuseau du téléphone (le moteur suppose UTC+1 par défaut) : une mesure à 23 h 30 et une à 0 h 30 sont
-//    bien sur deux jours différents pour le patient ;
+//    bien sur deux jours différents pour le patient ; le décalage est lu POUR CHAQUE MESURE (L3-02), donc
+//    une période qui traverse un changement d'heure compte encore les bons jours ;
 //  - la phrase parle de ce qui fait le plus baisser le score (couverture, densité ou fraîcheur) ; elle ne dit
 //    « tout va bien » que si les trois composantes sont bonnes (un score « Bonne » peut cacher 57 jours
 //    mesurés sur 90 : on le dit plutôt que de rassurer à tort).
-import { computeQuality, type QualityScore } from '@glyka/analytics';
+import { computeQuality, type PatientTimeZone, type QualityScore } from '@glyka/analytics';
 import { QUALITY_TARGET_MEASUREMENTS_PER_DAY } from '@glyka/shared';
 import { periodBounds, type ChartPeriod, type ChartPoint } from './chart';
 
@@ -32,6 +33,12 @@ function nextMidnight(now: Date): number {
   return new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1).getTime();
 }
 
+/**
+ * Fuseau du téléphone, instant par instant (minutes, UTC+1 → 60). Un seul décalage pris « maintenant »
+ * serait faux d'une heure pour les mesures d'avant un changement d'heure (pays avec heure d'été).
+ */
+export const deviceTimeZone: PatientTimeZone = (at: number) => -new Date(at).getTimezoneOffset();
+
 /** Poids de la formule (§5.3) : la « perte » d'une composante = poids × ce qui lui manque. */
 const WEIGHTS = { coverage: 0.5, density: 0.3, freshness: 0.2 } as const;
 
@@ -54,9 +61,7 @@ export function periodQuality(
 ): PeriodQuality {
   const period = { from: periodBounds(days, now).from, to: nextMidnight(now) };
   const engine = points.map((p) => ({ id: p.id, at: p.at, mgDl: p.mgDl }));
-  // Décalage du fuseau du téléphone en minutes (UTC+1 → 60), comme l'attend le moteur.
-  const tzOffsetMinutes = -now.getTimezoneOffset();
-  const quality = computeQuality(engine, period, now.getTime(), tzOffsetMinutes);
+  const quality = computeQuality(engine, period, now.getTime(), deviceTimeZone);
 
   const count = points.filter((p) => p.at >= period.from && p.at < period.to).length;
   const perDay =

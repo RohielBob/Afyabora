@@ -5,6 +5,7 @@ import {
   QUALITY_TARGET_MEASUREMENTS_PER_DAY,
   type QualityLevel,
 } from '@glyka/shared';
+import { localDayNumber, resolveTimeZone, type PatientTimeZone } from './timezone';
 import type { GlucosePoint, Period, QualityScore } from './types';
 
 const DAY_MS = 24 * 60 * 60 * 1000;
@@ -15,22 +16,20 @@ export function qualityLevel(score: number): QualityLevel {
   return 'INSUFFICIENT';
 }
 
-/** Clé de jour en UTC. TODO(L3-02) : utiliser le fuseau du patient (Africa/Kinshasa, UTC+1). */
-const dayKey = (ms: number, tzOffsetMinutes: number) =>
-  Math.floor((ms + tzOffsetMinutes * 60_000) / DAY_MS);
-
 export function computeQuality(
   allPoints: GlucosePoint[],
   period: Period,
   now: number,
-  tzOffsetMinutes = 60, // Kinshasa : UTC+1
+  timeZone?: PatientTimeZone, // par défaut Kinshasa, UTC+1 (timezone.ts)
 ): QualityScore {
+  // Les jours se comptent à la date du calendrier du PATIENT (L3-02), heure d'été comprise.
+  const offsetAt = resolveTimeZone(timeZone);
   const points = allPoints.filter((p) => p.at >= period.from && p.at < period.to);
   const daysInPeriod = Math.max(1, Math.round((period.to - period.from) / DAY_MS));
 
   const perDay = new Map<number, number>();
   for (const p of points) {
-    const k = dayKey(p.at, tzOffsetMinutes);
+    const k = localDayNumber(p.at, offsetAt(p.at));
     perDay.set(k, (perDay.get(k) ?? 0) + 1);
   }
   const daysWithData = perDay.size;
