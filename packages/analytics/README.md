@@ -47,6 +47,13 @@ jours sans mesure) se comptent à l'heure **locale du patient**, pas en UTC. `an
   même là où l'heure change à minuit (Le Caire, La Havane, Santiago : le jour commence alors à 1 h). Vérifié
   sur les 418 fuseaux, chaque jour de 2026 (152 570 journées).
 
+## Analyse prête à afficher (L8-11)
+
+`analyzeLastDays(points, days, { now, thresholds, timeZone })` construit la réponse complète (période en UTC,
+qualité, statistiques, comparaison, observations **avec leur phrase**, avertissement) : **même fonction** pour
+l'API (`GET /insights`) et pour le téléphone hors-ligne, donc mêmes chiffres partout.
+`analysisWindow(days, now, timeZone)` dit quelles mesures lire (la période et la précédente).
+
 ## Jeu de données de référence (L3-01)
 
 `test/reference/` : une semaine type dont **tous** les résultats (pourcentages, moyenne, écart-type,

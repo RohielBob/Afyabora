@@ -10,7 +10,7 @@ Dernière mesure, graphique, statistiques, qualité des données, comparaison de
 - **L2-06** — Mobile : graphique d'évolution 7/14/30/90 jours avec bande cible — **fait**
 - **L2-07** — Mobile : statistiques et comparaison avec la période précédente — **fait**
 - **L2-08** — Mobile : score de qualité des données et phrase d'explication — **fait**
-- **L8-11** — Tableau de bord et analyse calculés depuis la base locale (moteur sur le téléphone)
+- **L8-11** — Tableau de bord et analyse calculés depuis la base locale (moteur sur le téléphone) — **fait**
 
 ## Dernière mesure (L2-05)
 
@@ -139,10 +139,13 @@ Carte « Qualité des données » sous les statistiques (`components/QualityCard
 - [x] Bonne qualité (3 par jour, tous les jours) ; aucune mesure ; couverture, densité, fraîcheur comme cause.
 - [x] Composante la plus faible pondérée comme la formule, ordre fixe en cas d'égalité.
 
-## Fichiers prévus (suite)
+## Calcul sur le téléphone (L8-11)
 
-- `QualityCard.tsx`
-- `useLocalAnalysis.ts` : lit SQLite → GlucosePoint[] → @glyka/analytics
+- Le tableau de bord (dernière mesure, graphique, statistiques, qualité) est lu **uniquement** dans la base
+  locale et calculé par **`@glyka/analytics`** sur le téléphone : aucun appel réseau.
+- L'**analyse complète** (observations, preuves, phrases) est calculée elle aussi sur le téléphone :
+  `loadLocalAnalysis` / `useLocalAnalysis` de la feature `insights` (utilisés par l'écran « Analyse », L3-04).
+- Le fuseau du téléphone (`deviceTimeZone`, lu pour chaque mesure) est dans `src/lib/time-zone.ts`.
 
 ## Règle importante
 

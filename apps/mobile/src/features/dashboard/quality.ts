@@ -9,9 +9,10 @@
 //  - la phrase parle de ce qui fait le plus baisser le score (couverture, densité ou fraîcheur) ; elle ne dit
 //    « tout va bien » que si les trois composantes sont bonnes (un score « Bonne » peut cacher 57 jours
 //    mesurés sur 90 : on le dit plutôt que de rassurer à tort).
-import { computeQuality, type PatientTimeZone, type QualityScore } from '@glyka/analytics';
+import { computeQuality, type QualityScore } from '@glyka/analytics';
 import { QUALITY_TARGET_MEASUREMENTS_PER_DAY } from '@glyka/shared';
 import { periodBounds, type ChartPeriod, type ChartPoint } from './chart';
+import { deviceTimeZone } from '@/lib/time-zone';
 
 /** Ce que dit la phrase : tout va bien, ou la composante qui pèse le plus sur le score. */
 export type QualityReason = 'empty' | 'good' | 'coverage' | 'density' | 'freshness';
@@ -32,12 +33,6 @@ const DAY_MS = 86_400_000;
 function nextMidnight(now: Date): number {
   return new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1).getTime();
 }
-
-/**
- * Fuseau du téléphone, instant par instant (minutes, UTC+1 → 60). Un seul décalage pris « maintenant »
- * serait faux d'une heure pour les mesures d'avant un changement d'heure (pays avec heure d'été).
- */
-export const deviceTimeZone: PatientTimeZone = (at: number) => -new Date(at).getTimezoneOffset();
 
 /** Poids de la formule (§5.3) : la « perte » d'une composante = poids × ce qui lui manque. */
 const WEIGHTS = { coverage: 0.5, density: 0.3, freshness: 0.2 } as const;
