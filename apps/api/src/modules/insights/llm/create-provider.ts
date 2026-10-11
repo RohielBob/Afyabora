@@ -10,7 +10,7 @@ export function createLlmProvider(config: ConfigService): LlmProvider | null {
   if (provider === 'ollama') {
     return new OllamaProvider({
       url: config.get<string>('OLLAMA_URL') ?? 'http://localhost:11434',
-      model: config.get<string>('LLM_MODEL') ?? 'llama3.1',
+      model: config.get<string>('LLM_MODEL') ?? 'mistral-nemo',
       timeoutMs: config.get<number>('LLM_TIMEOUT_MS') ?? 90_000,
     });
   }

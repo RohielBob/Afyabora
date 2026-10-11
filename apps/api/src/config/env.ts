@@ -34,7 +34,8 @@ const envSchema = z.object({
   // dépend jamais) ; « ollama » = modèle LOCAL (https://ollama.com), sans service externe.
   LLM_PROVIDER: z.enum(['none', 'ollama']).default('none'),
   OLLAMA_URL: z.string().url().default('http://localhost:11434'),
-  LLM_MODEL: z.string().min(1).default('llama3.1'),
+  // mistral-nemo : choisi au banc d'essai de L3-06 (aucune phrase au sens déformé, contre 5 pour llama3.1).
+  LLM_MODEL: z.string().min(1).default('mistral-nemo'),
   // Temps maximal d'une reformulation (en arrière-plan : GET /insights ne l'attend jamais).
   LLM_TIMEOUT_MS: z.coerce.number().int().min(1000).max(600_000).default(90_000),
   LLM_API_KEY: z.string().optional(), // réservé à un futur fournisseur hébergé

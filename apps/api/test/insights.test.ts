@@ -148,6 +148,7 @@ describe('L3-03 : analyse (/insights) et qualité des données (/quality)', () =
     stats: Record<string, number | null> | null;
     previousStats: Record<string, number | null> | null;
     insights: { type: string; evidenceIds: string[]; text: string }[];
+    summary: string;
     disclaimer: string;
   };
 
@@ -223,6 +224,8 @@ describe('L3-03 : analyse (/insights) et qualité des données (/quality)', () =
       expect(body.previousStats).toMatchObject(EXPECTED.previousStats);
       expect(body.quality).toEqual(EXPECTED.quality);
       expect(body.insights).toEqual(expectedInsights(awa));
+      // Résumé de la période (L3-06, contrat 0.3.0) : le texte écrit à la main pour la semaine de référence.
+      expect(body.summary).toBe(EXPECTED.summary);
       expect(body.disclaimer).toBe(DISCLAIMER_FR);
     });
 

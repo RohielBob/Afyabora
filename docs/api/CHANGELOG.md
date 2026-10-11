@@ -2,6 +2,20 @@
 
 Format : une section par version. Une **rupture** est signalée en tête de section.
 
+## 0.3.0 : 2026-10-11 (L3-06, accord du lead technique)
+
+### Ajouté
+
+- `InsightsResponse.summary` (`GET /insights`) : **facultatif**. Résumé de la période en langage clair
+  (IA-3) : nombre de mesures et qualité, temps dans la cible / au-dessus / en dessous, comparaison, points à
+  examiner avec le professionnel de santé, jours sans mesure. Gabarit du moteur `@glyka/analytics`
+  (`summaryFacts` + `renderSummaryFr`), éventuellement reformulé par le modèle de langage local sous
+  garde-fous. Base du rapport PDF (F9).
+
+### Pas de rupture
+
+Champ ajouté à une réponse : un client qui ne le lit pas fonctionne comme avant.
+
 ## 0.2.1 : 2026-10-10 (suite de L2-01, validé en équipe)
 
 ### Précisé

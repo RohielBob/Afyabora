@@ -10,7 +10,8 @@
 //  - sous 10 mesures : `stats` nul et aucune observation (« Données insuffisantes ») ;
 //  - chaque observation garde ses preuves (`evidenceIds`) et reçoit une phrase : celle du modèle de
 //    langage si elle est prête et a passé les garde-fous (L3-05, InsightWriter), sinon le gabarit français
-//    du moteur (descriptif, jamais un diagnostic). La réponse n'attend jamais le modèle.
+//    du moteur (descriptif, jamais un diagnostic). La réponse n'attend jamais le modèle ;
+//  - RÉSUMÉ de la période en langage clair (L3-06, IA-3, champ `summary`, contrat 0.3.0) : même principe.
 // PROPRIÉTÉ : le patient vient TOUJOURS du jeton ; seules ses mesures non supprimées sont lues.
 // Aucune valeur de santé dans les journaux.
 import { Injectable, Logger } from '@nestjs/common';
@@ -54,7 +55,13 @@ export class InsightsService {
   async insights(patientId: string, days: number): Promise<InsightsResponse> {
     const { points, now, thresholds, timeZone } = await this.load(patientId, days);
     const analysis = analyzeLastDays(points, days, { now, thresholds, timeZone });
-    return { ...analysis, insights: this.writer.write(analysis.insights) };
+    // Phrases et résumé : reformulés par le modèle s'ils sont prêts et validés, sinon gabarits du moteur.
+    const written = this.writer.write(analysis.insights, analysis.summary);
+    return {
+      ...analysis,
+      insights: written.insights,
+      summary: written.summary ?? analysis.summary,
+    };
   }
 
   /** GET /quality?period : score de qualité des données (couverture, densité, fraîcheur). */
