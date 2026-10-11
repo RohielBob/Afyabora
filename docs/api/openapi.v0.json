@@ -2,7 +2,7 @@
   "openapi": "3.0.3",
   "info": {
     "title": "Glyka API",
-    "version": "0.2.1",
+    "version": "0.3.0",
     "description": "Contrat de l'API Glyka — **version 0 (gelée)**. Les écrans du mobile et du portail se développent contre ce document avant que l'API soit prête.\n\n## Conventions\n- **Format** : JSON en UTF-8. Dates en ISO 8601 avec fuseau. Identifiants en UUID.\n- **Glycémie** : stockée et renvoyée en **mg/dL entier** (`valueMgDl`) ; la valeur saisie et son unité d'origine sont conservées (`originalValue`, `originalUnit`). 1 g/L = 100 mg/dL.\n- **Authentification** : `Authorization: Bearer <jeton d'accès>` (15 minutes). Les routes publiques sont marquées `security: []`.\n- **Identifiants créés par le client** : mesures et événements portent un UUID généré sur l'appareil, ce qui rend les envois répétables sans doublon.\n- **Erreurs** : corps `{ message, code?, issues?, retryAfterSeconds? }`. Jamais de détail interne ni de donnée de santé.\n- **Pagination** : `limit` et `cursor` opaque ; réponse `{ items, nextCursor }`. `nextCursor` nul = dernière page.\n- **Extensions** : `x-roles`, `x-lot`, `x-ticket`, `x-priority` (P0/P1), `x-status` (`implemented` / `planned`).\n\n## Règle de changement\nAjouter une route ou un champ optionnel est compatible. Tout autre changement est une **rupture** : annoncée à l'équipe, consignée dans `docs/api/CHANGELOG.md`, validée par le lead technique.\n",
     "x-contract-status": "frozen-v0",
     "x-frozen-on": "2026-10-07"
@@ -4333,6 +4333,11 @@
             "items": {
               "$ref": "#/components/schemas/Insight"
             }
+          },
+          "summary": {
+            "type": "string",
+            "description": "Résumé de la période en langage clair (IA-3, L3-06) : chiffres et points à examiner avec le professionnel de santé. Gabarit du moteur, éventuellement reformulé par un modèle de langage sous garde-fous (mêmes nombres, jamais de diagnostic). Facultatif (ajouté en 0.3.0).",
+            "example": "Sur les 30 derniers jours, 92 mesures ont été analysées (qualité des données : bonne, 88/100). Elles étaient dans la cible 70 % du temps, au-dessus 22 % et en dessous 8 %. Points à examiner avec votre professionnel de santé : des valeurs hautes plus fréquentes le soir."
           },
           "disclaimer": {
             "type": "string",

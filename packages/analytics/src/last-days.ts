@@ -3,6 +3,7 @@
 // chiffres, les mêmes observations et les mêmes phrases.
 import { DEFAULT_THRESHOLDS, type GlucoseThresholds } from '@glyka/shared';
 import { analyze } from './insights';
+import { renderSummaryFr, summaryFacts } from './summary';
 import { DISCLAIMER_FR, renderInsightFr } from './templates.fr';
 import { lastDaysPeriod, type PatientTimeZone } from './timezone';
 import type { GlucosePoint, Insight, QualityScore, RangeStats } from './types';
@@ -19,6 +20,8 @@ export interface LastDaysAnalysis {
   stats: RangeStats | null;
   previousStats: RangeStats | null;
   insights: InsightWithText[];
+  /** Résumé de la période en langage clair (L3-06) : gabarit du moteur, éventuellement reformulé par l'API. */
+  summary: string;
   /** « Ces observations sont statistiques… pas un diagnostic. » */
   disclaimer: string;
 }
@@ -61,6 +64,7 @@ export function analyzeLastDays(
     stats: result.stats,
     previousStats: result.previousStats,
     insights: result.insights.map((insight) => ({ ...insight, text: renderInsightFr(insight) })),
+    summary: renderSummaryFr(summaryFacts(result, days)),
     disclaimer: DISCLAIMER_FR,
   };
 }

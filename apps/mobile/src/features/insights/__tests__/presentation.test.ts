@@ -2,8 +2,10 @@
 import {
   analyzeLastDays,
   renderInsightFr,
+  renderSummaryFr,
   type InsightWithText,
   type LastDaysAnalysis,
+  type SummaryFacts,
 } from '@glyka/analytics';
 import i18n from '@/i18n';
 import type { MeasurementPoint } from '@/features/measurements';
@@ -13,8 +15,10 @@ import {
   evidenceOf,
   headlineOf,
   insightSentence,
+  joinList,
   orderInsights,
   pointsInPeriod,
+  summaryText,
 } from '../presentation';
 
 const insight = (overrides: Partial<InsightWithText>): InsightWithText => ({
@@ -190,5 +194,66 @@ describe('phrases : les traductions françaises = les gabarits du moteur (et don
       expect(text).not.toMatch(/insights\.|{{|undefined/);
       expect(text).not.toBe(renderInsightFr(sample));
     }
+  });
+});
+
+describe('résumé « En bref » (L3-06) : traductions françaises = gabarit du moteur (et donc l’API)', () => {
+  const fr = i18n.getFixedT('fr');
+  const en = i18n.getFixedT('en');
+  const base: Extract<SummaryFacts, { kind: 'analysis' }> = {
+    kind: 'analysis',
+    days: 7,
+    count: 20,
+    qualityLevel: 'GOOD',
+    qualityScore: 86,
+    inRange: 70,
+    above: 20,
+    below: 10,
+    previousInRange: 50,
+    points: ['REPEATED_HYPO', 'HIGH_STREAK', 'TIME_OF_DAY_PATTERN'],
+    slots: ['EVENING'],
+    missingDays: 2,
+    daysInPeriod: 7,
+  };
+  const cases: [string, SummaryFacts][] = [
+    ['semaine de référence', base],
+    ['pas assez de mesures', { kind: 'insufficient', days: 30 }],
+    [
+      'rien de particulier, sans comparaison ni jour manquant',
+      {
+        ...base,
+        qualityLevel: 'PARTIAL',
+        previousInRange: null,
+        points: [],
+        slots: [],
+        missingDays: null,
+      },
+    ],
+    ['un seul point', { ...base, points: ['ANOMALY'] }],
+    ['deux points', { ...base, points: ['REPEATED_HYPO', 'ANOMALY'] }],
+    [
+      'plusieurs créneaux',
+      { ...base, points: ['TIME_OF_DAY_PATTERN'], slots: ['MORNING', 'NOON', 'NIGHT'] },
+    ],
+    ['qualité insuffisante', { ...base, qualityLevel: 'INSUFFICIENT', qualityScore: 31 }],
+  ];
+
+  it.each(cases)('%s : mot pour mot', (_, facts) => {
+    expect(summaryText(fr, facts)).toBe(renderSummaryFr(facts));
+  });
+
+  it('anglais : traduit, sans clé brute', () => {
+    for (const [, facts] of cases) {
+      const text = summaryText(en, facts);
+      expect(text).not.toMatch(/insights\.|{{|undefined/);
+      expect(text).not.toBe(renderSummaryFr(facts));
+    }
+  });
+
+  it('énumérations : « a », « a et b », « a, b et c »', () => {
+    expect(joinList([], 'et')).toBe('');
+    expect(joinList(['a'], 'et')).toBe('a');
+    expect(joinList(['a', 'b'], 'and')).toBe('a and b');
+    expect(joinList(['a', 'b', 'c'], 'et')).toBe('a, b et c');
   });
 });

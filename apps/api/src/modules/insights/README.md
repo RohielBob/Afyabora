@@ -29,6 +29,9 @@ Analyse : appelle `@glyka/analytics`, produit des observations traçables, refor
   ailleurs, stocker un nom IANA (« Europe/Paris ») demanderait un changement de schéma et de contrat.
 - Chaque observation : faits chiffrés du moteur, preuves (`evidenceIds` = UUID des mesures) et `text` = phrase des
   gabarits français (`renderInsightFr`). Réponse avec `disclaimer` (« pas un diagnostic »).
+- **Résumé** (`summary`, L3-06, contrat 0.3.0) : quelques phrases en langage clair (mesures et qualité, répartition,
+  comparaison, points à examiner avec le professionnel de santé, jours sans mesure), gabarit du moteur
+  (`summaryFacts` + `renderSummaryFr`), éventuellement reformulé par le modèle sous les mêmes garde-fous.
 - Chaque réponse du LLM est journalisée pour audit.
 
 ## Tests obligatoires
@@ -60,23 +63,34 @@ pas : phrases du moteur seulement, la démo n'en dépend jamais.
 - **La réponse n'attend jamais le modèle** (`llm/insight-writer.service.ts`) : `GET /insights` répond tout de suite
   avec les phrases du moteur ; les phrases pas encore reformulées partent en arrière-plan (une génération à la
   fois) ; les réponses suivantes utilisent la reformulation, mémorisée par phrase (1 000 au plus).
-- **Garde-fous, phrase par phrase** (`llm/rephrase.ts`) : refusée (⇒ phrase du moteur) si elle n'a pas
-  **exactement les mêmes nombres**, si elle contient un mot interdit (diagnostic, dose, insuline, traitement,
-  médicament, cause affirmée, ordre, alarme, « toujours », « jamais », lien), si elle est vide ou trop longue
-  (280 caractères). Réponse illisible ou au mauvais nombre de phrases ⇒ tout reste en phrases du moteur.
+- **Garde-fous, texte par texte** (`llm/rephrase.ts`) : refusé (⇒ texte du moteur) s'il n'a pas **exactement les
+  mêmes nombres**, **pas le même nombre de négations** (L3-06 : « Temps dans la cible : 0 % » devenu « pas dans la
+  cible 0 % » disait l'inverse), s'il contient un mot interdit (diagnostic, dose, insuline, traitement,
+  médicament, cause affirmée, ordre, alarme, « toujours », « jamais », « vous avez observé », lien), s'il perd le
+  rappel « professionnel de santé » (résumé), s'il est vide ou trop long (phrase : 280 caractères, résumé :
+  900). Réponse illisible ou au mauvais nombre de phrases ⇒ tout reste en textes du moteur.
+- **Résumé** : reformulé dans la même tâche, après les phrases (`SUMMARY_SYSTEM`, réponse `{"texte": …}`) ; si le
+  modèle est en panne pendant les phrases, le résumé n'est pas demandé.
 - **Modèle en panne** (injoignable, trop lent, erreur) ⇒ phrases du moteur et nouvel essai après 1 minute.
 - **Journaux** : nombre de phrases acceptées / refusées, raisons et durée ; **jamais** les phrases (données de santé).
 - Ce sont les garde-fous de base ; le résumé (L3-06), les questions-pièges (L3-07) et le journal d'audit
   (L3-10) viennent ensuite. Toute modification de la consigne (`REPHRASE_SYSTEM`) ⇒ rejouer L3-07.
 
-**Mesuré sur un PC sans carte graphique, avec `llama3.1` (8 milliards de paramètres)** : 20 à 45 s par lot de
-phrases (d'où l'arrière-plan) ; sur les 6 phrases de la semaine de référence, 5 reformulées et acceptées, 1 refusée
-(un nombre perdu) ; réponse de l'API en 29 ms.
+**Banc d'essai (L3-06, 20 phrases du moteur, PC sans carte graphique)** :
+
+| Modèle                        | Acceptées | Par lot de 5 | Sens déformé (relu à la main)                    |
+| ----------------------------- | --------- | ------------ | ------------------------------------------------ |
+| `llama3.1` (8 milliards)      | 20 / 20   | ≈ 30 s       | **5** (dont « pas dans la cible 0 % » = inverse) |
+| `mistral-nemo` (12 milliards) | 19 / 20   | ≈ 47 s       | **0** (1 refus : chiffre calculé)                |
+
+⇒ modèle par défaut : **`mistral-nemo`** ; garde-fou des négations ajouté (les 5 phrases déformées de `llama3.1`
+sont maintenant refusées, testé). Essai réel L3-06 avec `mistral-nemo` : 5 phrases sur 5 acceptées ; résumé
+tantôt refusé (un nombre changé), tantôt accepté (mêmes nombres) : le garde-fou trie, le gabarit prend le relais.
 
 **Activer le modèle local** (PowerShell) :
 
 ```powershell
-ollama pull llama3.1
+ollama pull mistral-nemo
 # puis, dans apps/api/.env : LLM_PROVIDER=ollama (et éventuellement LLM_MODEL, OLLAMA_URL, LLM_TIMEOUT_MS)
 pnpm dev:api
 ```
@@ -85,7 +99,7 @@ pnpm dev:api
 | ---------------- | ------------------------ | ---------------------------------------------------- |
 | `LLM_PROVIDER`   | `none`                   | `none` (phrases du moteur) ou `ollama`               |
 | `OLLAMA_URL`     | `http://localhost:11434` | serveur Ollama (un serveur que vous contrôlez)       |
-| `LLM_MODEL`      | `llama3.1`               | modèle installé (`ollama list`)                      |
+| `LLM_MODEL`      | `mistral-nemo`           | modèle installé (`ollama list`)                      |
 | `LLM_TIMEOUT_MS` | `90000`                  | durée maximale d'une reformulation (en arrière-plan) |
 
 ## Fichiers

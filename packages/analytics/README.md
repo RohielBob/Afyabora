@@ -54,6 +54,14 @@ qualité, statistiques, comparaison, observations **avec leur phrase**, avertiss
 l'API (`GET /insights`) et pour le téléphone hors-ligne, donc mêmes chiffres partout.
 `analysisWindow(days, now, timeZone)` dit quelles mesures lire (la période et la précédente).
 
+## Résumé de la période (L3-06, IA-3)
+
+`summaryFacts(result, days)` calcule les **faits** du résumé (nombre de mesures, qualité, répartition affichée,
+comparaison, **points à examiner avec le professionnel de santé** par gravité, créneaux, jours sans mesure) ;
+`renderSummaryFr(facts)` les met en mots (gabarit, toujours disponible, même hors-ligne). `analyzeLastDays` renvoie
+ce résumé dans `summary` : API (champ `summary`, contrat 0.3.0, éventuellement reformulé par le modèle local),
+écran « Analyse » (carte « En bref », par les traductions, mot pour mot identique) et, plus tard, rapport PDF (F9).
+
 ## Pourcentages affichés (L3-04)
 
 `displayPercents(stats)` : en dessous / dans la plage / au-dessus en **entiers qui font 100** (plus grand reste ;

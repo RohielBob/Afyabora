@@ -21,10 +21,15 @@ import {
 import { OllamaProvider } from '../src/modules/insights/llm/ollama.provider';
 import {
   MAX_LENGTH,
+  MAX_SUMMARY_LENGTH,
   REPHRASE_SYSTEM,
+  SUMMARY_SYSTEM,
   buildPrompt,
+  buildSummaryPrompt,
   checkRewrite,
+  negationsOf,
   numbersOf,
+  parseSummary,
   parseTexts,
 } from '../src/modules/insights/llm/rephrase';
 import type { PrismaService } from '../src/prisma/prisma.service';
@@ -138,10 +143,99 @@ describe('garde-fous : une reformulation remplace le gabarit seulement si elle e
     expect(checkRewrite(COMPARISON, text)).toBe('forbidden');
   });
 
+  // Réponses RÉELLES du banc d'essai de L3-06 (20 phrases, llama3.1 et mistral-nemo).
+  it('refusée : négation ajoutée qui inverse le sens (llama3.1 : « pas dans la cible 0 % »)', () => {
+    const source = 'Temps dans la cible : 0 % (période précédente : 12 %).';
+    const llama =
+      "Vos mesures n'étaient pas dans la cible 0 % du temps, contre 12 % sur la période précédente.";
+    expect(negationsOf(source)).toBe(0);
+    expect(negationsOf(llama)).toBe(2);
+    expect(checkRewrite(source, llama)).toBe('negation');
+  });
+
+  it('refusée : négation perdue qui change le sens (llama3.1 : « mesures incomplètes »)', () => {
+    const source =
+      '2 jour(s) sur 7 ne contiennent aucune mesure : certaines analyses peuvent être incomplètes.';
+    expect(checkRewrite(source, 'Vos mesures étaient incomplètes 2 jour(s) sur 7.')).toBe(
+      'negation',
+    );
+    // mistral-nemo garde le sens (« sans aucune mesure ») : acceptée.
+    expect(
+      checkRewrite(
+        source,
+        'Il y a eu 2 jour(s) sur 7 sans aucune mesure, certaines analyses peuvent être incomplètes.',
+      ),
+    ).toBeNull();
+  });
+
+  it('refusée : « vous avez observé » (c’est l’application qui observe, mistral-nemo)', () => {
+    expect(
+      checkRewrite(
+        HYPO,
+        'Vous avez observé 2 mesures sous le seuil bas au cours des 7 derniers jours.',
+      ),
+    ).toBe('forbidden');
+  });
+
+  it('les consignes rappellent les leçons du banc d’essai', () => {
+    for (const system of [REPHRASE_SYSTEM, SUMMARY_SYSTEM]) {
+      expect(system).toMatch(/aucune négation/);
+      expect(system).toMatch(/n'écris jamais « vous avez observé »/);
+    }
+    expect(REPHRASE_SYSTEM).toMatch(/Garde les guillemets « »/);
+  });
+
   it('refusée : vide ou trop longue', () => {
     expect(checkRewrite(COMPARISON, '')).toBe('empty');
     expect(checkRewrite(COMPARISON, `70 % et 50 %. ${'Très long. '.repeat(30)}`)).toBe('too-long');
     expect(MAX_LENGTH).toBe(280);
+  });
+});
+
+describe('résumé (L3-06) : consigne, lecture de la réponse, garde-fous', () => {
+  const SUMMARY =
+    'Sur les 7 derniers jours, 20 mesures ont été analysées (qualité des données : bonne, 86/100). ' +
+    'Elles étaient dans la cible 70 % du temps, au-dessus 20 % et en dessous 10 %. ' +
+    'Points à examiner avec votre professionnel de santé : des valeurs basses répétées.';
+  const GOOD =
+    'Ces 7 derniers jours, 20 mesures ont été analysées, avec une bonne qualité des données (86/100). ' +
+    'Vos valeurs étaient dans la cible 70 % du temps, au-dessus 20 % et en dessous 10 %. ' +
+    'Un point est à examiner avec votre professionnel de santé : des valeurs basses répétées.';
+
+  it('demande : seulement le résumé du moteur ; consigne en 5 règles, réponse {"texte": …}', () => {
+    expect(buildSummaryPrompt(SUMMARY)).toBe(`Résumé à réécrire :\n${SUMMARY}`);
+    expect(SUMMARY_SYSTEM).toMatch(/Recopie TOUS les nombres/);
+    expect(SUMMARY_SYSTEM).toMatch(/garde ce rappel/);
+    expect(SUMMARY_SYSTEM).toMatch(/\{"texte": "\.\.\."\}/);
+  });
+
+  it('lecture : texte nettoyé, ou null si ce n’est pas le JSON attendu', () => {
+    expect(parseSummary('{"texte": "  Un   résumé. "}')).toBe('Un résumé.');
+    expect(parseSummary('{"textes": ["a"]}')).toBeNull();
+    expect(parseSummary('pas du json')).toBeNull();
+    expect(parseSummary('{"texte": 3}')).toBeNull();
+  });
+
+  it('accepté : mêmes nombres, même sens, rappel gardé', () => {
+    expect(checkRewrite(SUMMARY, GOOD, MAX_SUMMARY_LENGTH)).toBeNull();
+  });
+
+  it('refusé : rappel « professionnel de santé » perdu', () => {
+    const lost = GOOD.replace('à examiner avec votre professionnel de santé', 'à noter');
+    expect(checkRewrite(SUMMARY, lost, MAX_SUMMARY_LENGTH)).toBe('reminder');
+  });
+
+  it('refusé : nombre changé, négation ajoutée, trop long', () => {
+    expect(checkRewrite(SUMMARY, GOOD.replace('86/100', '90/100'), MAX_SUMMARY_LENGTH)).toBe(
+      'numbers',
+    );
+    expect(
+      checkRewrite(SUMMARY, GOOD.replace('Un point est', "Aucun point n'est"), MAX_SUMMARY_LENGTH),
+    ).toBe('negation');
+    expect(checkRewrite(SUMMARY, `${GOOD} ${'Très long. '.repeat(90)}`, MAX_SUMMARY_LENGTH)).toBe(
+      'too-long',
+    );
+    expect(MAX_SUMMARY_LENGTH).toBe(900);
   });
 });
 
@@ -214,12 +308,21 @@ describe('fournisseur Ollama (faux serveur)', () => {
 
 // ---------------------------------------------------------------------------------------------
 /** Faux fournisseur : renvoie, pour chaque phrase demandée, la reformulation donnée (ou la phrase). */
-function fakeLlm(rewrite: (sentence: string) => string = (s) => s) {
+function fakeLlm(
+  rewrite: (sentence: string) => string = (s) => s,
+  rewriteSummary: (summary: string) => string = (s) => s,
+) {
   const calls: string[][] = [];
+  const summaries: string[] = [];
   const llm: LlmProvider = {
     name: 'faux',
     model: 'modele-de-test',
-    generate: async ({ prompt }) => {
+    generate: async ({ system, prompt }) => {
+      if (system === SUMMARY_SYSTEM) {
+        const summary = prompt.replace(/^Résumé à réécrire :\n/, '');
+        summaries.push(summary);
+        return JSON.stringify({ texte: rewriteSummary(summary) });
+      }
       const sentences = prompt
         .split('\n')
         .slice(1)
@@ -228,7 +331,7 @@ function fakeLlm(rewrite: (sentence: string) => string = (s) => s) {
       return JSON.stringify({ textes: sentences.map(rewrite) });
     },
   };
-  return { llm, calls };
+  return { llm, calls, summaries };
 }
 
 const BETTER: Record<string, string> = {
@@ -251,20 +354,20 @@ describe('InsightWriter : repli automatique sur les gabarits', () => {
 
   it('sans modèle (LLM_PROVIDER=none) : les gabarits, rien d’autre', async () => {
     const writer = new InsightWriter(null);
-    expect(writer.write(insights)).toEqual(insights);
+    expect(writer.write(insights).insights).toEqual(insights);
     await writer.idle();
-    expect(writer.write(insights)).toEqual(insights);
+    expect(writer.write(insights).insights).toEqual(insights);
   });
 
   it('ne fait JAMAIS attendre : gabarits d’abord, reformulations validées ensuite', async () => {
     const { llm, calls } = fakeLlm((s) => BETTER[s] ?? s);
     const writer = new InsightWriter(llm);
 
-    const first = writer.write(insights);
+    const first = writer.write(insights).insights;
     expect(first.map((i) => i.text)).toEqual([HYPO, SLOT, COMPARISON]); // tout de suite
     await writer.idle();
 
-    const second = writer.write(insights);
+    const second = writer.write(insights).insights;
     expect(second.map((i) => i.text)).toEqual([
       HYPO, // reformulation refusée (un nombre manquait) : le gabarit reste
       BETTER[SLOT],
@@ -318,9 +421,9 @@ describe('InsightWriter : repli automatique sur les gabarits', () => {
       },
     };
     const writer = new InsightWriter(llm);
-    expect(writer.write(insights)).toEqual(insights);
+    expect(writer.write(insights).insights).toEqual(insights);
     await writer.idle();
-    expect(writer.write(insights)).toEqual(insights); // pendant la pause : aucun appel
+    expect(writer.write(insights).insights).toEqual(insights); // pendant la pause : aucun appel
     await writer.idle();
     expect(calls).toBe(1);
 
@@ -343,9 +446,62 @@ describe('InsightWriter : repli automatique sur les gabarits', () => {
     const writer = new InsightWriter(llm);
     writer.write(insights);
     await writer.idle();
-    expect(writer.write(insights)).toEqual(insights);
+    expect(writer.write(insights).insights).toEqual(insights);
     await writer.idle();
     expect(calls).toBe(1);
+  });
+
+  it('résumé : gabarit tout de suite, reformulation validée ensuite, dans la même tâche', async () => {
+    const SUMMARY = 'Sur les 7 derniers jours, 20 mesures ont été analysées. Rien de particulier.';
+    const BETTER_SUMMARY =
+      'Ces 7 derniers jours, 20 mesures ont été analysées. Rien de particulier.';
+    const { llm, calls, summaries } = fakeLlm(
+      (s) => s,
+      () => BETTER_SUMMARY,
+    );
+    const writer = new InsightWriter(llm);
+    expect(writer.write(insights, SUMMARY).summary).toBe(SUMMARY);
+    await writer.idle();
+    expect(writer.write(insights, SUMMARY).summary).toBe(BETTER_SUMMARY);
+    expect(calls).toHaveLength(1); // les phrases…
+    expect(summaries).toEqual([SUMMARY]); // … puis le résumé, une seule fois
+  });
+
+  it('résumé refusé par les garde-fous : le gabarit reste, sans nouvel essai', async () => {
+    const SUMMARY = 'Sur les 7 derniers jours, 20 mesures ont été analysées.';
+    const { llm, summaries } = fakeLlm(
+      (s) => s,
+      () => 'Sur les 30 derniers jours, 20 mesures ont été analysées.', // nombre changé
+    );
+    const writer = new InsightWriter(llm);
+    writer.write([], SUMMARY);
+    await writer.idle();
+    expect(writer.write([], SUMMARY).summary).toBe(SUMMARY);
+    await writer.idle();
+    expect(summaries).toHaveLength(1);
+  });
+
+  it('modèle en panne pendant les phrases : le résumé n’est même pas demandé', async () => {
+    let calls = 0;
+    const writer = new InsightWriter({
+      name: 'faux',
+      model: 'm',
+      generate: async () => {
+        calls += 1;
+        throw new LlmError('timeout');
+      },
+    });
+    expect(writer.write(insights, 'Résumé.').summary).toBe('Résumé.');
+    await writer.idle();
+    expect(calls).toBe(1);
+  });
+
+  it('sans résumé donné : aucune tâche de résumé', async () => {
+    const { llm, summaries } = fakeLlm();
+    const writer = new InsightWriter(llm);
+    expect(writer.write(insights).summary).toBeUndefined();
+    await writer.idle();
+    expect(summaries).toEqual([]);
   });
 
   it(`mémoire limitée à ${CACHE_LIMIT} phrases : les plus anciennes sont oubliées`, async () => {
@@ -354,9 +510,11 @@ describe('InsightWriter : repli automatique sur les gabarits', () => {
     const many = Array.from({ length: CACHE_LIMIT + 1 }, (_, i) => insight(`Phrase ${i}.`));
     writer.write(many);
     await writer.idle();
-    expect(writer.write([many[CACHE_LIMIT]!])[0]!.text).toBe(`Phrase ${CACHE_LIMIT}. (reformulée)`);
+    expect(writer.write([many[CACHE_LIMIT]!]).insights[0]!.text).toBe(
+      `Phrase ${CACHE_LIMIT}. (reformulée)`,
+    );
     // La toute première a été oubliée : redemandée au modèle.
-    expect(writer.write([many[0]!])[0]!.text).toBe('Phrase 0.');
+    expect(writer.write([many[0]!]).insights[0]!.text).toBe('Phrase 0.');
     await writer.idle();
     expect(calls.at(-1)).toEqual(['Phrase 0.']);
   });
@@ -424,6 +582,9 @@ describe('GET /insights avec un modèle : la réponse n’attend pas, puis utili
     expect(hypo(second).text).toBe(`Vous noterez : ${hypo(first).text}`);
     expect(hypo(second).evidenceIds).toEqual(hypo(first).evidenceIds);
     expect(second.stats).toEqual(first.stats);
+    // Résumé : gabarit du moteur au premier appel, reformulation validée (identique ici) ensuite.
+    expect(first.summary).toMatch(/^Sur les 7 derniers jours, 12 mesures ont été analysées/);
+    expect(second.summary).toBe(first.summary);
   });
 
   it('modèle qui ne répond jamais : la réponse arrive quand même, avec les gabarits', async () => {
@@ -451,7 +612,7 @@ describe('configuration', () => {
     expect(env).toMatchObject({
       LLM_PROVIDER: 'none',
       OLLAMA_URL: 'http://localhost:11434',
-      LLM_MODEL: 'llama3.1',
+      LLM_MODEL: 'mistral-nemo', // choisi au banc d'essai de L3-06
       LLM_TIMEOUT_MS: 90_000,
     });
   });

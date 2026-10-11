@@ -813,6 +813,35 @@
       "openHint": "Opens the details of this reading.",
       "a11y": "{{when}}: {{value}}, {{state}}. {{context}}."
     },
-    "cardA11y": "{{severity}}. {{title}}. {{sentence}}"
+    "cardA11y": "{{severity}}. {{title}}. {{sentence}}",
+    "summaryText": {
+      "title": "In short",
+      "note": "Summary based on your readings. This is not medical advice.",
+      "insufficient": "Not enough readings yet over the last {{days}} days for a reliable analysis (at least 10 are needed).",
+      "counts": "Over the last {{days}} days, {{measures}} readings were analysed (data quality: {{level}}, {{score}}/100).",
+      "level": {
+        "GOOD": "good",
+        "PARTIAL": "partial",
+        "INSUFFICIENT": "insufficient"
+      },
+      "split": "They were in target range {{inRange}} % of the time, above {{above}} % and below {{below}} %.",
+      "previous": "Over the previous period, time in range was {{previous}} %.",
+      "points": "Points to review with your healthcare professional: {{list}}.",
+      "none": "Nothing in particular was found over this period.",
+      "missing": "{{missing}} day(s) out of {{days}} without readings: some analyses may be incomplete.",
+      "point": {
+        "REPEATED_HYPO": "repeated low values",
+        "HIGH_STREAK": "a run of high values",
+        "ANOMALY": "unusual values",
+        "TIME_OF_DAY_PATTERN": "high values more frequent {{slots}}"
+      },
+      "slot": {
+        "MORNING": "in the morning",
+        "NOON": "at midday",
+        "EVENING": "in the evening",
+        "NIGHT": "at night"
+      },
+      "and": "and"
+    }
   }
 }

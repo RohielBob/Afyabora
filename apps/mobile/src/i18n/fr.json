@@ -813,6 +813,35 @@
       "openHint": "Ouvre le détail de cette mesure.",
       "a11y": "{{when}} : {{value}}, {{state}}. {{context}}."
     },
-    "cardA11y": "{{severity}}. {{title}}. {{sentence}}"
+    "cardA11y": "{{severity}}. {{title}}. {{sentence}}",
+    "summaryText": {
+      "title": "En bref",
+      "note": "Résumé établi à partir de vos mesures. Ce n’est pas un avis médical.",
+      "insufficient": "Pas encore assez de mesures sur les {{days}} derniers jours pour une analyse fiable (il en faut au moins 10).",
+      "counts": "Sur les {{days}} derniers jours, {{measures}} mesures ont été analysées (qualité des données : {{level}}, {{score}}/100).",
+      "level": {
+        "GOOD": "bonne",
+        "PARTIAL": "partielle",
+        "INSUFFICIENT": "insuffisante"
+      },
+      "split": "Elles étaient dans la cible {{inRange}} % du temps, au-dessus {{above}} % et en dessous {{below}} %.",
+      "previous": "Sur la période précédente, le temps dans la cible était de {{previous}} %.",
+      "points": "Points à examiner avec votre professionnel de santé : {{list}}.",
+      "none": "Aucun point particulier n'a été relevé sur cette période.",
+      "missing": "{{missing}} jour(s) sur {{days}} sans mesure : certaines analyses peuvent être incomplètes.",
+      "point": {
+        "REPEATED_HYPO": "des valeurs basses répétées",
+        "HIGH_STREAK": "une série de valeurs hautes",
+        "ANOMALY": "des valeurs inhabituelles",
+        "TIME_OF_DAY_PATTERN": "des valeurs hautes plus fréquentes {{slots}}"
+      },
+      "slot": {
+        "MORNING": "le matin",
+        "NOON": "à midi",
+        "EVENING": "le soir",
+        "NIGHT": "la nuit"
+      },
+      "and": "et"
+    }
   }
 }

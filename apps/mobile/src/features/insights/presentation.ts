@@ -2,7 +2,7 @@
 // __tests__/presentation.test.ts). Les observations et leurs chiffres viennent du moteur (L8-11) ; ici on
 // les ORDONNE, on choisit le résumé du haut de l'écran, on retrouve les mesures qui justifient chaque
 // observation (« Voir les mesures concernées ») et on met la phrase en mots.
-import type { InsightWithText, LastDaysAnalysis } from '@glyka/analytics';
+import type { InsightWithText, LastDaysAnalysis, SummaryFacts } from '@glyka/analytics';
 import { MIN_MEASUREMENTS_FOR_ANALYSIS, type InsightSeverity } from '@glyka/shared';
 import type { MeasurementPoint } from '@/features/measurements';
 
@@ -88,6 +88,12 @@ export function crossedThreshold(
   return null;
 }
 
+/** « a », « a et b », « a, b et c » (le mot « et » vient des traductions). */
+export function joinList(items: readonly string[], and: string): string {
+  if (items.length <= 1) return items.join('');
+  return `${items.slice(0, -1).join(', ')} ${and} ${items[items.length - 1]}`;
+}
+
 /** Traduction minimale dont la phrase a besoin (i18next `t`). */
 export type Translate = (key: string, options?: Record<string, unknown>) => string;
 
@@ -105,4 +111,42 @@ export function insightSentence(t: Translate, insight: InsightWithText): string 
     });
   }
   return t(`insights.sentence.${insight.type}`, facts);
+}
+
+/**
+ * Résumé de la période (L3-06), par les traductions (`insights.summaryText.*`) à partir des FAITS du moteur
+ * (`summaryFacts`). En français, il est mot pour mot le gabarit du moteur (`renderSummaryFr`, le même que
+ * l'API) : un test le vérifie.
+ */
+export function summaryText(t: Translate, facts: SummaryFacts): string {
+  const k = (key: string, options?: Record<string, unknown>) =>
+    t(`insights.summaryText.${key}`, options);
+  if (facts.kind === 'insufficient') return k('insufficient', { days: facts.days });
+  const and = k('and');
+  const sentences = [
+    k('counts', {
+      days: facts.days,
+      measures: facts.count,
+      level: k(`level.${facts.qualityLevel}`),
+      score: facts.qualityScore,
+    }),
+    k('split', { inRange: facts.inRange, above: facts.above, below: facts.below }),
+  ];
+  if (facts.previousInRange !== null) {
+    sentences.push(k('previous', { previous: facts.previousInRange }));
+  }
+  if (facts.points.length > 0) {
+    const slots = joinList(
+      facts.slots.map((slot) => k(`slot.${slot}`)),
+      and,
+    );
+    const list = facts.points.map((point) => k(`point.${point}`, { slots }));
+    sentences.push(k('points', { list: joinList(list, and) }));
+  } else {
+    sentences.push(k('none'));
+  }
+  if (facts.missingDays !== null) {
+    sentences.push(k('missing', { missing: facts.missingDays, days: facts.daysInPeriod }));
+  }
+  return sentences.join(' ');
 }

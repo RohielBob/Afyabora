@@ -2,6 +2,7 @@
 // moteur et mêmes phrases que l'API), donc aussi sans réseau.
 //  - période 7 / 14 / 30 / 90 jours (30 à l'ouverture, comme le tableau de bord) ;
 //  - résumé : temps dans la plage cible, répartition, qualité des données, phrase de synthèse ;
+//  - « En bref » : le résumé de la période en langage clair (L3-06), comme dans l'API et le rapport PDF ;
 //  - observations triées par gravité, chacune avec « Voir les mesures concernées » (traçabilité) ;
 //  - moins de 10 mesures : « pas encore assez de mesures », aucun chiffre trompeur ;
 //  - avertissement « outil d'aide, pas un avis médical ».
@@ -15,6 +16,7 @@ import {
   AnalysisSummary,
   InsightCard,
   InsufficientData,
+  SummaryCard,
   evidenceOf,
   headlineOf,
   orderInsights,
@@ -83,6 +85,7 @@ export default function InsightsScreen() {
               headline={view.headline}
               index={0}
             />
+            <SummaryCard analysis={state.analysis} days={state.days} index={1} />
             {view.insights.length > 0 ? (
               <Text variant="overline" tone="muted" accessibilityRole="header">
                 {t('insights.observations', { count: view.insights.length })}
@@ -97,7 +100,7 @@ export default function InsightsScreen() {
                 unit={unit}
                 thresholds={state.thresholds}
                 now={state.now}
-                index={i + 1}
+                index={i + 2}
               />
             ))}
           </>
