@@ -11,7 +11,9 @@
 //    d'essai de L3-05 avec llama3.1, avec les bons chiffres) ;
 //  - contient un mot interdit : diagnostic, dose, insuline, traitement, médicament, cause affirmée,
 //    ordre (« vous devez », « il faut »), alarme (« grave », « urgence »), « toujours » / « jamais »,
-//    « vous avez observé » (c'est l'application qui observe), ou un lien ;
+//    « vous avez observé » (c'est l'application qui observe), un JUGEMENT (« inquiétant », « rassurant »,
+//    « mal équilibré », « anormal ») ou un CONSEIL (« je vous recommande », « essayez de »), ou un lien
+//    (jeu de réponses-pièges, L3-07) ;
 //  - perd le rappel « professionnel de santé » que contenait la phrase du moteur (résumé, L3-06).
 
 /** Consignes données au modèle. Toute modification ⇒ rejouer les questions-pièges (L3-07). */
@@ -91,8 +93,53 @@ export function parseSummary(raw: string): string | null {
 }
 
 /** Mots et formules refusés (garde-fous de l'ADR-0005 et du CDC §5.5). */
-const FORBIDDEN =
-  /diagnos|\bdoses?\b|dosage|posologie|insuline|traitement|m[ée]dicament|prescri|vous devez|vous devriez|il faut|à cause|parce que|en raison|caus[ée]|provoqu|\bgraves?\b|urgen|danger|toujours|jamais|vous avez observ|https?:|www\.|@/i;
+const FORBIDDEN = new RegExp(
+  [
+    // Médical : diagnostic, dose, traitement
+    'diagnos',
+    '\\bdoses?\\b',
+    'dosage',
+    'posologie',
+    'insuline',
+    'traitement',
+    'm[ée]dicament',
+    'prescri',
+    // Ordres et conseils
+    'vous devez',
+    'vous devriez',
+    'il faut',
+    'recommand',
+    'conseill',
+    'essayez',
+    'pensez à',
+    "n'oubliez pas",
+    // Causes affirmées
+    'à cause',
+    'parce que',
+    'en raison',
+    'caus[ée]',
+    'provoqu',
+    // Alarmes et jugements
+    '\\bgraves?\\b',
+    'urgen',
+    'danger',
+    'inqui[ée]t',
+    'alarm',
+    'pr[ée]occup',
+    'rassur',
+    'anormal',
+    'mal [ée]quilibr',
+    'd[ée]s[ée]quilibr',
+    'toujours',
+    'jamais',
+    // Sujet faux, liens
+    'vous avez observ',
+    'https?:',
+    'www\\.',
+    '@',
+  ].join('|'),
+  'i',
+);
 
 /** Marques de négation : « ne », « n' », « pas », « aucun(e) », « rien », « sans », « hors ». */
 const NEGATION = /\b(?:ne|pas|aucune?|rien|sans|hors)\b|\bn['’]/gi;
