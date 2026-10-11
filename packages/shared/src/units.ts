@@ -10,14 +10,24 @@ export const MG_DL_PER_MMOL_L = 18.016;
 export const PLAUSIBLE_MIN_MG_DL = 20;
 export const PLAUSIBLE_MAX_MG_DL = 600;
 
+/**
+ * Arrondi à l'entier le plus proche (moitié vers le haut), SANS l'erreur des nombres à virgule de
+ * l'ordinateur : 1,005 × 100 vaut 100,49999999999999 en machine, et Math.round donnait 100 au lieu de 101
+ * (36 des 600 valeurs « x,xx5 g/L » étaient mal arrondies, L2-12). On ramène d'abord le produit à
+ * 12 chiffres significatifs (100,500000000), ce qui efface cette erreur minuscule, puis on arrondit.
+ */
+function roundHalfUp(product: number): number {
+  return Math.round(Number(product.toPrecision(12)));
+}
+
 export function toMgDl(value: number, unit: GlucoseUnit): number {
   switch (unit) {
     case 'G_L':
-      return Math.round(value * MG_DL_PER_G_L);
+      return roundHalfUp(value * MG_DL_PER_G_L);
     case 'MMOL_L':
-      return Math.round(value * MG_DL_PER_MMOL_L);
+      return roundHalfUp(value * MG_DL_PER_MMOL_L);
     case 'MG_DL':
-      return Math.round(value);
+      return roundHalfUp(value);
   }
 }
 
