@@ -157,7 +157,7 @@ Si le moteur de sync (L8-06, XL) ou le QR (L5) dérape, **tout le reste attend**
 
 | ID    | Ticket                                                                             | Prio | Taille |
 | ----- | ---------------------------------------------------------------------------------- | ---- | ------ |
-| L3-08 | Question libre sur l'historique (IA-4)                                             | P1   | L      |
+| L3-08 | Question libre sur l'historique (IA-4) : remplacé par l'assistant (lot L9)         | P1   | L      |
 | L6-01 | Modèle du PDF « Préparer ma consultation » (react-pdf)                             | P0   | L      |
 | L6-02 | API : génération du rapport et téléchargement journalisé                           | P0   | M      |
 | L6-03 | Mobile : écran « Préparer ma consultation » et partage du PDF                      | P0   | M      |
@@ -184,7 +184,7 @@ Si le moteur de sync (L8-06, XL) ou le QR (L5) dérape, **tout le reste attend**
 
 ## 4. Règle de coupe si le temps manque
 
-Dans cet ordre : **1.** L6-05/L6-06 (carte d'urgence) → **2.** L3-08 (question libre IA) → **3.** onglets Nutrition/Activité du portail → **4.** L8-16 (push serveur) → **5.** L8-15 (écran de préférences détaillé, garder un réglage minimal).
+Dans cet ordre : **1.** L6-05/L6-06 (carte d'urgence) → **2.** lot L9 (assistant Afyabora, qui remplace L3-08) → **3.** onglets Nutrition/Activité du portail → **4.** L8-16 (push serveur) → **5.** L8-15 (écran de préférences détaillé, garder un réglage minimal).
 **On ne coupe jamais :** le partage par QR (L5), l'import (L4), la saisie hors-ligne et sa synchronisation (L8-02 à L8-09), les notifications locales (L8-12, L8-13).
 
 ## 5. Risques propres à la saisie hors-ligne
@@ -192,4 +192,4 @@ Dans cet ordre : **1.** L6-05/L6-06 (carte d'urgence) → **2.** L3-08 (question
 - La synchronisation est la partie la plus difficile du projet : **démarrer le jour 2**, pas à la fin.
 - Tester sur un **vrai téléphone en mode avion** dès J5, pas seulement sur émulateur.
 - Le push Android exige un **development build** et Firebase : à préparer au J2 (L0-11).
-- Charge élevée : 105 tickets dont plusieurs XL. Découper tout ticket XL avant de le prendre.
+- Charge élevée : 116 tickets (dont les 11 de l'assistant, lot L9, ajoutés le 2026-10-11) et plusieurs XL. Découper tout ticket XL avant de le prendre.

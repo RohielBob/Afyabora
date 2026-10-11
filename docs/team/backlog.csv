@@ -43,7 +43,7 @@ L3-04,L3,Mobile : écran Analyse avec « Voir les mesures concernées »,F6,P0,J
 L3-05,L3,"API : interface LlmProvider, implémentation, repli automatique sur les gabarits",F6,P0,J7,L,L3-03,api
 L3-06,L3,Résumé automatique (IA-3) avec garde-fous,F6,P0,J7,L,L3-05,api
 L3-07,L3,Jeu de questions-pièges et test automatique des garde-fous,F6,P0,J7,M,L3-05,api
-L3-08,L3,Question libre sur l'historique (IA-4),F6,P1,J8,L,L3-06,api
+L3-08,L3,Question libre sur l'historique (IA-4) : remplacé par l'assistant (lot L9),F6,P1,J8,L,L3-06,api
 L3-09,L3,Mobile : analyse et gabarits calculés hors-ligne depuis la base locale,F6,P0,J5,M,L8-11,mobile
 L3-10,L3,Journaliser les réponses du modèle de langage pour audit,F6,P0,J7,S,L3-05,api
 L4-01,L4,"Analyseur CSV : séparateurs, virgule/point décimal, encodages UTF-8 et Windows-1252",F5,P0,J4,L,L0-08,api
@@ -104,3 +104,14 @@ L8-14,L8,"Push serveur : enregistrement de l'appareil, file d'envoi, Expo Push",
 L8-15,L8,"Écran de préférences : catégories, heures calmes, contenu sur écran verrouillé",F12,P0,J7,M,L8-12,mobile
 L8-16,L8,"Notifications serveur : médecin consulte / accès terminé, urgence ouverte, import terminé",F12,P1,J9,M,L8-14,api
 L8-17,L8,Test hors-ligne de bout en bout sur un vrai téléphone (mode avion),F11,P0,J9,L,L8-06,mobile
+L9-01,L9,"Assistant : complément de l'ADR-0005, contrat 0.4.0, schémas Zod, tickets du lot",F6,P1,—,M,L3-07,docs
+L9-02,L9,"Assistant : 10 fiches de connaissances en brouillon (sources citées) et test de leur format",F6,P1,—,M,L9-01,docs
+L9-03,L9,"API : pays et numéro d'urgence dans le profil patient (migration)",F1,P1,—,S,L9-01,api
+L9-04,L9,"Mobile : saisie du pays et du numéro d'urgence dans le profil",F1,P1,—,M,L9-03,mobile
+L9-05,L9,"API : conversations chiffrées (créer, lire, effacer) et réponses gabarits",F6,P1,—,L,"L9-01, L3-10",api
+L9-06,L9,"API : tri des questions, réponses sur les mesures, recherche dans les fiches, carte urgence",F6,P1,—,L,"L9-02, L9-05",api
+L9-07,L9,"API : réponses mises en mots par le modèle local (file, délai, vérification, audit)",F6,P1,—,L,L9-06,api
+L9-08,L9,"Assistant : questions-pièges en conversation, erreurs volontaires, évaluation réelle",F6,P1,—,M,L9-07,api
+L9-09,L9,"Mobile : écran de conversation avec l'assistant (fiches citées, urgence, hors-ligne)",F6,P1,—,L,"L9-04, L9-05",mobile
+L9-10,L9,"Mobile : liste et effacement des conversations, lecteur de fiches",F6,P1,—,M,L9-09,mobile
+L9-11,L9,"Assistant : scénario de démo, README du module, checklist de sécurité",F6,P1,—,S,L9-10,docs

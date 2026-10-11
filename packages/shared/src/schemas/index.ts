@@ -9,3 +9,4 @@ export * from './notification';
 export * from './sync';
 export * from './insights';
 export * from './query';
+export * from './assistant';

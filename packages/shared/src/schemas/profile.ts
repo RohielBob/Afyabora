@@ -37,6 +37,23 @@ export const doctorContactSchema = z.object({
   phone: z.string().trim().min(6).max(30),
 });
 
+/** Pays du patient : code ISO 3166-1 alpha-2 en majuscules (« CD », « FR », « KE »…). Contrat 0.4.0. */
+export const countryCodeSchema = z.string().regex(/^[A-Z]{2}$/, {
+  message: 'Le pays doit être un code à deux lettres majuscules (ex. « CD »)',
+});
+
+/**
+ * Numéro d'urgence que le patient veut voir dans l'assistant (contrat 0.4.0) : numéro court (« 112 »,
+ * « 15 », « 911 ») ou numéro complet d'une ambulance (« +243 81 000 0000 »). Saisi par le patient lui-même :
+ * Afyabora ne devine jamais un numéro d'urgence.
+ */
+export const emergencyNumberSchema = z
+  .string()
+  .trim()
+  .regex(/^\+?\d[\d ]{1,19}$/, {
+    message: "Le numéro d'urgence ne contient que des chiffres (et éventuellement « + » au début)",
+  });
+
 export const patientProfileSchema = z
   .object({
     firstName: z.string().trim().min(1).max(80),
@@ -53,6 +70,10 @@ export const patientProfileSchema = z
     thresholdsReviewedByClinician: z.boolean().default(false),
     emergencyContact: emergencyContactSchema.optional(),
     doctorContact: doctorContactSchema.optional(),
+    /** Pays (L9-03) : sert à présenter le numéro d'urgence ; facultatif. */
+    country: countryCodeSchema.optional(),
+    /** Numéro d'urgence saisi par le patient (L9-03), affiché par l'assistant en cas d'urgence. */
+    emergencyNumber: emergencyNumberSchema.optional(),
   })
   // Règles qui dépendent de la date du jour ou de plusieurs champs : évaluées à CHAQUE validation.
   .superRefine((profile, ctx) => {

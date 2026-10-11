@@ -84,4 +84,21 @@ describe('patientProfileSchema', () => {
       'emergencyContact.phone',
     );
   });
+
+  // Contrat 0.4.0 (L9-01) : pays et numéro d'urgence, affichés par l'assistant en cas d'urgence.
+  it('accepte un pays (2 lettres majuscules) et un numéro d’urgence court ou complet', () => {
+    for (const emergencyNumber of ['112', '15', '911', '+243 81 000 0000', '  999  ']) {
+      const parsed = patientProfileSchema.parse({ ...valid, country: 'CD', emergencyNumber });
+      expect(parsed.emergencyNumber).toBe(emergencyNumber.trim());
+    }
+  });
+
+  it('refuse un pays mal écrit et un numéro d’urgence qui n’est pas un numéro', () => {
+    for (const country of ['cd', 'COD', 'C', 'C1']) {
+      expect(errorPaths({ ...valid, country })).toEqual(['country']);
+    }
+    for (const emergencyNumber of ['1', 'appelez', '11 2a', '++112', '1'.repeat(21), '']) {
+      expect(errorPaths({ ...valid, emergencyNumber })).toEqual(['emergencyNumber']);
+    }
+  });
 });

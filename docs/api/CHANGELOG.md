@@ -2,6 +2,43 @@
 
 Format : une section par version. Une **rupture** est signalée en tête de section.
 
+## 0.4.0 : 2026-10-11 (L9-01, accord du lead technique)
+
+Assistant de conversation « Afyabora » (lot L9). Décision : complément de l'ADR-0005 du 2026-10-11.
+
+### Ajouté
+
+- Tag `assistant` et 8 routes, **réservées au patient** (le médecin n'accède jamais aux conversations),
+  toutes `planned`, priorité P1 :
+  - `GET /assistant/conversations` (paramètres `limit`, 20 par défaut, 100 au plus, et `cursor`),
+    `POST /assistant/conversations` (identifiant créé sur le téléphone : `201`, `200` au rejeu),
+    `DELETE /assistant/conversations` (tout effacer) : L9-05 ;
+  - `GET /assistant/conversations/{id}` et `DELETE /assistant/conversations/{id}` (effacement réel) : L9-05 ;
+  - `POST /assistant/conversations/{id}/messages` : `202` avec la question et la réponse (prête ou en
+    préparation), `200` au rejeu, `409 MESSAGE_ID_CONFLICT`, `429` au-delà de 20 questions par heure : L9-05 ;
+  - `GET /assistant/sheets` et `GET /assistant/sheets/{sheetId}` : fiches de connaissances, L9-06.
+- Schémas `CreateAssistantConversationRequest`, `SendAssistantMessageRequest`, `AssistantMessage`,
+  `AssistantConversation`, `AssistantConversationList`, `AssistantConversationDetail`,
+  `SendAssistantMessageResponse`, `KnowledgeSheetRef`, `KnowledgeSheetSummary`, `KnowledgeSheetList`,
+  `KnowledgeSheet`, `KnowledgeSource` ; énumérations `AssistantMessageRole`, `AssistantMessageStatus`,
+  `AssistantAnswerKind`, `KnowledgeSheetStatus` ; paramètres `SheetIdPath` et `AssistantLimit`.
+- `PatientProfile.country` (code pays à 2 lettres) et `PatientProfile.emergencyNumber` (numéro d'urgence
+  saisi par le patient) : **facultatifs**. Enregistrés à partir de L9-03 ; d'ici là, l'API les accepte sans
+  les conserver. L'assistant les affiche en cas d'urgence, avec le médecin (`doctorContact`) et le proche
+  (`emergencyContact`) déjà présents dans le profil.
+- Code d'erreur `MESSAGE_ID_CONFLICT`.
+- `@glyka/shared` : `schemas/assistant.ts` (requêtes et réponses), énumérations `ASSISTANT_*` et
+  `KNOWLEDGE_SHEET_STATUSES`, `countryCodeSchema`, `emergencyNumberSchema`.
+
+### Déprécié
+
+- `POST /insights/ask` (L3-08, jamais codée) : `deprecated: true`, **remplacée par l'assistant**. Gardée dans
+  le contrat pour ne rien rompre.
+
+### Pas de rupture
+
+Routes et champs facultatifs ajoutés ; aucune route retirée ni modifiée.
+
 ## 0.3.0 : 2026-10-11 (L3-06, accord du lead technique)
 
 ### Ajouté

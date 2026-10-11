@@ -25,7 +25,7 @@ Créer 10 **jalons** `J1` … `J10` avec les dates réelles.
 ```bash
 gh auth login
 scripts/github/create-issues.sh --dry-run   # vérifier
-scripts/github/create-issues.sh             # créer les 105 issues
+scripts/github/create-issues.sh             # créer les 116 issues
 ```
 
 Puis assigner les lots selon `plan-de-travail.md` et passer les tickets du jour en `Ready`.
