@@ -118,6 +118,8 @@ model PatientProfile {
   emergencyContactRelation      String?
   doctorName                    String? // médecin traitant (L1-08, facultatif)
   doctorPhone                   String?
+  country                       String?      @db.Char(2) // pays, code ISO 3166-1 alpha-2 (L9-03, contrat 0.4.0)
+  emergencyNumber               String? // numéro d'urgence saisi par le patient, montré par l'assistant (L9-03)
   timezoneOffsetMinutes         Int          @default(60) // Kinshasa : UTC+1
   updatedAt                     DateTime     @updatedAt
 

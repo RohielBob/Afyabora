@@ -1,6 +1,6 @@
 # Module `patients`
 
-**Lot : L1 · Fonctionnalité : F1 · Tickets : L1-05, L1-14**
+**Lot : L1 · Fonctionnalité : F1 · Tickets : L1-05, L1-14, L9-03**
 
 Profil médical du patient, seuils d'alerte, export et suppression de compte.
 
@@ -26,6 +26,7 @@ Profil médical du patient, seuils d'alerte, export et suppression de compte.
 - Validation (`patientProfileSchema`, `@glyka/shared`) : ordre des seuils avec le champ fautif dans l'erreur ; date de naissance ni future ni avant 1900 ; année du diagnostic ni future ni avant la naissance, **calculée à chaque requête** (corrige le défaut « année figée au chargement du module »).
 - Compte supprimé alors que le jeton est encore valide : 401 (au lieu d'une erreur 500).
 - **Médecin traitant** (L1-08, contrat 0.2.0) : `doctorContact { name, phone }` facultatif, colonnes `doctorName` / `doctorPhone`. Comme le contact d'urgence, il est effacé si un `PUT` ne le contient pas.
+- **Pays et numéro d'urgence** (L9-03, contrat 0.4.0) : `country` (code à 2 lettres majuscules, colonne `CHAR(2)`) et `emergencyNumber` (chiffres, `+` au début possible, espaces retirés autour), facultatifs, migration `ajoute_pays_et_numero_urgence_au_profil` (ajoute deux colonnes, n'efface rien). Saisis par le patient : Afyabora ne devine jamais un numéro d'urgence. L'assistant (L9-06) les affichera en cas d'urgence avec le médecin et le proche. Effacés si un `PUT` ne les contient pas ; présents dans l'export.
 
 ### Export et suppression (L1-14)
 
@@ -53,6 +54,7 @@ Profil médical du patient, seuils d'alerte, export et suppression de compte.
 - [x] Seuils incohérents refusés (`test/patients-profile.test.ts`, `packages/shared/test/profile.test.ts`).
 - [x] Un patient ne peut pas lire le profil d'un autre (`test/patients-profile.test.ts`).
 - [x] (L1-08) Médecin traitant enregistré, relu, et effacé quand il est absent du `PUT`.
+- [x] (L9-03) Pays et numéro d'urgence enregistrés, relus et exportés ; espaces retirés ; effacés par un `PUT` qui ne les contient pas ; 400 sur le bon champ si invalides ; jamais visibles par un autre patient.
 - [x] (L1-05) 404 avant création ; création puis relecture identique ; remplacement complet ; valeurs par défaut ; 403 médecin/admin ; 401 sans jeton.
 - [x] (L1-14) Export : format exact du contrat ; seulement mes données ; sans les éléments supprimés ; notes déchiffrées ; note illisible tolérée ; `no-store` + fichier daté ; 404 sans profil ; 401 compte supprimé ; 403 médecin/admin ; 429 au 11e (`test/account.test.ts`).
 - [x] (L1-14) Suppression : mauvais mot de passe ⇒ 403 `INVALID_PASSWORD` sans rien supprimer ; bon mot de passe ⇒ 204, tout supprimé en une transaction, autres patients intacts, notifications en attente effacées ; jeton ensuite inutilisable ; 400 / 401 / 403 ; 429 à la 6e tentative.

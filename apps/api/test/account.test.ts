@@ -154,6 +154,8 @@ function addPatient(id = randomUUID()) {
     emergencyContactRelation: 'Frère',
     doctorName: null,
     doctorPhone: null,
+    country: null,
+    emergencyNumber: null,
     updatedAt: at('2026-10-01T08:00:00Z'),
   });
   return id;
@@ -320,6 +322,16 @@ describe('L1-14 : export des données et suppression du compte', () => {
           deletedAt: null,
         },
       ]);
+    });
+
+    it('exporte aussi le pays et le numéro d’urgence quand le patient les a saisis (L9-03)', async () => {
+      const awa = addPatient();
+      Object.assign(db.profiles.get(awa)!, { country: 'CD', emergencyNumber: '+243 81 000 0000' });
+
+      const body = (await (await exportFor(token(awa))).json()) as { profile: Rec };
+
+      expect(body.profile.country).toBe('CD');
+      expect(body.profile.emergencyNumber).toBe('+243 81 000 0000');
     });
 
     it('respecte exactement les champs obligatoires du contrat (DataExport, Measurement, LifeEvent)', async () => {
