@@ -18,8 +18,21 @@
 ## Règles
 
 - Aucune phrase dans `insights.ts`, seulement des faits chiffrés.
+- `analyze()` trie les mesures par date : le même historique donne toujours le même résultat, quel que
+  soit l'ordre d'arrivée des mesures. La période précédente n'est comparée qu'à partir de 10 mesures.
 - Toute nouvelle règle = un test dans `test/`.
 - Les seuils viennent de `@glyka/shared` (valeurs par défaut à faire valider par un clinicien).
+
+## Jeu de données de référence (L3-01)
+
+`test/reference/` : une semaine type dont **tous** les résultats (pourcentages, moyenne, écart-type,
+qualité, observations, phrases) ont été calculés à la main puis recalculés indépendamment en Python
+(`oracle.py`). Chaque règle y est testée à sa limite. Détail et calculs : `test/reference/README.md`.
+
+```powershell
+pnpm --filter @glyka/analytics test
+python packages/analytics/test/reference/oracle.py
+```
 
 ## À faire (voir backlog L3)
 
