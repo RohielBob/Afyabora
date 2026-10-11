@@ -1,9 +1,134 @@
-import { Injectable } from '@nestjs/common';
+// Analyse des mesures du patient (ticket L3-03) : GET /insights et GET /quality.
+//
+// Règles (CDC F6 et §5, ADR-0005) :
+//  - TOUS les chiffres viennent de @glyka/analytics (le même moteur que sur le téléphone) : ce service
+//    ne calcule rien lui-même, il lit les mesures, choisit la période et met le résultat en forme ;
+//  - période = les N derniers jours ENTIERS du patient (minuit à minuit, à SON heure locale), même règle
+//    que le téléphone (`lastDaysPeriod`) : les deux affichent les mêmes chiffres ;
+//  - seuils personnels du patient (profil) et fuseau du profil (créneaux, jours : L3-02) ;
+//  - sous 10 mesures : `stats` nul et aucune observation (« Données insuffisantes ») ;
+//  - chaque observation garde ses preuves (`evidenceIds`) et reçoit une phrase des gabarits français
+//    (descriptive, jamais un diagnostic ; la reformulation par un modèle de langage viendra en L3-05).
+// PROPRIÉTÉ : le patient vient TOUJOURS du jeton ; seules ses mesures non supprimées sont lues.
+// Aucune valeur de santé dans les journaux.
+import { Injectable, Logger } from '@nestjs/common';
+import {
+  analyze,
+  computeQuality,
+  DEFAULT_TIME_ZONE,
+  DISCLAIMER_FR,
+  lastDaysPeriod,
+  renderInsightFr,
+  resolveTimeZone,
+  type GlucosePoint,
+  type Insight,
+  type PatientTimeZone,
+  type QualityScore,
+  type RangeStats,
+} from '@glyka/analytics';
+import { DEFAULT_THRESHOLDS, type GlucoseThresholds } from '@glyka/shared';
 import { PrismaService } from '../../prisma/prisma.service';
+
+/** Réponse de GET /insights (schéma `InsightsResponse` du contrat). */
+export interface InsightsResponse {
+  period: { from: string; to: string };
+  quality: QualityScore;
+  stats: RangeStats | null;
+  previousStats: RangeStats | null;
+  insights: (Insight & { text: string })[];
+  disclaimer: string;
+}
+
+/** Ce qu'il faut pour analyser : mesures, période, seuils et fuseau du patient. */
+interface AnalysisInput {
+  points: GlucosePoint[];
+  period: { from: number; to: number };
+  now: number;
+  thresholds: GlucoseThresholds;
+  timeZone: PatientTimeZone;
+}
 
 @Injectable()
 export class InsightsService {
+  private readonly logger = new Logger(InsightsService.name);
+
   constructor(private readonly prisma: PrismaService) {}
 
-  // TODO(L3-03 à L3-07, L3-10) : logique métier de ce module (voir README.md).
+  /** GET /insights?period : statistiques, comparaison, observations traçables et leurs phrases. */
+  async insights(patientId: string, days: number): Promise<InsightsResponse> {
+    const { points, period, now, thresholds, timeZone } = await this.load(patientId, days);
+    const result = analyze(points, period, { now, thresholds, timeZone });
+    return {
+      period: { from: new Date(period.from).toISOString(), to: new Date(period.to).toISOString() },
+      quality: result.quality,
+      stats: result.stats,
+      previousStats: result.previousStats,
+      insights: result.insights.map((insight) => ({ ...insight, text: renderInsightFr(insight) })),
+      disclaimer: DISCLAIMER_FR,
+    };
+  }
+
+  /** GET /quality?period : score de qualité des données (couverture, densité, fraîcheur). */
+  async quality(patientId: string, days: number): Promise<QualityScore> {
+    const { points, period, now, timeZone } = await this.load(patientId, days);
+    return computeQuality(points, period, now, timeZone);
+  }
+
+  private async load(patientId: string, days: number): Promise<AnalysisInput> {
+    const profile = await this.prisma.patientProfile.findUnique({
+      where: { userId: patientId },
+      select: {
+        veryLowMgDl: true,
+        targetMinMgDl: true,
+        targetMaxMgDl: true,
+        veryHighMgDl: true,
+        timezoneOffsetMinutes: true,
+      },
+    });
+    // Sans profil (inscription pas terminée), il n'y a pas de mesure : seuils et fuseau par défaut.
+    const thresholds: GlucoseThresholds = profile
+      ? {
+          veryLowMgDl: profile.veryLowMgDl,
+          targetMinMgDl: profile.targetMinMgDl,
+          targetMaxMgDl: profile.targetMaxMgDl,
+          veryHighMgDl: profile.veryHighMgDl,
+        }
+      : DEFAULT_THRESHOLDS;
+    const timeZone = this.timeZoneOf(profile?.timezoneOffsetMinutes);
+
+    const now = Date.now();
+    const period = lastDaysPeriod(days, now, timeZone);
+    // On lit aussi la période PRÉCÉDENTE (même durée) : comparaison « 7 derniers jours / 7 d'avant ».
+    // Elle couvre au moins 14 jours, donc la dernière mesure utile à la fraîcheur (≤ 7 jours) aussi.
+    const rows = await this.prisma.measurement.findMany({
+      where: {
+        patientId,
+        deletedAt: null,
+        measuredAt: {
+          gte: new Date(period.from - (period.to - period.from)),
+          lt: new Date(period.to),
+        },
+      },
+      select: { id: true, measuredAt: true, valueMgDl: true },
+      orderBy: [{ measuredAt: 'asc' }, { id: 'asc' }],
+    });
+    const points = rows.map((r) => ({ id: r.id, at: r.measuredAt.getTime(), mgDl: r.valueMgDl }));
+    return { points, period, now, thresholds, timeZone };
+  }
+
+  /**
+   * Fuseau du profil (décalage fixe en minutes, UTC+1 par défaut). Une valeur impossible en base ne doit
+   * pas empêcher le patient de voir son analyse : on prend le fuseau par défaut et on le SIGNALE dans les
+   * journaux (sans aucune donnée de santé).
+   */
+  private timeZoneOf(offset: number | undefined): PatientTimeZone {
+    if (offset === undefined) return DEFAULT_TIME_ZONE;
+    try {
+      resolveTimeZone(offset);
+      return offset;
+    } catch {
+      this.logger.warn('Décalage horaire du profil invalide : fuseau par défaut (UTC+1) utilisé.');
+      return DEFAULT_TIME_ZONE;
+    }
+  }
 }
