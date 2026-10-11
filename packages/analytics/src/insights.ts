@@ -27,11 +27,20 @@ export interface AnalyzeOptions {
   tzOffsetMinutes?: number;
 }
 
+/**
+ * Ordre chronologique (puis par identifiant si deux mesures ont la même heure). Sans ce tri, la liste
+ * « Voir les mesures concernées » suivait l'ordre d'arrivée des mesures (base, synchronisation,
+ * import) : le même historique pouvait donner deux résultats différents (L3-01).
+ */
+const chronological = (a: GlucosePoint, b: GlucosePoint) =>
+  a.at - b.at || (a.id < b.id ? -1 : a.id > b.id ? 1 : 0);
+
 export function analyze(
-  allPoints: GlucosePoint[],
+  input: GlucosePoint[],
   period: Period,
   opts: AnalyzeOptions,
 ): AnalysisResult {
+  const allPoints = [...input].sort(chronological);
   const thresholds = opts.thresholds ?? DEFAULT_THRESHOLDS;
   const tz = opts.tzOffsetMinutes ?? 60;
   const points = inPeriod(allPoints, period);
@@ -45,7 +54,12 @@ export function analyze(
   const length = period.to - period.from;
   const previous = inPeriod(allPoints, { from: period.from - length, to: period.from });
   const stats = computeRangeStats(points, thresholds);
-  const previousStats = previous.length > 0 ? computeRangeStats(previous, thresholds) : null;
+  // Même règle de blocage pour la période précédente : on ne compare pas à des données insuffisantes
+  // (avant L3-01, une seule mesure suffisait). Même seuil que l'écran Statistiques du mobile (L2-07).
+  const previousStats =
+    previous.length >= MIN_MEASUREMENTS_FOR_ANALYSIS
+      ? computeRangeStats(previous, thresholds)
+      : null;
   const insights: Insight[] = [];
 
   // Hypoglycémies répétées (≥ 2 sur 7 jours)
