@@ -58,3 +58,9 @@
   dangereux : pour un ordre précis, ajouter un point d'arrêt dans le faux Prisma (voir
   `test/auth-security.test.ts`, `beforeRefreshCreate`), et vérifier que le test ÉCHOUE sur l'ancien code.
 - Les fichiers `docs/api/openapi.v0.json` (contrat) et `openapi.generated.json` (export Nest) sont ignorés par Prettier ; ce dernier est aussi ignoré par Git.
+- **Prettier lit l'en-tête `---` d'un fichier Markdown comme du YAML** et peut réécrire son texte (« Libellé : x »
+  devient « Libellé: x »). Les fiches de l'assistant (`apps/api/knowledge/fiches/`) sont donc exclues de
+  Prettier : leur texte relu par le médecin est protégé par une empreinte (L9-02).
+- Une séquence d'échappement Unicode (comme celle de l'indicateur d'ordre des octets, U+FEFF) écrite par l'outil
+  d'écriture de Claude Code peut devenir le caractère lui-même, invisible dans le code. Vérifier les nouveaux
+  fichiers (caractères Unicode de catégorie Cf ou Mn) et réécrire en séquence échappée (L3-07, L9-02).
