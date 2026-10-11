@@ -1,7 +1,9 @@
 // Ticket L1-08 : logique de l'assistant de profil (sans interface).
 import {
+  SUGGESTED_COUNTRIES,
   birthDateToIso,
   convertThresholds,
+  countryCode,
   displayToMgDl,
   finalPayload,
   firstInvalidStep,
@@ -144,5 +146,54 @@ describe('profil final', () => {
     expect(firstInvalidStep(complete())).toBeNull();
     expect(firstInvalidStep({ ...complete(), diabetesType: null })).toBe('diabetes');
     expect(finalPayload({ ...complete(), diabetesType: null })).toBeNull();
+  });
+});
+
+// Ticket L9-04 : pays et numéro d'urgence (étape 4, contrat 0.4.0).
+describe('L9-04 : en cas d’urgence (pays et numéro)', () => {
+  it('facultatifs : rien n’est envoyé tant que rien n’est choisi ni saisi', () => {
+    const payload = finalPayload(complete())!;
+    expect(payload).not.toHaveProperty('country');
+    expect(payload).not.toHaveProperty('emergencyNumber');
+    expect(validateStep('contacts', complete())).toEqual({});
+  });
+
+  it('un pays proposé et un numéro sont envoyés tels quels (espaces autour retirés par le schéma)', () => {
+    const payload = finalPayload({
+      ...complete(),
+      country: 'CD',
+      emergencyNumber: ' +243 81 000 0000 ',
+    })!;
+    expect(payload.country).toBe('CD');
+    expect(payload.emergencyNumber).toBe('+243 81 000 0000');
+  });
+
+  it('« Autre pays » : le code saisi est mis en majuscules', () => {
+    const draft = { ...complete(), country: 'OTHER' as const, otherCountry: ' ke ' };
+    expect(countryCode(draft)).toBe('KE');
+    expect(finalPayload(draft)!.country).toBe('KE');
+  });
+
+  it('« Autre pays » sans code, ou un code invalide : erreur sous le champ, à l’étape 4', () => {
+    for (const otherCountry of ['', 'K', 'KEN', '1A']) {
+      const draft = { ...complete(), country: 'OTHER' as const, otherCountry };
+      expect(validateStep('contacts', draft)).toEqual({ country: 'onboarding.errors.country' });
+      expect(firstInvalidStep(draft)).toBe('contacts');
+    }
+  });
+
+  it('un numéro qui n’en est pas un est refusé à l’étape 4 (et seulement là)', () => {
+    const draft = { ...complete(), emergencyNumber: 'appeler le 112' };
+    expect(validateStep('contacts', draft)).toEqual({
+      emergencyNumber: 'onboarding.errors.emergencyNumber',
+    });
+    expect(validateStep('identity', draft)).toEqual({});
+    expect(finalPayload(draft)).toBeNull();
+  });
+
+  it('les pays proposés sont des codes à 2 lettres majuscules, sans doublon', () => {
+    expect(SUGGESTED_COUNTRIES.every((code) => /^[A-Z]{2}$/.test(code))).toBe(true);
+    expect(new Set(SUGGESTED_COUNTRIES).size).toBe(SUGGESTED_COUNTRIES.length);
+    expect(SUGGESTED_COUNTRIES[0]).toBe('CD'); // public d'Afyabora : Kinshasa
   });
 });

@@ -253,7 +253,27 @@
       "doctorTitle": "Votre médecin",
       "doctorHint": "Le médecin qui suit votre diabète.",
       "doctorName": "Nom du médecin",
-      "doctorNamePlaceholder": "Dr …"
+      "doctorNamePlaceholder": "Dr …",
+      "emergencyTitle": "En cas d'urgence",
+      "emergencyHint": "Le numéro à appeler pour les secours là où vous vivez. Afyabora ne le devine pas : vérifiez-le auprès de votre centre de santé.",
+      "country": "Pays",
+      "countries": {
+        "CD": "RD Congo",
+        "CG": "Congo",
+        "RW": "Rwanda",
+        "BI": "Burundi",
+        "UG": "Ouganda",
+        "AO": "Angola",
+        "FR": "France",
+        "BE": "Belgique",
+        "OTHER": "Autre pays"
+      },
+      "otherCountry": "Code du pays (2 lettres)",
+      "otherCountryHint": "Par exemple KE pour le Kenya, CM pour le Cameroun.",
+      "clearCountry": "Ne pas indiquer de pays",
+      "emergencyNumber": "Numéro d'urgence",
+      "emergencyNumberHint": "Secours, ambulance ou hôpital le plus proche.",
+      "emergencyNumberPlaceholder": "Ex. 112"
     },
     "summary": {
       "overline": "Dernière étape",
@@ -292,7 +312,9 @@
       "doctorContact": {
         "name": "Saisissez le nom de votre médecin.",
         "phone": "Saisissez un numéro de téléphone (6 caractères au moins)."
-      }
+      },
+      "country": "Choisissez un pays ou saisissez son code à 2 lettres (ex. KE).",
+      "emergencyNumber": "Saisissez un numéro composé de chiffres (le « + » est permis au début)."
     }
   },
   "security": {
