@@ -15,14 +15,14 @@ import {
   type PatientTimeZone,
 } from '@glyka/analytics';
 import type { GlucoseThresholds } from '@glyka/shared';
-import { localMeasurements } from '@/features/measurements';
+import { localMeasurements, type MeasurementPoint } from '@/features/measurements';
 import { readThresholds } from '@/features/profile';
 import { deviceTimeZone } from '@/lib/time-zone';
 
 /** D'où viennent les données (remplaçable dans les tests). */
 export interface LocalSources {
   /** Mesures non supprimées entre deux instants, bornes INCLUSES (comme `localMeasurements.between`). */
-  between: (from: number, to: number) => Promise<GlucosePoint[]>;
+  between: (from: number, to: number) => Promise<MeasurementPoint[]>;
   thresholds: () => Promise<GlucoseThresholds>;
   timeZone: PatientTimeZone;
 }
@@ -33,12 +33,20 @@ const deviceSources: LocalSources = {
   timeZone: deviceTimeZone,
 };
 
+/** Analyse + ce qu'il faut pour l'afficher (« Voir les mesures concernées », badges d'état). */
+export interface LocalAnalysis {
+  analysis: LastDaysAnalysis;
+  /** Mesures lues (période et période précédente), du plus ancien au plus récent. */
+  points: MeasurementPoint[];
+  thresholds: GlucoseThresholds;
+}
+
 /** Analyse des `days` derniers jours à partir des mesures du téléphone. */
 export async function loadLocalAnalysis(
   days: number,
   now: number,
   sources: LocalSources = deviceSources,
-): Promise<LastDaysAnalysis> {
+): Promise<LocalAnalysis> {
   const window = analysisWindow(days, now, sources.timeZone);
   const [points, thresholds] = await Promise.all([
     // Fin EXCLUE pour le moteur (minuit ce soir) ; la lecture locale inclut sa borne, d'où − 1 ms.
@@ -46,6 +54,7 @@ export async function loadLocalAnalysis(
     sources.thresholds(),
   ]);
   // Seules l'identité, la date et la valeur comptent pour le moteur (pas le contexte).
-  const engine = points.map((p) => ({ id: p.id, at: p.at, mgDl: p.mgDl }));
-  return analyzeLastDays(engine, days, { now, thresholds, timeZone: sources.timeZone });
+  const engine: GlucosePoint[] = points.map((p) => ({ id: p.id, at: p.at, mgDl: p.mgDl }));
+  const analysis = analyzeLastDays(engine, days, { now, thresholds, timeZone: sources.timeZone });
+  return { analysis, points, thresholds };
 }

@@ -50,22 +50,10 @@ export function periodStats(
 }
 
 /**
- * Pourcentages entiers qui font TOUJOURS 100 (méthode du plus grand reste) : 33,3 / 33,3 / 33,3 donne
- * 34 / 33 / 33 et non 33 / 33 / 33 (= 99 %, que l'œil remarque).
+ * Pourcentages entiers qui font TOUJOURS 100 : la règle vient du moteur (L3-04), pour que l'Accueil,
+ * l'Analyse, l'API et le rapport affichent exactement le même chiffre.
  */
-export function roundedPercents(values: readonly number[]): number[] {
-  const floors = values.map((v) => Math.floor(v));
-  let missing = 100 - floors.reduce((a, b) => a + b, 0);
-  const order = values
-    .map((v, i) => ({ i, rest: v - Math.floor(v) }))
-    .sort((a, b) => b.rest - a.rest || a.i - b.i);
-  for (const { i } of order) {
-    if (missing <= 0) break;
-    floors[i] = (floors[i] as number) + 1;
-    missing -= 1;
-  }
-  return floors;
-}
+export { roundedPercents } from '@glyka/analytics';
 
 export type Direction = 'up' | 'down' | 'flat';
 

@@ -29,6 +29,55 @@ export function median(values: number[]): number | null {
 
 const pct = (n: number, total: number) => (total === 0 ? null : (n / total) * 100);
 
+/**
+ * Reste après la virgule, arrondi à 9 décimales : 58,333… − 58 et 8,333… − 8 sont alors bien ÉGAUX.
+ * Sans cela, l'imprécision du calcul en machine décidait quelle part recevait le point manquant.
+ */
+const restOf = (value: number) => Math.round((value - Math.floor(value)) * 1e9) / 1e9;
+
+/**
+ * Pourcentages entiers qui font TOUJOURS 100 (méthode du plus grand reste) : 33,3 / 33,3 / 33,3 donne
+ * 34 / 33 / 33 et non 33 / 33 / 33 (= 99 %, que l'œil remarque). Les valeurs données font 100 au total.
+ * À reste égal, le point va à la plus grande part (puis à la première) : règle fixe, jamais le hasard.
+ */
+export function roundedPercents(values: readonly number[]): number[] {
+  const floors = values.map((v) => Math.floor(v));
+  let missing = 100 - floors.reduce((a, b) => a + b, 0);
+  const order = values
+    .map((v, i) => ({ i, v, rest: restOf(v) }))
+    .sort((a, b) => b.rest - a.rest || b.v - a.v || a.i - b.i);
+  for (const { i } of order) {
+    if (missing <= 0) break;
+    floors[i] = (floors[i] as number) + 1;
+    missing -= 1;
+  }
+  return floors;
+}
+
+/** Répartition affichée : en dessous / dans la plage / au-dessus, en entiers qui font 100. */
+export interface DisplayPercents {
+  below: number;
+  inRange: number;
+  above: number;
+}
+
+/**
+ * LA répartition à afficher partout (L3-04) : écrans du téléphone, phrases du moteur, API, rapport. Un
+ * même historique donne ainsi le même chiffre sur l'Accueil, dans l'Analyse et chez le médecin.
+ * null si aucune mesure.
+ */
+export function displayPercents(stats: RangeStats): DisplayPercents | null {
+  if (stats.timeInRangePct === null || stats.timeBelowPct === null || stats.timeAbovePct === null) {
+    return null;
+  }
+  const [below, inRange, above] = roundedPercents([
+    stats.timeBelowPct,
+    stats.timeInRangePct,
+    stats.timeAbovePct,
+  ]) as [number, number, number];
+  return { below, inRange, above };
+}
+
 export function computeRangeStats(
   points: GlucosePoint[],
   thresholds: GlucoseThresholds = DEFAULT_THRESHOLDS,

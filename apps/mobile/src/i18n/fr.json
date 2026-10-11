@@ -742,5 +742,77 @@
       "another": "Ajouter un autre événement",
       "done": "Terminé"
     }
+  },
+  "insights": {
+    "title": "Analyse",
+    "subtitle": "Ce que montrent vos mesures. Calculé sur ce téléphone, même sans réseau.",
+    "periodLabel": "Période analysée",
+    "error": "Impossible de lire les mesures enregistrées sur ce téléphone.",
+    "summary": {
+      "title": "{{days}} derniers jours",
+      "range": "Du {{from}} au {{to}}",
+      "inRange": "dans la plage cible",
+      "count_one": "{{count}} mesure",
+      "count_other": "{{count}} mesures",
+      "quality": "Qualité des données : {{score}}/100 · {{level}}",
+      "a11y": "Sur les {{days}} derniers jours : {{percent}} % des mesures dans la plage cible, {{readings}}. Qualité des données : {{score}} sur 100, {{level}}."
+    },
+    "headline": {
+      "calm": "Rien de particulier à signaler sur cette période.",
+      "watch_one": "{{count}} observation à regarder de plus près.",
+      "watch_other": "{{count}} observations à regarder de plus près."
+    },
+    "insufficient": {
+      "title": "Pas encore assez de mesures",
+      "body_one": "{{count}} mesure sur ces {{days}} jours : il en faut au moins 10 pour une analyse fiable.",
+      "body_other": "{{count}} mesures sur ces {{days}} jours : il en faut au moins 10 pour une analyse fiable.",
+      "action": "Noter une mesure"
+    },
+    "observations_one": "{{count}} observation",
+    "observations_other": "{{count}} observations",
+    "severity": {
+      "INFO": "Information",
+      "ATTENTION": "À surveiller",
+      "ALERT": "Alerte"
+    },
+    "type": {
+      "TREND": "Tendance",
+      "TIME_OF_DAY_PATTERN": "Moment de la journée",
+      "ANOMALY": "Valeur inhabituelle",
+      "HIGH_STREAK": "Série de valeurs hautes",
+      "REPEATED_HYPO": "Valeurs basses répétées",
+      "MISSING_DATA": "Jours sans mesure",
+      "PERIOD_COMPARISON": "Comparaison"
+    },
+    "slot": {
+      "MORNING": "matin",
+      "NOON": "midi",
+      "EVENING": "soir",
+      "NIGHT": "nuit"
+    },
+    "sentence": {
+      "REPEATED_HYPO": "J'observe {{count}} mesures sous le seuil bas au cours des {{days}} derniers jours.",
+      "HIGH_STREAK": "J'observe une série de {{length}} mesures consécutives au-dessus du seuil haut.",
+      "ANOMALY": "{{count}} mesure(s) diffèrent sensiblement de votre historique récent.",
+      "TIME_OF_DAY_PATTERN": "Les valeurs hautes sont plus fréquentes sur le créneau « {{slot}} » ({{slotAbovePct}} % contre {{globalAbovePct}} % en général).",
+      "MISSING_DATA": "{{daysWithoutData}} jour(s) sur {{daysInPeriod}} ne contiennent aucune mesure : certaines analyses peuvent être incomplètes.",
+      "PERIOD_COMPARISON": "Temps dans la cible : {{timeInRangePct}} % (période précédente : {{previousTimeInRangePct}} %).",
+      "TREND": "Tendance observée sur la période."
+    },
+    "threshold": {
+      "below": "Seuil franchi : sous {{value}}",
+      "above": "Seuil franchi : au-dessus de {{value}}"
+    },
+    "alertReminder": "Parlez-en à votre professionnel de santé.",
+    "evidence": {
+      "show_one": "Voir la mesure concernée",
+      "show_other": "Voir les {{count}} mesures concernées",
+      "hide": "Masquer les mesures",
+      "more_one": "Afficher {{count}} autre mesure",
+      "more_other": "Afficher les {{count}} autres mesures",
+      "openHint": "Ouvre le détail de cette mesure.",
+      "a11y": "{{when}} : {{value}}, {{state}}. {{context}}."
+    },
+    "cardA11y": "{{severity}}. {{title}}. {{sentence}}"
   }
 }

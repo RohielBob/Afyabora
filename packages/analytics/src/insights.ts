@@ -8,7 +8,7 @@ import {
 import { findAnomaliesBySlot, findHighStreaks, findLows } from './anomalies';
 import { computeQuality } from './quality';
 import { groupBySlot } from './slots';
-import { computeRangeStats, inPeriod } from './stats';
+import { computeRangeStats, displayPercents, inPeriod } from './stats';
 import { resolveTimeZone, type PatientTimeZone } from './timezone';
 import type { GlucosePoint, Insight, Period, QualityScore, RangeStats } from './types';
 
@@ -101,20 +101,23 @@ export function analyze(
     });
   }
 
-  // Créneaux : au moins 5 mesures par créneau et écart notable (≥ 20 points de % vs. le global)
+  // Créneaux : au moins 5 mesures par créneau et écart notable (≥ 20 points de % vs. le global).
+  // L'écart est mesuré sur les valeurs EXACTES ; les pourcentages de la phrase sont ceux affichés partout
+  // (displayPercents, L3-04).
   const bySlot = groupBySlot(points, tz);
   const globalAbove = stats.timeAbovePct ?? 0;
   for (const [slot, pts] of Object.entries(bySlot)) {
     if (pts.length < 5) continue;
-    const slotAbove = computeRangeStats(pts, thresholds).timeAbovePct ?? 0;
+    const slotStats = computeRangeStats(pts, thresholds);
+    const slotAbove = slotStats.timeAbovePct ?? 0;
     if (slotAbove - globalAbove >= 20) {
       insights.push({
         type: 'TIME_OF_DAY_PATTERN',
         severity: 'INFO',
         facts: {
           slot,
-          slotAbovePct: Math.round(slotAbove),
-          globalAbovePct: Math.round(globalAbove),
+          slotAbovePct: displayPercents(slotStats)?.above ?? 0,
+          globalAbovePct: displayPercents(stats)?.above ?? 0,
         },
         evidenceIds: pts.filter((p) => p.mgDl > thresholds.targetMaxMgDl).map((p) => p.id),
       });
@@ -134,14 +137,16 @@ export function analyze(
     });
   }
 
-  // Comparaison avec la période précédente
-  if (previousStats?.timeInRangePct != null && stats.timeInRangePct != null) {
+  // Comparaison avec la période précédente (pourcentages affichés partout : displayPercents, L3-04)
+  const shown = displayPercents(stats);
+  const previousShown = previousStats ? displayPercents(previousStats) : null;
+  if (shown && previousShown) {
     insights.push({
       type: 'PERIOD_COMPARISON',
       severity: 'INFO',
       facts: {
-        timeInRangePct: Math.round(stats.timeInRangePct),
-        previousTimeInRangePct: Math.round(previousStats.timeInRangePct),
+        timeInRangePct: shown.inRange,
+        previousTimeInRangePct: previousShown.inRange,
       },
       evidenceIds: [],
     });
