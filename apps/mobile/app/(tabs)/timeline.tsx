@@ -221,6 +221,11 @@ export default function TimelineScreen() {
                 first={index === 0}
                 last={index === section.data.length - 1}
                 index={before + index}
+                onPress={
+                  item.kind === 'measurement'
+                    ? () => router.push({ pathname: '/measurement/[id]', params: { id: item.id } })
+                    : undefined
+                }
               />
             );
           }}

@@ -30,6 +30,17 @@ export {
   type WhenState,
 } from './entry';
 export {
+  canGoForward,
+  draftFromMeasurement,
+  originalText,
+  shiftDays,
+  shiftMinutes,
+  toUpdatePatch,
+  validateEdit,
+  type EditDraft,
+  type EditErrors,
+} from './edit';
+export {
   localMeasurements,
   type LatestMeasurement,
   type LocalMeasurement,
@@ -37,6 +48,7 @@ export {
 } from './local-store';
 export { DEFAULT_UNIT, parseUnit, readUnit, writeUnit } from './unit-preference';
 export { AddTabButton } from './components/AddTabButton';
+export { DateTimeAdjuster } from './components/DateTimeAdjuster';
 export { SafetyNotice } from './components/SafetyNotice';
 export { SavedState } from './components/SavedState';
 export { UnusualValueCard } from './components/UnusualValueCard';

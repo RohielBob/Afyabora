@@ -5,13 +5,14 @@
 //  - événement : libellé, type (+ durée pour une activité), détails ; traitement : « déclaré par vous »
 //    (jamais de calcul de dose, CDC).
 // Les lignes d'un même jour forment une carte : bords arrondis en haut de la première, en bas de la dernière.
+// L2-11 : une MESURE se touche (chevron à droite) pour ouvrir son détail (modifier, supprimer).
 import { Ionicons } from '@expo/vector-icons';
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { classifyGlucose, type GlucoseThresholds, type GlucoseUnit } from '@glyka/shared';
-import { RangeBadge, Text } from '@/components/ui';
+import { PressableScale, RangeBadge, Text } from '@/components/ui';
 import { formatClock, formatReading } from '@/features/measurements';
 import { enterFromBelow, radii, spacing, useReducedMotion, useTheme } from '@/theme';
 import type { TimelineItem } from '../timeline';
@@ -25,6 +26,7 @@ export function TimelineRow({
   first,
   last,
   index,
+  onPress,
 }: {
   item: TimelineItem;
   unit: GlucoseUnit;
@@ -33,6 +35,8 @@ export function TimelineRow({
   last: boolean;
   /** Rang d'apparition (les premières lignes entrent l'une après l'autre). */
   index: number;
+  /** Ouvre le détail (mesures seulement, L2-11). */
+  onPress?: () => void;
 }) {
   const { t } = useTranslation();
   const { colors } = useTheme();
@@ -115,11 +119,21 @@ export function TimelineRow({
     );
   }
 
+  const pressable = Boolean(onPress);
+  const Row = pressable ? PressableScale : View;
+
   return (
     <Animated.View entering={index < 10 ? enterFromBelow(index, reduced) : undefined}>
-      <View
+      <Row
         accessible
         accessibilityLabel={a11y}
+        {...(pressable
+          ? {
+              onPress,
+              accessibilityRole: 'button' as const,
+              accessibilityHint: t('timeline.openHint'),
+            }
+          : {})}
         style={{
           flexDirection: 'row',
           gap: spacing.md,
@@ -158,7 +172,15 @@ export function TimelineRow({
           <Ionicons name={icon} size={16} color={colors.text} />
         </View>
         <View style={{ flex: 1, gap: 4 }}>{body}</View>
-      </View>
+        {pressable ? (
+          <Ionicons
+            name="chevron-forward"
+            size={18}
+            color={colors.textSubtle}
+            style={{ alignSelf: 'center' }}
+          />
+        ) : null}
+      </Row>
     </Animated.View>
   );
 }

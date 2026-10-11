@@ -23,8 +23,13 @@ export const ValueField = forwardRef<
     error?: string;
     /** Valeur inhabituelle en attente de confirmation (L2-04). */
     attention?: boolean;
+    /** Clavier ouvert tout de suite (saisie) ; pas sur l'écran de détail d'une mesure (L2-11). */
+    autoFocus?: boolean;
   }
->(function ValueField({ text, onChangeText, unit, mgDl, error, attention = false }, ref) {
+>(function ValueField(
+  { text, onChangeText, unit, mgDl, error, attention = false, autoFocus = true },
+  ref,
+) {
   const { t } = useTranslation();
   const { colors } = useTheme();
   const reduced = useReducedMotion();
@@ -65,7 +70,7 @@ export const ValueField = forwardRef<
           onChangeText={(value) => onChangeText(value.replace(/[^0-9.,]/g, ''))}
           keyboardType="decimal-pad"
           inputMode="decimal"
-          autoFocus
+          autoFocus={autoFocus}
           maxLength={6}
           placeholder={placeholder}
           placeholderTextColor={colors.textSubtle}

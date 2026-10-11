@@ -8,7 +8,7 @@ Saisie rapide, confirmation de valeur inhabituelle, message de sécurité, édit
 
 - **L2-03** — Mobile : saisie rapide d'une mesure (valeur, unité, date, contexte), écriture locale d'abord — **fait**
 - **L2-04** — Mobile : confirmation de valeur inhabituelle + message de sécurité hypo/hyper — **fait**
-- **L2-11** — Mobile : modification et suppression d'une mesure
+- **L2-11** — Mobile : modification et suppression d'une mesure — **fait**
 - **L4-09** — Badge de provenance (saisie, import, appareil) sur mesure, chronologie et portail
 
 ## Saisie rapide (L2-03)
@@ -74,6 +74,28 @@ En cas de malaise, demandez de l'aide immédiatement. »). **Aucune consigne de 
 la base locale, vidée à la déconnexion) quand le profil est enregistré. Absents ou illisibles : seuils par
 défaut de `@glyka/shared`.
 
+## Modifier ou supprimer une mesure (L2-11)
+
+Écran de détail `app/measurement/[id].tsx`, ouvert en touchant une mesure dans l'Historique (chevron) ou
+la carte « Dernière mesure » de l'accueil :
+
+- en haut, la mesure telle qu'elle est gardée : valeur, badge d'état, contexte, date, provenance,
+  « Pas encore envoyée » ;
+- formulaire : valeur (pas de clavier imposé à l'ouverture), unité (la valeur est convertie), **date et
+  heure** à partir de la date d'origine (jour précédent / suivant, heure par 5 min ou 1 h, jamais dans le
+  futur — le « Quand ? » de la saisie ne remonte qu'à avant-hier), contexte, note ;
+- valeur inhabituelle : même question « est-ce correct ? » qu'à la saisie (L2-04) ;
+- **seuls les champs changés** sont écrits (`toUpdatePatch`) ; rien de changé = rien à écrire. Le dépôt
+  local (L8-03) renvoie la mesure COMPLÈTE à la synchronisation ;
+- **suppression** : confirmation dans la page (« Annuler » / « Supprimer »), puis pierre tombale + note
+  effacée (L8-03) ; retour à l'écran précédent, qui se met à jour.
+
+| Fichier                           | Rôle                                                         |
+| --------------------------------- | ------------------------------------------------------------ |
+| `edit.ts`                         | Logique : brouillon de départ, date, validation, changements |
+| `components/DateTimeAdjuster.tsx` | Réglage jour + heure à partir de la date d'origine           |
+| `__tests__/edit.test.ts`          | Tests de la logique                                          |
+
 ## Tests obligatoires
 
 - [x] 1,48 g/L = 148 mg/dL ; virgule ou point ; mmol/L et mg/dL (`__tests__/entry.test.ts`).
@@ -82,6 +104,11 @@ défaut de `@glyka/shared`.
 - [x] « Quand ? » : maintenant à la minute, raccourcis, jour + heure, tour d'horloge, futur refusé.
 - [x] Formulaire complet / erreurs par champ ; données écrites (valeur et unité d'origine, date ISO).
 - [x] Doublon exact détecté (même minute + même valeur), pas pour une autre valeur ou minute.
+- [x] L2-11 : brouillon = mesure telle que saisie ; date réglée par jours du calendrier et minutes, jamais
+      dans le futur ; mêmes règles de valeur qu'à la saisie.
+- [x] L2-11 : seuls les champs changés ; valeur toujours avec son unité (même nombre, autre unité =
+      changement) ; note vidée effacée ; confirmation d'une nouvelle valeur inhabituelle ; modification
+      valide pour le schéma partagé.
 - [x] L2-04 : 18,7 g/L refusée sans confirmation, acceptée confirmée ; la confirmation n'efface pas les
       autres erreurs ; `confirmedUnusual` vrai seulement pour une valeur réellement inhabituelle.
 - [x] L2-04 : unité probable (18,7 g/L → mmol/L ; 1870 mg/dL → aucune) ; textes (« 1 870 mg/dL »).
