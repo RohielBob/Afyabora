@@ -2,7 +2,8 @@
 //   1. Qui êtes-vous ?   prénom, nom, date de naissance, sexe            (obligatoire)
 //   2. Votre diabète     type (obligatoire), année du diagnostic (facultative)
 //   3. Unité et seuils   unité préférée, plage cible et seuils (valeurs par défaut « à définir avec votre médecin »)
-//   4. Vos contacts      un proche et/ou le médecin traitant (facultatifs, mais complets s'ils sont commencés)
+//   4. Vos contacts      un proche et/ou le médecin traitant (facultatifs, mais complets s'ils sont commencés) ;
+//                        en cas d'urgence : pays et numéro d'urgence saisis par la personne (facultatifs, L9-04)
 //   5. Résumé            vérifier, modifier une étape, enregistrer
 // On ne passe à l'étape suivante que si l'étape est valide (mêmes règles que le serveur).
 // Chaque étape apparaît en glissant ; la barre de progression se remplit.
@@ -32,6 +33,7 @@ import { MedicalDisclaimer } from '@/features/legal';
 import { writeUnit } from '@/features/measurements';
 import {
   STEPS,
+  SUGGESTED_COUNTRIES,
   THRESHOLD_KEYS,
   StepProgress,
   ThresholdBar,
@@ -44,6 +46,7 @@ import {
   profileApi,
   saveThresholds,
   validateStep,
+  type CountryChoice,
   type ProfileDraft,
   type Step,
   type StepErrors,
@@ -376,6 +379,55 @@ export default function ProfileSetupScreen() {
                 />
               </View>
             </Card>
+            {/* L9-04 : l'assistant affichera ce numéro en cas d'urgence, avec le médecin et le proche. */}
+            <Card variant="outlined" animateIn={false}>
+              <Text variant="subheading">{t('onboarding.contacts.emergencyTitle')}</Text>
+              <Text variant="bodySmall" tone="muted">
+                {t('onboarding.contacts.emergencyHint')}
+              </Text>
+              <View style={{ gap: spacing.md, marginTop: spacing.sm }}>
+                <ChoiceGroup<CountryChoice>
+                  label={t('onboarding.contacts.country')}
+                  options={[...SUGGESTED_COUNTRIES, 'OTHER' as const].map((code) => ({
+                    value: code,
+                    label: t(`onboarding.contacts.countries.${code}`),
+                  }))}
+                  value={draft.country}
+                  onChange={(country) => update({ country })}
+                  error={draft.country === 'OTHER' ? undefined : err('country')}
+                  columns={3}
+                />
+                {draft.country === 'OTHER' ? (
+                  <TextField
+                    label={t('onboarding.contacts.otherCountry')}
+                    hint={t('onboarding.contacts.otherCountryHint')}
+                    placeholder="KE"
+                    value={draft.otherCountry}
+                    onChangeText={(otherCountry) => update({ otherCountry })}
+                    error={err('country')}
+                    autoCapitalize="characters"
+                    maxLength={2}
+                  />
+                ) : null}
+                {draft.country !== null ? (
+                  <Button
+                    label={t('onboarding.contacts.clearCountry')}
+                    variant="ghost"
+                    onPress={() => update({ country: null, otherCountry: '' })}
+                  />
+                ) : null}
+                <TextField
+                  label={t('onboarding.contacts.emergencyNumber')}
+                  hint={t('onboarding.contacts.emergencyNumberHint')}
+                  placeholder={t('onboarding.contacts.emergencyNumberPlaceholder')}
+                  value={draft.emergencyNumber}
+                  onChangeText={(emergencyNumber) => update({ emergencyNumber })}
+                  error={err('emergencyNumber')}
+                  keyboardType="phone-pad"
+                  textContentType="telephoneNumber"
+                />
+              </View>
+            </Card>
           </>
         ) : null}
 
@@ -485,6 +537,10 @@ function Summary({ draft, onEdit }: { draft: ProfileDraft; onEdit: (step: Step) 
             ? `${draft.doctorName.trim()} · ${draft.doctorPhone.trim()}`
             : t('onboarding.summary.none'),
         ],
+        [
+          t('onboarding.contacts.emergencyTitle'),
+          emergencySummary(draft, (key) => t(key)) ?? t('onboarding.summary.none'),
+        ],
       ],
     },
   ];
@@ -525,4 +581,16 @@ function Summary({ draft, onEdit }: { draft: ProfileDraft; onEdit: (step: Step) 
       ))}
     </View>
   );
+}
+
+/** Ligne « En cas d'urgence » du résumé : « RD Congo · 112 », « KE · 999 », « 112 »… ; null si rien. */
+function emergencySummary(draft: ProfileDraft, t: (key: string) => string): string | null {
+  const country =
+    draft.country === null
+      ? ''
+      : draft.country === 'OTHER'
+        ? draft.otherCountry.trim().toUpperCase()
+        : t(`onboarding.contacts.countries.${draft.country}`);
+  const parts = [country, draft.emergencyNumber.trim()].filter(Boolean);
+  return parts.length ? parts.join(' · ') : null;
 }

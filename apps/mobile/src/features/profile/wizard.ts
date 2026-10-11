@@ -18,6 +18,14 @@ export type Step = (typeof STEPS)[number];
 export type Sex = 'F' | 'M' | 'OTHER';
 export type DiabetesType = PatientProfileInput['diabetesType'];
 export type ThresholdKey = 'veryLowMgDl' | 'targetMinMgDl' | 'targetMaxMgDl' | 'veryHighMgDl';
+
+/**
+ * Pays proposés en un appui (L9-04) : ceux du public d'Afyabora (Kinshasa) et des pays voisins ou
+ * francophones les plus probables. « OTHER » ouvre un champ pour le code à 2 lettres de n'importe quel pays.
+ * Noms affichés : i18n `onboarding.contacts.countries.<code>`.
+ */
+export const SUGGESTED_COUNTRIES = ['CD', 'CG', 'RW', 'BI', 'UG', 'AO', 'FR', 'BE'] as const;
+export type CountryChoice = (typeof SUGGESTED_COUNTRIES)[number] | 'OTHER';
 export const THRESHOLD_KEYS: readonly ThresholdKey[] = [
   'veryLowMgDl',
   'targetMinMgDl',
@@ -42,6 +50,12 @@ export interface ProfileDraft {
   relativeRelation: string;
   doctorName: string;
   doctorPhone: string;
+  /** Pays choisi parmi SUGGESTED_COUNTRIES, « OTHER » (code saisi dans `otherCountry`), ou rien (L9-04). */
+  country: CountryChoice | null;
+  /** Code à 2 lettres saisi quand `country` vaut « OTHER » (« ke » est accepté : mis en majuscules). */
+  otherCountry: string;
+  /** Numéro d'urgence saisi par le patient : Afyabora ne le devine jamais (L9-04). */
+  emergencyNumber: string;
 }
 
 /** Champs (premier niveau du schéma) contrôlés à chaque étape. */
@@ -49,7 +63,7 @@ const STEP_FIELDS: Record<Exclude<Step, 'summary'>, readonly string[]> = {
   identity: ['firstName', 'lastName', 'birthDate', 'sex'],
   diabetes: ['diabetesType', 'diagnosisYear'],
   thresholds: ['preferredUnit', 'thresholds', 'thresholdsReviewedByClinician'],
-  contacts: ['emergencyContact', 'doctorContact'],
+  contacts: ['emergencyContact', 'doctorContact', 'country', 'emergencyNumber'],
 };
 
 // ---------- Nombres et unités (affichage à la française : virgule décimale) ----------
@@ -132,7 +146,19 @@ export function initialDraft(): ProfileDraft {
     relativeRelation: '',
     doctorName: '',
     doctorPhone: '',
+    country: null,
+    otherCountry: '',
+    emergencyNumber: '',
   };
+}
+
+/**
+ * Code pays envoyé à l'API : le choix proposé, ou le code saisi (majuscules) ; null si aucun pays choisi.
+ * « Autre » sans code donne « » : le schéma le refuse, et la personne voit l'erreur sous le champ.
+ */
+export function countryCode(draft: ProfileDraft): string | null {
+  if (draft.country === 'OTHER') return draft.otherCountry.trim().toUpperCase();
+  return draft.country;
 }
 
 /** Construit la requête PUT /me/profile. Les valeurs non valides sont laissées telles quelles : le schéma les refuse. */
@@ -165,6 +191,9 @@ export function toPayload(draft: ProfileDraft): Record<string, unknown> {
         }
       : {}),
     ...(doctor ? { doctorContact: { name: draft.doctorName, phone: draft.doctorPhone } } : {}),
+    // L9-04 : pays et numéro d'urgence, envoyés seulement s'ils sont renseignés (le schéma vérifie le format).
+    ...(draft.country !== null ? { country: countryCode(draft) } : {}),
+    ...(draft.emergencyNumber.trim() ? { emergencyNumber: draft.emergencyNumber } : {}),
   };
 }
 

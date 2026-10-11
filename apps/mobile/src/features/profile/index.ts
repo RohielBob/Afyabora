@@ -2,14 +2,17 @@
 export { profileApi, type PatientProfileResponse } from './api';
 export {
   STEPS,
+  SUGGESTED_COUNTRIES,
   THRESHOLD_KEYS,
   convertThresholds,
+  countryCode,
   displayToMgDl,
   finalPayload,
   firstInvalidStep,
   initialDraft,
   maskBirthDate,
   validateStep,
+  type CountryChoice,
   type ProfileDraft,
   type Step,
   type StepErrors,

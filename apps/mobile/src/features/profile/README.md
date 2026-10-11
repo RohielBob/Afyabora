@@ -8,21 +8,23 @@ Assistant de profil, unité préférée, plage cible et seuils, contacts.
 
 - **L1-05** — API : profil patient et seuils d'alerte (validation Zod) — **fait**
 - **L1-08** — Mobile : assistant de profil — **fait** (4 étapes + résumé, décision du 2026-10-10)
+- **L9-04** — Mobile : saisie du pays et du numéro d'urgence (étape 4) — **fait** (contrat 0.4.0, API L9-03)
 
 ## Assistant (`app/(onboarding)/profile-setup.tsx`)
 
-| Étape              | Contenu                                                                                                                     | Obligatoire                         |
-| ------------------ | --------------------------------------------------------------------------------------------------------------------------- | ----------------------------------- |
-| 1. Qui êtes-vous ? | prénom, nom, date de naissance (JJ/MM/AAAA, « / » ajoutés pendant la frappe), sexe                                          | oui                                 |
-| 2. Votre diabète   | type (1, 2, gestationnel, autre), année du diagnostic                                                                       | type : oui ; année : non            |
-| 3. Unité et seuils | unité (g/L par défaut, mg/dL, mmol/L), plage cible (de / à), seuils très bas / très haut, case « définis avec mon médecin » | oui (valeurs par défaut proposées)  |
-| 4. Vos contacts    | un proche (nom, téléphone, lien) ; le médecin traitant (nom, téléphone)                                                     | non, mais complet s'il est commencé |
-| Résumé             | une carte par étape avec « Modifier », puis « Enregistrer mon profil »                                                      | —                                   |
+| Étape              | Contenu                                                                                                                           | Obligatoire                         |
+| ------------------ | --------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------- |
+| 1. Qui êtes-vous ? | prénom, nom, date de naissance (JJ/MM/AAAA, « / » ajoutés pendant la frappe), sexe                                                | oui                                 |
+| 2. Votre diabète   | type (1, 2, gestationnel, autre), année du diagnostic                                                                             | type : oui ; année : non            |
+| 3. Unité et seuils | unité (g/L par défaut, mg/dL, mmol/L), plage cible (de / à), seuils très bas / très haut, case « définis avec mon médecin »       | oui (valeurs par défaut proposées)  |
+| 4. Vos contacts    | un proche (nom, téléphone, lien) ; le médecin traitant (nom, téléphone) ; **en cas d'urgence** : pays et numéro d'urgence (L9-04) | non, mais complet s'il est commencé |
+| Résumé             | une carte par étape avec « Modifier », puis « Enregistrer mon profil »                                                            | —                                   |
 
 - **On ne passe à l'étape suivante que si elle est valide.** La validation utilise le schéma du serveur (`patientProfileSchema`, `@glyka/shared`) : on ne garde que les erreurs des champs de l'étape. Message sous chaque champ (i18n `onboarding.errors.*`).
 - **Seuils** : saisis dans l'unité choisie (virgule ou point), envoyés en **mg/dL entiers** (ADR-0002). Changer d'unité convertit les valeurs affichées. Mention « à définir avec votre médecin », bouton « Revenir aux valeurs par défaut », barre colorée des 5 zones (couleurs des états, jamais rouge, symbole dans chaque zone).
 - **Fin** : `PUT /me/profile`, écran « Bienvenue », puis `markProfileCompleted()` (session, L1-07) et ouverture des onglets.
 - Animations : étape qui glisse (droite = suivant, gauche = retour), barre de progression, écran qui remonte en haut à chaque étape (`Screen scrollKey`).
+- **En cas d'urgence (L9-04)** : pays choisi en un appui parmi `SUGGESTED_COUNTRIES` (RD Congo d'abord, public de Kinshasa, puis Congo, Rwanda, Burundi, Ouganda, Angola, France, Belgique) ou « Autre pays » avec son code à 2 lettres (mis en majuscules) ; « Ne pas indiquer de pays » efface le choix. Numéro d'urgence saisi par la personne : **Afyabora ne le devine jamais** (message sous le titre de la carte). Tous deux facultatifs ; « Autre » sans code valide ou un numéro qui n'en est pas un ⇒ erreur sous le champ. Résumé : « RD Congo · 112 ». L'assistant les affichera en cas d'urgence avec le médecin et le proche (L9-06). Modifiables après l'inscription quand l'écran Profil sera construit.
 - Traitement, allergies, groupe sanguin : **carte d'urgence** (L6-06), pas dans le profil.
 
 ## Fichiers
