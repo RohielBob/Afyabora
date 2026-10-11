@@ -7,7 +7,7 @@ Outils pour l'équipe : données de démo, administration, GitHub.
 | `seed-demo/`   | Génère 3 patients **fictifs** (Jean 96 % Bonne, Marie 60 % Partielle, Paul 34 % Insuffisante) + un médecin approuvé. Le générateur est **déterministe** (même graine = mêmes données) et testé. | L7-07        |
 | `admin/`       | Comptes médecins : lister, voir, approuver, refuser (remplace une interface d'admin). Journal d'audit du modèle de langage (lecture). Détails ci-dessous.                                       | L1-12, L3-10 |
 | `sample-data/` | Fichiers d'import de test : `import-demo-147.csv` (**139 valides / 5 doublons / 3 incohérentes**, valeur 18,7 g/L à la ligne 42), `import-windows1252.csv`, `import-corrupted.xlsx`             | L4-08        |
-| `github/`      | `create-labels.sh`, `create-issues.sh` (crée les 105 issues depuis `docs/team/backlog.csv`)                                                                                                     | L0-01        |
+| `github/`      | `create-labels.sh`, `create-issues.sh` (crée les 116 issues depuis `docs/team/backlog.csv`)                                                                                                     | L0-01        |
 
 ```bash
 pnpm db:seed                                           # données de démo (DEMO_PASSWORD dans apps/api/.env)

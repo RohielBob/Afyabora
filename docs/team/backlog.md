@@ -3,7 +3,7 @@
 Source de vérité : `backlog.csv` (importable dans GitHub Projects ; `scripts/github/create-issues.sh` crée les issues).
 Tailles : S ≤ 2 h · M ½ journée · L 1 journée · XL à découper avant de commencer.
 
-**105 tickets** · P0 : 97 · P1 : 8
+**116 tickets** · P0 : 97 · P1 : 19
 
 | Lot | Intitulé                   | Tickets |
 | --- | -------------------------- | ------- |
@@ -16,6 +16,7 @@ Tailles : S ≤ 2 h · M ½ journée · L 1 journée · XL à découper avant de
 | L6  | Rapport & urgence          | 6       |
 | L7  | Design & contenu           | 12      |
 | L8  | Hors-ligne & notifications | 17      |
+| L9  | Assistant Afyabora         | 11      |
 
 ## L0 — Socle
 
@@ -80,7 +81,7 @@ Tailles : S ≤ 2 h · M ½ journée · L 1 journée · XL à découper avant de
 | L3-05 | API : interface LlmProvider, implémentation, repli automatique sur les gabarits | F6  | P0   | J7   | L      | L3-03     |
 | L3-06 | Résumé automatique (IA-3) avec garde-fous                                       | F6  | P0   | J7   | L      | L3-05     |
 | L3-07 | Jeu de questions-pièges et test automatique des garde-fous                      | F6  | P0   | J7   | M      | L3-05     |
-| L3-08 | Question libre sur l'historique (IA-4)                                          | F6  | P1   | J8   | L      | L3-06     |
+| L3-08 | Question libre sur l'historique (IA-4) : remplacé par l'assistant (lot L9)      | F6  | P1   | J8   | L      | L3-06     |
 | L3-09 | Mobile : analyse et gabarits calculés hors-ligne depuis la base locale          | F6  | P0   | J5   | M      | L8-11     |
 | L3-10 | Journaliser les réponses du modèle de langage pour audit                        | F6  | P0   | J7   | S      | L3-05     |
 
@@ -166,3 +167,21 @@ Tailles : S ≤ 2 h · M ½ journée · L 1 journée · XL à découper avant de
 | L8-15 | Écran de préférences : catégories, heures calmes, contenu sur écran verrouillé                | F12 | P0   | J7   | M      | L8-12        |
 | L8-16 | Notifications serveur : médecin consulte / accès terminé, urgence ouverte, import terminé     | F12 | P1   | J9   | M      | L8-14        |
 | L8-17 | Test hors-ligne de bout en bout sur un vrai téléphone (mode avion)                            | F11 | P0   | J9   | L      | L8-06        |
+
+## L9 — Assistant Afyabora
+
+Ajouté le 2026-10-11 (complément de l'ADR-0005, contrat 0.4.0). Remplace L3-08. Hors du plan des 10 jours : pas de jour prévu.
+
+| ID    | Ticket                                                                                      | F.  | Prio | Jour | Taille | Dépend de    |
+| ----- | ------------------------------------------------------------------------------------------- | --- | ---- | ---- | ------ | ------------ |
+| L9-01 | Assistant : complément de l'ADR-0005, contrat 0.4.0, schémas Zod, tickets du lot            | F6  | P1   | —    | M      | L3-07        |
+| L9-02 | Assistant : 10 fiches de connaissances en brouillon (sources citées) et test de leur format | F6  | P1   | —    | M      | L9-01        |
+| L9-03 | API : pays et numéro d'urgence dans le profil patient (migration)                           | F1  | P1   | —    | S      | L9-01        |
+| L9-04 | Mobile : saisie du pays et du numéro d'urgence dans le profil                               | F1  | P1   | —    | M      | L9-03        |
+| L9-05 | API : conversations chiffrées (créer, lire, effacer) et réponses gabarits                   | F6  | P1   | —    | L      | L9-01, L3-10 |
+| L9-06 | API : tri des questions, réponses sur les mesures, recherche dans les fiches, carte urgence | F6  | P1   | —    | L      | L9-02, L9-05 |
+| L9-07 | API : réponses mises en mots par le modèle local (file, délai, vérification, audit)         | F6  | P1   | —    | L      | L9-06        |
+| L9-08 | Assistant : questions-pièges en conversation, erreurs volontaires, évaluation réelle        | F6  | P1   | —    | M      | L9-07        |
+| L9-09 | Mobile : écran de conversation avec l'assistant (fiches citées, urgence, hors-ligne)        | F6  | P1   | —    | L      | L9-04, L9-05 |
+| L9-10 | Mobile : liste et effacement des conversations, lecteur de fiches                           | F6  | P1   | —    | M      | L9-09        |
+| L9-11 | Assistant : scénario de démo, README du module, checklist de sécurité                       | F6  | P1   | —    | S      | L9-10        |

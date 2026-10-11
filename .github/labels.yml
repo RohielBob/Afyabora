@@ -14,6 +14,7 @@
 - { name: 'lot:L6', color: 'bfd4f2', description: 'Rapport & urgence' }
 - { name: 'lot:L7', color: 'ff7619', description: 'Design & contenu' }
 - { name: 'lot:L8', color: '006b75', description: 'Hors-ligne & notifications' }
+- { name: 'lot:L9', color: '5319e7', description: 'Assistant Afyabora' }
 - { name: 'area:mobile', color: 'ededed', description: 'apps/mobile' }
 - { name: 'area:portal', color: 'ededed', description: 'apps/portal' }
 - { name: 'area:api', color: 'ededed', description: 'apps/api' }

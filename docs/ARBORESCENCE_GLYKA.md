@@ -188,7 +188,7 @@ glyka/
 │   │   │   │   ├── mapping.tsx  🟡  — Écran : Correspondance des colonnes — L4-06
 │   │   │   │   └── report.tsx  🟡  — Écran : Rapport d'importation — L4-07
 │   │   │   ├── insights/
-│   │   │   │   └── ask.tsx  🟡  — Écran : Poser une question — L3-08
+│   │   │   │   └── ask.tsx  🟡  — Écran : Poser une question — L3-08 (remplacé par l'assistant, lot L9)
 │   │   │   ├── measurement/
 │   │   │   │   ├── [id].tsx  🟡  — Écran : Détail d'une mesure — L2-11
 │   │   │   │   └── new.tsx  🟡  — Écran : Nouvelle mesure — L2-03, L2-04
