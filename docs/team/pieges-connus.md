@@ -27,6 +27,7 @@
 
 - Expo Go **n'affiche pas** la nouvelle icône ni l'écran de lancement ; il faut un build. Le push et le chiffrement SQLite exigent un **development build** (L0-11).
 - Metro lit `@glyka/*` dans `dist/` : après une modification de `packages/ui-tokens` (ou `shared`, `analytics`), reconstruire ce paquet, sinon écran blanc ou erreur « Unable to resolve ».
+- **Sur le disque externe `E:`, Metro ne voit pas toujours les fichiers modifiés** après son démarrage : l'aperçu web continue d'afficher l'ancienne version (même après un rechargement de la page). Constaté trois fois le 2026-10-11 (une démo temporaire déjà retirée du disque restait affichée ; L9-04). Remède : **arrêter puis relancer** `expo start` (ou `expo start --clear`). Pour vérifier ce que Metro sert vraiment, dans la console du navigateur : chercher le module par son chemin dans `__r.getModules()` (`verboseName`) et lire `String(module.factory)`.
 - `app/index.tsx` choisit le premier écran selon la session (L1-07) : accueil, connexion, assistant de profil ou onglets.
 - `expo install --fix` aligne les versions natives sur le SDK : ne pas mettre `react-native` à jour à la main.
 - Ne jamais comparer des dates SQLite en texte si les décalages horaires diffèrent (`+01:00` vs `Z`) : normaliser en UTC à l'écriture.
