@@ -3,8 +3,9 @@
 // Règles (CDC F6 et §5, ADR-0005) :
 //  - TOUS les chiffres viennent de @glyka/analytics (le même moteur que sur le téléphone) : ce service
 //    ne calcule rien lui-même, il lit les mesures, choisit la période et met le résultat en forme ;
-//  - période = les N derniers jours ENTIERS du patient (minuit à minuit, à SON heure locale), même règle
-//    que le téléphone (`lastDaysPeriod`) : les deux affichent les mêmes chiffres ;
+//  - période = les N derniers jours ENTIERS du patient (minuit à minuit, à SON heure locale). La réponse
+//    est construite par `analyzeLastDays`, la MÊME fonction que le téléphone hors-ligne (L8-11) : les deux
+//    affichent exactement les mêmes chiffres, observations et phrases ;
 //  - seuils personnels du patient (profil) et fuseau du profil (créneaux, jours : L3-02) ;
 //  - sous 10 mesures : `stats` nul et aucune observation (« Données insuffisantes ») ;
 //  - chaque observation garde ses preuves (`evidenceIds`) et reçoit une phrase des gabarits français
@@ -13,36 +14,26 @@
 // Aucune valeur de santé dans les journaux.
 import { Injectable, Logger } from '@nestjs/common';
 import {
-  analyze,
+  analysisWindow,
+  analyzeLastDays,
   computeQuality,
   DEFAULT_TIME_ZONE,
-  DISCLAIMER_FR,
   lastDaysPeriod,
-  renderInsightFr,
   resolveTimeZone,
   type GlucosePoint,
-  type Insight,
+  type LastDaysAnalysis,
   type PatientTimeZone,
   type QualityScore,
-  type RangeStats,
 } from '@glyka/analytics';
 import { DEFAULT_THRESHOLDS, type GlucoseThresholds } from '@glyka/shared';
 import { PrismaService } from '../../prisma/prisma.service';
 
 /** Réponse de GET /insights (schéma `InsightsResponse` du contrat). */
-export interface InsightsResponse {
-  period: { from: string; to: string };
-  quality: QualityScore;
-  stats: RangeStats | null;
-  previousStats: RangeStats | null;
-  insights: (Insight & { text: string })[];
-  disclaimer: string;
-}
+export type InsightsResponse = LastDaysAnalysis;
 
-/** Ce qu'il faut pour analyser : mesures, période, seuils et fuseau du patient. */
+/** Ce qu'il faut pour analyser : mesures, seuils et fuseau du patient, heure de la lecture. */
 interface AnalysisInput {
   points: GlucosePoint[];
-  period: { from: number; to: number };
   now: number;
   thresholds: GlucoseThresholds;
   timeZone: PatientTimeZone;
@@ -56,22 +47,14 @@ export class InsightsService {
 
   /** GET /insights?period : statistiques, comparaison, observations traçables et leurs phrases. */
   async insights(patientId: string, days: number): Promise<InsightsResponse> {
-    const { points, period, now, thresholds, timeZone } = await this.load(patientId, days);
-    const result = analyze(points, period, { now, thresholds, timeZone });
-    return {
-      period: { from: new Date(period.from).toISOString(), to: new Date(period.to).toISOString() },
-      quality: result.quality,
-      stats: result.stats,
-      previousStats: result.previousStats,
-      insights: result.insights.map((insight) => ({ ...insight, text: renderInsightFr(insight) })),
-      disclaimer: DISCLAIMER_FR,
-    };
+    const { points, now, thresholds, timeZone } = await this.load(patientId, days);
+    return analyzeLastDays(points, days, { now, thresholds, timeZone });
   }
 
   /** GET /quality?period : score de qualité des données (couverture, densité, fraîcheur). */
   async quality(patientId: string, days: number): Promise<QualityScore> {
-    const { points, period, now, timeZone } = await this.load(patientId, days);
-    return computeQuality(points, period, now, timeZone);
+    const { points, now, timeZone } = await this.load(patientId, days);
+    return computeQuality(points, lastDaysPeriod(days, now, timeZone), now, timeZone);
   }
 
   private async load(patientId: string, days: number): Promise<AnalysisInput> {
@@ -97,23 +80,20 @@ export class InsightsService {
     const timeZone = this.timeZoneOf(profile?.timezoneOffsetMinutes);
 
     const now = Date.now();
-    const period = lastDaysPeriod(days, now, timeZone);
-    // On lit aussi la période PRÉCÉDENTE (même durée) : comparaison « 7 derniers jours / 7 d'avant ».
+    // On lit la période ET la période PRÉCÉDENTE (même durée) : comparaison « 7 derniers jours / 7 d'avant ».
     // Elle couvre au moins 14 jours, donc la dernière mesure utile à la fraîcheur (≤ 7 jours) aussi.
+    const window = analysisWindow(days, now, timeZone);
     const rows = await this.prisma.measurement.findMany({
       where: {
         patientId,
         deletedAt: null,
-        measuredAt: {
-          gte: new Date(period.from - (period.to - period.from)),
-          lt: new Date(period.to),
-        },
+        measuredAt: { gte: new Date(window.from), lt: new Date(window.to) },
       },
       select: { id: true, measuredAt: true, valueMgDl: true },
       orderBy: [{ measuredAt: 'asc' }, { id: 'asc' }],
     });
     const points = rows.map((r) => ({ id: r.id, at: r.measuredAt.getTime(), mgDl: r.valueMgDl }));
-    return { points, period, now, thresholds, timeZone };
+    return { points, now, thresholds, timeZone };
   }
 
   /**
