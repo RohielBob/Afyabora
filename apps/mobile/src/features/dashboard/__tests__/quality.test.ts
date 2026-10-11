@@ -1,6 +1,7 @@
 // Ticket L2-08 : score de qualité des données et choix de la phrase d'explication (sans interface).
 import type { ChartPoint } from '../chart';
-import { deviceTimeZone, periodQuality, weakestPart } from '../quality';
+import { deviceTimeZone } from '@/lib/time-zone';
+import { periodQuality, weakestPart } from '../quality';
 
 // 10 octobre 2026, 09:17, heure LOCALE du téléphone.
 const NOW = new Date(2026, 9, 10, 9, 17);
