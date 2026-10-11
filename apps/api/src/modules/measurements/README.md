@@ -60,6 +60,26 @@ Outils partagés avec les événements (L2-02) : `src/common/data/owned-records.
 - Les tests détectent les erreurs : 5 erreurs introduites volontairement (propriété, doublon
   simultané, supprimées listées, date future, valeur inhabituelle) ⇒ chaque fois des tests en échec.
 
+### Cas limites (L2-12)
+
+- [x] Conversions aux frontières : 1,1 mmol/L (= 20) et 33,3 mmol/L (= 600) acceptés, 1,0 et 33,4
+      inhabituels ; 0,20 / 6,00 g/L acceptés, 0,19 / 6,01 inhabituels ; mg/dL avec décimale arrondi.
+- [x] **Arrondi exact** : 1,005 g/L = 101 mg/dL (et non 100 : erreur des nombres à virgule corrigée dans
+      `toMgDl`, `@glyka/shared`) ; la modification reconvertit avec les mêmes règles.
+- [x] Valeurs impossibles, même confirmées : au-delà de 5 000 mg/dL ou arrondies à 0 ⇒ 400
+      « Valeur impossible » (création et modification).
+- [x] Date future : pile 5 minutes acceptée, une milliseconde de plus refusée ; décalages horaires
+      (+01:00, −05:00, +14:00) comparés en instants ; modification refusée sans rien changer.
+- [x] Idempotence : trois envois simultanés ⇒ une création + deux 200 ; rejeu après modification ⇒ la
+      mesure modifiée, pas réécrite ; rejeu d'une valeur inhabituelle déjà enregistrée sans la
+      confirmation ⇒ 200 (et non 422 : la synchronisation ne doit pas la croire en échec) ; même
+      modification deux fois ⇒ même résultat ; suppression et création rejouées ⇒ reste supprimée.
+- [x] 6 erreurs volontaires (ancien arrondi, limite 5 000 → 6 000, 0 mg/dL accepté, « pile 5 minutes »
+      refusé, décalage horaire ignoré, contrôles avant le rejeu) : toutes détectées.
+- [x] Vérifié aussi sur la vraie base (API locale + PostgreSQL) : 1,005 g/L ⇒ 101 ; 5 001 mg/dL
+      confirmé ⇒ 400 ; 33,4 mmol/L ⇒ 422 (602) ; 5 envois simultanés du même identifiant ⇒ 1 création,
+      4 rejeux, une seule mesure en base ; +10 min ⇒ 400.
+
 ## Fichiers
 
 | Fichier                      | Rôle                                                                                                   |

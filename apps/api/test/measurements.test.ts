@@ -1,4 +1,5 @@
-// Tests du ticket L2-01 : mesures de glycémie (POST, GET, PUT, DELETE /measurements).
+// Tests des tickets L2-01 (mesures de glycémie : POST, GET, PUT, DELETE /measurements) et L2-12
+// (idempotence, conversions, bornes plausibles, date future : cas limites).
 // Vrai serveur HTTP (port 0), vraies gardes JWT et rôles ; base de données SIMULÉE en mémoire qui
 // applique réellement les filtres (patient, supprimées, période, curseur) et les contraintes de
 // PostgreSQL (identifiant unique → P2002, profil obligatoire → P2003).
@@ -134,6 +135,19 @@ const fakeConfig = {
 class FakeInfraModule {}
 
 const isoIn = (ms: number) => new Date(Date.now() + ms).toISOString();
+
+/**
+ * Même instant que « maintenant + ms », mais écrit avec un décalage horaire (« …T10:20:00.000+01:00 ») :
+ * c'est ainsi qu'un téléphone envoie l'heure locale. Le serveur doit comparer des INSTANTS, pas du texte.
+ */
+const isoInZone = (ms: number, offsetMinutes: number) => {
+  const local = new Date(Date.now() + ms + offsetMinutes * MINUTE).toISOString().slice(0, 23);
+  const sign = offsetMinutes >= 0 ? '+' : '-';
+  const abs = Math.abs(offsetMinutes);
+  const hh = String(Math.floor(abs / 60)).padStart(2, '0');
+  const mm = String(abs % 60).padStart(2, '0');
+  return `${local}${sign}${hh}:${mm}`;
+};
 
 describe('L2-01 : mesures de glycémie (/measurements)', () => {
   let app: INestApplication;
@@ -575,6 +589,203 @@ describe('L2-01 : mesures de glycémie (/measurements)', () => {
         403,
       );
       expect(rows[0]!.deletedAt).toBeNull();
+    });
+  });
+
+  // ---------------------------------------------------------------------------------------------
+  // L2-12 : cas limites. Les règles sont testées plus haut (L2-01) ; ici, leurs FRONTIÈRES exactes et
+  // les situations de la synchronisation hors-ligne (rejeux, envois simultanés).
+  describe('L2-12 : idempotence, conversions, bornes plausibles, date future', () => {
+    const update = (id: string, body: Record<string, unknown>) =>
+      call('PUT', `/measurements/${id}`, token(awa), body);
+
+    describe('conversions (stockage en mg/dL entier)', () => {
+      it('frontières en mmol/L : 1,1 (= 20) et 33,3 (= 600) acceptés ; 1,0 et 33,4 inhabituels', async () => {
+        const low = await create(valid({ value: 1.1, unit: 'MMOL_L' }));
+        expect(low.status).toBe(201);
+        expect((await json(low)).valueMgDl).toBe(20);
+        const high = await create(valid({ value: 33.3, unit: 'MMOL_L' }));
+        expect(high.status).toBe(201);
+        expect((await json(high)).valueMgDl).toBe(600);
+
+        const tooLow = await create(valid({ value: 1.0, unit: 'MMOL_L' }));
+        expect(tooLow.status).toBe(422);
+        expect((await json(tooLow)).valueMgDl).toBe(18);
+        const tooHigh = await create(valid({ value: 33.4, unit: 'MMOL_L' }));
+        expect(tooHigh.status).toBe(422);
+        expect((await json(tooHigh)).valueMgDl).toBe(602);
+      });
+
+      it('frontières en g/L : 0,20 et 6,00 acceptés ; 0,19 et 6,01 inhabituels', async () => {
+        expect((await create(valid({ value: 0.2 }))).status).toBe(201);
+        expect((await create(valid({ value: 6 }))).status).toBe(201);
+        expect((await create(valid({ value: 0.19 }))).status).toBe(422);
+        expect((await create(valid({ value: 6.01 }))).status).toBe(422);
+      });
+
+      it('arrondi exact malgré l’imprécision des nombres à virgule : 1,005 g/L = 101 mg/dL', async () => {
+        const res = await create(valid({ value: 1.005 }));
+        expect(res.status).toBe(201);
+        expect(await json(res)).toMatchObject({
+          valueMgDl: 101, // et non 100 (1,005 × 100 = 100,4999… en machine)
+          originalValue: 1.005,
+          originalUnit: 'G_L',
+        });
+      });
+
+      it('mg/dL avec décimale : arrondi à l’entier, valeur d’origine gardée telle quelle', async () => {
+        const res = await create(valid({ value: 148.5, unit: 'MG_DL' }));
+        expect(await json(res)).toMatchObject({ valueMgDl: 149, originalValue: 148.5 });
+      });
+
+      it('la modification reconvertit avec les mêmes règles (33,4 mmol/L : 422, puis confirmé)', async () => {
+        const body = valid();
+        await create(body);
+        const refused = await update(body.id, { value: 33.4, unit: 'MMOL_L' });
+        expect(refused.status).toBe(422);
+        expect(rows[0]!.valueMgDl).toBe(148); // rien n'a changé
+        const confirmed = await update(body.id, {
+          value: 33.4,
+          unit: 'MMOL_L',
+          confirmedUnusual: true,
+        });
+        expect((await json(confirmed)).valueMgDl).toBe(602);
+      });
+    });
+
+    describe('valeurs impossibles (même confirmées)', () => {
+      it('jusqu’à 5 000 mg/dL : accepté une fois confirmé ; au-delà : 400 « Valeur impossible »', async () => {
+        const max = await create(valid({ value: 50, confirmedUnusual: true })); // 5 000 mg/dL
+        expect(max.status).toBe(201);
+
+        const over = await create(valid({ value: 50.01, confirmedUnusual: true })); // 5 001 mg/dL
+        expect(over.status).toBe(400);
+        expect(await json(over)).toEqual({
+          message: 'Données invalides',
+          issues: [{ path: 'value', message: 'Valeur impossible.' }],
+        });
+      });
+
+      it('valeur qui s’arrondit à 0 mg/dL (0,004 g/L), zéro ou négative : refusée', async () => {
+        expect((await create(valid({ value: 0.004, confirmedUnusual: true }))).status).toBe(400);
+        expect((await create(valid({ value: 0 }))).status).toBe(400);
+        expect((await create(valid({ value: -1.2 }))).status).toBe(400);
+        expect(rows).toHaveLength(0);
+      });
+
+      it('la modification applique la même limite', async () => {
+        const body = valid();
+        await create(body);
+        const res = await update(body.id, { value: 60, unit: 'G_L', confirmedUnusual: true });
+        expect(res.status).toBe(400);
+        expect(rows[0]!.valueMgDl).toBe(148);
+      });
+    });
+
+    describe('date future (tolérance de 5 minutes)', () => {
+      it('pile 5 minutes dans le futur : accepté ; une milliseconde de plus : refusé', async () => {
+        // Seule l'horloge est figée (le serveur HTTP continue de fonctionner normalement).
+        vi.useFakeTimers({ toFake: ['Date'] });
+        try {
+          vi.setSystemTime(new Date('2026-10-11T08:00:00.000Z'));
+          const edge = await create(valid({ measuredAt: '2026-10-11T08:05:00.000Z' }));
+          expect(edge.status).toBe(201);
+          const over = await create(valid({ measuredAt: '2026-10-11T08:05:00.001Z' }));
+          expect(over.status).toBe(400);
+        } finally {
+          vi.useRealTimers();
+        }
+      });
+
+      it('heure locale avec décalage : on compare des INSTANTS (+01:00, −05:00, +14:00)', async () => {
+        // Kinshasa (+01:00) : 3 minutes dans le futur, même si le texte « paraît » 1 h en avance.
+        expect((await create(valid({ measuredAt: isoInZone(3 * MINUTE, 60) }))).status).toBe(201);
+        // −05:00 : 10 minutes dans le futur, même si le texte « paraît » dans le passé.
+        expect((await create(valid({ measuredAt: isoInZone(10 * MINUTE, -300) }))).status).toBe(
+          400,
+        );
+        // +14:00 : 1 heure dans le PASSÉ, même si le texte « paraît » le lendemain.
+        const past = await create(valid({ measuredAt: isoInZone(-60 * MINUTE, 14 * 60) }));
+        expect(past.status).toBe(201);
+        // Stockée et rendue en UTC (suffixe Z).
+        expect((await json<{ measuredAt: string }>(past)).measuredAt).toMatch(/Z$/);
+      });
+
+      it('la modification refuse aussi une date future, et ne change alors rien', async () => {
+        const body = valid();
+        await create(body);
+        const res = await update(body.id, { measuredAt: isoIn(6 * MINUTE), context: 'NIGHT' });
+        expect(res.status).toBe(400);
+        expect(rows[0]!.context).toBe('FASTING');
+      });
+    });
+
+    describe('idempotence (rejeux de la synchronisation hors-ligne)', () => {
+      it('trois envois en même temps : une seule création, les deux autres reçoivent la mesure', async () => {
+        const body = valid();
+        const statuses = (await Promise.all([create(body), create(body), create(body)])).map(
+          (res) => res.status,
+        );
+        expect(statuses.sort()).toEqual([200, 200, 201]);
+        expect(rows).toHaveLength(1);
+      });
+
+      it('rejeu de la création APRÈS une modification : la mesure modifiée est renvoyée, pas réécrite', async () => {
+        const body = valid();
+        await create(body);
+        await update(body.id, { value: 1.62, unit: 'G_L' });
+
+        const replay = await create(body); // l'ancienne valeur 1,48 g/L
+        expect(replay.status).toBe(200);
+        expect((await json(replay)).valueMgDl).toBe(162);
+        expect(rows).toHaveLength(1);
+        expect(rows[0]!.valueMgDl).toBe(162);
+      });
+
+      it('rejeu d’une valeur inhabituelle déjà enregistrée, sans la confirmation : 200, pas 422', async () => {
+        // Le serveur a déjà accepté la mesure (confirmée) : un rejeu ne doit pas la faire « échouer »,
+        // sinon la synchronisation la marquerait en erreur alors qu'elle est bien enregistrée.
+        const body = valid({ value: 18.7, confirmedUnusual: true });
+        expect((await create(body)).status).toBe(201);
+        const replay = await create({ ...body, confirmedUnusual: false });
+        expect(replay.status).toBe(200);
+        expect((await json(replay)).valueMgDl).toBe(1870);
+      });
+
+      it('la même modification envoyée deux fois : même résultat, une seule mesure', async () => {
+        const body = valid();
+        await create(body);
+        const change = {
+          value: 8.2,
+          unit: 'MMOL_L',
+          context: 'AFTER_MEAL',
+          note: 'après le repas',
+        };
+        const first = await json(await update(body.id, change));
+        const second = await json(await update(body.id, change));
+        expect(second).toMatchObject({
+          valueMgDl: first.valueMgDl,
+          originalValue: 8.2,
+          originalUnit: 'MMOL_L',
+          context: 'AFTER_MEAL',
+          note: 'après le repas',
+        });
+        expect(rows).toHaveLength(1);
+      });
+
+      it('suppression rejouée puis création rejouée : la mesure reste supprimée', async () => {
+        const body = valid();
+        await create(body);
+        expect((await call('DELETE', `/measurements/${body.id}`, token(awa))).status).toBe(204);
+        expect((await call('DELETE', `/measurements/${body.id}`, token(awa))).status).toBe(204);
+        const replay = await create(body);
+        expect(replay.status).toBe(200);
+        expect((await json(replay)).deletedAt).not.toBeNull();
+        const list = await json<{ items: unknown[] }>(
+          await call('GET', '/measurements', token(awa)),
+        );
+        expect(list.items).toHaveLength(0);
+      });
     });
   });
 
