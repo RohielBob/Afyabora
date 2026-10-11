@@ -1,6 +1,7 @@
 // Détection d'anomalies : score z modifié (médiane + MAD), seuil 3,5 (Iglewicz & Hoaglin).
 import { groupBySlot } from './slots';
 import { median } from './stats';
+import type { PatientTimeZone } from './timezone';
 import type { GlucosePoint } from './types';
 
 export const MODIFIED_Z_THRESHOLD = 3.5;
@@ -58,9 +59,12 @@ export const MIN_POINTS_PER_SLOT_FOR_ANOMALY = 8;
  * Anomalies calculées PAR CRÉNEAU HORAIRE : une habitude régulière (ex. valeurs hautes chaque soir)
  * n'est pas une anomalie, elle est signalée comme « tendance par créneau » (insights.ts).
  */
-export function findAnomaliesBySlot(points: GlucosePoint[], tzOffsetMinutes = 60): GlucosePoint[] {
+export function findAnomaliesBySlot(
+  points: GlucosePoint[],
+  timeZone?: PatientTimeZone,
+): GlucosePoint[] {
   const out: GlucosePoint[] = [];
-  for (const slotPoints of Object.values(groupBySlot(points, tzOffsetMinutes))) {
+  for (const slotPoints of Object.values(groupBySlot(points, timeZone))) {
     if (slotPoints.length < MIN_POINTS_PER_SLOT_FOR_ANOMALY) continue;
     out.push(...findStatisticalAnomalies(slotPoints));
   }
