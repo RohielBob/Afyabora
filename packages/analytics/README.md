@@ -42,6 +42,10 @@ jours sans mesure) se comptent à l'heure **locale du patient**, pas en UTC. `an
   `InvalidTimeZoneError`, levée **avant** tout calcul : jamais une analyse silencieusement fausse.
 - Un décalage fixe ne suit pas l'heure d'été : il convient à Kinshasa (pas d'heure d'été), pas à Paris.
 - Coût : environ 0,16 s pour 5 000 mesures avec un nom IANA (moins de 0,01 s avec un décalage ou une fonction).
+- `lastDaysPeriod(days, now, timeZone)` (L3-03) : les N derniers jours **entiers** du patient, de minuit à minuit,
+  aujourd'hui compris (période de l'API et du téléphone). `localMidnight` donne le vrai premier instant du jour,
+  même là où l'heure change à minuit (Le Caire, La Havane, Santiago : le jour commence alors à 1 h). Vérifié
+  sur les 418 fuseaux, chaque jour de 2026 (152 570 journées).
 
 ## Jeu de données de référence (L3-01)
 

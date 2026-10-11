@@ -119,3 +119,40 @@ export function localHour(at: number, offsetMinutes: number): number {
 export function localDayNumber(at: number, offsetMinutes: number): number {
   return Math.floor((at + offsetMinutes * MINUTE_MS) / DAY_MS);
 }
+
+/**
+ * Premier instant du jour local `dayNumber` chez le patient (voir localDayNumber) : son minuit. Le décalage
+ * de minuit peut différer de celui lu à « minuit UTC » quand l'heure change ce jour-là. On calcule donc deux
+ * candidats (avec le décalage lu à minuit UTC, puis avec celui lu au premier candidat) et on garde le plus
+ * tôt qui tombe bien CE jour-là. Si minuit n'existe pas (heure d'été qui démarre à 0 h : Le Caire,
+ * La Havane, Santiago…), le jour commence à 1 h : c'est cet instant qui est rendu.
+ * Vérifié sur les 418 fuseaux connus, pour chaque jour de 2026 (voir les tests).
+ */
+export function localMidnight(dayNumber: number, timeZone?: PatientTimeZone): number {
+  const offsetAt = resolveTimeZone(timeZone);
+  const asUtc = dayNumber * DAY_MS; // minuit de ce jour, comme si le patient était à UTC
+  const first = asUtc - offsetAt(asUtc) * MINUTE_MS;
+  const second = asUtc - offsetAt(first) * MINUTE_MS;
+  const onThatDay = [first, second].filter((at) => localDayNumber(at, offsetAt(at)) === dayNumber);
+  return onThatDay.length > 0 ? Math.min(...onThatDay) : second;
+}
+
+/**
+ * Les `days` derniers jours ENTIERS du patient, aujourd'hui compris : de minuit il y a `days − 1` jours
+ * jusqu'à minuit ce soir (exclu). Même période sur l'API et sur le téléphone ; « 7 jours » = 7 dates du
+ * calendrier, même si la semaine contient un changement d'heure (elle dure alors 7 jours ± 1 heure).
+ */
+export function lastDaysPeriod(
+  days: number,
+  now: number,
+  timeZone?: PatientTimeZone,
+): { from: number; to: number } {
+  if (!Number.isInteger(days) || days < 1) {
+    throw new RangeError(`Nombre de jours invalide : ${String(days)}`);
+  }
+  const today = localDayNumber(now, resolveTimeZone(timeZone)(now));
+  return {
+    from: localMidnight(today - (days - 1), timeZone),
+    to: localMidnight(today + 1, timeZone),
+  };
+}
