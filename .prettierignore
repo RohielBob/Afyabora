@@ -10,3 +10,7 @@ apps/api/prisma/migrations
 
 docs/api/openapi.v0.json
 docs/api/openapi.generated.json
+
+# Fiches de l'assistant (L9-02) : contenu relu par un médecin et protégé par une empreinte. Prettier lirait
+# l'en-tête comme du YAML et changerait le texte (donc l'empreinte) ; le format est vérifié par les tests.
+apps/api/knowledge/fiches

@@ -58,8 +58,11 @@ const PRIORITY: readonly RefusalReason[] = [
 /** Une expression régulière à partir d'une liste de formulations (une par ligne : plus lisible à relire). */
 const anyOf = (...parts: string[]) => new RegExp(parts.join('|'));
 
-/** Noms commerciaux courants d'insulines et d'antidiabétiques : les citer, c'est parler de traitement. */
-const BRANDS =
+/**
+ * Noms commerciaux courants d'insulines et d'antidiabétiques : les citer, c'est parler de traitement.
+ * Exporté pour les fiches de l'assistant (L9-02), qui ne doivent citer aucune marque.
+ */
+export const BRANDS =
   '(lantus|toujeo|levemir|tresiba|abasaglar|novorapid|humalog|apidra|fiasp|actrapid|insulatard|mixtard|humulin|novomix|ozempic|trulicity|victoza|januvia|jardiance|forxiga|glucophage|diamicron|amarel)';
 
 /** Règles, dans l'ordre où elles sont vérifiées. Les motifs s'appliquent au texte normalisé. */
