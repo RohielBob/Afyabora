@@ -235,6 +235,72 @@ describe('L1-05 : profil patient et seuils d’alerte (/me/profile)', () => {
     expect((await request('GET')).status).toBe(401);
   });
 
+  // ---------- L9-03 : pays et numéro d'urgence (contrat 0.4.0) ----------
+
+  it('L9-03 : enregistre le pays et le numéro d’urgence, puis les renvoie à l’identique', async () => {
+    const withEmergency = { ...profile, country: 'CD', emergencyNumber: '+243 81 000 0000' };
+
+    const put = await request('PUT', tokenFor(jean), withEmergency);
+    const { updatedAt: _u, ...saved } = (await put.json()) as Record<string, unknown>;
+
+    expect(put.status).toBe(200);
+    expect(saved).toEqual(withEmergency);
+    expect(profiles.get(jean)).toMatchObject({
+      country: 'CD',
+      emergencyNumber: '+243 81 000 0000',
+    });
+    const { updatedAt: _g, ...read } = (await (
+      await request('GET', tokenFor(jean))
+    ).json()) as Record<string, unknown>;
+    expect(read).toEqual(withEmergency);
+  });
+
+  it('L9-03 : retire les espaces autour du numéro, accepte un numéro court (« 112 »)', async () => {
+    const res = await request('PUT', tokenFor(jean), { ...profile, emergencyNumber: '  112 ' });
+    const body = (await res.json()) as Record<string, unknown>;
+
+    expect(res.status).toBe(200);
+    expect(body.emergencyNumber).toBe('112');
+    expect(profiles.get(jean)!.emergencyNumber).toBe('112');
+  });
+
+  it('L9-03 : un PUT sans pays ni numéro les efface (le PUT remplace tout le profil)', async () => {
+    await request('PUT', tokenFor(jean), { ...profile, country: 'CD', emergencyNumber: '112' });
+
+    const res = await request('PUT', tokenFor(jean), profile);
+    const body = (await res.json()) as Record<string, unknown>;
+
+    expect(body).not.toHaveProperty('country');
+    expect(body).not.toHaveProperty('emergencyNumber');
+    expect(profiles.get(jean)).toMatchObject({ country: null, emergencyNumber: null });
+  });
+
+  it('L9-03 : refuse un pays mal écrit ou un numéro qui n’en est pas un (400), sans rien enregistrer', async () => {
+    const badCountry = await request('PUT', tokenFor(jean), { ...profile, country: 'cd' });
+    const badNumber = await request('PUT', tokenFor(jean), {
+      ...profile,
+      emergencyNumber: 'appelez le médecin',
+    });
+    const issues = async (res: Response) =>
+      ((await res.json()) as { issues: { path: string }[] }).issues.map((i) => i.path);
+
+    expect(badCountry.status).toBe(400);
+    expect(await issues(badCountry)).toEqual(['country']);
+    expect(badNumber.status).toBe(400);
+    expect(await issues(badNumber)).toEqual(['emergencyNumber']);
+    expect(profiles.size).toBe(0);
+  });
+
+  it('L9-03 : le pays et le numéro d’un patient ne sont jamais visibles par un autre', async () => {
+    await request('PUT', tokenFor(jean), { ...profile, country: 'CD', emergencyNumber: '112' });
+    await request('PUT', tokenFor(awa), { ...profile, firstName: 'Awa', sex: 'F' });
+
+    const asAwa = (await (await request('GET', tokenFor(awa))).json()) as Record<string, unknown>;
+
+    expect(asAwa).not.toHaveProperty('country');
+    expect(asAwa).not.toHaveProperty('emergencyNumber');
+  });
+
   it('compte supprimé mais jeton encore valide : 401 au lieu d’une erreur 500', async () => {
     const ghost = randomUUID(); // absent de existingUsers
     const res = await request('PUT', tokenFor(ghost), profile);

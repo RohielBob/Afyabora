@@ -16,6 +16,10 @@ export interface PatientProfileResponse {
   thresholdsReviewedByClinician: boolean;
   emergencyContact?: { name: string; phone: string; relation?: string };
   doctorContact?: { name: string; phone: string };
+  /** Pays, code à 2 lettres (L9-03, contrat 0.4.0). */
+  country?: string;
+  /** Numéro d'urgence saisi par le patient, montré par l'assistant en cas d'urgence (L9-03). */
+  emergencyNumber?: string;
   updatedAt: string; // UTC, suffixe Z (règle du projet)
 }
 
@@ -38,6 +42,8 @@ export const PROFILE_SELECT = {
   emergencyContactRelation: true,
   doctorName: true,
   doctorPhone: true,
+  country: true,
+  emergencyNumber: true,
   updatedAt: true,
 } as const;
 
@@ -59,6 +65,8 @@ export type ProfileRow = {
   emergencyContactRelation: string | null;
   doctorName: string | null;
   doctorPhone: string | null;
+  country: string | null;
+  emergencyNumber: string | null;
   updatedAt: Date;
 };
 
@@ -108,6 +116,9 @@ export class PatientsService {
       emergencyContactRelation: input.emergencyContact?.relation ?? null,
       doctorName: input.doctorContact?.name ?? null,
       doctorPhone: input.doctorContact?.phone ?? null,
+      // L9-03 : comme les contacts, effacés si un PUT ne les contient pas (le PUT remplace tout le profil).
+      country: input.country ?? null,
+      emergencyNumber: input.emergencyNumber ?? null,
     };
 
     try {
@@ -155,6 +166,8 @@ export function toResponse(row: ProfileRow): PatientProfileResponse {
     ...(row.doctorName && row.doctorPhone
       ? { doctorContact: { name: row.doctorName, phone: row.doctorPhone } }
       : {}),
+    ...(row.country ? { country: row.country } : {}),
+    ...(row.emergencyNumber ? { emergencyNumber: row.emergencyNumber } : {}),
     updatedAt: row.updatedAt.toISOString(),
   };
 }
