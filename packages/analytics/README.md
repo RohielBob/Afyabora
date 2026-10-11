@@ -54,6 +54,13 @@ qualité, statistiques, comparaison, observations **avec leur phrase**, avertiss
 l'API (`GET /insights`) et pour le téléphone hors-ligne, donc mêmes chiffres partout.
 `analysisWindow(days, now, timeZone)` dit quelles mesures lire (la période et la précédente).
 
+## Pourcentages affichés (L3-04)
+
+`displayPercents(stats)` : en dessous / dans la plage / au-dessus en **entiers qui font 100** (plus grand reste ;
+à reste égal, la plus grande part, puis la première : jamais le hasard du calcul en machine). Utilisé par les
+phrases du moteur (comparaison, créneau), donc par l'API, et par les écrans du téléphone (Accueil, Analyse) :
+un même historique donne **le même chiffre partout**. La détection, elle, reste faite sur les valeurs exactes.
+
 ## Jeu de données de référence (L3-01)
 
 `test/reference/` : une semaine type dont **tous** les résultats (pourcentages, moyenne, écart-type,
