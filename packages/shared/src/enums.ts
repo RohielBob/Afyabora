@@ -82,3 +82,34 @@ export type SyncEntity = (typeof SYNC_ENTITIES)[number];
 
 export const SYNC_OP_TYPES = ['upsert', 'delete'] as const;
 export type SyncOpType = (typeof SYNC_OP_TYPES)[number];
+
+// Assistant de conversation « Afyabora » (lot L9, contrat 0.4.0, ADR-0005 complétée le 2026-10-11).
+
+/** Auteur d'un message : le patient, ou l'assistant. */
+export const ASSISTANT_MESSAGE_ROLES = ['USER', 'ASSISTANT'] as const;
+export type AssistantMessageRole = (typeof ASSISTANT_MESSAGE_ROLES)[number];
+
+/** PENDING : réponse en préparation (le modèle de langage travaille) ; READY : réponse définitive. */
+export const ASSISTANT_MESSAGE_STATUSES = ['PENDING', 'READY'] as const;
+export type AssistantMessageStatus = (typeof ASSISTANT_MESSAGE_STATUSES)[number];
+
+/**
+ * Nature d'une réponse de l'assistant :
+ * - MEASUREMENTS : sur les mesures du patient (chiffres calculés par @glyka/analytics) ;
+ * - SHEET : question générale, réponse tirée d'une fiche (citée) ;
+ * - REFUSAL : dose, diagnostic, traitement, prédiction… ⇒ refus poli et renvoi au professionnel de santé ;
+ * - EMERGENCY : urgence ⇒ message d'urgence (numéro, médecin, proche), sans passer par le modèle ;
+ * - OUT_OF_SCOPE : hors sujet ou aucune fiche ne répond ⇒ « je ne peux pas répondre », jamais d'invention.
+ */
+export const ASSISTANT_ANSWER_KINDS = [
+  'MEASUREMENTS',
+  'SHEET',
+  'REFUSAL',
+  'EMERGENCY',
+  'OUT_OF_SCOPE',
+] as const;
+export type AssistantAnswerKind = (typeof ASSISTANT_ANSWER_KINDS)[number];
+
+/** Fiche de connaissances : DRAFT (pas encore relue par le médecin) ou VALIDATED (relue). */
+export const KNOWLEDGE_SHEET_STATUSES = ['DRAFT', 'VALIDATED'] as const;
+export type KnowledgeSheetStatus = (typeof KNOWLEDGE_SHEET_STATUSES)[number];

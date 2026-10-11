@@ -4,7 +4,14 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import {
+  ASSISTANT_ANSWER_KINDS,
+  ASSISTANT_MESSAGE_ROLES,
+  ASSISTANT_MESSAGE_STATUSES,
   askInsightSchema,
+  assistantConversationDetailSchema,
+  assistantConversationDtoSchema,
+  assistantConversationListSchema,
+  assistantMessageDtoSchema,
   claimShareSchema,
   createLifeEventSchema,
   createMeasurementSchema,
@@ -21,6 +28,10 @@ import {
   importPreviewFormSchema,
   INSIGHT_SEVERITIES,
   INSIGHT_TYPES,
+  KNOWLEDGE_SHEET_STATUSES,
+  knowledgeSheetListSchema,
+  knowledgeSheetSchema,
+  knowledgeSheetSummarySchema,
   LIFE_EVENT_TYPES,
   loginSchema,
   measurementDtoSchema,
@@ -34,6 +45,9 @@ import {
   registerDoctorSchema,
   registerPatientSchema,
   resetPasswordSchema,
+  createAssistantConversationSchema,
+  sendAssistantMessageResponseSchema,
+  sendAssistantMessageSchema,
   SHARE_CATEGORIES,
   SHARE_DURATIONS,
   SHARE_STATUSES,
@@ -111,7 +125,8 @@ describe('contrat OpenAPI : structure', () => {
       expect(
         op['x-roles'].length > 0 && op['x-roles'].every((r: string) => roles.includes(r)),
       ).toBe(true);
-      expect(/^L[0-8]-\d{2}$/.test(op['x-ticket'])).toBe(true);
+      // L9 : assistant de conversation « Afyabora » (contrat 0.4.0).
+      expect(/^L[0-9]-\d{2}$/.test(op['x-ticket'])).toBe(true);
       expect(op['x-ticket'].startsWith(op['x-lot'])).toBe(true);
       expect(['P0', 'P1']).toContain(op['x-priority']);
       expect(['implemented', 'planned']).toContain(op['x-status']);
@@ -180,6 +195,15 @@ describe('contrat OpenAPI : structure', () => {
       'DELETE /devices/{deviceId}',
       'GET /notifications/preferences',
       'PUT /notifications/preferences',
+      // Assistant « Afyabora » (lot L9, contrat 0.4.0)
+      'GET /assistant/conversations',
+      'POST /assistant/conversations',
+      'DELETE /assistant/conversations',
+      'GET /assistant/conversations/{id}',
+      'DELETE /assistant/conversations/{id}',
+      'POST /assistant/conversations/{id}/messages',
+      'GET /assistant/sheets',
+      'GET /assistant/sheets/{sheetId}',
     ];
     const described = operations().map(({ method, path }) => `${method.toUpperCase()} ${path}`);
     expect([...described].sort()).toEqual([...expected].sort());
@@ -254,6 +278,10 @@ describe('contrat OpenAPI : énumérations identiques à @glyka/shared', () => {
     ['SyncOpType', SYNC_OP_TYPES],
     ['SyncOpResultCode', SYNC_OP_RESULTS],
     ['ImportRowStatus', IMPORT_ROW_STATUSES],
+    ['AssistantMessageRole', ASSISTANT_MESSAGE_ROLES],
+    ['AssistantMessageStatus', ASSISTANT_MESSAGE_STATUSES],
+    ['AssistantAnswerKind', ASSISTANT_ANSWER_KINDS],
+    ['KnowledgeSheetStatus', KNOWLEDGE_SHEET_STATUSES],
   ];
 
   it.each(pairs)('%s', (name: string, values: readonly string[]) => {
@@ -292,6 +320,8 @@ describe('contrat OpenAPI : requêtes identiques aux schémas Zod', () => {
     ['EmergencyCardRequest', emergencyCardSchema],
     ['NotificationPreferences', notificationPreferencesSchema],
     ['RegisterDeviceRequest', registerDeviceSchema],
+    ['CreateAssistantConversationRequest', createAssistantConversationSchema],
+    ['SendAssistantMessageRequest', sendAssistantMessageSchema],
   ];
 
   it.each(requests)('%s : exemple accepté par le schéma Zod', (name: string, zod: Json) => {
@@ -363,7 +393,66 @@ describe('contrat OpenAPI : requêtes identiques aux schémas Zod', () => {
   });
 });
 
+/** Champs et champs obligatoires d'un schéma OpenAPI, y compris à travers `allOf` (schémas étendus). */
+const documentedFields = (schema: Json): { properties: string[]; required: string[] } => {
+  const parts: Json[] = schema.allOf
+    ? schema.allOf.map((p: Json) => (p.$ref ? schemas[p.$ref.split('/').pop()] : p))
+    : [schema];
+  return {
+    properties: parts.flatMap((p) => Object.keys(p.properties ?? {})).sort(),
+    required: parts.flatMap((p) => p.required ?? []).sort(),
+  };
+};
+
+describe('contrat OpenAPI : réponses de l’assistant identiques aux schémas Zod (0.4.0)', () => {
+  // Nom du schéma OpenAPI -> schéma Zod avec lequel le mobile lira la réponse.
+  const responses: [string, Json][] = [
+    ['AssistantMessage', assistantMessageDtoSchema],
+    ['AssistantConversation', assistantConversationDtoSchema],
+    ['AssistantConversationList', assistantConversationListSchema],
+    ['AssistantConversationDetail', assistantConversationDetailSchema],
+    ['SendAssistantMessageResponse', sendAssistantMessageResponseSchema],
+    ['KnowledgeSheetSummary', knowledgeSheetSummarySchema],
+    ['KnowledgeSheetList', knowledgeSheetListSchema],
+    ['KnowledgeSheet', knowledgeSheetSchema],
+  ];
+
+  it.each(responses)('%s : exemple accepté par le schéma Zod', (name: string, zod: Json) => {
+    expect(zod.safeParse(schemas[name].example).success).toBe(true);
+  });
+
+  it.each(responses)('%s : mêmes champs, mêmes champs obligatoires', (name: string, zod: Json) => {
+    const shape = shapeOf(zod);
+    const { properties, required } = documentedFields(schemas[name]);
+    expect(properties).toEqual(Object.keys(shape).sort());
+    const requiredByZod = Object.keys(shape)
+      .filter((key) => !shape[key].isOptional())
+      .sort();
+    expect(required).toEqual(requiredByZod);
+  });
+
+  it('une réponse en préparation (exemple de SendAssistantMessageResponse) n’a ni texte ni nature', () => {
+    const { answer } = schemas.SendAssistantMessageResponse.example;
+    expect(answer).toMatchObject({ status: 'PENDING', text: null, kind: null, sources: [] });
+  });
+});
+
 describe('contrat OpenAPI : règles métier visibles dans le contrat', () => {
+  it('l’assistant est réservé au patient : le médecin n’accède jamais aux conversations', () => {
+    const assistant = operations().filter(({ path }) => path.startsWith('/assistant/'));
+    expect(assistant).toHaveLength(8);
+    for (const { op } of assistant) {
+      expect(op['x-roles']).toEqual(['PATIENT']);
+      expect(op['x-lot']).toBe('L9');
+    }
+  });
+
+  it('la question libre L3-08 est remplacée par l’assistant (dépréciée, pas retirée)', () => {
+    const ask = contract.paths['/insights/ask'].post;
+    expect(ask.deprecated).toBe(true);
+    expect(ask.description).toMatch(/Remplacée par l’assistant/);
+  });
+
   it('les jetons de partage et d’urgence ne contiennent jamais de donnée médicale (documenté)', () => {
     expect(schemas.ShareToken.properties.token.description).toMatch(/JAMAIS de donnée médicale/);
   });

@@ -6,12 +6,12 @@ Le contrat **OpenAPI v0** est **gelé** (ticket L0-07). Le mobile et le portail 
 
 ## Fichiers
 
-| Fichier                  | Rôle                                                                                                     |
-| ------------------------ | -------------------------------------------------------------------------------------------------------- |
-| `openapi.v0.json`        | **Le contrat gelé** : 49 opérations, 91 schémas. Écrit à la main, vérifié par des tests.                 |
-| `openapi.generated.json` | Ce que le code produit réellement (`pnpm --filter @glyka/api openapi:export`). Non versionné.            |
-| `CHANGELOG.md`           | Historique des changements du contrat.                                                                   |
-| `REVUE-SCHEMAS.md`       | Relecture des schémas partagés (ticket L0-08) : défauts corrigés, points à décider, validation par rôle. |
+| Fichier                  | Rôle                                                                                                      |
+| ------------------------ | --------------------------------------------------------------------------------------------------------- |
+| `openapi.v0.json`        | **Le contrat gelé** (version 0.4.0) : 57 opérations, 109 schémas. Écrit à la main, vérifié par des tests. |
+| `openapi.generated.json` | Ce que le code produit réellement (`pnpm --filter @glyka/api openapi:export`). Non versionné.             |
+| `CHANGELOG.md`           | Historique des changements du contrat.                                                                    |
+| `REVUE-SCHEMAS.md`       | Relecture des schémas partagés (ticket L0-08) : défauts corrigés, points à décider, validation par rôle.  |
 
 ## Utiliser le contrat
 
@@ -220,6 +220,21 @@ Appareils et préférences de notification.
 | GET     | `/notifications/preferences` | patient  | P0   | à coder | L8-14  |
 | PUT     | `/notifications/preferences` | patient  | P0   | à coder | L8-14  |
 
-**49 opérations.**
+### assistant
+
+Assistant de conversation « Afyabora » (lot L9, ADR-0005) : questions sur ses mesures et sur le diabète, réponses tirées de fiches relues par un médecin, jamais de dose ni de diagnostic.
+
+| Méthode | Chemin                                   | Accès   | Prio | État    | Ticket |
+| ------- | ---------------------------------------- | ------- | ---- | ------- | ------ |
+| GET     | `/assistant/conversations`               | patient | P1   | à coder | L9-05  |
+| POST    | `/assistant/conversations`               | patient | P1   | à coder | L9-05  |
+| DELETE  | `/assistant/conversations`               | patient | P1   | à coder | L9-05  |
+| GET     | `/assistant/conversations/{id}`          | patient | P1   | à coder | L9-05  |
+| DELETE  | `/assistant/conversations/{id}`          | patient | P1   | à coder | L9-05  |
+| POST    | `/assistant/conversations/{id}/messages` | patient | P1   | à coder | L9-05  |
+| GET     | `/assistant/sheets`                      | patient | P1   | à coder | L9-06  |
+| GET     | `/assistant/sheets/{sheetId}`            | patient | P1   | à coder | L9-06  |
+
+**57 opérations.**
 
 <!-- routes:end -->
