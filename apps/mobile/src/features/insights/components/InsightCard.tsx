@@ -14,6 +14,7 @@ import { formatReading, type MeasurementPoint } from '@/features/measurements';
 import { durations, easing, radii, spacing, useReducedMotion, useTheme } from '@/theme';
 import { crossedThreshold, insightSentence } from '../presentation';
 import { EvidenceList } from './EvidenceList';
+import { RewrittenNote } from './RewrittenNote';
 
 type IconName = ComponentProps<typeof Ionicons>['name'];
 
@@ -40,6 +41,7 @@ export function InsightCard({
   thresholds,
   now,
   index = 0,
+  rewritten,
 }: {
   insight: InsightWithText;
   /** Mesures qui justifient l'observation (déjà retrouvées et triées). */
@@ -48,6 +50,8 @@ export function InsightCard({
   thresholds: GlucoseThresholds;
   now: Date;
   index?: number;
+  /** Phrase reformulée par le serveur (L3-09), déjà vérifiée ; sinon la phrase des traductions. */
+  rewritten?: string;
 }) {
   const { t } = useTranslation();
   const { colors } = useTheme();
@@ -59,7 +63,7 @@ export function InsightCard({
   const tone = insight.severity === 'INFO' ? colors.info : colors.warning;
   const severity = t(`insights.severity.${insight.severity}`);
   const title = t(`insights.type.${insight.type}`);
-  const sentence = insightSentence(t, insight);
+  const sentence = rewritten ?? insightSentence(t, insight);
   const threshold = crossedThreshold(insight);
 
   const turn = useSharedValue(0);
@@ -123,6 +127,7 @@ export function InsightCard({
         </View>
 
         <Text variant="body">{sentence}</Text>
+        {rewritten ? <RewrittenNote /> : null}
 
         {threshold ? (
           <Text variant="caption" tone="muted">

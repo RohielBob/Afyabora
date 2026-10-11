@@ -5,6 +5,8 @@
 //  - « En bref » : le résumé de la période en langage clair (L3-06), comme dans l'API et le rapport PDF ;
 //  - observations triées par gravité, chacune avec « Voir les mesures concernées » (traçabilité) ;
 //  - moins de 10 mesures : « pas encore assez de mesures », aucun chiffre trompeur ;
+//  - en ligne : les phrases déjà reformulées par l'IA du serveur remplacent celles du téléphone, seulement
+//    si elles décrivent exactement les mêmes faits (L3-09) ; hors-ligne, rien ne change ;
 //  - avertissement « outil d'aide, pas un avis médical ».
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -20,6 +22,7 @@ import {
   evidenceOf,
   headlineOf,
   orderInsights,
+  useEnrichment,
   useLocalAnalysis,
 } from '@/features/insights';
 import { MedicalDisclaimer } from '@/features/legal';
@@ -30,6 +33,7 @@ export default function InsightsScreen() {
   const { t } = useTranslation();
   const [period, setPeriod] = useState<ChartPeriod>(DEFAULT_PERIOD);
   const { state, reload } = useLocalAnalysis(period);
+  const enrichment = useEnrichment(state.status === 'ready' ? state.analysis : null, period);
   const unit = readUnit();
 
   const view = useMemo(() => {
@@ -38,6 +42,8 @@ export default function InsightsScreen() {
     const insights = orderInsights(state.analysis.insights).map((insight) => ({
       insight,
       evidence: evidenceOf(insight, state.points),
+      // Position dans l'analyse locale (l'ordre d'affichage est différent) : clé des phrases reprises.
+      position: state.analysis.insights.indexOf(insight),
     }));
     return { headline, insights };
   }, [state]);
@@ -85,13 +91,18 @@ export default function InsightsScreen() {
               headline={view.headline}
               index={0}
             />
-            <SummaryCard analysis={state.analysis} days={state.days} index={1} />
+            <SummaryCard
+              analysis={state.analysis}
+              days={state.days}
+              index={1}
+              rewritten={enrichment.summary}
+            />
             {view.insights.length > 0 ? (
               <Text variant="overline" tone="muted" accessibilityRole="header">
                 {t('insights.observations', { count: view.insights.length })}
               </Text>
             ) : null}
-            {view.insights.map(({ insight, evidence }, i) => (
+            {view.insights.map(({ insight, evidence, position }, i) => (
               <InsightCard
                 // Clé stable par type et période : changer de période rejoue l'apparition des cartes.
                 key={`${state.days}-${insight.type}-${i}`}
@@ -101,6 +112,7 @@ export default function InsightsScreen() {
                 thresholds={state.thresholds}
                 now={state.now}
                 index={i + 2}
+                rewritten={enrichment.texts.get(position)}
               />
             ))}
           </>

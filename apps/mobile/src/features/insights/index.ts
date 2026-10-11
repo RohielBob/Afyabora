@@ -2,6 +2,15 @@
 export { loadLocalAnalysis, type LocalAnalysis, type LocalSources } from './local-analysis';
 export { useLocalAnalysis, type LocalAnalysisState } from './useLocalAnalysis';
 export {
+  NO_ENRICHMENT,
+  enrich,
+  numbersKey,
+  type Enrichment,
+  type ServerInsights,
+} from './enrichment';
+export { loadEnrichment, type EnrichmentSources } from './server-enrichment';
+export { useEnrichment } from './useEnrichment';
+export {
   EVIDENCE_PREVIEW,
   crossedThreshold,
   evidenceOf,
