@@ -742,5 +742,77 @@
       "another": "Add another event",
       "done": "Done"
     }
+  },
+  "insights": {
+    "title": "Insights",
+    "subtitle": "What your readings show. Computed on this phone, even offline.",
+    "periodLabel": "Analysed period",
+    "error": "Unable to read the readings stored on this phone.",
+    "summary": {
+      "title": "Last {{days}} days",
+      "range": "From {{from}} to {{to}}",
+      "inRange": "in target range",
+      "count_one": "{{count}} reading",
+      "count_other": "{{count}} readings",
+      "quality": "Data quality: {{score}}/100 · {{level}}",
+      "a11y": "Over the last {{days}} days: {{percent}} % of readings in target range, {{readings}}. Data quality: {{score}} out of 100, {{level}}."
+    },
+    "headline": {
+      "calm": "Nothing in particular to report for this period.",
+      "watch_one": "{{count}} observation worth a closer look.",
+      "watch_other": "{{count}} observations worth a closer look."
+    },
+    "insufficient": {
+      "title": "Not enough readings yet",
+      "body_one": "{{count}} reading over these {{days}} days: at least 10 are needed for a reliable analysis.",
+      "body_other": "{{count}} readings over these {{days}} days: at least 10 are needed for a reliable analysis.",
+      "action": "Log a reading"
+    },
+    "observations_one": "{{count}} observation",
+    "observations_other": "{{count}} observations",
+    "severity": {
+      "INFO": "Information",
+      "ATTENTION": "Worth watching",
+      "ALERT": "Alert"
+    },
+    "type": {
+      "TREND": "Trend",
+      "TIME_OF_DAY_PATTERN": "Time of day",
+      "ANOMALY": "Unusual value",
+      "HIGH_STREAK": "Run of high values",
+      "REPEATED_HYPO": "Repeated low values",
+      "MISSING_DATA": "Days without readings",
+      "PERIOD_COMPARISON": "Comparison"
+    },
+    "slot": {
+      "MORNING": "morning",
+      "NOON": "midday",
+      "EVENING": "evening",
+      "NIGHT": "night"
+    },
+    "sentence": {
+      "REPEATED_HYPO": "I observe {{count}} readings below the low threshold over the last {{days}} days.",
+      "HIGH_STREAK": "I observe a run of {{length}} consecutive readings above the high threshold.",
+      "ANOMALY": "{{count}} reading(s) differ noticeably from your recent history.",
+      "TIME_OF_DAY_PATTERN": "High values are more frequent in the “{{slot}}” slot ({{slotAbovePct}} % versus {{globalAbovePct}} % overall).",
+      "MISSING_DATA": "{{daysWithoutData}} day(s) out of {{daysInPeriod}} have no readings: some analyses may be incomplete.",
+      "PERIOD_COMPARISON": "Time in range: {{timeInRangePct}} % (previous period: {{previousTimeInRangePct}} %).",
+      "TREND": "Trend observed over the period."
+    },
+    "threshold": {
+      "below": "Threshold crossed: below {{value}}",
+      "above": "Threshold crossed: above {{value}}"
+    },
+    "alertReminder": "Talk to your healthcare professional about it.",
+    "evidence": {
+      "show_one": "See the reading involved",
+      "show_other": "See the {{count}} readings involved",
+      "hide": "Hide the readings",
+      "more_one": "Show {{count}} more reading",
+      "more_other": "Show the {{count}} other readings",
+      "openHint": "Opens the details of this reading.",
+      "a11y": "{{when}}: {{value}}, {{state}}. {{context}}."
+    },
+    "cardA11y": "{{severity}}. {{title}}. {{sentence}}"
   }
 }

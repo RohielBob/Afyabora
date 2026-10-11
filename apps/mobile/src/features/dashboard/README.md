@@ -139,6 +139,11 @@ Carte « Qualité des données » sous les statistiques (`components/QualityCard
 - [x] Bonne qualité (3 par jour, tous les jours) ; aucune mesure ; couverture, densité, fraîcheur comme cause.
 - [x] Composante la plus faible pondérée comme la formule, ordre fixe en cas d'égalité.
 
+## Pourcentages (L3-04)
+
+La répartition « pourcentages qui font 100 » vient du moteur (`roundedPercents` / `displayPercents` de
+`@glyka/analytics`) : l'Accueil, l'Analyse et les phrases du moteur affichent exactement le même chiffre.
+
 ## Calcul sur le téléphone (L8-11)
 
 - Le tableau de bord (dernière mesure, graphique, statistiques, qualité) est lu **uniquement** dans la base

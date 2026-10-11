@@ -1,15 +1,14 @@
 // Analyse des N derniers jours, calculée sur le téléphone (L8-11) : pour l'écran « Analyse » (L3-04) et
 // le travail hors-ligne (L3-09). Relue à chaque retour sur l'écran (ex. après une nouvelle mesure) et à
 // chaque changement de période.
-import type { LastDaysAnalysis } from '@glyka/analytics';
 import { useFocusEffect } from 'expo-router';
 import { useCallback, useRef, useState } from 'react';
-import { loadLocalAnalysis } from './local-analysis';
+import { loadLocalAnalysis, type LocalAnalysis } from './local-analysis';
 
 export type LocalAnalysisState =
   | { status: 'loading' }
   | { status: 'error' }
-  | { status: 'ready'; analysis: LastDaysAnalysis; days: number };
+  | ({ status: 'ready'; days: number; now: Date } & LocalAnalysis);
 
 export function useLocalAnalysis(days: number): {
   state: LocalAnalysisState;
@@ -22,9 +21,10 @@ export function useLocalAnalysis(days: number): {
 
   const load = useCallback(() => {
     const id = ++lastLoad.current;
-    loadLocalAnalysis(days, Date.now())
-      .then((analysis) => {
-        if (id === lastLoad.current) setState({ status: 'ready', analysis, days });
+    const now = new Date();
+    loadLocalAnalysis(days, now.getTime())
+      .then((result) => {
+        if (id === lastLoad.current) setState({ status: 'ready', days, now, ...result });
       })
       .catch(() => {
         // Base locale illisible : on le dit (avec « Réessayer ») plutôt que « données insuffisantes ».
