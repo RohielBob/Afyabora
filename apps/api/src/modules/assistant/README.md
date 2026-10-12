@@ -129,7 +129,7 @@ médecin. Lecteur : `knowledge/sheet-format.ts`, `knowledge/knowledge-sheets.ts`
   mets ce soir ? ») : chaque question est jugée seule (filtre de L3-07), puis, si c'est une **question de
   suite** (« Et… », « Alors… », « Du coup… », « Ok… », ou un pronom qui reprend l'objet : « je peux
   l'arrêter », « j'en prends »), **avec les 2 questions précédentes** de la même conversation (30 dernières
-  minutes au plus) : une raison de refus dans l'ensemble ⇒ refus pour cette raison. Une **urgence reste une
+  minutes au plus) : une raison de refus dans l'ensemble ⇒ refus pour cette raison, **la plus proche d'abord** (on ne remonte à l'autre que si rien n'est trouvé : une suite reprend ce qui vient d'être dit). Une **urgence reste une
   urgence** (« Ma glycémie est à 0,4. » puis « Et maintenant ? »).
 - Une question **autonome** n'est jamais refusée à cause des précédentes : le modèle ne voit jamais les
   questions, un détournement précédent ne débloque donc rien. Les questions précédentes servent seulement au

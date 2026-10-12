@@ -8,7 +8,7 @@
 //  1. la question est d'abord jugée SEULE (filtre de L3-07) : urgence ou refus ⇒ décidé ;
 //  2. si c'est une QUESTION DE SUITE (« Et… », « Alors… », « Du coup… », « Je peux l'arrêter ? »,
 //     « J'en prends… »), elle est jugée AVEC les questions précédentes de la conversation (2 au plus, des
-//     30 dernières minutes) : une raison de refus trouvée dans l'ensemble ⇒ refus pour cette raison ;
+//     30 dernières minutes), la plus PROCHE d'abord : une raison de refus trouvée ⇒ refus pour cette raison ;
 //     une urgence reste une urgence (« Ma glycémie est à 0,4. » puis « Et maintenant ? ») ;
 //  3. une question AUTONOME n'est jamais refusée à cause des précédentes : le modèle ne voit jamais les
 //     questions, un détournement précédent ne débloque donc rien.
@@ -54,9 +54,14 @@ export function screenInConversation(
   const own = screenQuestion(question);
   if (own.refused && own.reason !== 'OFF_TOPIC') return own;
   if (previous.length === 0 || !isFollowUp(question)) return own;
-  const together = [...previous.slice(-CONTEXT_QUESTIONS), question]
-    .map(normalizeQuestion)
-    .join(' . ');
-  const [reason] = refusalReasons(together);
-  return reason ? { refused: true, reason, answer: REFUSAL_ANSWERS[reason] } : own;
+  // La question la plus PROCHE d'abord : une suite reprend d'abord ce qui vient d'être dit. « Combien
+  // d'unités ? », « Je suis sous metformine. », « Je peux l'arrêter ? » ⇒ refus « traitement » (avec la
+  // metformine), pas « dose » (question d'avant-avant). On ne remonte plus loin que si rien n'est trouvé.
+  const recent = previous.slice(-CONTEXT_QUESTIONS);
+  for (let count = 1; count <= recent.length; count++) {
+    const together = [...recent.slice(-count), question].map(normalizeQuestion).join(' . ');
+    const [reason] = refusalReasons(together);
+    if (reason) return { refused: true, reason, answer: REFUSAL_ANSWERS[reason] };
+  }
+  return own;
 }
