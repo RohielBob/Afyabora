@@ -2,11 +2,11 @@
 id: preparer-une-consultation
 titre: Préparer une consultation
 resume: Que noter et apporter avant un rendez-vous, comment Afyabora peut aider, et des questions utiles à poser.
-statut: brouillon
+statut: validee
 version: 1
-relu_par:
-relu_le:
-empreinte:
+relu_par: Médecin relecteur (anonyme)
+relu_le: 2026-10-12
+empreinte: 9149329c82555574
 mots_cles: consultation, rendez-vous, médecin, préparer, questions, rapport, partage, qr code, carnet, examens, bilan, suivi
 sources:
   - Fédération Française des Diabétiques : Ma consultation chez un diabétologue | https://www.federationdesdiabetiques.org/diabete/traitements/diabetologue

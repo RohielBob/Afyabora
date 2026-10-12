@@ -2,11 +2,11 @@
 id: activite-physique
 titre: Activité physique et diabète
 resume: Pourquoi bouger, combien de temps par semaine et quelles précautions prendre pour éviter les hypoglycémies.
-statut: brouillon
+statut: validee
 version: 1
-relu_par:
-relu_le:
-empreinte:
+relu_par: Médecin relecteur (anonyme)
+relu_le: 2026-10-12
+empreinte: ddc494463b4ee6b5
 mots_cles: activité physique, sport, marche, exercice, bouger, sédentarité, 150 minutes, effort, hypoglycémie à l'effort, pieds
 sources:
   - Organisation mondiale de la santé : Activité physique (aide-mémoire) | https://www.who.int/fr/news-room/fact-sheets/detail/physical-activity

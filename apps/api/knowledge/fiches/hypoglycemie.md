@@ -2,11 +2,11 @@
 id: hypoglycemie
 titre: Hypoglycémie : la reconnaître et réagir
 resume: Les signes d'une glycémie trop basse et les gestes généralement recommandés, à adapter avec votre médecin.
-statut: brouillon
+statut: validee
 version: 1
-relu_par:
-relu_le:
-empreinte:
+relu_par: Médecin relecteur (anonyme)
+relu_le: 2026-10-12
+empreinte: 2b046faf3e7ecce6
 mots_cles: hypoglycémie, hypo, glycémie basse, sucre bas, malaise, tremblements, sueurs, resucrage, sucre rapide, glucagon, trop bas
 sources:
   - Fédération Française des Diabétiques : Hypoglycémie | https://www.federationdesdiabetiques.org/diabete/glycemie/hypoglycemie

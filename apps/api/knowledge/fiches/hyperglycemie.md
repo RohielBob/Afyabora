@@ -2,11 +2,11 @@
 id: hyperglycemie
 titre: Hyperglycémie : quand la glycémie est trop haute
 resume: Ce que signifie une glycémie au-dessus de votre cible, les signes possibles et quand réagir vite.
-statut: brouillon
+statut: validee
 version: 1
-relu_par:
-relu_le:
-empreinte:
+relu_par: Médecin relecteur (anonyme)
+relu_le: 2026-10-12
+empreinte: 40f9939420dcde54
 mots_cles: hyperglycémie, glycémie haute, sucre élevé, trop haut, soif, uriner souvent, fatigue, acétone, cétones, acidocétose, au-dessus de la cible
 sources:
   - Fédération Française des Diabétiques : Hyperglycémie | https://www.federationdesdiabetiques.org/diabete/glycemie/hyperglycemie

@@ -2,11 +2,11 @@
 id: sommeil
 titre: Sommeil et diabète
 resume: Comment le sommeil et la glycémie s'influencent, des habitudes qui aident et les signes à signaler à votre médecin.
-statut: brouillon
+statut: validee
 version: 1
-relu_par:
-relu_le:
-empreinte:
+relu_par: Médecin relecteur (anonyme)
+relu_le: 2026-10-12
+empreinte: bb38b8773be893ce
 mots_cles: sommeil, dormir, dors, dort, nuit, fatigue, insomnie, ronflement, ronfle, apnée du sommeil, hypoglycémie nocturne, réveil, cauchemars
 sources:
   - Fédération Française des Diabétiques : Diabète et sommeil | https://www.federationdesdiabetiques.org/information/complications-diabete/diabete-et-sommeil

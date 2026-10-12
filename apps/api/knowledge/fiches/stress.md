@@ -2,11 +2,11 @@
 id: stress
 titre: Stress, moral et diabète
 resume: L'effet du stress sur la glycémie, la fatigue liée au diabète et quand demander de l'aide.
-statut: brouillon
+statut: validee
 version: 1
-relu_par:
-relu_le:
-empreinte:
+relu_par: Médecin relecteur (anonyme)
+relu_le: 2026-10-12
+empreinte: 95bb546d4f024e12
 mots_cles: stress, anxiété, moral, émotions, fatigue du diabète, détresse, déprime, tristesse, découragement, soutien, psychologue
 sources:
   - Fédération Française des Diabétiques : Diabète et santé mentale | https://www.federationdesdiabetiques.org/diabete/le-diabete-et-la-sante-mentale

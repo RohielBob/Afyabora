@@ -4,25 +4,27 @@ Ticket **L9-02** (lot L9, complément de l'ADR-0005 du 2026-10-11). L'assistant 
 sur le diabète **qu'à partir de ces fiches**, et les cite. Il ne fait jamais de diagnostic, ne donne aucune dose
 et ne modifie aucun traitement.
 
-> **Statut actuel : les 10 fiches sont des BROUILLONS.** Elles ont été rédigées avec Claude Code à partir des
-> sources publiques citées, et **n'ont pas encore été relues par un médecin**. En production, l'assistant
-> n'utilise que les fiches validées. En développement et en démonstration, les brouillons s'affichent avec la
-> mention « Fiche non encore relue ».
+> **Statut actuel : les 10 fiches sont VALIDÉES** (version 1). Rédigées avec Claude Code à partir des sources
+> publiques citées, elles ont été **relues et approuvées en entier par un médecin le 2026-10-12**. Le médecin a
+> demandé à **rester anonyme** : les fiches indiquent `relu_par: Médecin relecteur (anonyme)` ; son identité est
+> connue du lead technique et n'est écrite nulle part dans le dépôt. L'empreinte de chaque fiche prouve que le
+> texte servi est exactement celui qui a été relu. En production, l'assistant n'utilise que les fiches validées ;
+> une fiche modifiée repasse en brouillon (« Fiche non encore relue ») jusqu'à une nouvelle relecture.
 
 ## Les fiches
 
-| Fichier                               | Sujet                                    | Statut    |
-| ------------------------------------- | ---------------------------------------- | --------- |
-| `fiches/hypoglycemie.md`              | Reconnaître une hypoglycémie et réagir   | brouillon |
-| `fiches/hyperglycemie.md`             | Glycémie trop haute, quand réagir vite   | brouillon |
-| `fiches/hba1c.md`                     | L'hémoglobine glyquée                    | brouillon |
-| `fiches/lire-ses-glycemies.md`        | Unités, plage cible, temps dans la cible | brouillon |
-| `fiches/alimentation.md`              | Repères d'alimentation                   | brouillon |
-| `fiches/activite-physique.md`         | Bouger, combien, quelles précautions     | brouillon |
-| `fiches/sommeil.md`                   | Sommeil, hypoglycémies nocturnes, apnée  | brouillon |
-| `fiches/stress.md`                    | Stress, moral, fatigue liée au diabète   | brouillon |
-| `fiches/preparer-une-consultation.md` | Préparer un rendez-vous                  | brouillon |
-| `fiches/quand-demander-de-l-aide.md`  | Urgences et situations à signaler        | brouillon |
+| Fichier                               | Sujet                                    | Statut               |
+| ------------------------------------- | ---------------------------------------- | -------------------- |
+| `fiches/hypoglycemie.md`              | Reconnaître une hypoglycémie et réagir   | validée (2026-10-12) |
+| `fiches/hyperglycemie.md`             | Glycémie trop haute, quand réagir vite   | validée (2026-10-12) |
+| `fiches/hba1c.md`                     | L'hémoglobine glyquée                    | validée (2026-10-12) |
+| `fiches/lire-ses-glycemies.md`        | Unités, plage cible, temps dans la cible | validée (2026-10-12) |
+| `fiches/alimentation.md`              | Repères d'alimentation                   | validée (2026-10-12) |
+| `fiches/activite-physique.md`         | Bouger, combien, quelles précautions     | validée (2026-10-12) |
+| `fiches/sommeil.md`                   | Sommeil, hypoglycémies nocturnes, apnée  | validée (2026-10-12) |
+| `fiches/stress.md`                    | Stress, moral, fatigue liée au diabète   | validée (2026-10-12) |
+| `fiches/preparer-une-consultation.md` | Préparer un rendez-vous                  | validée (2026-10-12) |
+| `fiches/quand-demander-de-l-aide.md`  | Urgences et situations à signaler        | validée (2026-10-12) |
 
 ## Format d'une fiche
 
@@ -68,7 +70,9 @@ reformaté automatiquement.
 
 1. Le médecin relit la fiche **en entier** (titre, résumé, texte et sources) et demande les corrections.
 2. Une fois le texte final accepté, mettre `statut: validee`, `relu_par: Dr Prénom Nom` et
-   `relu_le: AAAA-MM-JJ`, en laissant `empreinte:` vide.
+   `relu_le: AAAA-MM-JJ`, en laissant `empreinte:` vide. **Si le médecin demande l'anonymat**, écrire
+   `relu_par: Médecin relecteur (anonyme)` : ce champ est montré aux patients (`reviewedBy`), son nom ne doit
+   alors apparaître nulle part (ni fiche, ni commit, ni PR) ; le lead technique garde son identité.
 3. Lancer le test des fiches :
 
    ```powershell
