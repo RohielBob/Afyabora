@@ -19,6 +19,7 @@ import { decryptField } from '../src/common/crypto/field-encryption';
 import { AllExceptionsFilter } from '../src/common/filters/all-exceptions.filter';
 import { JwtAuthGuard } from '../src/common/guards/jwt-auth.guard';
 import { RolesGuard } from '../src/common/guards/roles.guard';
+import { emergencyAnswer } from '../src/modules/assistant/answers/emergency-answer';
 import { ASSISTANT_TEMPLATES } from '../src/modules/assistant/answers/template-answer';
 import { AssistantModule } from '../src/modules/assistant/assistant.module';
 import {
@@ -31,6 +32,12 @@ import { PrismaService } from '../src/prisma/prisma.service';
 
 const SECRET = 'secret-de-test-uniquement-0123456789abcdef';
 const FIELD_KEY = randomBytes(32).toString('base64');
+/** Configuration du test : modèle de langage absent (gabarits), fiches en brouillon servies. */
+const CONFIG: Record<string, string> = {
+  FIELD_ENCRYPTION_KEY: FIELD_KEY,
+  NODE_ENV: 'test',
+  LLM_PROVIDER: 'none',
+};
 
 // ---------------------------------------------------------------- Fausse base
 interface Conversation {
@@ -177,6 +184,25 @@ const fakePrisma = {
     findUnique: async ({ where }: { where: { id: string } }) =>
       users.has(where.id) ? { id: where.id } : null,
   },
+  // L9-06 : l'assistant lit les seuils et les contacts du profil, et les mesures (aucune ici).
+  patientProfile: {
+    findUnique: async ({ where }: { where: { userId: string } }) =>
+      profiles.has(where.userId)
+        ? {
+            veryLowMgDl: 54,
+            targetMinMgDl: 70,
+            targetMaxMgDl: 180,
+            veryHighMgDl: 250,
+            timezoneOffsetMinutes: 60,
+            emergencyNumber: null,
+            emergencyContactName: null,
+            emergencyContactPhone: null,
+            doctorName: null,
+            doctorPhone: null,
+          }
+        : null,
+  },
+  measurement: { findMany: async () => [] },
   // Transaction : tout ou rien (on restaure l'état si une écriture échoue).
   $transaction: async (fn: (tx: unknown) => Promise<unknown>) => {
     const saved = {
@@ -194,6 +220,13 @@ const fakePrisma = {
 };
 
 class FakeInfraModule {}
+
+/** Réponse d'urgence quand le profil n'a ni numéro, ni proche, ni médecin (L9-06). */
+const EMERGENCY_WITHOUT_CONTACTS = emergencyAnswer({
+  emergencyNumber: null,
+  relative: null,
+  doctor: null,
+});
 
 // ---------------------------------------------------------------- Serveur de test
 describe('L9-05 : conversations de l’assistant (/assistant/conversations)', () => {
@@ -240,7 +273,10 @@ describe('L9-05 : conversations de l’assistant (/assistant/conversations)', ()
             { provide: PrismaService, useValue: fakePrisma },
             {
               provide: ConfigService,
-              useValue: { get: () => FIELD_KEY, getOrThrow: () => FIELD_KEY },
+              useValue: {
+                get: (key: string) => CONFIG[key],
+                getOrThrow: (key: string) => CONFIG[key],
+              },
             },
           ],
           exports: [PrismaService, ConfigService],
@@ -327,7 +363,12 @@ describe('L9-05 : conversations de l’assistant (/assistant/conversations)', ()
     it('202 : la question et sa réponse gabarit, prête tout de suite, au format du contrat', async () => {
       const conv = await newConversation(awa);
       const questionId = randomUUID();
-      const res = await ask(awa, conv, '  Pourquoi ma glycémie monte le soir ?  ', questionId);
+      const res = await ask(
+        awa,
+        conv,
+        '  Les remboursements du lecteur de glycémie ?  ',
+        questionId,
+      );
       const body = sendAssistantMessageResponseSchema.parse(await res.json());
 
       expect(res.status).toBe(202);
@@ -337,7 +378,7 @@ describe('L9-05 : conversations de l’assistant (/assistant/conversations)', ()
         role: 'USER',
         status: 'READY',
         kind: null,
-        text: 'Pourquoi ma glycémie monte le soir ?', // espaces retirés par le schéma
+        text: 'Les remboursements du lecteur de glycémie ?', // espaces retirés par le schéma
         sources: [],
         rephrased: false,
       });
@@ -357,7 +398,7 @@ describe('L9-05 : conversations de l’assistant (/assistant/conversations)', ()
     });
 
     it.each([
-      ['urgence', 'Je fais un malaise, que faire ?', 'EMERGENCY', REFUSAL_ANSWERS.EMERGENCY],
+      ['urgence', 'Je fais un malaise, que faire ?', 'EMERGENCY', EMERGENCY_WITHOUT_CONTACTS],
       ['dose', 'Combien d’unités d’insuline dois-je prendre ?', 'REFUSAL', REFUSAL_ANSWERS.DOSE],
       ['diagnostic', 'Est-ce que j’ai un diabète grave ?', 'REFUSAL', REFUSAL_ANSWERS.DIAGNOSIS],
       [
@@ -393,7 +434,7 @@ describe('L9-05 : conversations de l’assistant (/assistant/conversations)', ()
 
       const stored = JSON.stringify({ conversations, messages });
       expect(stored).not.toContain('malaise');
-      expect(stored).not.toContain('services d');
+      expect(stored).not.toContain('secours');
       const question = messages.find((m) => m.role === 'USER')!;
       expect(decryptField(question.textEncrypted!, FIELD_KEY)).toBe(
         'Je fais un malaise, que faire ?',
@@ -454,7 +495,7 @@ describe('L9-05 : conversations de l’assistant (/assistant/conversations)', ()
 
       expect(res.status).toBe(409);
       expect(body).not.toContain('malaise');
-      expect(body).not.toContain(REFUSAL_ANSWERS.EMERGENCY);
+      expect(body).not.toContain('secours');
       expect(messages).toHaveLength(2);
     });
 

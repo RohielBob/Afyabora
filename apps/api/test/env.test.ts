@@ -51,6 +51,20 @@ describe('validation de la configuration', () => {
     expect(() => validateEnv(sansBase)).toThrow(/DATABASE_URL/);
   });
 
+  // L9-06 : fiches de l'assistant en brouillon (voir SheetsService.draftsAllowed).
+  it('ASSISTANT_DRAFT_SHEETS : vide = non renseigné ; « true » ou « false » ; autre valeur refusée', () => {
+    expect(validateEnv(validEnv()).ASSISTANT_DRAFT_SHEETS).toBeUndefined();
+    expect(validateEnv({ ...validEnv(), ASSISTANT_DRAFT_SHEETS: '' }).ASSISTANT_DRAFT_SHEETS).toBe(
+      undefined,
+    );
+    expect(
+      validateEnv({ ...validEnv(), ASSISTANT_DRAFT_SHEETS: 'true' }).ASSISTANT_DRAFT_SHEETS,
+    ).toBe('true');
+    expect(() => validateEnv({ ...validEnv(), ASSISTANT_DRAFT_SHEETS: 'oui' })).toThrow(
+      /ASSISTANT_DRAFT_SHEETS/,
+    );
+  });
+
   it("ne révèle jamais la valeur des secrets dans le message d'erreur", () => {
     const secret = 'change-me-ceci-ne-doit-jamais-apparaitre-dans-un-journal';
     let message = '';

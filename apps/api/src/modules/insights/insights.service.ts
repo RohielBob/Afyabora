@@ -64,6 +64,16 @@ export class InsightsService {
     };
   }
 
+  /**
+   * Analyse du MOTEUR seul (phrases et résumé = gabarits, jamais le modèle de langage) : pour l'assistant
+   * (L9-06), dont les réponses sur les mesures doivent être déterministes ; la mise en mots par le modèle
+   * y sera ajoutée et vérifiée séparément (L9-07).
+   */
+  async engineAnalysis(patientId: string, days: number): Promise<LastDaysAnalysis> {
+    const { points, now, thresholds, timeZone } = await this.load(patientId, days);
+    return analyzeLastDays(points, days, { now, thresholds, timeZone });
+  }
+
   /** GET /quality?period : score de qualité des données (couverture, densité, fraîcheur). */
   async quality(patientId: string, days: number): Promise<QualityScore> {
     const { points, now, timeZone } = await this.load(patientId, days);
