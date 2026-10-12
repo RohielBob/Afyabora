@@ -2,11 +2,11 @@
 id: quand-demander-de-l-aide
 titre: Quand demander de l'aide
 resume: Les situations où il faut appeler les secours tout de suite, celles où il faut prévenir votre médecin, et comment s'y préparer.
-statut: brouillon
+statut: validee
 version: 1
-relu_par:
-relu_le:
-empreinte:
+relu_par: Médecin relecteur (anonyme)
+relu_le: 2026-10-12
+empreinte: 8c848e0aefc3f8f2
 mots_cles: urgence, secours, aide, appeler, perte de connaissance, convulsions, malaise grave, vomissements, douleur poitrine, plaie au pied, médecin, proche
 sources:
   - Fédération Française des Diabétiques : Hypoglycémie | https://www.federationdesdiabetiques.org/diabete/glycemie/hypoglycemie

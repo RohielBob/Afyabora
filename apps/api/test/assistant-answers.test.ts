@@ -7,7 +7,9 @@ import { JwtModule, JwtService } from '@nestjs/jwt';
 import { Test } from '@nestjs/testing';
 import { randomUUID } from 'node:crypto';
 import type { AddressInfo } from 'node:net';
-import { afterEach, beforeAll, describe, expect, it } from 'vitest';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import { analyzeLastDays, type GlucosePoint, type LastDaysAnalysis } from '@glyka/analytics';
 import { knowledgeSheetListSchema, knowledgeSheetSchema } from '@glyka/shared';
 import { AllExceptionsFilter } from '../src/common/filters/all-exceptions.filter';
@@ -30,7 +32,9 @@ import {
   sheetAnswer,
 } from '../src/modules/assistant/answers/sheet-answer';
 import { ASSISTANT_TEMPLATES } from '../src/modules/assistant/answers/template-answer';
+import * as knowledgeSheets from '../src/modules/assistant/knowledge/knowledge-sheets';
 import { loadSheets } from '../src/modules/assistant/knowledge/knowledge-sheets';
+import { parseSheet, type ParsedSheet } from '../src/modules/assistant/knowledge/sheet-format';
 import { SheetsService, draftsAllowed } from '../src/modules/assistant/knowledge/sheets.service';
 import { SheetsController } from '../src/modules/assistant/sheets.controller';
 import {
@@ -39,6 +43,24 @@ import {
 } from '../src/modules/insights/guardrails/question-guard';
 import type { InsightsService } from '../src/modules/insights/insights.service';
 import type { PrismaService } from '../src/prisma/prisma.service';
+
+/** Relecteur inscrit dans les fiches validées : le médecin a demandé à rester anonyme (2026-10-12). */
+const ANONYMOUS_REVIEWER = 'Médecin relecteur (anonyme)';
+
+/**
+ * Un BROUILLON fabriqué à partir d'une vraie fiche (repassée en « brouillon », sous un autre identifiant) :
+ * depuis la validation des 10 fiches, il n'existe plus de vrai brouillon pour tester « aucun brouillon en
+ * production ».
+ */
+function draftOf(id: string): ParsedSheet {
+  const text = readFileSync(join(knowledgeSheets.KNOWLEDGE_DIR, `${id}.md`), 'utf8')
+    .replace(/^id: .*$/m, `id: brouillon-${id}`)
+    .replace(/^statut: validee$/m, 'statut: brouillon')
+    .replace(/^relu_par: .*$/m, 'relu_par:')
+    .replace(/^relu_le: .*$/m, 'relu_le:')
+    .replace(/^empreinte: .*$/m, 'empreinte:');
+  return parseSheet(text, `brouillon-${id}.md`);
+}
 
 const SHEETS = loadSheets();
 const n = normalizeQuestion;
@@ -117,7 +139,7 @@ describe('recherche dans les fiches (vraies fiches de apps/api/knowledge)', () =
     const hypo = SHEETS.find((s) => s.sheet.id === 'hypoglycemie')!;
     const { text, source } = sheetAnswer(hypo, 'Que faire en cas d’hypoglycémie ?');
 
-    expect(source).toEqual({ id: 'hypoglycemie', title: hypo.sheet.title, status: 'DRAFT' });
+    expect(source).toEqual({ id: 'hypoglycemie', title: hypo.sheet.title, status: 'VALIDATED' });
     expect(
       text.startsWith(`D'après la fiche « ${hypo.sheet.title} » : ${hypo.sheet.summary}`),
     ).toBe(true);
@@ -322,12 +344,29 @@ describe('AssistantResponder : l’ordre de décision', () => {
     );
   });
 
+  it('en production : les fiches VALIDÉES (relues par le médecin le 2026-10-12) sont citées', async () => {
+    const r = responder(sheetsWith({ NODE_ENV: 'production' }));
+    const answer = await r.answer(patient, 'C’est quoi l’HbA1c ?');
+    expect(answer.kind).toBe('SHEET');
+    expect(answer.sources).toEqual([expect.objectContaining({ id: 'hba1c', status: 'VALIDATED' })]);
+    const emergency = await r.answer(patient, 'Je fais un malaise');
+    expect(emergency.sources).toEqual([
+      expect.objectContaining({ id: 'quand-demander-de-l-aide', status: 'VALIDATED' }),
+    ]);
+  });
+
   it('en production sans brouillons : aucune fiche non relue n’est citée', async () => {
+    // Uniquement des brouillons (fabriqués à partir des vraies fiches) : rien ne doit être cité.
+    vi.spyOn(knowledgeSheets, 'loadSheets').mockReturnValue([
+      draftOf('hba1c'),
+      draftOf('quand-demander-de-l-aide'),
+    ]);
     const r = responder(sheetsWith({ NODE_ENV: 'production' }));
     expect((await r.answer(patient, 'C’est quoi l’HbA1c ?')).kind).toBe('OUT_OF_SCOPE');
     const emergency = await r.answer(patient, 'Je fais un malaise');
     expect(emergency.kind).toBe('EMERGENCY');
     expect(emergency.sources).toEqual([]);
+    vi.restoreAllMocks();
   });
 });
 
@@ -380,7 +419,10 @@ describe('GET /assistant/sheets et /{sheetId}', () => {
     const body = knowledgeSheetListSchema.parse(await res.json());
     expect(res.status).toBe(200);
     expect(body.items).toHaveLength(10);
-    expect(body.items.every((s) => s.status === 'DRAFT' && s.reviewedOn === null)).toBe(true);
+    // Les 10 fiches ont été relues et validées par le médecin le 2026-10-12.
+    expect(body.items.every((s) => s.status === 'VALIDATED' && s.reviewedOn === '2026-10-12')).toBe(
+      true,
+    );
     expect(JSON.stringify(body)).not.toContain('"body"');
   });
 
@@ -389,6 +431,8 @@ describe('GET /assistant/sheets et /{sheetId}', () => {
     const sheet = knowledgeSheetSchema.parse(await res.json());
     expect(sheet.id).toBe('hba1c');
     expect(sheet.sources.length).toBeGreaterThan(0);
+    // Le médecin relecteur a demandé à rester anonyme : aucun nom n'est servi aux patients.
+    expect(sheet.reviewedBy).toBe(ANONYMOUS_REVIEWER);
     expect((await get(`${dev[1]}/assistant/sheets/inconnue`, token())).status).toBe(404);
     expect((await get(`${dev[1]}/assistant/sheets/Pas%20Valide`, token())).status).toBe(400);
   });
@@ -398,7 +442,22 @@ describe('GET /assistant/sheets et /{sheetId}', () => {
     expect((await get(`${dev[1]}/assistant/sheets/hba1c`)).status).toBe(401);
   });
 
+  it('en production : les 10 fiches validées sont servies', async () => {
+    const [prod, prodUrl] = await appWith({ NODE_ENV: 'production' });
+    try {
+      const list = knowledgeSheetListSchema.parse(
+        await (await get(`${prodUrl}/assistant/sheets`, token())).json(),
+      );
+      expect(list.items).toHaveLength(10);
+      expect((await get(`${prodUrl}/assistant/sheets/hba1c`, token())).status).toBe(200);
+    } finally {
+      await prod.close();
+    }
+  });
+
   it('en production : aucun brouillon servi (liste vide, 404) ; démonstration explicite : servis', async () => {
+    // Uniquement des brouillons (fabriqués à partir des vraies fiches).
+    vi.spyOn(knowledgeSheets, 'loadSheets').mockReturnValue([draftOf('hba1c')]);
     const [prod, prodUrl] = await appWith({ NODE_ENV: 'production' });
     const [demo, demoUrl] = await appWith({
       NODE_ENV: 'production',
@@ -408,14 +467,17 @@ describe('GET /assistant/sheets et /{sheetId}', () => {
       expect(await (await get(`${prodUrl}/assistant/sheets`, token())).json()).toEqual({
         items: [],
       });
-      expect((await get(`${prodUrl}/assistant/sheets/hba1c`, token())).status).toBe(404);
+      expect((await get(`${prodUrl}/assistant/sheets/brouillon-hba1c`, token())).status).toBe(404);
       const demoList = (await (await get(`${demoUrl}/assistant/sheets`, token())).json()) as {
-        items: unknown[];
+        items: { id: string; status: string }[];
       };
-      expect(demoList.items).toHaveLength(10);
+      expect(demoList.items).toEqual([
+        expect.objectContaining({ id: 'brouillon-hba1c', status: 'DRAFT' }),
+      ]);
     } finally {
       await prod.close();
       await demo.close();
+      vi.restoreAllMocks();
     }
   });
 });

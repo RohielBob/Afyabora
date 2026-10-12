@@ -928,7 +928,7 @@ describe('L9-07 : réponses mises en mots par le modèle de langage (faux modèl
     await writer.idle();
     const answer = (await detail(awa, conv)).messages[1]!;
     expect(answer).toMatchObject({ status: 'READY', kind: 'SHEET', rephrased: true });
-    expect(answer.sources).toEqual([expect.objectContaining({ id: 'hba1c', status: 'DRAFT' })]);
+    expect(answer.sources).toEqual([expect.objectContaining({ id: 'hba1c', status: 'VALIDATED' })]);
     // Citation, résumé de la fiche et rappel remis par le code, autour du texte du modèle.
     const sentBody = requests[0]!.prompt.replace(/^Texte à réécrire :\n/, '');
     expect(template).toContain(sentBody);

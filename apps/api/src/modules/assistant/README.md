@@ -105,6 +105,13 @@ ensuite, voir L9-07). Ordre de décision (ADR-0005 complétée), **tri fait par 
   la PR de L9-07 pour le banc d'essai).
 - Une seule instance de l'API est prévue (la file est en mémoire) : c'est le cas du MVP.
 
+### Fiches validées (2026-10-12)
+
+Les **10 fiches ont été relues et approuvées par un médecin le 2026-10-12** (`statut: validee`, empreintes à
+jour) : l'assistant les cite aussi en production. Le médecin a demandé à rester **anonyme** : `reviewedBy`
+vaut « Médecin relecteur (anonyme) ». La règle « aucun brouillon en production » reste testée avec un brouillon
+fabriqué à partir d'une vraie fiche (`test/assistant-answers.test.ts`).
+
 ### Fiches : routes (L9-06)
 
 - `GET /assistant/sheets` : les fiches servies, sans leur texte ; `GET /assistant/sheets/{sheetId}` : la fiche

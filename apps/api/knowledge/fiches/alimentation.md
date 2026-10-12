@@ -2,11 +2,11 @@
 id: alimentation
 titre: Alimentation et diabète
 resume: Des repères simples sur les glucides, l'équilibre des repas et les boissons, à adapter avec votre médecin ou un diététicien.
-statut: brouillon
+statut: validee
 version: 1
-relu_par:
-relu_le:
-empreinte:
+relu_par: Médecin relecteur (anonyme)
+relu_le: 2026-10-12
+empreinte: d0e3132e20594139
 mots_cles: alimentation, manger, repas, glucides, sucres, féculents, fibres, légumes, boissons sucrées, régime, diététicien, assiette
 sources:
   - Fédération Française des Diabétiques : L'alimentation en cas de diabète | https://www.federationdesdiabetiques.org/information/alimentation-diabete

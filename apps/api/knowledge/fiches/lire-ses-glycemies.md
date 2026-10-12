@@ -2,11 +2,11 @@
 id: lire-ses-glycemies
 titre: Lire ses glycémies
 resume: Les unités, la plage cible, le temps dans la cible et le contexte des mesures, pour mieux comprendre vos chiffres.
-statut: brouillon
+statut: validee
 version: 1
-relu_par:
-relu_le:
-empreinte:
+relu_par: Médecin relecteur (anonyme)
+relu_le: 2026-10-12
+empreinte: 52bac15655cb139a
 mots_cles: glycémie, lire, comprendre, unité, mg/dl, g/l, mmol/l, plage cible, temps dans la cible, à jeun, après repas, mesure, capteur
 sources:
   - Fédération Française des Diabétiques : Glycémie | https://www.federationdesdiabetiques.org/information/glycemie

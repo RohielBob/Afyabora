@@ -2,11 +2,11 @@
 id: hba1c
 titre: L'HbA1c (hémoglobine glyquée)
 resume: Ce que mesure l'HbA1c, à quoi elle sert, à quelle fréquence on la contrôle et qui fixe votre objectif.
-statut: brouillon
+statut: validee
 version: 1
-relu_par:
-relu_le:
-empreinte:
+relu_par: Médecin relecteur (anonyme)
+relu_le: 2026-10-12
+empreinte: 097a3f9a0616a6cf
 mots_cles: hba1c, hémoglobine glyquée, a1c, glycémie moyenne, trois mois, prise de sang, laboratoire, objectif, pourcentage
 sources:
   - Fédération Française des Diabétiques : HbA1c | https://www.federationdesdiabetiques.org/information/glycemie/hba1c
