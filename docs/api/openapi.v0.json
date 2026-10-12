@@ -2,7 +2,7 @@
   "openapi": "3.0.3",
   "info": {
     "title": "Glyka API",
-    "version": "0.4.0",
+    "version": "0.4.1",
     "description": "Contrat de l'API Glyka — **version 0 (gelée)**. Les écrans du mobile et du portail se développent contre ce document avant que l'API soit prête.\n\n## Conventions\n- **Format** : JSON en UTF-8. Dates en ISO 8601 avec fuseau. Identifiants en UUID.\n- **Glycémie** : stockée et renvoyée en **mg/dL entier** (`valueMgDl`) ; la valeur saisie et son unité d'origine sont conservées (`originalValue`, `originalUnit`). 1 g/L = 100 mg/dL.\n- **Authentification** : `Authorization: Bearer <jeton d'accès>` (15 minutes). Les routes publiques sont marquées `security: []`.\n- **Identifiants créés par le client** : mesures et événements portent un UUID généré sur l'appareil, ce qui rend les envois répétables sans doublon.\n- **Erreurs** : corps `{ message, code?, issues?, retryAfterSeconds? }`. Jamais de détail interne ni de donnée de santé.\n- **Pagination** : `limit` et `cursor` opaque ; réponse `{ items, nextCursor }`. `nextCursor` nul = dernière page.\n- **Extensions** : `x-roles`, `x-lot`, `x-ticket`, `x-priority` (P0/P1), `x-status` (`implemented` / `planned`).\n\n## Règle de changement\nAjouter une route ou un champ optionnel est compatible. Tout autre changement est une **rupture** : annoncée à l'équipe, consignée dans `docs/api/CHANGELOG.md`, validée par le lead technique.\n",
     "x-contract-status": "frozen-v0",
     "x-frozen-on": "2026-10-07"
@@ -1162,7 +1162,7 @@
             }
           },
           "400": {
-            "$ref": "#/components/responses/BadRequest"
+            "$ref": "#/components/responses/ImportBadRequest"
           },
           "401": {
             "$ref": "#/components/responses/Unauthorized"
@@ -2849,6 +2849,38 @@
             }
           }
         }
+      },
+      "ImportBadRequest": {
+        "description": "Requête invalide. Si les colonnes de date ou de valeur sont introuvables (ou si une colonne choisie est absente) : code `IMPORT_COLUMNS_NOT_FOUND` et liste `columns` (schéma `ImportColumnsError`).",
+        "content": {
+          "application/json": {
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/ImportColumnsError"
+                },
+                {
+                  "$ref": "#/components/schemas/Error"
+                }
+              ]
+            },
+            "example": {
+              "message": "Colonnes de date ou de valeur introuvables",
+              "code": "IMPORT_COLUMNS_NOT_FOUND",
+              "issues": [
+                {
+                  "path": "file",
+                  "message": "Colonnes de date ou de valeur introuvables"
+                }
+              ],
+              "columns": [
+                "Quand",
+                "Combien",
+                "Remarque"
+              ]
+            }
+          }
+        }
       }
     },
     "schemas": {
@@ -3093,7 +3125,7 @@
           },
           "code": {
             "type": "string",
-            "description": "Code stable pour le client. Valeurs : UNUSUAL_VALUE, EMAIL_NOT_VERIFIED, ACCOUNT_LOCKED, INVALID_PASSWORD, DOCTOR_NOT_APPROVED, TOKEN_INVALID, SESSION_EXPIRED, SESSION_REVOKED, SESSION_NOT_PENDING, CATEGORY_NOT_SHARED, IMPORT_ALREADY_COMMITTED, MESSAGE_ID_CONFLICT."
+            "description": "Code stable pour le client. Valeurs : UNUSUAL_VALUE, EMAIL_NOT_VERIFIED, ACCOUNT_LOCKED, INVALID_PASSWORD, DOCTOR_NOT_APPROVED, TOKEN_INVALID, SESSION_EXPIRED, SESSION_REVOKED, SESSION_NOT_PENDING, CATEGORY_NOT_SHARED, IMPORT_ALREADY_COMMITTED, IMPORT_COLUMNS_NOT_FOUND, MESSAGE_ID_CONFLICT."
           },
           "issues": {
             "type": "array",
@@ -6215,6 +6247,45 @@
             }
           ],
           "reviewedBy": null
+        }
+      },
+      "ImportColumnsError": {
+        "description": "Réponse 400 `IMPORT_COLUMNS_NOT_FOUND` de `POST /imports/preview` : colonnes de date ou de valeur introuvables, ou correspondance (`mapping`) qui cite une colonne absente du fichier. `columns` donne les noms des colonnes du fichier, pour que l'application les fasse choisir au patient (L4-06), puis relance l'aperçu avec `mapping`.",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Error"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "columns": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Noms des colonnes du fichier (en-tête), dans l'ordre, colonnes sans nom exclues."
+              }
+            },
+            "required": [
+              "code",
+              "columns"
+            ]
+          }
+        ],
+        "example": {
+          "message": "Colonnes de date ou de valeur introuvables",
+          "code": "IMPORT_COLUMNS_NOT_FOUND",
+          "issues": [
+            {
+              "path": "file",
+              "message": "Colonnes de date ou de valeur introuvables"
+            }
+          ],
+          "columns": [
+            "Quand",
+            "Combien",
+            "Remarque"
+          ]
         }
       }
     }

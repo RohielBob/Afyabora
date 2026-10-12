@@ -28,6 +28,7 @@ import {
   isPlausibleMgDl,
   toMgDl,
   type GlucoseUnit,
+  type ImportColumnsError,
   type ImportReport,
   type ImportRowReport,
   type importCommitSchema,
@@ -108,14 +109,30 @@ export function rowMessage(row: ValidatedRow): string | undefined {
   return `${message} (en ${units.map((u) => UNIT_LABELS[u]).join(' ou ')} ?)`;
 }
 
-/** Erreur sur le fichier entier ⇒ réponse HTTP : 413 si trop gros, sinon 400 sur le champ `file`. */
-function fileError(error: ImportFileError): Error {
+/**
+ * Erreur sur le fichier entier ⇒ réponse HTTP : 413 si trop gros ; colonnes introuvables (ou colonne
+ * choisie absente) ⇒ 400 `IMPORT_COLUMNS_NOT_FOUND` avec la liste `columns` (contrat 0.4.1), pour que
+ * l'application fasse choisir les colonnes au patient ; sinon 400 sur le champ `file`.
+ */
+export function fileError(error: ImportFileError): Error {
   if (error.code === 'TOO_LARGE' || error.code === 'TOO_MANY_ROWS') {
     return new PayloadTooLargeException({
       message: `${error.message}. Limites : ${IMPORT_MAX_FILE_BYTES / 1024 / 1024} Mo et ${IMPORT_MAX_ROWS} lignes.`,
     });
   }
-  return invalidField(error.code === 'UNKNOWN_COLUMN' ? 'mapping' : 'file', error.message);
+  if (error.code === 'MISSING_COLUMNS' || error.code === 'UNKNOWN_COLUMN') {
+    const body: ImportColumnsError = {
+      message: error.message,
+      code: 'IMPORT_COLUMNS_NOT_FOUND',
+      issues: [
+        { path: error.code === 'UNKNOWN_COLUMN' ? 'mapping' : 'file', message: error.message },
+      ],
+      // Une colonne sans nom (cellule d'en-tête vide) ne peut pas être choisie : elle n'est pas proposée.
+      columns: error.headers.filter((name) => name.trim() !== ''),
+    };
+    return new BadRequestException(body);
+  }
+  return invalidField('file', error.message);
 }
 
 @Injectable()

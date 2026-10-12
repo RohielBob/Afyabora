@@ -61,6 +61,7 @@ import {
   verifyEmailSchema,
   lifeEventDtoSchema,
   unusualValueErrorSchema,
+  importColumnsErrorSchema,
 } from '@glyka/shared';
 
 // Le contrat est un document JSON arbitraire : `any` est volontaire ici (permis dans les tests).
@@ -366,6 +367,26 @@ describe('contrat OpenAPI : requêtes identiques aux schémas Zod', () => {
     expect(Object.keys(schemas.Measurement.properties).sort()).toEqual(
       Object.keys(measurementDtoSchema.shape).sort(),
     );
+  });
+
+  it('ImportColumnsError (0.4.1) : exemple et champs identiques à importColumnsErrorSchema', () => {
+    const error = schemas.ImportColumnsError;
+    expect(importColumnsErrorSchema.safeParse(error.example).success).toBe(true);
+    const extra = error.allOf[1];
+    expect(Object.keys(extra.properties)).toEqual(['columns']);
+    expect(extra.required).toEqual(['code', 'columns']);
+    const documented = [...Object.keys(schemas.Error.properties), ...Object.keys(extra.properties)];
+    for (const key of Object.keys(importColumnsErrorSchema.shape))
+      expect(documented).toContain(key);
+    // Code listé parmi les codes stables, et réponse 400 de l'aperçu qui y renvoie.
+    expect(schemas.Error.properties.code.description).toContain('IMPORT_COLUMNS_NOT_FOUND');
+    const preview = contract.paths['/imports/preview'].post.responses['400'];
+    expect(preview.$ref).toBe('#/components/responses/ImportBadRequest');
+    expect(
+      importColumnsErrorSchema.safeParse(
+        contract.components.responses.ImportBadRequest.content['application/json'].example,
+      ).success,
+    ).toBe(true);
   });
 
   it('UnusualValueError (0.2.1) : exemple et champs identiques à unusualValueErrorSchema', () => {

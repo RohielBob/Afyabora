@@ -14,7 +14,7 @@ import { randomUUID } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import type { AddressInfo } from 'node:net';
 import { join } from 'node:path';
-import { IMPORT_MAX_FILE_BYTES, IMPORT_MAX_ROWS } from '@glyka/shared';
+import { IMPORT_MAX_FILE_BYTES, IMPORT_MAX_ROWS, importColumnsErrorSchema } from '@glyka/shared';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { AllExceptionsFilter } from '../src/common/filters/all-exceptions.filter';
 import { JwtAuthGuard } from '../src/common/guards/jwt-auth.guard';
@@ -451,6 +451,49 @@ describe('L4-04 : routes de l’import (/imports)', () => {
       expect(noColumns.status).toBe(400);
       expect(await issues(noColumns)).toEqual(['file']);
       expect(batches).toEqual([]);
+    });
+
+    it('colonnes introuvables (0.4.1) : code IMPORT_COLUMNS_NOT_FOUND et liste des colonnes à choisir', async () => {
+      const csv = Buffer.from('Quand;Combien;;Remarque\n01/10/2026 07:15;1,1;;sport\n');
+      const res = await preview({ bytes: csv, name: 'a.csv' });
+      const body = await json(res);
+
+      expect(res.status).toBe(400);
+      expect(importColumnsErrorSchema.safeParse(body).success).toBe(true);
+      expect(body).toEqual({
+        message: 'Colonnes de date ou de valeur introuvables',
+        code: 'IMPORT_COLUMNS_NOT_FOUND',
+        issues: [{ path: 'file', message: 'Colonnes de date ou de valeur introuvables' }],
+        columns: ['Quand', 'Combien', 'Remarque'], // la colonne sans nom n'est pas proposée
+      });
+
+      // Le patient choisit parmi `columns` : l'aperçu passe.
+      const chosen = await preview(
+        { bytes: csv, name: 'a.csv' },
+        { defaultUnit: 'G_L', mapping: JSON.stringify({ date: 'Quand', value: 'Combien' }) },
+      );
+      expect(chosen.status).toBe(200);
+
+      // Colonne choisie absente du fichier : même code, sur « mapping », avec la liste à jour.
+      const wrong = await preview(
+        { bytes: csv, name: 'a.csv' },
+        { defaultUnit: 'G_L', mapping: JSON.stringify({ date: 'Quand', value: 'Glycémie' }) },
+      );
+      expect(await json(wrong)).toMatchObject({
+        code: 'IMPORT_COLUMNS_NOT_FOUND',
+        issues: [{ path: 'mapping' }],
+        columns: ['Quand', 'Combien', 'Remarque'],
+      });
+
+      // Les autres erreurs de fichier n'ont ni ce code ni de liste.
+      const corrupted = await json(
+        await preview({
+          bytes: readFileSync(join(SAMPLES, 'import-corrupted.xlsx')),
+          name: 'm.xlsx',
+        }),
+      );
+      expect(corrupted).not.toHaveProperty('code');
+      expect(corrupted).not.toHaveProperty('columns');
     });
 
     it('formulaire mal formé (2 fichiers, mauvais nom de champ) ⇒ 400 en français sur « file »', async () => {

@@ -8,7 +8,7 @@ Le contrat **OpenAPI v0** est **gelé** (ticket L0-07). Le mobile et le portail 
 
 | Fichier                  | Rôle                                                                                                      |
 | ------------------------ | --------------------------------------------------------------------------------------------------------- |
-| `openapi.v0.json`        | **Le contrat gelé** (version 0.4.0) : 57 opérations, 109 schémas. Écrit à la main, vérifié par des tests. |
+| `openapi.v0.json`        | **Le contrat gelé** (version 0.4.1) : 57 opérations, 110 schémas. Écrit à la main, vérifié par des tests. |
 | `openapi.generated.json` | Ce que le code produit réellement (`pnpm --filter @glyka/api openapi:export`). Non versionné.             |
 | `CHANGELOG.md`           | Historique des changements du contrat.                                                                    |
 | `REVUE-SCHEMAS.md`       | Relecture des schémas partagés (ticket L0-08) : défauts corrigés, points à décider, validation par rôle.  |
