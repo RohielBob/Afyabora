@@ -1,9 +1,11 @@
 // Réponse sur les MESURES du patient (L9-06) : uniquement les phrases du moteur `@glyka/analytics`
 // (`analyzeLastDays` : le même calcul que l'écran Analyse, sur le téléphone comme sur le serveur).
 // Aucun chiffre n'est calculé ici, aucune cause n'est affirmée : la réponse DÉCRIT les mesures et renvoie
-// au professionnel de santé. La mise en mots par le modèle de langage viendra en L9-07, vérifiée.
+// au professionnel de santé. Mise en mots par le modèle de langage (L9-07) : seulement le corps, vérifié ;
+// le rappel final est toujours remis tel quel par le code.
 import type { LastDaysAnalysis } from '@glyka/analytics';
 import type { InsightType } from '@glyka/shared';
+import { composeAnswer, type AnswerRewrite } from './answer-rewrite';
 
 /** « … une valeur inhabituelle … » : ce que le moteur n'a PAS relevé, dit sans dramatiser. */
 const NOT_OBSERVED: Record<InsightType, string> = {
@@ -22,13 +24,13 @@ export const MEASUREMENT_REMINDER =
   'Ces chiffres décrivent vos mesures, sans diagnostic : pour toute décision, parlez-en à votre professionnel de santé.';
 
 /**
- * Texte de la réponse : le résumé de la période, puis les observations sur lesquelles la question insiste
- * (`focus`), ou ce qui n'a pas été observé ; enfin le rappel.
+ * Réponse découpée pour la mise en mots (L9-07) : le corps (le résumé de la période, puis les observations
+ * sur lesquelles la question insiste — `focus` —, ou ce qui n'a pas été observé), puis le rappel.
  */
-export function measurementAnswer(
+export function measurementRewrite(
   analysis: LastDaysAnalysis,
   focus: readonly InsightType[],
-): string {
+): AnswerRewrite {
   const parts = [analysis.summary];
   if (analysis.stats !== null) {
     for (const type of focus) {
@@ -39,6 +41,14 @@ export function measurementAnswer(
       else parts.push(NOT_OBSERVED[type]);
     }
   }
-  parts.push(MEASUREMENT_REMINDER);
-  return [...new Set(parts)].join(' ');
+  return { prefix: '', body: [...new Set(parts)].join(' '), suffix: ` ${MEASUREMENT_REMINDER}` };
+}
+
+/** Texte gabarit de la réponse : le corps et le rappel. */
+export function measurementAnswer(
+  analysis: LastDaysAnalysis,
+  focus: readonly InsightType[],
+): string {
+  const rewrite = measurementRewrite(analysis, focus);
+  return composeAnswer(rewrite, rewrite.body);
 }

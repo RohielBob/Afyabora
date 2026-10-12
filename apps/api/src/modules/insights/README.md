@@ -148,13 +148,13 @@ refusé (« 2 jours sur 7 » devenu « 2 jours ») : le résumé du moteur est a
 ## Journal d'audit du modèle de langage (L3-10)
 
 Chaque appel au modèle écrit **une ligne** dans la table `LlmAuditLog` (`llm/llm-audit.service.ts`) : fournisseur,
-modèle, type (phrases ou résumé), **empreinte de la consigne** (12 caractères du SHA-256 : deux lignes avec la même
+modèle, type (phrases, résumé, ou réponse de l'assistant `ASSISTANT` depuis L9-07), **empreinte de la consigne** (12 caractères du SHA-256 : deux lignes avec la même
 empreinte ont suivi les mêmes règles), résultat (`OK`, `TIMEOUT`, `UNREACHABLE`, `HTTP`, `FORMAT`, `UNKNOWN`),
 durée, et **pour chaque texte la décision des garde-fous** (`accepted` ou la raison du refus).
 
 - **Textes envoyés et réponse brute CHIFFRÉS** (AES-256-GCM, même clé que les notes) : données de santé.
 - **Aucun identifiant de patient** : les textes sont les phrases du moteur (chiffres agrégés), partagées entre
-  patients.
+  patients, ou le corps d'une réponse de l'assistant (phrases du moteur ou extrait de fiche ; jamais la question).
 - **Conservation : 90 jours** (lignes plus anciennes effacées à chaque écriture).
 - **Ne bloque jamais** l'analyse : une écriture qui échoue est signalée dans les journaux techniques, sans texte.
 - Lecture : `pnpm admin:llm-audit` (voir `scripts/README.md`) ; sans option, **aucun texte affiché** ;

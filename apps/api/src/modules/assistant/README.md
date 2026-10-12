@@ -1,6 +1,6 @@
 # Module `assistant`
 
-**Lot : L9 · Fonctionnalités : F6 (IA), F1 (profil) · Tickets : L9-02, L9-05, L9-06 (L9-07, L9-08 à venir)**
+**Lot : L9 · Fonctionnalités : F6 (IA), F1 (profil) · Tickets : L9-02, L9-05, L9-06, L9-07 (L9-08 à venir)**
 
 Assistant de conversation « Afyabora » : le patient pose des questions sur **ses mesures** et sur **le
 diabète** ; les réponses viennent uniquement de ses mesures (chiffres de `@glyka/analytics`) et de fiches
@@ -13,7 +13,8 @@ complément de l'ADR-0005 du 2026-10-11. Contrat : 0.4.0.
 - `POST /assistant/conversations` — **fait (L9-05)**
 - `DELETE /assistant/conversations` (tout effacer) — **fait (L9-05)**
 - `GET /assistant/conversations/{id}` · `DELETE /assistant/conversations/{id}` — **faits (L9-05)**
-- `POST /assistant/conversations/{id}/messages` — **fait (L9-05)**, réponses des mesures et des fiches **(L9-06)**
+- `POST /assistant/conversations/{id}/messages` — **fait (L9-05)**, réponses des mesures et des fiches **(L9-06)**,
+  mises en mots par le modèle local **(L9-07)**
 - `GET /assistant/sheets` · `GET /assistant/sheets/{sheetId}` — **faits (L9-06)**
 
 ## Règles
@@ -42,8 +43,8 @@ complément de l'ADR-0005 du 2026-10-11. Contrat : 0.4.0.
 
 ### Réponses (L9-06 : `answers/assistant-responder.service.ts`)
 
-Déterministes, sans modèle de langage, prêtes tout de suite (`status: READY`, `rephrased: false`). Ordre de
-décision (ADR-0005 complétée), **tri fait par le code** :
+Déterministes, construites par le code (le modèle de langage ne décide rien ; il peut seulement mettre en mots
+ensuite, voir L9-07). Ordre de décision (ADR-0005 complétée), **tri fait par le code** :
 
 | Étape | Question                                                     | Réponse                                                                                                                                                                                                                                   |
 | ----- | ------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -66,6 +67,43 @@ décision (ADR-0005 complétée), **tri fait par le code** :
   production, jamais en production sauf réglage explicite pour une démonstration (l'image Docker de
   démonstration l'active, avertissement dans les journaux). En production sans brouillons, aucune fiche non
   relue n'est ni listée ni citée.
+
+### Mise en mots par le modèle local (L9-07 : `answers/answer-writer.service.ts`, `answers/answer-rewrite.ts`)
+
+- **Sans modèle** (`LLM_PROVIDER=none`, le défaut) : rien ne change, toute réponse est prête tout de suite
+  (`READY`, `rephrased: false`).
+- **Avec un modèle** (`LLM_PROVIDER=ollama`, `LLM_MODEL=mistral-nemo` par défaut) : une réponse `MEASUREMENTS`
+  ou `SHEET` est renvoyée **« en préparation »** (`202`, `status: PENDING`, `kind`, `text` et `sources` à
+  `null` / vides). Son gabarit est déjà enregistré, chiffré : c'est lui qui sert si le modèle échoue. Le
+  téléphone relit la conversation (`GET /assistant/conversations/{id}`) jusqu'à `READY`.
+- **Urgence, refus et hors sujet ne passent jamais par le modèle** : prêts tout de suite, textes fixes.
+- **Ce que reçoit le modèle** : seulement le **corps** du gabarit (phrases du moteur, ou la partie de la fiche
+  qui répond). **Jamais la question du patient** (un piège glissé dans la question n'atteint pas le modèle),
+  jamais un nom, un identifiant ou une date. La citation de la fiche (« D'après la fiche « … » : » et son
+  résumé) et le rappel final (« parlez-en à votre professionnel de santé ») sont **remis tels quels par le
+  code** autour du texte du modèle.
+- **Vérification** (`checkAnswerRewrite`) : le texte du modèle est **refusé** (gabarit gardé) s'il est vide,
+  trop long (plus de 1,6 fois le gabarit + 120 caractères, 1 200 au plus) ou trop court (moins de 45 %) ;
+  pas en français ; pas **exactement les mêmes nombres** (le « 1 » de « HbA1c » n'en est pas un) ; pas le
+  **même nombre de négations** (« ne … pas » = une, comme « aucun », « sans », « non ») ; un **mot interdit**
+  des garde-fous de L3-05 (dose, diagnostic, ordre, cause, alarme, lien…) **absent du gabarit** ; une fiche,
+  une « source » ou un texte entre « » absent du gabarit (fausse citation) ; plus de 30 % de mots nouveaux
+  (information ajoutée). Accepté ⇒ `rephrased: true`.
+- **File** : une seule réponse mise en mots à la fois, dans l'ordre d'arrivée ; 50 en attente au plus (au-delà,
+  réponse prête tout de suite, en gabarit).
+- **Délai : 2 minutes** après la question, la réponse est prête quoi qu'il arrive : l'appel au modèle est
+  arrêté et le gabarit est gardé. Une réponse dont le tour arrive après le délai n'est pas envoyée au modèle.
+- **Panne** (modèle injoignable, erreur, réponse illisible) : gabarit, puis **pause d'une minute** pendant
+  laquelle les réponses sont prêtes tout de suite. Le délai de 2 minutes n'est pas une panne (pas de pause).
+- **Filets de sécurité** : au **démarrage** de l'API, les réponses restées « en préparation » passent en
+  gabarit (la file est en mémoire) ; à la **lecture** d'une conversation, celles du patient en préparation
+  depuis plus de 2 min 15 s aussi. Une conversation effacée pendant la mise en mots n'est jamais recréée.
+- **Journaux** : seulement la nature, la décision (« acceptée », « refusée [numbers] ») et la durée. **Journal
+  d'audit** (L3-10, `pnpm admin:llm-audit`) : une ligne par appel, `kind = ASSISTANT`, corps envoyé et
+  réponse **chiffrés**, décision, durée ; aucun identifiant de patient.
+- Mesuré sur le PC de l'équipe (sans carte graphique, `mistral-nemo`) : 20 à 120 secondes par réponse (voir
+  la PR de L9-07 pour le banc d'essai).
+- Une seule instance de l'API est prévue (la file est en mémoire) : c'est le cas du MVP.
 
 ### Fiches : routes (L9-06)
 
@@ -101,3 +139,7 @@ médecin. Lecteur : `knowledge/sheet-format.ts`, `knowledge/knowledge-sheets.ts`
 - [x] (L9-06) Urgence : numéro, proche et médecin du profil ; sans numéro, aucun chiffre inventé.
 - [x] (L9-06) Ordre de décision : urgence puis refus avant tout calcul ; mesures ; fiche ; hors sujet / pas de réponse sûre ; en production sans brouillons, aucune fiche citée.
 - [x] (L9-06) Routes des fiches : liste, fiche, 404, 400, 403, 401 ; brouillons selon l'environnement ; `ASSISTANT_DRAFT_SHEETS` validé (`test/env.test.ts`).
+- [x] (L9-07) Consigne, demande (corps seul), lecture de la réponse ; découpage citation / corps / rappel identique au gabarit (`test/assistant-rewrite.test.ts`).
+- [x] (L9-07) Vérification : chaque raison de refus (vide, longueur, langue, nombres, négations, mot interdit ajouté, fausse citation, mots nouveaux) ; mots interdits déjà dans la fiche acceptés ; « HbA1c » ; « ne … pas » = une négation.
+- [x] (L9-07) File : acceptée ⇒ texte chiffré et `rephrased` ; refusée ⇒ gabarit ; illisible / injoignable ⇒ gabarit + pause d'une minute ; délai de 2 minutes (appel arrêté, sans pause) ; tour après le délai ⇒ pas d'appel ; une à la fois dans l'ordre ; file pleine ; démarrage ; lecture en retard (ce patient seulement) ; réponse effacée ; base indisponible ; journal d'audit `ASSISTANT` ; aucun texte dans les journaux.
+- [x] (L9-07) Par HTTP avec un faux modèle (`test/assistant-conversations.test.ts`) : `202` « en préparation » sans rien montrer, puis réponse citée mise en mots ; le modèle ne reçoit ni la question, ni la citation, ni le rappel ; urgence, refus et hors sujet jamais envoyés ; rejeu en préparation puis prêt (sans nouvel appel) ; réponse oubliée ⇒ gabarit à la lecture ; conversation effacée ; un autre patient ⇒ 404 ; journaux sans texte.

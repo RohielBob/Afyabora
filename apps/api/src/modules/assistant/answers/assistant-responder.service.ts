@@ -4,7 +4,8 @@
 //   2. Question sur les MESURES du patient ⇒ MEASUREMENTS : résumé et observations du moteur.
 //   3. Question générale ⇒ SHEET : extrait de la fiche la plus pertinente, citée.
 //   4. Sinon ⇒ OUT_OF_SCOPE : « hors sujet » ou « pas de réponse sûre ». Jamais d'invention.
-// Tout est déterministe : le modèle de langage n'intervient pas ici (mise en mots vérifiée : L9-07).
+// Tout est déterministe : le modèle de langage n'intervient pas ici. Les réponses MEASUREMENTS et SHEET
+// indiquent seulement ce qu'il pourra mettre en mots (`rewrite`, L9-07 : `answer-writer.service.ts`).
 import { Injectable } from '@nestjs/common';
 import type { KnowledgeSheetRef } from '@glyka/shared';
 import { PrismaService } from '../../../prisma/prisma.service';
@@ -16,7 +17,8 @@ import {
 import { InsightsService } from '../../insights/insights.service';
 import { SheetsService } from '../knowledge/sheets.service';
 import { emergencyAnswer, type EmergencyContacts } from './emergency-answer';
-import { measurementAnswer } from './measurement-answer';
+import { composeAnswer, type AnswerRewrite } from './answer-rewrite';
+import { measurementRewrite } from './measurement-answer';
 import { focusOf, isMeasurementQuestion, periodOf } from './routing';
 import { bestSheet, sheetAnswer } from './sheet-answer';
 import { ASSISTANT_TEMPLATES, type AssistantAnswer } from './template-answer';
@@ -46,15 +48,16 @@ export class AssistantResponder {
     const normalized = normalizeQuestion(question);
     if (isMeasurementQuestion(normalized)) {
       const analysis = await this.insights.engineAnalysis(patientId, periodOf(normalized));
-      return this.reply('MEASUREMENTS', measurementAnswer(analysis, focusOf(normalized)));
+      const rewrite = measurementRewrite(analysis, focusOf(normalized));
+      return this.reply('MEASUREMENTS', composeAnswer(rewrite, rewrite.body), [], rewrite);
     }
 
     // Le filtre de L3-07 ne connaît que le vocabulaire des mesures : une question sur le diabète en
     // général (« C'est quoi l'HbA1c ? ») lui paraît « hors sujet ». Ce sont les fiches qui décident.
     const sheet = bestSheet(this.sheets.available(), question);
     if (sheet) {
-      const { text, source } = sheetAnswer(sheet, question);
-      return this.reply('SHEET', text, [source]);
+      const { text, source, rewrite } = sheetAnswer(sheet, question);
+      return this.reply('SHEET', text, [source], rewrite);
     }
     return this.reply(
       'OUT_OF_SCOPE',
@@ -66,8 +69,9 @@ export class AssistantResponder {
     kind: AssistantAnswer['kind'],
     text: string,
     sources: KnowledgeSheetRef[] = [],
+    rewrite?: AnswerRewrite,
   ): AssistantAnswer {
-    return { kind, text, sources, rephrased: false };
+    return { kind, text, sources, rephrased: false, ...(rewrite ? { rewrite } : {}) };
   }
 
   /** Référence d'une fiche servie (aucune si elle n'est pas servie, par exemple un brouillon en production). */

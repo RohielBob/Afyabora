@@ -1,7 +1,8 @@
 // Journal d'audit des appels au modèle de langage (L3-10, CDC §5.5) : une ligne par appel, pour pouvoir
 // retrouver ce que le modèle a répondu et ce que les garde-fous en ont fait.
 //  - AUCUN identifiant de patient : les textes envoyés sont les phrases du moteur (chiffres agrégés),
-//    partagées entre patients ;
+//    partagées entre patients, ou le corps d'une réponse de l'assistant (phrases du moteur ou extrait
+//    d'une fiche, L9-07 ; jamais la question du patient) ;
 //  - textes envoyés et réponse CHIFFRÉS (AES-256-GCM, même clé que les notes) : ce sont des données de santé ;
 //  - lignes de plus de 90 jours effacées à chaque écriture (la table reste petite) ;
 //  - le journal ne bloque JAMAIS l'analyse : une écriture qui échoue est signalée dans les journaux
@@ -17,7 +18,8 @@ import { PrismaService } from '../../../prisma/prisma.service';
 export const AUDIT_RETENTION_DAYS = 90;
 const DAY_MS = 86_400_000;
 
-export type AuditKind = 'SENTENCES' | 'SUMMARY';
+/** SENTENCES et SUMMARY : écran Analyse (L3-05, L3-06) ; ASSISTANT : réponse de l'assistant (L9-07). */
+export type AuditKind = 'SENTENCES' | 'SUMMARY' | 'ASSISTANT';
 export type AuditOutcome = 'OK' | 'TIMEOUT' | 'UNREACHABLE' | 'HTTP' | 'FORMAT' | 'UNKNOWN';
 
 /** Ce qui est journalisé pour un appel au modèle. */

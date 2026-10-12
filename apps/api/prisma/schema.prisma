@@ -388,7 +388,7 @@ model LlmAuditLog {
   createdAt       DateTime @default(now())
   provider        String // « ollama »
   model           String // « mistral-nemo »
-  kind            String // SENTENCES (phrases des observations) | SUMMARY (résumé de la période)
+  kind            String // SENTENCES (phrases des observations) | SUMMARY (résumé de la période) | ASSISTANT (réponse de l'assistant, L9-07)
   promptHash      String // empreinte de la consigne utilisée (12 premiers caractères du SHA-256)
   outcome         String // OK | TIMEOUT | UNREACHABLE | HTTP | FORMAT | UNKNOWN
   durationMs      Int

@@ -7,10 +7,13 @@
 //    doublon (200 au rejeu) ; un identifiant déjà pris par autre chose ⇒ 409.
 //  - Textes CHIFFRÉS en base (AES-256-GCM, même clé que les notes) : questions, réponses et début de la
 //    première question (aperçu de la liste). Aucun texte dans les journaux.
-//  - 20 questions par heure au plus par patient (le modèle local est lent, L9-07) ⇒ 429 + délai.
+//  - 20 questions par heure au plus par patient (le modèle local est lent) ⇒ 429 + délai.
 //  - Effacement RÉEL (pas de corbeille), d'une conversation ou de toutes ; aussi avec le compte (cascade).
-// Les réponses viennent d'`AssistantResponder` (L9-06 : filtre de sécurité, mesures, fiches), prêtes tout
-// de suite ; la mise en mots par le modèle de langage, vérifiée, viendra en L9-07.
+// Les réponses viennent d'`AssistantResponder` (L9-06 : filtre de sécurité, mesures, fiches). Sans modèle de
+// langage, elles sont prêtes tout de suite (READY). Avec un modèle (L9-07), une réponse sur les mesures ou
+// les fiches est enregistrée « en préparation » (PENDING) avec son gabarit, puis `AnswerWriter` la met en
+// mots, la vérifie et la rend prête en 2 minutes au plus ; tant qu'elle est en préparation, le patient ne
+// voit ni sa nature, ni son texte, ni ses sources (contrat 0.4.0).
 import {
   BadRequestException,
   ConflictException,
@@ -43,6 +46,7 @@ import {
 } from '../../common/data/owned-records';
 import { UNAUTHORIZED_MESSAGE } from '../../common/guards/jwt-auth.guard';
 import { PrismaService } from '../../prisma/prisma.service';
+import { AnswerWriter } from './answers/answer-writer.service';
 import { AssistantResponder } from './answers/assistant-responder.service';
 
 /** Questions autorisées par patient sur une heure glissante. */
@@ -103,6 +107,7 @@ export class ConversationsService {
     private readonly prisma: PrismaService,
     private readonly config: ConfigService,
     private readonly responder: AssistantResponder,
+    private readonly writer: AnswerWriter,
   ) {}
 
   /** POST /assistant/conversations : 201 si créée, 200 au rejeu ; identifiant d'un autre patient ⇒ 409. */
@@ -152,6 +157,7 @@ export class ConversationsService {
   async get(patientId: string, id: string): Promise<AssistantConversationDetail> {
     const row = await this.findConversation(id);
     if (!row || row.patientId !== patientId) throw notFound();
+    await this.writer.settleOverdue(patientId); // réponse oubliée au-delà du délai ⇒ gabarit
     const messages = await this.prisma.assistantMessage.findMany({
       where: { conversationId: id },
       orderBy: [{ createdAt: 'asc' }, { role: 'asc' }],
@@ -193,6 +199,9 @@ export class ConversationsService {
     await this.checkQuota(patientId);
 
     const answer = await this.responder.answer(patientId, input.text);
+    // Avec un modèle de langage : réponse « en préparation », son gabarit déjà enregistré (L9-07).
+    const pending = this.writer.willRewrite(answer);
+    const answerId = randomUUID();
     const askedAt = new Date();
     const key = this.key();
     try {
@@ -210,11 +219,11 @@ export class ConversationsService {
         });
         await tx.assistantMessage.create({
           data: {
-            id: randomUUID(),
+            id: answerId,
             conversationId,
             patientId,
             role: 'ASSISTANT',
-            status: 'READY',
+            status: pending ? 'PENDING' : 'READY',
             kind: answer.kind,
             textEncrypted: encryptField(answer.text, key),
             sources: answer.sources as unknown as object[],
@@ -245,7 +254,12 @@ export class ConversationsService {
       if (hasPrismaCode(error, 'P2003') || hasPrismaCode(error, 'P2025')) throw notFound();
       throw error;
     }
-    this.logger.log(`Question enregistrée, réponse : ${answer.kind}`); // jamais le texte
+    // Jamais le texte dans les journaux : seulement la nature de la réponse.
+    this.logger.log(
+      `Question enregistrée, réponse : ${answer.kind}${pending ? ' (mise en mots en cours)' : ''}`,
+    );
+    if (pending && answer.rewrite)
+      this.writer.enqueue({ answerId, rewrite: answer.rewrite, askedAt });
     const pair = await this.readPair(input.id);
     if (!pair) throw notFound();
     return { response: pair, created: true };
@@ -263,6 +277,7 @@ export class ConversationsService {
       where: { id: input.id },
     })) as MessageRow | null;
     if (!existing) return null;
+    await this.writer.settleOverdue(patientId);
     const same =
       existing.role === 'USER' &&
       existing.patientId === patientId &&
@@ -339,6 +354,20 @@ export class ConversationsService {
   }
 
   private toMessage(row: MessageRow): AssistantMessageDto {
+    // En préparation : rien n'est montré (le gabarit enregistré attend la mise en mots).
+    if (row.status === 'PENDING') {
+      return {
+        id: row.id,
+        conversationId: row.conversationId,
+        role: row.role,
+        status: 'PENDING',
+        kind: null,
+        text: null,
+        sources: [],
+        rephrased: false,
+        createdAt: row.createdAt.toISOString(),
+      };
+    }
     return {
       id: row.id,
       conversationId: row.conversationId,

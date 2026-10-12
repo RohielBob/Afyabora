@@ -11,6 +11,11 @@ export interface LlmRequest {
   system: string;
   /** Les phrases à reformuler : uniquement des faits agrégés, sans nom, email ni identifiant. */
   prompt: string;
+  /**
+   * Arrêt demandé par l'appelant (L9-07 : délai de 2 minutes d'une réponse de l'assistant), en plus du
+   * délai propre au fournisseur. Un arrêt lève LlmError('timeout').
+   */
+  signal?: AbortSignal;
 }
 
 export interface LlmProvider {

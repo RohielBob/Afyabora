@@ -41,8 +41,8 @@ interface Call {
   started: number;
 }
 
-/** Raison d'une panne du modèle → résultat écrit dans le journal d'audit. */
-const FAILURE_OUTCOME: Record<LlmFailure, AuditOutcome> = {
+/** Raison d'une panne du modèle → résultat écrit dans le journal d'audit (aussi pour l'assistant, L9-07). */
+export const FAILURE_OUTCOME: Record<LlmFailure, AuditOutcome> = {
   timeout: 'TIMEOUT',
   unreachable: 'UNREACHABLE',
   http: 'HTTP',

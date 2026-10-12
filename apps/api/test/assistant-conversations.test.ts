@@ -1,4 +1,5 @@
-// Tests du ticket L9-05 : conversations de l'assistant « Afyabora » (contrat 0.4.0).
+// Tests des tickets L9-05 (conversations de l'assistant « Afyabora », contrat 0.4.0) et L9-07 (réponses
+// « en préparation » mises en mots par le modèle de langage, ici un faux modèle).
 // Vrai serveur HTTP (port 0), vraies gardes JWT et rôles ; base SIMULÉE qui applique réellement les filtres
 // (propriétaire, curseur), l'ordre, la cascade et les contraintes PostgreSQL (P2002, P2003).
 import { Logger, type INestApplication } from '@nestjs/common';
@@ -19,7 +20,15 @@ import { decryptField } from '../src/common/crypto/field-encryption';
 import { AllExceptionsFilter } from '../src/common/filters/all-exceptions.filter';
 import { JwtAuthGuard } from '../src/common/guards/jwt-auth.guard';
 import { RolesGuard } from '../src/common/guards/roles.guard';
+import { buildAnswerPrompt } from '../src/modules/assistant/answers/answer-rewrite';
+import {
+  ANSWER_DEADLINE_MS,
+  AnswerWriter,
+  OVERDUE_GRACE_MS,
+} from '../src/modules/assistant/answers/answer-writer.service';
 import { emergencyAnswer } from '../src/modules/assistant/answers/emergency-answer';
+import { MEASUREMENT_REMINDER } from '../src/modules/assistant/answers/measurement-answer';
+import { SHEET_REMINDER } from '../src/modules/assistant/answers/sheet-answer';
 import { ASSISTANT_TEMPLATES } from '../src/modules/assistant/answers/template-answer';
 import { AssistantModule } from '../src/modules/assistant/assistant.module';
 import {
@@ -28,6 +37,12 @@ import {
   previewOf,
 } from '../src/modules/assistant/conversations.service';
 import { REFUSAL_ANSWERS } from '../src/modules/insights/guardrails/question-guard';
+import { LlmAuditService, type AuditEntry } from '../src/modules/insights/llm/llm-audit.service';
+import {
+  LLM_PROVIDER,
+  type LlmProvider,
+  type LlmRequest,
+} from '../src/modules/insights/llm/llm-provider';
 import { PrismaService } from '../src/prisma/prisma.service';
 
 const SECRET = 'secret-de-test-uniquement-0123456789abcdef';
@@ -93,7 +108,8 @@ type MsgWhere = {
   conversationId?: string;
   patientId?: string;
   role?: string;
-  createdAt?: { gte: Date };
+  status?: string;
+  createdAt?: { gte?: Date; lt?: Date };
 };
 function msgMatches(m: Message, where: MsgWhere): boolean {
   if (where.id !== undefined && m.id !== where.id) return false;
@@ -101,7 +117,9 @@ function msgMatches(m: Message, where: MsgWhere): boolean {
   if (where.conversationId !== undefined && m.conversationId !== where.conversationId) return false;
   if (where.patientId !== undefined && m.patientId !== where.patientId) return false;
   if (where.role !== undefined && m.role !== where.role) return false;
-  if (where.createdAt && time(m.createdAt) < time(where.createdAt.gte)) return false;
+  if (where.status !== undefined && m.status !== where.status) return false;
+  if (where.createdAt?.gte && time(m.createdAt) < time(where.createdAt.gte)) return false;
+  if (where.createdAt?.lt && !(time(m.createdAt) < time(where.createdAt.lt))) return false;
   return true;
 }
 
@@ -178,6 +196,12 @@ const fakePrisma = {
       } as Message;
       messages.push(m);
       return m;
+    },
+    // L9-07 : réponse mise en mots (ou gabarit gardé) quand elle n'est plus en préparation.
+    updateMany: async ({ where, data }: { where: MsgWhere; data: Partial<Message> }) => {
+      const hit = messages.filter((m) => msgMatches(m, where));
+      for (const m of hit) Object.assign(m, data);
+      return { count: hit.length };
     },
   },
   user: {
@@ -698,5 +722,286 @@ describe('L9-05 : conversations de l’assistant (/assistant/conversations)', ()
       // Rien à effacer : 204 aussi.
       expect((await call('DELETE', '/assistant/conversations', tokenFor(awa))).status).toBe(204);
     });
+  });
+});
+
+// ---------------------------------------------------------------- L9-07 : mise en mots par le modèle
+describe('L9-07 : réponses mises en mots par le modèle de langage (faux modèle)', () => {
+  let app: INestApplication;
+  let baseUrl: string;
+  let writer: AnswerWriter;
+  const jwt = new JwtService({ secret: SECRET });
+  const awa = randomUUID();
+  const paul = randomUUID();
+  const audit: AuditEntry[] = [];
+
+  /** Faux modèle : réécrit le corps reçu en « En bref, … », après `release()` si `hold` est vrai. */
+  const requests: LlmRequest[] = [];
+  let hold = false;
+  let releases: Array<() => void> = [];
+  const release = () => {
+    for (const go of releases) go();
+    releases = [];
+  };
+  const llm: LlmProvider = {
+    name: 'faux',
+    model: 'faux-modele',
+    generate: async (request) => {
+      requests.push(request);
+      if (hold) await new Promise<void>((resolve) => releases.push(resolve));
+      const body = request.prompt.replace(/^Texte à réécrire :\n/, '');
+      return JSON.stringify({ texte: `En bref, ${body}` });
+    },
+  };
+
+  const tokenFor = (sub: string) =>
+    jwt.sign({ sub, role: 'PATIENT' }, { expiresIn: 900, algorithm: 'HS256' });
+  const call = (method: string, path: string, token: string, body?: unknown) =>
+    fetch(`${baseUrl}${path}`, {
+      method,
+      headers: { 'content-type': 'application/json', authorization: `Bearer ${token}` },
+      ...(body !== undefined ? { body: JSON.stringify(body) } : {}),
+    });
+  const newConversation = async (patient: string) => {
+    const id = randomUUID();
+    const res = await call('POST', '/assistant/conversations', tokenFor(patient), { id });
+    expect(res.status).toBe(201);
+    return id;
+  };
+  const ask = async (patient: string, conversationId: string, text: string, id = randomUUID()) => {
+    const path = `/assistant/conversations/${conversationId}/messages`;
+    const res = await call('POST', path, tokenFor(patient), { id, text });
+    return { status: res.status, body: sendAssistantMessageResponseSchema.parse(await res.json()) };
+  };
+  const detail = async (patient: string, conversationId: string) => {
+    const res = await call('GET', `/assistant/conversations/${conversationId}`, tokenFor(patient));
+    return assistantConversationDetailSchema.parse(await res.json());
+  };
+  const HBA1C = "C'est quoi l'HbA1c ?";
+
+  beforeAll(async () => {
+    const moduleRef = await Test.createTestingModule({
+      imports: [
+        JwtModule.register({ global: true, secret: SECRET }),
+        {
+          module: FakeInfraModule,
+          global: true,
+          providers: [
+            { provide: PrismaService, useValue: fakePrisma },
+            {
+              provide: ConfigService,
+              useValue: {
+                get: (key: string) => CONFIG[key],
+                getOrThrow: (key: string) => CONFIG[key],
+              },
+            },
+          ],
+          exports: [PrismaService, ConfigService],
+        },
+        AssistantModule,
+      ],
+      providers: [
+        { provide: APP_GUARD, useClass: JwtAuthGuard },
+        { provide: APP_GUARD, useClass: RolesGuard },
+      ],
+    })
+      .overrideProvider(LLM_PROVIDER)
+      .useValue(llm)
+      .overrideProvider(LlmAuditService)
+      .useValue({ record: async (entry: AuditEntry) => void audit.push(entry) })
+      .compile();
+    app = moduleRef.createNestApplication();
+    app.useGlobalFilters(new AllExceptionsFilter());
+    await app.listen(0, '127.0.0.1');
+    baseUrl = `http://127.0.0.1:${(app.getHttpServer().address() as AddressInfo).port}`;
+    writer = app.get(AnswerWriter);
+  });
+
+  afterAll(async () => {
+    await app.close();
+  });
+
+  beforeEach(() => {
+    conversations = [];
+    messages = [];
+    users = new Set([awa, paul]);
+    profiles = new Set([awa, paul]);
+    requests.length = 0;
+    audit.length = 0;
+    hold = false;
+  });
+
+  afterEach(async () => {
+    release();
+    await writer.idle();
+    vi.restoreAllMocks();
+  });
+
+  it('question générale : 202 « en préparation » sans rien montrer, puis la réponse mise en mots et citée', async () => {
+    const conv = await newConversation(awa);
+    hold = true;
+    const { status, body } = await ask(awa, conv, HBA1C);
+
+    expect(status).toBe(202);
+    expect(body.answer).toMatchObject({
+      status: 'PENDING',
+      kind: null,
+      text: null,
+      sources: [],
+      rephrased: false,
+    });
+    // En base : le gabarit est déjà là (chiffré), prêt à servir si le modèle échoue.
+    const stored = messages.find((m) => m.id === body.answer.id)!;
+    expect(stored).toMatchObject({ status: 'PENDING', kind: 'SHEET', rephrased: false });
+    const template = decryptField(stored.textEncrypted!, FIELD_KEY);
+    expect(template.startsWith("D'après la fiche « ")).toBe(true);
+    // Pendant la préparation, la conversation ne montre rien non plus.
+    expect((await detail(awa, conv)).messages[1]).toMatchObject({ status: 'PENDING', text: null });
+
+    release();
+    await writer.idle();
+    const answer = (await detail(awa, conv)).messages[1]!;
+    expect(answer).toMatchObject({ status: 'READY', kind: 'SHEET', rephrased: true });
+    expect(answer.sources).toEqual([expect.objectContaining({ id: 'hba1c', status: 'DRAFT' })]);
+    // Citation, résumé de la fiche et rappel remis par le code, autour du texte du modèle.
+    const sentBody = requests[0]!.prompt.replace(/^Texte à réécrire :\n/, '');
+    expect(template).toContain(sentBody);
+    expect(answer.text).toBe(template.replace(sentBody, `En bref, ${sentBody}`));
+    expect(answer.text!.startsWith("D'après la fiche « ")).toBe(true);
+    expect(answer.text!.endsWith(`\n\n${SHEET_REMINDER}`)).toBe(true);
+    const saved = messages.find((m) => m.id === answer.id)!;
+    expect(decryptField(saved.textEncrypted!, FIELD_KEY)).toBe(answer.text);
+  });
+
+  it('le modèle ne reçoit QUE le corps du gabarit : ni la question, ni la citation, ni le rappel', async () => {
+    const conv = await newConversation(awa);
+    const { body } = await ask(awa, conv, HBA1C);
+    await ask(awa, conv, 'Comment s’est passée ma semaine ?');
+    await writer.idle();
+
+    expect(body.answer.status).toBe('PENDING');
+    expect(requests).toHaveLength(2);
+    for (const request of requests) {
+      expect(request.prompt).not.toContain("C'est quoi");
+      expect(request.prompt).not.toContain('ma semaine');
+      expect(request.prompt).not.toContain(SHEET_REMINDER);
+      expect(request.prompt).not.toContain(MEASUREMENT_REMINDER);
+      expect(request.prompt).not.toContain('après la fiche');
+    }
+    // Mesures : le rappel est remis par le code à la fin.
+    const measurements = (await detail(awa, conv)).messages[3]!;
+    expect(measurements).toMatchObject({ status: 'READY', kind: 'MEASUREMENTS', rephrased: true });
+    expect(measurements.text!.endsWith(` ${MEASUREMENT_REMINDER}`)).toBe(true);
+    const sentBody = measurements
+      .text!.replace(/^En bref, /, '')
+      .replace(` ${MEASUREMENT_REMINDER}`, '');
+    expect(requests[1]!.prompt).toBe(buildAnswerPrompt(sentBody));
+    expect(audit.map((entry) => entry.kind)).toEqual(['ASSISTANT', 'ASSISTANT']);
+  });
+
+  it('urgence, refus et hors sujet : prêts tout de suite, JAMAIS envoyés au modèle', async () => {
+    const conv = await newConversation(awa);
+    for (const [text, kind] of [
+      ['Je fais un malaise, que faire ?', 'EMERGENCY'],
+      ['Combien d’unités d’insuline dois-je prendre ?', 'REFUSAL'],
+      ['Donne-moi une recette de pizza', 'OUT_OF_SCOPE'],
+    ] as const) {
+      const { status, body } = await ask(awa, conv, text);
+      expect(status).toBe(202);
+      expect(body.answer).toMatchObject({ status: 'READY', kind, rephrased: false });
+      expect(body.answer.text).not.toBeNull();
+    }
+    await writer.idle();
+    expect(requests).toHaveLength(0);
+  });
+
+  it('rejeu d’une question en préparation : 200 avec l’état du moment, puis la réponse prête', async () => {
+    const conv = await newConversation(awa);
+    hold = true;
+    const id = randomUUID();
+    await ask(awa, conv, HBA1C, id);
+    const replay = await ask(awa, conv, HBA1C, id);
+    expect(replay.status).toBe(200);
+    expect(replay.body.answer.status).toBe('PENDING');
+
+    release();
+    await writer.idle();
+    const after = await ask(awa, conv, HBA1C, id);
+    expect(after.status).toBe(200);
+    expect(after.body.answer).toMatchObject({ status: 'READY', kind: 'SHEET', rephrased: true });
+    expect(requests).toHaveLength(1); // le rejeu ne relance pas le modèle
+  });
+
+  it('réponse oubliée au-delà du délai : la lecture la rend prête avec son gabarit', async () => {
+    const conv = await newConversation(awa);
+    hold = true;
+    const { body } = await ask(awa, conv, HBA1C);
+    const stored = messages.find((m) => m.id === body.answer.id)!;
+    const template = decryptField(stored.textEncrypted!, FIELD_KEY);
+    // Comme si l'API avait perdu la tâche il y a plus de 2 minutes (+ la marge).
+    const late = new Date(Date.now() - ANSWER_DEADLINE_MS - OVERDUE_GRACE_MS - 1000);
+    for (const m of messages) m.createdAt = late;
+
+    const answer = (await detail(awa, conv)).messages[1]!;
+    expect(answer).toMatchObject({
+      status: 'READY',
+      kind: 'SHEET',
+      rephrased: false,
+      text: template,
+    });
+    // Le modèle répond ensuite : trop tard, rien ne change.
+    release();
+    await writer.idle();
+    expect((await detail(awa, conv)).messages[1]).toMatchObject({
+      rephrased: false,
+      text: template,
+    });
+  });
+
+  it('réponse oubliée au-delà du délai : le rejeu de la question la rend prête aussi', async () => {
+    const conv = await newConversation(awa);
+    hold = true;
+    const id = randomUUID();
+    await ask(awa, conv, HBA1C, id);
+    const late = new Date(Date.now() - ANSWER_DEADLINE_MS - OVERDUE_GRACE_MS - 1000);
+    for (const m of messages) m.createdAt = late;
+
+    const replay = await ask(awa, conv, HBA1C, id);
+    expect(replay.status).toBe(200);
+    expect(replay.body.answer).toMatchObject({ status: 'READY', kind: 'SHEET', rephrased: false });
+  });
+
+  it('conversation effacée pendant la mise en mots : rien n’est recréé', async () => {
+    const conv = await newConversation(awa);
+    hold = true;
+    await ask(awa, conv, HBA1C);
+    const res = await call('DELETE', `/assistant/conversations/${conv}`, tokenFor(awa));
+    expect(res.status).toBe(204);
+    release();
+    await writer.idle();
+    expect(messages).toEqual([]);
+  });
+
+  it('un autre patient ne voit jamais la réponse en préparation (404)', async () => {
+    const conv = await newConversation(awa);
+    hold = true;
+    await ask(awa, conv, HBA1C);
+    const res = await call('GET', `/assistant/conversations/${conv}`, tokenFor(paul));
+    expect(res.status).toBe(404);
+  });
+
+  it('journaux : la nature et la décision, jamais le texte de la question ni de la réponse', async () => {
+    const logs: string[] = [];
+    for (const level of ['log', 'warn', 'error'] as const) {
+      vi.spyOn(Logger.prototype, level).mockImplementation((...args: unknown[]) => {
+        logs.push(args.map(String).join(' '));
+      });
+    }
+    const conv = await newConversation(awa);
+    await ask(awa, conv, HBA1C);
+    await writer.idle();
+    expect(logs.join('\n')).toMatch(/SHEET \(mise en mots en cours\)/);
+    expect(logs.join('\n')).toMatch(/acceptée/);
+    expect(logs.join('\n')).not.toMatch(/HbA1c|En bref|hémoglobine/i);
   });
 });

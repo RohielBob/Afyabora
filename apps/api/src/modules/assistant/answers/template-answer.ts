@@ -1,6 +1,7 @@
 // Réponses GABARITS de l'assistant « Afyabora » (L9-05) : forme d'une réponse et textes fixes. L'ordre de
 // décision (filtre de sécurité, mesures, fiches) est dans `assistant-responder.service.ts` (L9-06).
 import type { AssistantAnswerKind, KnowledgeSheetRef } from '@glyka/shared';
+import type { AnswerRewrite } from './answer-rewrite';
 
 /** Réponse de l'assistant, avant enregistrement. */
 export interface AssistantAnswer {
@@ -9,6 +10,11 @@ export interface AssistantAnswer {
   sources: KnowledgeSheetRef[];
   /** Vrai seulement pour une phrase mise en mots par le modèle de langage ET vérifiée (L9-07). */
   rephrased: boolean;
+  /**
+   * Ce que le modèle de langage peut mettre en mots (L9-07) : seulement les réponses MEASUREMENTS et
+   * SHEET. Absent ⇒ texte fixe, jamais envoyé au modèle (urgence, refus, hors sujet).
+   */
+  rewrite?: AnswerRewrite;
 }
 
 /** Textes propres à l'assistant (les refus reprennent ceux de L3-07, déjà relus). */
