@@ -34,7 +34,10 @@ export function Screen({
         alignSelf: 'center',
         padding: padded ? spacing.xl : 0,
         gap: spacing.xl,
-        flexGrow: 1,
+        // Écran qui défile : le contenu grandit avec ce qu'il contient. Écran FIXE (liste ou conversation
+        // qui défile à l'intérieur, zone de saisie en bas) : il prend EXACTEMENT la hauteur de l'écran ;
+        // sinon, sur le web, il grandissait avec sa liste et poussait la zone de saisie hors de l'écran (L9-09).
+        ...(scroll ? { flexGrow: 1 } : { flex: 1, minHeight: 0 }),
       }}
     >
       {children}

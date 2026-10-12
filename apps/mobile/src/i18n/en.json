@@ -866,5 +866,86 @@
       "and": "and"
     },
     "rewritten": "Wording suggested by the AI, figures checked"
+  },
+  "assistant": {
+    "title": "Afyabora",
+    "subtitle": "Your follow-up assistant",
+    "entry": {
+      "title": "A question about your readings?",
+      "body": "Ask Afyabora, your assistant: it answers from your readings and from sheets reviewed by a doctor."
+    },
+    "welcome": {
+      "title": "Hello, I'm Afyabora",
+      "body": "Ask me about your blood glucose or about diabetes.",
+      "measures": "I describe your readings with the same calculations as the Insights screen.",
+      "sheets": "For general questions, I rely on sheets reviewed by a doctor, and I cite them.",
+      "never": "I never give a dose, a diagnosis or treatment advice: your healthcare professional remains the right person for that.",
+      "try": "Try",
+      "suggestionHint": "Asks Afyabora this question"
+    },
+    "suggestions": {
+      "week": "How did my week go?",
+      "evening": "Are my evening readings high?",
+      "hba1c": "What is HbA1c?",
+      "hypo": "What should I do in case of hypoglycaemia?"
+    },
+    "kinds": {
+      "measurements": "From your readings",
+      "sheet": "From a sheet",
+      "emergency": "Emergency",
+      "refusal": "Outside my role",
+      "outOfScope": "No safe answer"
+    },
+    "source": {
+      "title_one": "Cited sheet",
+      "title_other": "Cited sheets",
+      "validated": "Reviewed by a doctor",
+      "draft": "Sheet not yet reviewed"
+    },
+    "rephrased": "Worded by the local AI, then checked",
+    "pending": {
+      "title": "Afyabora is preparing its answer…",
+      "hint": "This can take up to 2 minutes.",
+      "late": "The answer is taking a little longer: it will appear as soon as it is ready."
+    },
+    "outgoing": {
+      "sending": "Sending…",
+      "offline": "Not sent: no connection. The assistant needs the internet.",
+      "quota": "Not sent: 20 questions per hour at most. Try again in {{minutes}} min.",
+      "conflict": "Not sent: please try again.",
+      "unknown": "Not sent: the service is not responding. Try again.",
+      "discard": "Remove"
+    },
+    "composer": {
+      "label": "Your question",
+      "placeholder": "Ask your question…",
+      "hint": "2 to 500 characters. Do not share identity details.",
+      "send": "Send the question",
+      "counter": "{{count}} / {{max}}",
+      "tooLong": "Too long: {{max}} characters at most."
+    },
+    "emergency": {
+      "button": "Emergency",
+      "buttonHint": "Shows the numbers to call in an emergency",
+      "title": "In an emergency",
+      "body": "If you feel unwell, do not stay alone: call the emergency services right away, or ask someone to do it.",
+      "noNumber": "No emergency number saved: call your country's emergency services. You can save your emergency number in your profile.",
+      "callNumber": "Call {{phone}}",
+      "call_relative": "Call {{name}}",
+      "call_doctor": "Call {{name}} (doctor)",
+      "callHint": "Opens the phone call"
+    },
+    "load": {
+      "loading": "Loading the conversation",
+      "offlineTitle": "No connection",
+      "offline": "Your conversations are kept on the server, encrypted: you need the internet to display them.",
+      "error": "The conversation could not be loaded.",
+      "notFound": "This conversation no longer exists: it may have been deleted.",
+      "newConversation": "New conversation"
+    },
+    "a11y": {
+      "question": "Your question: {{text}}",
+      "answerReady": "Afyabora has answered."
+    }
   }
 }

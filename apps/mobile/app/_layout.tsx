@@ -32,7 +32,7 @@ const PRIVATE_SCREENS = [
   'import/index',
   'import/mapping',
   'import/report',
-  'insights/ask',
+  'assistant/chat',
   'report/index',
   'share/active',
   'share/log',
