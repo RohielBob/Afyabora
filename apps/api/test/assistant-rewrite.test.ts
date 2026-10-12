@@ -648,6 +648,19 @@ describe('AnswerWriter : file de mise en mots', () => {
     expect(logs.some((l) => l.includes('2 réponse(s)'))).toBe(true);
   });
 
+  it('démarrage avec une base pas encore migrée (vérification Docker de la CI) : l’API démarre quand même', async () => {
+    const writer = new AnswerWriter(prisma, config, null, auditService);
+    // Erreur Prisma réelle vue en CI : P2021, la table AssistantMessage n'existe pas.
+    vi.mocked(prisma.assistantMessage.updateMany).mockRejectedValueOnce(
+      Object.assign(new Error('The table `public.AssistantMessage` does not exist'), {
+        code: 'P2021',
+      }),
+    );
+    await expect(writer.onModuleInit()).resolves.toBeUndefined();
+    expect(logs.some((l) => l.includes('non vérifiées au démarrage'))).toBe(true);
+    expect(logs.join('\n')).not.toContain('AssistantMessage');
+  });
+
   it('lecture : seules les réponses DE CE PATIENT en retard (délai + marge) passent en gabarit', async () => {
     const writer = new AnswerWriter(prisma, config, null, auditService);
     const late = new Date(Date.now() - ANSWER_DEADLINE_MS - OVERDUE_GRACE_MS - 1);

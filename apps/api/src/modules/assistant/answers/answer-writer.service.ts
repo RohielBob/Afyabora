@@ -65,14 +65,24 @@ export class AnswerWriter implements OnModuleInit {
     @Optional() private readonly audit?: LlmAuditService,
   ) {}
 
-  /** Démarrage : les réponses restées « en préparation » (API arrêtée pendant un travail) ⇒ gabarit. */
+  /**
+   * Démarrage : les réponses restées « en préparation » (API arrêtée pendant un travail) ⇒ gabarit.
+   * Ne bloque JAMAIS le démarrage : base pas encore migrée (vérification Docker de la CI, base neuve) ou
+   * indisponible ⇒ simple avertissement ; la lecture (`settleOverdue`) remettra le gabarit plus tard.
+   */
   async onModuleInit(): Promise<void> {
-    const { count } = await this.prisma.assistantMessage.updateMany({
-      where: { status: 'PENDING' },
-      data: { status: 'READY' },
-    });
-    if (count > 0)
-      this.logger.warn(`${count} réponse(s) restée(s) en préparation : gabarit utilisé.`);
+    try {
+      const { count } = await this.prisma.assistantMessage.updateMany({
+        where: { status: 'PENDING' },
+        data: { status: 'READY' },
+      });
+      if (count > 0)
+        this.logger.warn(`${count} réponse(s) restée(s) en préparation : gabarit utilisé.`);
+    } catch {
+      this.logger.warn(
+        'Réponses en préparation non vérifiées au démarrage (base indisponible) : reprise à la lecture.',
+      );
+    }
   }
 
   /** Vrai si cette réponse sera mise en mots par le modèle (enregistrée PENDING), faux si elle est prête. */
