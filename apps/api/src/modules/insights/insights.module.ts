@@ -16,6 +16,7 @@ import { LLM_PROVIDER } from './llm/llm-provider';
     // Fournisseur de modèle de langage choisi par la configuration (null = gabarits seulement).
     { provide: LLM_PROVIDER, inject: [ConfigService], useFactory: createLlmProvider },
   ],
-  exports: [InsightsService],
+  // Le modèle et son journal d'audit servent aussi à l'assistant (mise en mots des réponses, L9-07).
+  exports: [InsightsService, LLM_PROVIDER, LlmAuditService],
 })
 export class InsightsModule {}

@@ -92,54 +92,56 @@ export function parseSummary(raw: string): string | null {
   return typeof text === 'string' ? text.replace(/\s+/g, ' ').trim() : null;
 }
 
-/** Mots et formules refusés (garde-fous de l'ADR-0005 et du CDC §5.5). */
-const FORBIDDEN = new RegExp(
-  [
-    // Médical : diagnostic, dose, traitement
-    'diagnos',
-    '\\bdoses?\\b',
-    'dosage',
-    'posologie',
-    'insuline',
-    'traitement',
-    'm[ée]dicament',
-    'prescri',
-    // Ordres et conseils
-    'vous devez',
-    'vous devriez',
-    'il faut',
-    'recommand',
-    'conseill',
-    'essayez',
-    'pensez à',
-    "n'oubliez pas",
-    // Causes affirmées
-    'à cause',
-    'parce que',
-    'en raison',
-    'caus[ée]',
-    'provoqu',
-    // Alarmes et jugements
-    '\\bgraves?\\b',
-    'urgen',
-    'danger',
-    'inqui[ée]t',
-    'alarm',
-    'pr[ée]occup',
-    'rassur',
-    'anormal',
-    'mal [ée]quilibr',
-    'd[ée]s[ée]quilibr',
-    'toujours',
-    'jamais',
-    // Sujet faux, liens
-    'vous avez observ',
-    'https?:',
-    'www\\.',
-    '@',
-  ].join('|'),
-  'i',
-);
+/**
+ * Mots et formules refusés (garde-fous de l'ADR-0005 et du CDC §5.5). Exportés : l'assistant (L9-07) les
+ * vérifie un par un, car un extrait de fiche peut déjà contenir l'un d'eux.
+ */
+export const FORBIDDEN_PATTERNS: readonly string[] = [
+  // Médical : diagnostic, dose, traitement
+  'diagnos',
+  '\\bdoses?\\b',
+  'dosage',
+  'posologie',
+  'insuline',
+  'traitement',
+  'm[ée]dicament',
+  'prescri',
+  // Ordres et conseils
+  'vous devez',
+  'vous devriez',
+  'il faut',
+  'recommand',
+  'conseill',
+  'essayez',
+  'pensez à',
+  "n'oubliez pas",
+  // Causes affirmées
+  'à cause',
+  'parce que',
+  'en raison',
+  'caus[ée]',
+  'provoqu',
+  // Alarmes et jugements
+  '\\bgraves?\\b',
+  'urgen',
+  'danger',
+  'inqui[ée]t',
+  'alarm',
+  'pr[ée]occup',
+  'rassur',
+  'anormal',
+  'mal [ée]quilibr',
+  'd[ée]s[ée]quilibr',
+  'toujours',
+  'jamais',
+  // Sujet faux, liens
+  'vous avez observ',
+  'https?:',
+  'www\\.',
+  '@',
+];
+
+const FORBIDDEN = new RegExp(FORBIDDEN_PATTERNS.join('|'), 'i');
 
 /** Marques de négation : « ne », « n' », « pas », « aucun(e) », « rien », « sans », « hors ». */
 const NEGATION = /\b(?:ne|pas|aucune?|rien|sans|hors)\b|\bn['’]/gi;

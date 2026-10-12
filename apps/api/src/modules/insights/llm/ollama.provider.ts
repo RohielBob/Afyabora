@@ -29,7 +29,9 @@ export class OllamaProvider implements LlmProvider {
     this.model = options.model;
   }
 
-  async generate({ system, prompt }: LlmRequest): Promise<string> {
+  async generate({ system, prompt, signal }: LlmRequest): Promise<string> {
+    // Délai propre au fournisseur, et arrêt demandé par l'appelant s'il y en a un (le premier des deux).
+    const timeout = AbortSignal.timeout(this.options.timeoutMs);
     let res: Response;
     try {
       res = await this.fetchFn(new URL('/api/generate', this.options.url), {
@@ -44,7 +46,7 @@ export class OllamaProvider implements LlmProvider {
           // Peu de créativité : on veut une reformulation fidèle, pas une invention.
           options: { temperature: 0.2 },
         }),
-        signal: AbortSignal.timeout(this.options.timeoutMs),
+        signal: signal ? AbortSignal.any([timeout, signal]) : timeout,
       });
     } catch (error) {
       const name = (error as { name?: string }).name;

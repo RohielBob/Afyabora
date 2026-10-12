@@ -5,6 +5,7 @@
 import type { KnowledgeSheetRef } from '@glyka/shared';
 import { normalizeQuestion } from '../../insights/guardrails/question-guard';
 import type { ParsedSheet } from '../knowledge/sheet-format';
+import { composeAnswer, type AnswerRewrite } from './answer-rewrite';
 
 /** Mots trop courants pour départager deux fiches. */
 const STOP = new Set(
@@ -162,15 +163,24 @@ export const SHEET_REMINDER =
 export interface SheetAnswer {
   text: string;
   source: KnowledgeSheetRef;
+  /** Découpage pour la mise en mots (L9-07) : la citation et le rappel restent ceux du code. */
+  rewrite: AnswerRewrite;
 }
 
 /** Réponse tirée de la fiche : titre et résumé, la partie la plus pertinente, le rappel. */
 export function sheetAnswer(parsed: ParsedSheet, question: string): SheetAnswer {
   const { sheet } = parsed;
-  const text = [
-    `D'après la fiche « ${sheet.title} » : ${sheet.summary}`,
-    cut(bestSection(sheet.body, question), EXCERPT_MAX),
-    SHEET_REMINDER,
-  ].join('\n\n');
-  return { text, source: { id: sheet.id, title: sheet.title, status: sheet.status } };
+  // Le résumé de la fiche décrit la fiche elle-même (« Que noter avant un rendez-vous… ») : il reste avec la
+  // citation, écrit par le code. Le modèle ne reçoit que la partie qui répond (banc d'essai de L9-07 : il
+  // transformait ce résumé en conseil inventé).
+  const rewrite: AnswerRewrite = {
+    prefix: `D'après la fiche « ${sheet.title} » : ${sheet.summary}\n\n`,
+    body: cut(bestSection(sheet.body, question), EXCERPT_MAX),
+    suffix: `\n\n${SHEET_REMINDER}`,
+  };
+  return {
+    text: composeAnswer(rewrite, rewrite.body),
+    source: { id: sheet.id, title: sheet.title, status: sheet.status },
+    rewrite,
+  };
 }
