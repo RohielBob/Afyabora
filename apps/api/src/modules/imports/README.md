@@ -72,29 +72,53 @@ Fonctions pures, sans base : octets du fichier ⇒ en-têtes + lignes. Elles ne 
 ### Tests
 
 - `test/imports-csv.test.ts` : 44 tests, dont les deux fichiers de `scripts/sample-data/`.
+- `test/imports-validation.test.ts` (L4-03) : 75 tests, dont le fichier de démo (139 / 5 / 3, ligne 42), le même tableau en classeur Excel (même rapport), un 2e import du même fichier (tout devient « déjà enregistré »).
 - `test/imports-xlsx.test.ts` : 20 tests, dont :
   - les 147 lignes de la démo en vraies cellules Excel, avec les mêmes valeurs que le CSV ;
   - `import-corrupted.xlsx` ;
   - un classeur écrit au format XML exact d'Excel ;
   - des « bombes zip » fabriquées à la main.
 
+## Règles de validation (L4-03, `import-validation.ts`)
+
+Fonctions pures : lignes lues (CSV ou Excel) ⇒ un statut par ligne, avec la mesure prête à enregistrer (`measuredAt` en UTC, `valueMgDl`, `originalValue`, `originalUnit`, `context`). Rien n'est écrit en base (le commit est en L4-04).
+
+- **Statuts**, dans cet ordre de priorité, avec une raison précise (`reason`) et son message (`REASON_MESSAGES`) :
+  - **ERROR** (rejet) : date manquante ou illisible (jour inexistant comme 31/02, année sur 2 chiffres), heure illisible, valeur non numérique, unité inconnue, **date future**. Une marge de 5 minutes est laissée pour l'horloge du lecteur ;
+  - **INCONSISTENT** (à vérifier par le patient) :
+    - valeur hors des bornes **20–600 mg/dL** dans son unité : « Valeur inhabituelle, vérifier l'unité ». Les unités où ce nombre serait plausible sont proposées (`suggestedUnits` : 18,7 g/L ⇒ mmol/L) ;
+    - **unité de la ligne différente** de celle choisie pour le fichier. La valeur est lue dans l'unité de la ligne ;
+    - **nombre de colonnes inattendu**, signe d'un mauvais séparateur. C'est le cas d'une virgule décimale dans un fichier à virgules : « 1,1 » coupé en deux donnerait 1 g/L sans rien dire ;
+    - **heure absente** : la mesure est placée à minuit, et le patient le voit ;
+  - **DUPLICATE** : même horodatage **à la minute** et même valeur en mg/dL (1,10 g/L = 110 mg/dL) qu'une mesure **déjà enregistrée** ou qu'une ligne **plus haut dans le fichier**. La première occurrence garde son statut. Une ligne rejetée ne compte pas comme première occurrence ;
+  - **VALID** : tout le reste.
+- **Dates** :
+  - `jj/mm/aaaa` (aussi avec `-` ou `.`) et `aaaa-mm-jj` (aussi avec `/`), lues à la française (03/04 = 3 avril) ;
+  - avec ou sans heure, séparée par un espace ou par `T` ;
+  - heures `07:15`, `7h15`, `7h`, `07:15:30`. La colonne « heure » passe avant une heure écrite dans la date.
+- **Heure locale du patient ⇒ UTC** avec le décalage du profil (`timezoneOffsetMinutes`) : à Kinshasa (+60), 07:15 donne 06:15Z.
+- **Unités** : `g/L`, `mg/dL`, `mmol/L` et leurs écritures courantes (`g/l`, `mgdl`, `mg/100ml`, `mmol`…). Une case vide prend l'unité du fichier.
+- **Contextes** : à jeun ou réveil ⇒ FASTING ; avant ⇒ BEFORE_MEAL ; après ou post-prandial ⇒ AFTER_MEAL ; coucher ⇒ BEDTIME ; nuit ou nocturne ⇒ NIGHT ; le reste ⇒ OTHER, jamais une erreur.
+- **Mesures déjà enregistrées** : le service fournit leurs clés (`duplicateKey(measuredAt, valueMgDl)`), sans les mesures supprimées.
+
 ## Tests obligatoires
 
-- [ ] `scripts/sample-data/import-demo-147.csv` : 139 valides, 5 doublons, 3 incohérentes.
+- [x] `scripts/sample-data/import-demo-147.csv` : 139 valides, 5 doublons, 3 incohérentes (L4-03, `test/imports-validation.test.ts`).
 - [x] `.xlsx` corrompu : erreur claire, pas de plantage (L4-02 : `CORRUPTED`, testé avec `scripts/sample-data/import-corrupted.xlsx`).
 - [ ] Annuler un lot supprime toutes ses mesures.
-- [ ] Ligne 42 (18,7 g/L) signalée « vérifier l'unité ».
+- [x] Ligne 42 (18,7 g/L) signalée « vérifier l'unité » (L4-03 : `OUT_OF_RANGE`, mmol/L proposé).
 
 ## Fichiers
 
-| Fichier                 | Rôle                                                                                                   |
-| ----------------------- | ------------------------------------------------------------------------------------------------------ |
-| `imports.module.ts`     | Déclaration du module NestJS                                                                           |
-| `imports.controller.ts` | Routes HTTP : validation Zod (`ZodValidationPipe` + schémas de `@glyka/shared`), pas de logique métier |
-| `imports.service.ts`    | Logique métier et accès base (Prisma)                                                                  |
-| `csv-parser.ts`         | Lecture d'un fichier CSV (encodage, séparateur, numéros de ligne) : fonctions pures                    |
-| `xlsx-parser.ts`        | Lecture d'un classeur Excel .xlsx (contrôles du ZIP, feuille, cellules ⇒ texte)                        |
-| `import-table.ts`       | Commun CSV / Excel : colonnes, nombres, lignes, erreurs sur le fichier (`ImportFileError`)             |
+| Fichier                 | Rôle                                                                                                         |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------ |
+| `imports.module.ts`     | Déclaration du module NestJS                                                                                 |
+| `imports.controller.ts` | Routes HTTP : validation Zod (`ZodValidationPipe` + schémas de `@glyka/shared`), pas de logique métier       |
+| `imports.service.ts`    | Logique métier et accès base (Prisma)                                                                        |
+| `csv-parser.ts`         | Lecture d'un fichier CSV (encodage, séparateur, numéros de ligne) : fonctions pures                          |
+| `xlsx-parser.ts`        | Lecture d'un classeur Excel .xlsx (contrôles du ZIP, feuille, cellules ⇒ texte)                              |
+| `import-table.ts`       | Commun CSV / Excel : colonnes, nombres, lignes, erreurs sur le fichier (`ImportFileError`)                   |
+| `import-validation.ts`  | Règles de validation : statut VALID / DUPLICATE / INCONSISTENT / ERROR par ligne, mesure prête à enregistrer |
 
 ## Rappels
 
