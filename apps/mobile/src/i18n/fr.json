@@ -866,5 +866,86 @@
       "and": "et"
     },
     "rewritten": "Formulation proposée par l’IA, chiffres vérifiés"
+  },
+  "assistant": {
+    "title": "Afyabora",
+    "subtitle": "Votre assistant de suivi",
+    "entry": {
+      "title": "Une question sur vos mesures ?",
+      "body": "Demandez à Afyabora, votre assistant : il répond à partir de vos mesures et de fiches relues par un médecin."
+    },
+    "welcome": {
+      "title": "Bonjour, je suis Afyabora",
+      "body": "Posez-moi vos questions sur vos glycémies ou sur le diabète.",
+      "measures": "Je décris vos mesures avec les mêmes calculs que l'écran Analyse.",
+      "sheets": "Pour les questions générales, je m'appuie sur des fiches relues par un médecin, et je les cite.",
+      "never": "Je ne donne jamais de dose, de diagnostic ni de conseil de traitement : pour cela, votre professionnel de santé reste la bonne personne.",
+      "try": "Essayez",
+      "suggestionHint": "Pose cette question à Afyabora"
+    },
+    "suggestions": {
+      "week": "Comment s'est passée ma semaine ?",
+      "evening": "Mes glycémies du soir sont-elles hautes ?",
+      "hba1c": "C'est quoi l'HbA1c ?",
+      "hypo": "Que faire en cas d'hypoglycémie ?"
+    },
+    "kinds": {
+      "measurements": "D'après vos mesures",
+      "sheet": "D'après une fiche",
+      "emergency": "Urgence",
+      "refusal": "En dehors de mon rôle",
+      "outOfScope": "Pas de réponse sûre"
+    },
+    "source": {
+      "title_one": "Fiche citée",
+      "title_other": "Fiches citées",
+      "validated": "Relue par un médecin",
+      "draft": "Fiche non encore relue"
+    },
+    "rephrased": "Formulé par l'IA locale, puis vérifié",
+    "pending": {
+      "title": "Afyabora prépare sa réponse…",
+      "hint": "Cela peut prendre jusqu'à 2 minutes.",
+      "late": "La réponse tarde un peu : elle s'affichera dès qu'elle sera prête."
+    },
+    "outgoing": {
+      "sending": "Envoi…",
+      "offline": "Non envoyée : pas de connexion. L'assistant a besoin d'internet.",
+      "quota": "Non envoyée : 20 questions par heure au plus. Réessayez dans {{minutes}} min.",
+      "conflict": "Non envoyée : réessayez.",
+      "unknown": "Non envoyée : le service ne répond pas. Réessayez.",
+      "discard": "Retirer"
+    },
+    "composer": {
+      "label": "Votre question",
+      "placeholder": "Posez votre question…",
+      "hint": "2 à 500 caractères. Ne donnez pas d'informations d'identité.",
+      "send": "Envoyer la question",
+      "counter": "{{count}} / {{max}}",
+      "tooLong": "Trop long : {{max}} caractères au plus."
+    },
+    "emergency": {
+      "button": "Urgence",
+      "buttonHint": "Affiche les numéros à appeler en cas d'urgence",
+      "title": "En cas d'urgence",
+      "body": "Si vous vous sentez mal, ne restez pas seul : appelez tout de suite les secours, ou demandez à quelqu'un de le faire.",
+      "noNumber": "Aucun numéro d'urgence enregistré : appelez les secours de votre pays. Vous pouvez enregistrer votre numéro d'urgence dans votre profil.",
+      "callNumber": "Appeler le {{phone}}",
+      "call_relative": "Appeler {{name}}",
+      "call_doctor": "Appeler {{name}} (médecin)",
+      "callHint": "Ouvre l'appel téléphonique"
+    },
+    "load": {
+      "loading": "Chargement de la conversation",
+      "offlineTitle": "Pas de connexion",
+      "offline": "Vos conversations sont gardées sur le serveur, chiffrées : il faut internet pour les afficher.",
+      "error": "La conversation n'a pas pu être chargée.",
+      "notFound": "Cette conversation n'existe plus : elle a peut-être été effacée.",
+      "newConversation": "Nouvelle conversation"
+    },
+    "a11y": {
+      "question": "Votre question : {{text}}",
+      "answerReady": "Afyabora a répondu."
+    }
   }
 }

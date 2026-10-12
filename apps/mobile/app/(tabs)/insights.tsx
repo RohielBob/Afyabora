@@ -7,11 +7,13 @@
 //  - moins de 10 mesures : « pas encore assez de mesures », aucun chiffre trompeur ;
 //  - en ligne : les phrases déjà reformulées par l'IA du serveur remplacent celles du téléphone, seulement
 //    si elles décrivent exactement les mêmes faits (L3-09) ; hors-ligne, rien ne change ;
+//  - une question sur ces chiffres ? accès à l'assistant « Afyabora » (L9-09) ;
 //  - avertissement « outil d'aide, pas un avis médical ».
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 import { InlineAlert, Screen, SegmentedControl, Text } from '@/components/ui';
+import { AssistantEntryCard } from '@/features/assistant';
 import { CHART_PERIODS, DEFAULT_PERIOD, type ChartPeriod } from '@/features/dashboard';
 import {
   AnalysisSkeleton,
@@ -118,6 +120,8 @@ export default function InsightsScreen() {
           </>
         )
       ) : null}
+
+      {state.status === 'ready' ? <AssistantEntryCard index={2} /> : null}
 
       <View style={{ marginTop: 'auto' }}>
         <MedicalDisclaimer variant="compact" />

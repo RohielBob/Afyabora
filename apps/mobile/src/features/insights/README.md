@@ -2,13 +2,14 @@
 
 **Lot L3 · Fonctionnalité F6**
 
-Observations, « Voir les mesures concernées », résumé, question libre.
+Observations, « Voir les mesures concernées », résumé ; accès à l'assistant (L9-09).
 
 ## Tickets
 
 - **L8-11** — Analyse calculée sur le téléphone depuis la base locale — **fait** (données, sans écran)
 - **L3-04** — Mobile : écran Analyse avec « Voir les mesures concernées » — **fait**
-- **L3-08** — Question libre sur l'historique (IA-4)
+- **L3-08** — Question libre sur l'historique (IA-4) — **remplacé** par l'assistant « Afyabora » (lot L9, feature
+  `assistant`, ADR-0005 complétée) ; l'écran provisoire `insights/ask` est retiré (L9-09)
 - **L3-09** — Mobile : analyse et gabarits calculés hors-ligne depuis la base locale — **fait** (enrichissement en ligne)
 
 ## Analyse calculée sur le téléphone (L8-11)
