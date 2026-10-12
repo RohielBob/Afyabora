@@ -4,6 +4,7 @@ import {
   deleteAccountSchema,
   importCommitSchema,
   importPreviewFormSchema,
+  importReportSchema,
   insightsQuerySchema,
   listQuerySchema,
   reportQuerySchema,
@@ -185,5 +186,44 @@ describe('updateMeasurementSchema', () => {
     expect(updateMeasurementSchema.safeParse({ value: 1.5, unit: 'G_L' }).success).toBe(true);
     expect(updateMeasurementSchema.safeParse({ context: 'FASTING' }).success).toBe(true);
     expect(updateMeasurementSchema.safeParse({}).success).toBe(true);
+  });
+});
+
+describe('importReportSchema (L4-05 : rapport vérifié par le mobile)', () => {
+  const report = {
+    batchId: ID_A,
+    analyzed: 147,
+    valid: 139,
+    duplicates: 5,
+    inconsistent: 3,
+    errors: 0,
+    rows: [
+      {
+        line: 42,
+        status: 'INCONSISTENT',
+        rawValue: '18,70',
+        message: "Valeur inhabituelle, vérifier l'unité",
+      },
+      { line: 20, status: 'DUPLICATE', rawValue: '1,32' },
+    ],
+  };
+
+  it('accepte le rapport du contrat (message facultatif)', () => {
+    expect(importReportSchema.parse(report)).toEqual(report);
+  });
+
+  it('refuse un rapport faux : compte négatif ou décimal, statut inconnu, ligne 0, identifiant invalide', () => {
+    expect(importReportSchema.safeParse({ ...report, valid: -1 }).success).toBe(false);
+    expect(importReportSchema.safeParse({ ...report, errors: 1.5 }).success).toBe(false);
+    expect(importReportSchema.safeParse({ ...report, batchId: 'lot-1' }).success).toBe(false);
+    const row = (over: object) => ({
+      ...report,
+      rows: [{ line: 2, status: 'VALID', rawValue: '1', ...over }],
+    });
+    expect(importReportSchema.safeParse(row({ status: 'OK' })).success).toBe(false);
+    expect(importReportSchema.safeParse(row({ line: 0 })).success).toBe(false);
+    expect(importReportSchema.safeParse(row({ rawValue: 1 })).success).toBe(false);
+    const { rows: _rows, ...withoutRows } = report;
+    expect(importReportSchema.safeParse(withoutRows).success).toBe(false);
   });
 });

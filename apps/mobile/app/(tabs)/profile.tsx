@@ -48,6 +48,12 @@ export default function ProfileScreen() {
           subtitle={t('profile.settingsHint')}
           onPress={() => router.push('/settings')}
         />
+        <ListRow
+          icon={<Ionicons name="cloud-upload-outline" size={20} color={colors.primaryText} />}
+          title={t('profile.import')}
+          subtitle={t('profile.importHint')}
+          onPress={() => router.push('/import')}
+        />
       </Card>
 
       {confirming ? (
