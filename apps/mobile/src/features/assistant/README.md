@@ -1,6 +1,6 @@
 # Feature `assistant` — conversation avec « Afyabora »
 
-**Lot L9 · Fonctionnalité F6 · Tickets : L9-09 (L9-10 à venir)**
+**Lot L9 · Fonctionnalité F6 · Tickets : L9-09, L9-10**
 
 L'écran de conversation avec l'assistant. L'assistant répond **côté serveur** (module `assistant` de l'API :
 filtre de sécurité, mesures, fiches relues par un médecin, mise en mots vérifiée par le modèle local). Le
@@ -9,9 +9,9 @@ et effaçable sur le serveur).
 
 ## Écran (L9-09) : `app/assistant/chat.tsx`
 
-- **Accès** : carte « Une question sur vos mesures ? » sous l'onglet Analyse (`AssistantEntryCard`). Sans
-  paramètre : **nouvelle conversation** (identifiant créé sur le téléphone ; créée sur le serveur au premier
-  envoi seulement). Avec `?id=` : conversation existante relue sur le serveur (la liste viendra en L9-10).
+- **Accès** : depuis l'accueil de l'assistant (L9-10). Sans paramètre : **nouvelle conversation** (identifiant
+  créé sur le téléphone ; créée sur le serveur au premier envoi seulement). Avec `?id=` : conversation
+  existante relue sur le serveur. Une fiche citée s'ouvre dans le lecteur de fiches (L9-10).
 - **Accueil** (conversation vide) : Afyabora se présente — ce qu'il fait (vos mesures, des fiches relues par
   un médecin) et ce qu'il ne fera jamais (dose, diagnostic, traitement) — et propose 4 questions.
 - **Réponses** : nature en **icône + libellé** (« D'après vos mesures », « D'après une fiche », « Urgence »,
@@ -33,16 +33,38 @@ et effaçable sur le serveur).
 - Avertissement « outil d'aide, pas un avis médical » en bas de la conversation ; thèmes clair et sombre ;
   animations réduites respectées.
 
-| Fichier                          | Rôle                                                                          |
-| -------------------------------- | ----------------------------------------------------------------------------- |
-| `api.ts`                         | Appels `/assistant/conversations…`, réponses vérifiées par `@glyka/shared`    |
-| `conversation.ts`                | État pur : réducteur, fusion des messages, erreurs, relecture, saisie         |
-| `presentation.ts`                | Nature des réponses, statut des fiches, questions proposées, appels `tel:`    |
-| `useConversation.ts`             | Relie l'état au réseau (création au 1er envoi, renvoi, relecture)             |
-| `useEmergencyCalls.ts`           | Numéros d'urgence du profil, lus une fois                                     |
-| `components/*`                   | En-tête, accueil, bulles, saisie, panneau et touches d'urgence, carte d'accès |
-| `__tests__/conversation.test.ts` | Réducteur, ordre, rejeu, erreurs, saisie, relecture, retard                   |
-| `__tests__/presentation.test.ts` | Icône + libellé, statut des fiches, `tel:`, aucun numéro deviné, traductions  |
+## Accueil, conversations et fiches (L9-10)
+
+- **Accueil de l'assistant** `app/assistant/index.tsx`, ouvert par la carte « Une question sur vos mesures ? »
+  de l'onglet Analyse (`AssistantEntryCard`) : « Nouvelle conversation », accès aux fiches, **vos
+  conversations** (la plus récemment utilisée d'abord, début de la première question, date « Aujourd'hui,
+  14:32 » / « Hier » / date, nombre de messages ; 20 par page, « Voir plus » ; relues à chaque retour sur
+  l'écran).
+- **Effacement réel** : corbeille sur une conversation, ou « Effacer toutes mes conversations » ; toujours une
+  **confirmation dans la page** (comme la suppression d'une mesure), puis l'effacement sur le serveur (messages
+  compris). Déjà effacée ailleurs (404) : comptée comme faite. Sans réseau : « Rien n'a été effacé », rien ne
+  disparaît de l'écran.
+- **Lecteur de fiches** : `app/assistant/sheets/index.tsx` (liste : titre, résumé, relecture) et
+  `app/assistant/sheets/[id].tsx` (fiche entière : « Relue par un médecin le … » ou « Fiche non encore
+  relue », résumé, texte — titres, paragraphes, listes, gras —, rappel « parlez-en à votre professionnel de
+  santé », **sources officielles** ouvertes dans le navigateur, version).
+- Hors-ligne : message clair et « Réessayer » (rien n'est gardé sur le téléphone) ; mention « chiffrées,
+  gardées jusqu'à ce que vous les effaciez, votre médecin n'y a jamais accès ».
+
+| Fichier                          | Rôle                                                                              |
+| -------------------------------- | --------------------------------------------------------------------------------- |
+| `api.ts`                         | Appels `/assistant/conversations…`, réponses vérifiées par `@glyka/shared`        |
+| `conversation.ts`                | État pur : réducteur, fusion des messages, erreurs, relecture, saisie             |
+| `presentation.ts`                | Nature des réponses, statut des fiches, questions proposées, appels `tel:`        |
+| `useConversation.ts`             | Relie l'état au réseau (création au 1er envoi, renvoi, relecture)                 |
+| `useEmergencyCalls.ts`           | Numéros d'urgence du profil, lus une fois                                         |
+| `library.ts`                     | (L9-10) Pages de la liste, dates, lecture du texte des fiches, relecture          |
+| `useLibrary.ts`                  | (L9-10) Liste et effacement des conversations, fiches                             |
+| `components/Library.tsx`         | (L9-10) Retour, carte de conversation, confirmation, relecture, texte d'une fiche |
+| `__tests__/library.test.ts`      | (L9-10) Pages, dates, Markdown des fiches, relecture, traductions                 |
+| `components/*`                   | En-tête, accueil, bulles, saisie, panneau et touches d'urgence, carte d'accès     |
+| `__tests__/conversation.test.ts` | Réducteur, ordre, rejeu, erreurs, saisie, relecture, retard                       |
+| `__tests__/presentation.test.ts` | Icône + libellé, statut des fiches, `tel:`, aucun numéro deviné, traductions      |
 
 ## Tests obligatoires
 
@@ -55,3 +77,8 @@ et effaçable sur le serveur).
 - [x] (L9-09) Appels d'urgence : lien `tel:` propre ; ordre numéro d'urgence, proche, médecin ; aucun numéro deviné.
 - [x] (L9-09) Mêmes clés de traduction en français et en anglais.
 - [x] (L9-09) Vérifié dans le navigateur, format téléphone, clair et sombre, avec la vraie API et le vrai modèle local.
+- [x] (L9-10) Pages fusionnées sans doublon, la plus récente d'abord, ordre stable ; conversation reprise remontée.
+- [x] (L9-10) Dates : aujourd'hui, hier (frontières de minuit), date ; horloge en retard.
+- [x] (L9-10) Texte des fiches : titres, paragraphes réunis, listes (et suites indentées), gras, « ** » sans fin.
+- [x] (L9-10) Relecture : validée avec date, validée sans date, brouillon ; traductions et pluriels.
+- [x] (L9-10) Vérifié en vrai (accueil, liste, effacement d'une et de toutes, fiche citée ⇒ lecteur, liste des fiches, hors-ligne), format téléphone, clair et sombre.

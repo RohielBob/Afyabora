@@ -1,5 +1,5 @@
 // Carte d'accès à l'assistant (L9-09), sous l'analyse : « Une question sur vos mesures ? Demandez à
-// Afyabora ». Ouvre une nouvelle conversation.
+// Afyabora ». Ouvre l'accueil de l'assistant (L9-10 : nouvelle conversation, conversations, fiches).
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
@@ -15,7 +15,7 @@ export function AssistantEntryCard({ index = 0 }: { index?: number }) {
     <Card
       variant="tinted"
       index={index}
-      onPress={() => router.push('/assistant/chat')}
+      onPress={() => router.push('/assistant')}
       accessibilityLabel={`${t('assistant.entry.title')}. ${t('assistant.entry.body')}`}
     >
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.md }}>

@@ -900,7 +900,8 @@
       "title_one": "Fiche citée",
       "title_other": "Fiches citées",
       "validated": "Relue par un médecin",
-      "draft": "Fiche non encore relue"
+      "draft": "Fiche non encore relue",
+      "openHint": "Ouvre la fiche complète"
     },
     "rephrased": "Formulé par l'IA locale, puis vérifié",
     "pending": {
@@ -946,6 +947,52 @@
     "a11y": {
       "question": "Votre question : {{text}}",
       "answerReady": "Afyabora a répondu."
+    },
+    "home": {
+      "subtitle": "Votre assistant de suivi : vos mesures et des fiches relues par un médecin.",
+      "new": "Nouvelle conversation",
+      "sheets": "Fiches de connaissances",
+      "sheetsHint": "Hypoglycémie, HbA1c, alimentation…"
+    },
+    "list": {
+      "title": "Vos conversations",
+      "loading": "Chargement de vos conversations",
+      "offline": "Vos conversations sont gardées sur le serveur, chiffrées : il faut internet pour les afficher.",
+      "error": "Vos conversations n'ont pas pu être chargées.",
+      "empty": "Aucune conversation pour l'instant. Posez votre première question à Afyabora.",
+      "today": "Aujourd'hui, {{time}}",
+      "yesterday": "Hier, {{time}}",
+      "messages_one": "{{count}} message",
+      "messages_other": "{{count}} messages",
+      "noPreview": "Conversation sans question",
+      "openHint": "Ouvre la conversation",
+      "remove": "Effacer cette conversation",
+      "removeTitle": "Effacer cette conversation ?",
+      "removeText": "Les questions et les réponses seront effacées définitivement.",
+      "removeConfirm": "Effacer",
+      "removeAll": "Effacer toutes mes conversations",
+      "removeAllTitle": "Effacer toutes vos conversations ?",
+      "removeAllText": "Toutes vos questions et toutes les réponses seront effacées définitivement.",
+      "removeAllConfirm": "Tout effacer",
+      "removeOffline": "Rien n'a été effacé : pas de connexion. Réessayez une fois en ligne.",
+      "removeError": "Rien n'a été effacé : le service ne répond pas. Réessayez.",
+      "more": "Voir plus",
+      "privacy": "Vos conversations sont chiffrées et gardées jusqu'à ce que vous les effaciez. Votre médecin n'y a jamais accès."
+    },
+    "sheets": {
+      "title": "Fiches de connaissances",
+      "intro": "Afyabora s'appuie sur ces fiches pour répondre aux questions générales. Chacune cite ses sources officielles.",
+      "offline": "Les fiches sont sur le serveur : il faut internet pour les afficher.",
+      "error": "Les fiches n'ont pas pu être chargées.",
+      "empty": "Aucune fiche n'est disponible pour l'instant.",
+      "notFound": "Cette fiche n'est pas disponible.",
+      "overline": "Fiche de connaissances",
+      "reviewedOn": "Relue par un médecin le {{date}}",
+      "reminder": "Cette fiche donne des repères généraux. Pour une décision qui vous concerne, parlez-en à votre professionnel de santé.",
+      "sources_one": "Source",
+      "sources_other": "Sources",
+      "sourceHint": "Ouvre la source dans le navigateur",
+      "version": "Version {{version}}"
     }
   }
 }

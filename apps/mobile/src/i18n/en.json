@@ -900,7 +900,8 @@
       "title_one": "Cited sheet",
       "title_other": "Cited sheets",
       "validated": "Reviewed by a doctor",
-      "draft": "Sheet not yet reviewed"
+      "draft": "Sheet not yet reviewed",
+      "openHint": "Opens the full sheet"
     },
     "rephrased": "Worded by the local AI, then checked",
     "pending": {
@@ -946,6 +947,52 @@
     "a11y": {
       "question": "Your question: {{text}}",
       "answerReady": "Afyabora has answered."
+    },
+    "home": {
+      "subtitle": "Your follow-up assistant: your readings and sheets reviewed by a doctor.",
+      "new": "New conversation",
+      "sheets": "Knowledge sheets",
+      "sheetsHint": "Hypoglycaemia, HbA1c, food…"
+    },
+    "list": {
+      "title": "Your conversations",
+      "loading": "Loading your conversations",
+      "offline": "Your conversations are kept on the server, encrypted: you need the internet to display them.",
+      "error": "Your conversations could not be loaded.",
+      "empty": "No conversation yet. Ask Afyabora your first question.",
+      "today": "Today, {{time}}",
+      "yesterday": "Yesterday, {{time}}",
+      "messages_one": "{{count}} message",
+      "messages_other": "{{count}} messages",
+      "noPreview": "Conversation without a question",
+      "openHint": "Opens the conversation",
+      "remove": "Delete this conversation",
+      "removeTitle": "Delete this conversation?",
+      "removeText": "The questions and answers will be permanently deleted.",
+      "removeConfirm": "Delete",
+      "removeAll": "Delete all my conversations",
+      "removeAllTitle": "Delete all your conversations?",
+      "removeAllText": "All your questions and all the answers will be permanently deleted.",
+      "removeAllConfirm": "Delete all",
+      "removeOffline": "Nothing was deleted: no connection. Try again once online.",
+      "removeError": "Nothing was deleted: the service is not responding. Try again.",
+      "more": "Show more",
+      "privacy": "Your conversations are encrypted and kept until you delete them. Your doctor never has access to them."
+    },
+    "sheets": {
+      "title": "Knowledge sheets",
+      "intro": "Afyabora relies on these sheets to answer general questions. Each one cites its official sources.",
+      "offline": "The sheets are on the server: you need the internet to display them.",
+      "error": "The sheets could not be loaded.",
+      "empty": "No sheet is available yet.",
+      "notFound": "This sheet is not available.",
+      "overline": "Knowledge sheet",
+      "reviewedOn": "Reviewed by a doctor on {{date}}",
+      "reminder": "This sheet gives general guidance. For a decision about you, talk to your healthcare professional.",
+      "sources_one": "Source",
+      "sources_other": "Sources",
+      "sourceHint": "Opens the source in the browser",
+      "version": "Version {{version}}"
     }
   }
 }
