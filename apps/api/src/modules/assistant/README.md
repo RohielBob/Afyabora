@@ -1,11 +1,31 @@
 # Module `assistant`
 
-**Lot : L9 · Fonctionnalités : F6 (IA), F1 (profil) · Tickets : L9-02, L9-05 à L9-08**
+**Lot : L9 · Fonctionnalités : F6 (IA), F1 (profil) · Tickets : L9-01 à L9-11 (lot terminé)**
 
 Assistant de conversation « Afyabora » : le patient pose des questions sur **ses mesures** et sur **le
 diabète** ; les réponses viennent uniquement de ses mesures (chiffres de `@glyka/analytics`) et de fiches
 relues par un médecin. Jamais de dose, de diagnostic, de traitement ni de prédiction. Décision :
 complément de l'ADR-0005 du 2026-10-11. Contrat : 0.4.0.
+
+**Vue d'ensemble du lot L9** (une PR par ticket) :
+
+| Ticket        | Contenu                                                                         | PR         |
+| ------------- | ------------------------------------------------------------------------------- | ---------- |
+| L9-01         | Contrat 0.4.0 (8 routes, pays et numéro d'urgence), complément de l'ADR-0005    | #158       |
+| L9-02         | 10 fiches de connaissances, format et règles de contenu, empreinte de relecture | #159       |
+| L9-03 / L9-04 | Pays et numéro d'urgence dans le profil (API, mobile)                           | #160, #161 |
+| L9-05         | Conversations chiffrées, quota, effacement, réponses gabarits                   | #162       |
+| L9-06         | Réponses : mesures (moteur), fiches citées, urgence avec les contacts du profil | #163       |
+| L9-07         | Mise en mots par le modèle local, vérifiée, 2 min au plus, journal d'audit      | #164       |
+| L9-08         | Pièges en conversation, erreurs volontaires du modèle, évaluation réelle        | #165       |
+| —             | Fiches relues et validées par un médecin (anonyme), 2026-10-12                  | #166       |
+| L9-09 / L9-10 | Mobile : conversation ; accueil, liste et effacement, lecteur de fiches         | #167, #168 |
+| L9-11         | Scénario de démonstration, checklist de sécurité, ce README                     | —          |
+
+- **Démonstration** : `docs/demo/scenario.md`, étape 7 (questions vérifiées avec les données de Jean, plan B
+  sans modèle).
+- **Sécurité** : `docs/security/checklist.md`, section « Assistant Afyabora » (chaque point renvoie à son test).
+- **Mobile** : `apps/mobile/src/features/assistant/README.md`.
 
 ## Routes
 
