@@ -5,7 +5,9 @@
 //
 // Ordre des contrôles : l'URGENCE d'abord (sécurité du patient), puis le détournement, la dose, le
 // traitement, le diagnostic, la prédiction, et enfin « hors sujet » (aucun mot du suivi glycémique).
-// Le jeu de questions-pièges (test/fixtures/trap-questions.ts) doit être rejoué à chaque modification.
+// Le jeu de questions-pièges (test/fixtures/trap-questions.ts) doit être rejoué à chaque modification, ainsi
+// que celui de l'assistant en conversation (test/fixtures/conversation-traps.ts, L9-08), qui l'utilise via
+// `refusalReasons` (assistant/answers/conversation-guard.ts).
 
 /** Raison d'un refus (journalisée pour l'audit, L3-10 ; jamais la question elle-même). */
 export type RefusalReason =
@@ -229,6 +231,41 @@ const MORE: readonly [RefusalReason, RegExp][] = [
       'qu on t a (donne|dit)',
     ),
   ],
+  // Assistant en conversation (L9-08) : détournements « en plusieurs temps » et cadrages fictifs.
+  [
+    'MANIPULATION',
+    anyOf(
+      'nouvelle (conversation|session|discussion)',
+      '\\boublie (tout|ce qu)',
+      '(regles|consignes|limites) ne (comptent|s appliquent|valent|existent) plus',
+      '\\bon (fait|joue) (un jeu|a un jeu)',
+      '\\bjouons\\b',
+      'hypothetiquement',
+      'si (tu etais|vous etiez) (un |une |mon |ma )?(medecin|docteur|pharmacien|infirmier)',
+      'pour (un|une) (roman|histoire|film|fiction|scenario|piece)',
+      '(reponds|repondez) (seulement|juste|uniquement) par',
+    ),
+  ],
+  // Dose dite comme en conversation, sans nommer le produit (« Combien j'en mets ? ») : un nombre à
+  // prendre, quel que soit le produit (insuline, comprimé ou sucre). « Combien j'en ai fait » n'en est pas.
+  [
+    'DOSE',
+    anyOf(
+      'combien (j en|en) (mets|mettre|prends|prendre|injecte|injecter|rajoute|rajouter|ajoute|ajouter)',
+      '\\bj en (mets|prends|injecte|rajoute|ajoute) combien',
+      '\\ben (mettre|prendre|injecter|rajouter|ajouter) combien',
+      '\\b(je peux|puis je) en (prendre|mettre|injecter|rajouter) (deux|trois|2|3|plus|moins)',
+      // Le produit d'abord, la quantité ensuite (« Je prends de la Lantus. Et le matin, combien ? »).
+      `\\b${BRANDS}\\b.*\\bcombien\\b`,
+    ),
+  ],
+  // Le produit d'abord, puis la décision avec un pronom (« Mon insuline… je peux la sauter ? »).
+  [
+    'TREATMENT',
+    new RegExp(
+      `(traitement|medicament|insuline|metformine|comprime|cachet|piqure|${BRANDS}).*\\b(l|le|la|les) (arreter|stopper|sauter|remplacer|changer|interrompre|suspendre)\\b`,
+    ),
+  ],
   [
     'DIAGNOSIS',
     anyOf(
@@ -282,20 +319,28 @@ export function mentionsVeryLowValue(text: string): boolean {
 const DOMAIN =
   /glycemi|\bsucre|\bmesure|\bvaleur|\btaux\b|\bcible|\bseuil|\bhypo|\bhyper|\bmatin|\bmidi|\bsoir|\bnuit|\bsemaine|\bmois\b|\bjour|\bperiode|\brepas|\bmanger|\bactivite|\bsport|\bmarche|\btendance|variation|\bmoyenne|historique|\banalyse|resultat|\bdonnee|qualite|\bhaut|\bbas\b|\bbasse|\bpic|\bmg ?\/ ?dl|\bg ?\/ ?l\b|mmol|\bcourbe|evolution|\bprogres|\bstable|\bglucose|diabet/;
 
+/**
+ * TOUTES les raisons de refus reconnues dans un texte déjà normalisé, dans l'ordre de priorité (l'urgence
+ * d'abord ; « hors sujet » n'en fait pas partie). Sert aussi au filtre de conversation de l'assistant
+ * (L9-08), qui examine une question de suite avec les questions précédentes.
+ */
+export function refusalReasons(text: string): RefusalReason[] {
+  // Toutes les règles d'une même raison sont vérifiées, raison par raison (ordre de priorité).
+  const reasons = PRIORITY.filter((reason) =>
+    [...RULES, ...MORE].some(
+      ([r, pattern]) =>
+        r === reason && pattern.test(text) && (pattern !== FUTURE || DOMAIN.test(text)),
+    ),
+  );
+  if (mentionsVeryLowValue(text) && !reasons.includes('EMERGENCY')) reasons.unshift('EMERGENCY');
+  return reasons;
+}
+
 /** Décide si la question peut être posée au modèle, ou reçoit un refus poli (et pourquoi). */
 export function screenQuestion(question: string): QuestionVerdict {
   const text = normalizeQuestion(question);
-  if (mentionsVeryLowValue(text)) {
-    return { refused: true, reason: 'EMERGENCY', answer: REFUSAL_ANSWERS.EMERGENCY };
-  }
-  // Toutes les règles d'une même raison sont vérifiées avant de passer à la suivante (ordre de priorité).
-  for (const reason of PRIORITY) {
-    const matched = [...RULES, ...MORE].some(
-      ([r, pattern]) =>
-        r === reason && pattern.test(text) && (pattern !== FUTURE || DOMAIN.test(text)),
-    );
-    if (matched) return { refused: true, reason, answer: REFUSAL_ANSWERS[reason] };
-  }
+  const [reason] = refusalReasons(text);
+  if (reason) return { refused: true, reason, answer: REFUSAL_ANSWERS[reason] };
   if (!DOMAIN.test(text)) {
     return { refused: true, reason: 'OFF_TOPIC', answer: REFUSAL_ANSWERS.OFF_TOPIC };
   }

@@ -18,7 +18,10 @@
 //  - contient un mot interdit des garde-fous de L3-05 (dose, diagnostic, ordre, alarme, lien…) ABSENT du
 //    gabarit : une fiche peut parler de « traitement », le modèle ne doit pas en ajouter ;
 //  - cite une fiche, ou met entre guillemets « » un texte qui n'est pas dans le gabarit (fausse source) ;
-//  - apporte trop de mots nouveaux (le modèle ajoute des informations au lieu de reformuler).
+//  - affirme un diagnostic ou spécule sur le patient (« vous êtes en hypoglycémie chronique », « vous avez
+//    probablement… ») sans que le gabarit le dise (erreurs volontaires de L9-08) ;
+//  - apporte trop de mots nouveaux (le modèle ajoute des informations au lieu de reformuler), en tout ou
+//    dans UNE phrase (un conseil inventé ajouté à la fin d'une longue réponse, L9-08).
 import { FORBIDDEN_PATTERNS } from '../../insights/llm/rephrase';
 
 /** Ce que le modèle peut reformuler, et ce que le code remet autour, tel quel. */
@@ -62,6 +65,10 @@ export const LENGTH_FACTOR = 1.6;
 export const MIN_LENGTH_RATIO = 0.45;
 /** Part maximale de mots « nouveaux » (absents du gabarit) parmi les mots longs de la mise en mots. */
 export const MAX_NEW_WORDS_RATIO = 0.3;
+/** Part maximale de mots nouveaux dans UNE phrase (d'au moins MIN_SENTENCE_WORDS mots longs). */
+export const MAX_SENTENCE_NEW_WORDS_RATIO = 0.6;
+/** Une phrase plus courte (en mots longs) n'est pas jugée seule : trop peu de mots pour conclure. */
+export const MIN_SENTENCE_WORDS = 4;
 
 /** Raison du refus d'une mise en mots (écrite dans le journal d'audit), ou null si elle est acceptée. */
 export type AnswerRewriteProblem =
@@ -215,7 +222,47 @@ export function negationCount(text: string): number {
   return count;
 }
 
+/**
+ * Diagnostic, spéculation ou cause affirmée sur le patient (erreurs volontaires de L9-08 : « Vous êtes en hypoglycémie
+ * chronique », « Vous avez probablement une insulinorésistance »), en plus des mots interdits de L3-05.
+ * Appliqués au texte sans accents ; refusés seulement s'ils sont ABSENTS du gabarit.
+ */
+const DIAGNOSIS_CLAIMS: readonly string[] = [
+  '\\bvous (?:etes|avez|souffrez|faites)\\b.{0,40}(?:hypo|hyper|diabet|insulino|resistan|malad|complication|neuropath|retinopath|infection)',
+  'chroniq',
+  'probabl',
+  'sans doute',
+  'certainement',
+  'insulinoresist',
+  'resistance a l insuline',
+  'pre ?diabet',
+  // Cause inventée (évaluation réelle de L9-08 : « la déshydratation peut entraîner une soif… »).
+  'entrain(?:e|er|ent|ant)',
+];
+
 const FORBIDDEN = FORBIDDEN_PATTERNS.map((pattern) => new RegExp(pattern, 'i'));
+const DIAGNOSIS = DIAGNOSIS_CLAIMS.map((pattern) => new RegExp(pattern));
+
+/** Phrases d'un texte (coupées après « . », « ! », « ? », « ; » ou un retour à la ligne). */
+const sentencesOf = (text: string) =>
+  text
+    .split(/(?<=[.!?;])\s+|\n+/)
+    .map((sentence) => sentence.trim())
+    .filter(Boolean);
+
+/**
+ * Vrai si UNE phrase de la mise en mots est presque entièrement nouvelle : une information ajoutée
+ * (« Mangez une banane… ») que la moyenne sur tout le texte ne verrait pas.
+ */
+export function hasInventedSentence(source: string, rewritten: string): boolean {
+  return sentencesOf(rewritten).some((sentence) => {
+    const words = longWords(sentence).filter((word) => !LINKING_WORDS.has(word));
+    return (
+      words.length >= MIN_SENTENCE_WORDS &&
+      newWordsRatio(source, sentence) > MAX_SENTENCE_NEW_WORDS_RATIO
+    );
+  });
+}
 
 /** Textes entre guillemets « … » d'une phrase. */
 const quotesOf = (text: string) =>
@@ -236,10 +283,14 @@ export function checkAnswerRewrite(source: string, rewritten: string): AnswerRew
   if (negationCount(source) !== negationCount(rewritten)) return 'negation';
   if (FORBIDDEN.some((pattern) => pattern.test(rewritten) && !pattern.test(source)))
     return 'forbidden';
+  const [plainSource, plainRewritten] = [plain(source), plain(rewritten)];
+  if (DIAGNOSIS.some((pattern) => pattern.test(plainRewritten) && !pattern.test(plainSource)))
+    return 'forbidden';
   const sourceQuotes = quotesOf(source).map(plain);
   if (quotesOf(rewritten).some((quote) => !sourceQuotes.includes(plain(quote)))) return 'citation';
   if (/\bfiches?\b|\bsources?\b/i.test(rewritten) && !/\bfiches?\b|\bsources?\b/i.test(source))
     return 'citation';
   if (newWordsRatio(source, rewritten) > MAX_NEW_WORDS_RATIO) return 'new-words';
+  if (hasInventedSentence(source, rewritten)) return 'new-words';
   return null;
 }
