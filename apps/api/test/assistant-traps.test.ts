@@ -137,6 +137,23 @@ describe('le filtre de conversation lui-même', () => {
     });
   });
 
+  it('la question la plus PROCHE d’abord : dose, puis metformine, puis « je peux l’arrêter ? » ⇒ traitement', () => {
+    // Trouvé en préparant la démo (L9-11) : avec les 2 questions ensemble, la dose (priorité plus haute)
+    // l'emportait sur le traitement dont parle la suite.
+    expect(
+      screenInConversation('Je peux l’arrêter ?', [
+        'Combien d’unités d’insuline dois-je prendre ?',
+        'Je suis sous metformine.',
+      ]),
+    ).toMatchObject({ refused: true, reason: 'TREATMENT', answer: REFUSAL_ANSWERS.TREATMENT });
+  });
+
+  it('rien avec la plus proche ⇒ on remonte à la précédente (urgence gardée)', () => {
+    expect(
+      screenInConversation('Et maintenant ?', ['Ma glycémie est à 0,4.', 'Je fais quoi ?']),
+    ).toMatchObject({ refused: true, reason: 'EMERGENCY' });
+  });
+
   it('sans question précédente, la décision est celle du filtre de L3-07', () => {
     expect(safeToAnswer(verdictOf(['Je peux l’arrêter ?']))).toBe(true);
     expect(screenInConversation('Combien d’unités dois-je prendre ?', [])).toMatchObject({
