@@ -4,16 +4,17 @@
 //  - RÉPONSE d'Afyabora : à gauche, avec le logo, sa NATURE (icône + libellé : « D'après vos mesures »,
 //    « D'après une fiche », « Urgence »…), le texte, les FICHES citées (relue par un médecin ou non), la
 //    mention « Formulé par l'IA locale » si le modèle l'a mise en mots (L9-07), et pour une URGENCE les
-//    touches d'appel ;
+//    touches d'appel ; une fiche citée s'ouvre dans le lecteur de fiches (L9-10) ;
 //  - réponse EN PRÉPARATION : trois points animés, « jusqu'à 2 minutes », puis « La réponse tarde ».
 import { Ionicons } from '@expo/vector-icons';
 import type { AssistantMessageDto } from '@glyka/shared';
+import { router } from 'expo-router';
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { LogoMark } from '@/components/brand';
-import { Button, LoadingDots, Text } from '@/components/ui';
+import { Button, LoadingDots, PressableScale, Text } from '@/components/ui';
 import { enterFromBelow, radii, spacing, useReducedMotion, useTheme } from '@/theme';
 import type { OutgoingQuestion } from '../conversation';
 import { KIND_PRESENTATION, SOURCE_STATUS, type EmergencyCall } from '../presentation';
@@ -220,10 +221,14 @@ export function AnswerBubble({
           {message.sources.map((source) => {
             const status = SOURCE_STATUS[source.status];
             return (
-              <View
+              <PressableScale
                 key={source.id}
-                accessible
+                accessibilityRole="button"
                 accessibilityLabel={`${source.title}. ${t(status.labelKey)}`}
+                accessibilityHint={t('assistant.source.openHint')}
+                onPress={() =>
+                  router.push({ pathname: '/assistant/sheets/[id]', params: { id: source.id } })
+                }
                 style={{
                   borderRadius: radii.md,
                   borderWidth: 1,
@@ -246,11 +251,12 @@ export function AnswerBubble({
                     size={12}
                     color={source.status === 'VALIDATED' ? colors.success : colors.textMuted}
                   />
-                  <Text variant="caption" tone="muted">
+                  <Text variant="caption" tone="muted" style={{ flex: 1 }}>
                     {t(status.labelKey)}
                   </Text>
+                  <Ionicons name="chevron-forward" size={14} color={colors.textMuted} />
                 </View>
-              </View>
+              </PressableScale>
             );
           })}
         </View>

@@ -63,7 +63,7 @@ export default function AssistantChatScreen() {
     <Screen scroll={false} padded={false}>
       <View style={{ flex: 1 }}>
         <ChatHeader
-          onBack={() => (router.canGoBack() ? router.back() : router.replace('/(tabs)/insights'))}
+          onBack={() => (router.canGoBack() ? router.back() : router.replace('/assistant'))}
           emergencyOpen={emergencyOpen}
           onToggleEmergency={() => setEmergencyOpen((open) => !open)}
         />

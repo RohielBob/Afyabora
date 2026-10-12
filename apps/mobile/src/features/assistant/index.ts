@@ -25,7 +25,25 @@ export {
   telUri,
   type EmergencyCall,
 } from './presentation';
+export {
+  mergePage,
+  parseSheetBody,
+  reviewOf,
+  spansOf,
+  whenLabel,
+  type ReviewLabel,
+  type SheetBlock,
+  type Span,
+  type WhenLabel,
+} from './library';
 export { useConversation } from './useConversation';
+export {
+  useConversationList,
+  useSheet,
+  useSheetList,
+  type LoadStatus,
+  type RemoveResult,
+} from './useLibrary';
 export { useEmergencyCalls } from './useEmergencyCalls';
 export { AssistantEntryCard } from './components/AssistantEntryCard';
 export { AnswerBubble, OutgoingBubble, PendingBubble, QuestionBubble } from './components/Bubbles';
@@ -33,3 +51,12 @@ export { ChatHeader } from './components/ChatHeader';
 export { Composer } from './components/Composer';
 export { EmergencyPanel } from './components/EmergencyPanel';
 export { Welcome } from './components/Welcome';
+export {
+  BackLink,
+  ConfirmBox,
+  ConversationRow,
+  ReviewBadge,
+  SheetBody,
+  SheetRow,
+  useWhen,
+} from './components/Library';
