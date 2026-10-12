@@ -1,10 +1,15 @@
 import { Module } from '@nestjs/common';
+import { InsightsModule } from '../insights/insights.module';
+import { AssistantResponder } from './answers/assistant-responder.service';
 import { ConversationsController } from './conversations.controller';
 import { ConversationsService } from './conversations.service';
+import { SheetsService } from './knowledge/sheets.service';
+import { SheetsController } from './sheets.controller';
 
 /** Assistant de conversation « Afyabora » (lot L9, ADR-0005 complétée le 2026-10-11). */
 @Module({
-  controllers: [ConversationsController],
-  providers: [ConversationsService],
+  imports: [InsightsModule], // analyse des mesures par le moteur (réponses MEASUREMENTS)
+  controllers: [ConversationsController, SheetsController],
+  providers: [ConversationsService, AssistantResponder, SheetsService],
 })
 export class AssistantModule {}

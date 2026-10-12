@@ -7,7 +7,7 @@ version: 1
 relu_par:
 relu_le:
 empreinte:
-mots_cles: sommeil, dormir, nuit, fatigue, insomnie, ronflement, apnée du sommeil, hypoglycémie nocturne, réveil, cauchemars
+mots_cles: sommeil, dormir, dors, dort, nuit, fatigue, insomnie, ronflement, ronfle, apnée du sommeil, hypoglycémie nocturne, réveil, cauchemars
 sources:
   - Fédération Française des Diabétiques : Diabète et sommeil | https://www.federationdesdiabetiques.org/information/complications-diabete/diabete-et-sommeil
   - American Diabetes Association : Standards of Care in Diabetes 2025, chapitre 5 | https://doi.org/10.2337/dc25-S005

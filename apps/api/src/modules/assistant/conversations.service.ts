@@ -9,8 +9,8 @@
 //    première question (aperçu de la liste). Aucun texte dans les journaux.
 //  - 20 questions par heure au plus par patient (le modèle local est lent, L9-07) ⇒ 429 + délai.
 //  - Effacement RÉEL (pas de corbeille), d'une conversation ou de toutes ; aussi avec le compte (cascade).
-// En L9-05, les réponses sont des GABARITS prêts tout de suite (`templateAnswer`) ; les sources (mesures,
-// fiches) arrivent en L9-06 et le modèle de langage en L9-07.
+// Les réponses viennent d'`AssistantResponder` (L9-06 : filtre de sécurité, mesures, fiches), prêtes tout
+// de suite ; la mise en mots par le modèle de langage, vérifiée, viendra en L9-07.
 import {
   BadRequestException,
   ConflictException,
@@ -43,7 +43,7 @@ import {
 } from '../../common/data/owned-records';
 import { UNAUTHORIZED_MESSAGE } from '../../common/guards/jwt-auth.guard';
 import { PrismaService } from '../../prisma/prisma.service';
-import { templateAnswer } from './answers/template-answer';
+import { AssistantResponder } from './answers/assistant-responder.service';
 
 /** Questions autorisées par patient sur une heure glissante. */
 export const QUESTIONS_PER_HOUR = 20;
@@ -102,6 +102,7 @@ export class ConversationsService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly config: ConfigService,
+    private readonly responder: AssistantResponder,
   ) {}
 
   /** POST /assistant/conversations : 201 si créée, 200 au rejeu ; identifiant d'un autre patient ⇒ 409. */
@@ -191,7 +192,7 @@ export class ConversationsService {
     if (!conversation || conversation.patientId !== patientId) throw notFound();
     await this.checkQuota(patientId);
 
-    const answer = templateAnswer(input.text);
+    const answer = await this.responder.answer(patientId, input.text);
     const askedAt = new Date();
     const key = this.key();
     try {

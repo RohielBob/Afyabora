@@ -39,6 +39,14 @@ const envSchema = z.object({
   // Temps maximal d'une reformulation (en arrière-plan : GET /insights ne l'attend jamais).
   LLM_TIMEOUT_MS: z.coerce.number().int().min(1000).max(600_000).default(90_000),
   LLM_API_KEY: z.string().optional(), // réservé à un futur fournisseur hébergé
+  // Fiches de l'assistant (L9-06, ADR-0005 complétée) : servir aussi les BROUILLONS (fiches pas encore
+  // relues par le médecin, affichées « Fiche non encore relue ») ? Par défaut : oui hors production, non en
+  // production. « true » en production seulement pour une démonstration (l'API l'écrit dans ses journaux).
+  // Ligne vide dans le .env (« ASSISTANT_DRAFT_SHEETS= ») = non renseignée.
+  ASSISTANT_DRAFT_SHEETS: z.preprocess(
+    (v) => (v === '' ? undefined : v),
+    z.enum(['true', 'false']).optional(),
+  ),
   EXPO_ACCESS_TOKEN: z.string().optional(),
 });
 

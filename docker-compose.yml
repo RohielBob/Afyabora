@@ -43,6 +43,10 @@ services:
       PORT: '3000'
       DATABASE_URL: postgresql://${POSTGRES_USER:-glyka}:${POSTGRES_PASSWORD:-glyka_dev_password}@db:5432/${POSTGRES_DB:-glyka}
       SMTP_HOST: mailpit
+      # Assistant (L9-06) : cette image sert à la DÉMONSTRATION, donc les fiches pas encore relues par le
+      # médecin sont servies (affichées « Fiche non encore relue »). Mettre « false » pour ne servir que les
+      # fiches validées (PowerShell) : $env:ASSISTANT_DRAFT_SHEETS='false'; pnpm docker:api
+      ASSISTANT_DRAFT_SHEETS: ${ASSISTANT_DRAFT_SHEETS:-true}
     depends_on:
       db:
         condition: service_healthy
