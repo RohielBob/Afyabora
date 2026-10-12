@@ -73,6 +73,27 @@ enum EmailTokenType {
   RESET_PASSWORD
 }
 
+/// Assistant « Afyabora » (lot L9) : auteur d'un message.
+enum AssistantMessageRole {
+  USER
+  ASSISTANT
+}
+
+/// PENDING : réponse en préparation (modèle de langage, L9-07) ; READY : réponse définitive.
+enum AssistantMessageStatus {
+  PENDING
+  READY
+}
+
+/// Nature d'une réponse de l'assistant (contrat 0.4.0, AssistantAnswerKind).
+enum AssistantAnswerKind {
+  MEASUREMENTS
+  SHEET
+  REFUSAL
+  EMERGENCY
+  OUT_OF_SCOPE
+}
+
 enum NotificationStatus {
   PENDING
   SENT
@@ -132,6 +153,7 @@ model PatientProfile {
   emergencyCard          EmergencyCard?
   notificationPreference NotificationPreference?
   syncOps                SyncOpLog[]
+  assistantConversations AssistantConversation[]
 }
 
 model DoctorProfile {
@@ -377,4 +399,41 @@ model LlmAuditLog {
   outputEncrypted String? // réponse brute du modèle, chiffrée ; null s'il n'a pas répondu
 
   @@index([createdAt])
+}
+
+/// Conversation du patient avec l'assistant « Afyabora » (L9-05, ADR-0005 complétée le 2026-10-11).
+/// Identifiant créé sur le téléphone (rejeu sans doublon). Aucun titre en clair : `previewEncrypted` garde
+/// le début de la première question, CHIFFRÉ. Gardée jusqu'à ce que le patient l'efface (effacement réel) ;
+/// effacée aussi avec le compte (cascade). Le médecin n'y a jamais accès.
+model AssistantConversation {
+  id               String             @id @db.Uuid
+  patientId        String             @db.Uuid
+  patient          PatientProfile     @relation(fields: [patientId], references: [userId], onDelete: Cascade)
+  previewEncrypted String? // 80 premiers caractères de la première question, chiffrés ; null tant qu'elle est vide
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  messages         AssistantMessage[]
+
+  @@index([patientId, updatedAt])
+}
+
+/// Message d'une conversation : question du patient (identifiant du téléphone) ou réponse de l'assistant
+/// (identifiant du serveur, `questionId` = la question à laquelle elle répond). Texte CHIFFRÉ (AES-256-GCM),
+/// jamais dans les journaux.
+model AssistantMessage {
+  id             String                 @id @db.Uuid
+  conversationId String                 @db.Uuid
+  conversation   AssistantConversation  @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  patientId      String                 @db.Uuid // copie du propriétaire : quota horaire et contrôle de propriété en une requête
+  role           AssistantMessageRole
+  status         AssistantMessageStatus
+  kind           AssistantAnswerKind? // null pour une question ou une réponse en préparation
+  textEncrypted  String? // null tant que la réponse est en préparation
+  sources        Json                   @default("[]") // fiches citées : [{ id, title, status }]
+  rephrased      Boolean                @default(false) // vrai si mis en mots par le modèle ET vérifié (L9-07)
+  questionId     String?                @unique @db.Uuid // pour une réponse : la question
+  createdAt      DateTime               @default(now())
+
+  @@index([conversationId, createdAt])
+  @@index([patientId, role, createdAt])
 }
