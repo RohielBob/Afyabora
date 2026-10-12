@@ -2,6 +2,23 @@
 
 Format : une section par version. Une **rupture** est signalée en tête de section.
 
+## 0.4.1 : 2026-10-12 (L4-04 / L4-06, accord du lead technique)
+
+Import : quand l'aperçu ne trouve pas les colonnes, l'application doit pouvoir les faire choisir au patient.
+
+### Ajouté
+
+- Code d'erreur `IMPORT_COLUMNS_NOT_FOUND` pour `POST /imports/preview` (400). Il est renvoyé quand les
+  colonnes de date ou de valeur sont introuvables, ou quand `mapping` cite une colonne absente du fichier.
+- Schéma `ImportColumnsError` (`Error` + `columns` : noms des colonnes du fichier, dans l'ordre, sans les
+  colonnes sans nom) et réponse `ImportBadRequest` pour le 400 de `POST /imports/preview`. Les autres 400
+  de cette route gardent le format `Error` habituel.
+- `@glyka/shared` : `importColumnsErrorSchema` et le type `ImportColumnsError`, pour le mobile (L4-06).
+
+### Pas de rupture
+
+Champs ajoutés à une réponse d'erreur ; les champs existants (`message`, `issues`) sont inchangés.
+
 ## 0.4.0 : 2026-10-11 (L9-01, accord du lead technique)
 
 Assistant de conversation « Afyabora » (lot L9). Décision : complément de l'ADR-0005 du 2026-10-11.
