@@ -158,15 +158,29 @@ describe('rejets (ERROR) : date, heure, valeur, unité, futur', () => {
     },
   );
 
-  it('valeur illisible ⇒ VALUE_INVALID ; unité inconnue ⇒ UNIT_UNKNOWN', () => {
+  it('valeur illisible ⇒ VALUE_INVALID ; unité inconnue ⇒ UNIT_UNKNOWN (instant gardé : corrigeable)', () => {
     expect(one({ value: null, rawValue: 'abc' })).toEqual({
       line: 2,
       status: 'ERROR',
       reason: 'VALUE_INVALID',
       rawValue: 'abc',
+      measuredAt: '2026-10-01T06:15:00.000Z',
       context: 'OTHER',
     });
-    expect(one({ unit: 'kg' })).toMatchObject({ status: 'ERROR', reason: 'UNIT_UNKNOWN' });
+    expect(one({ unit: 'kg' })).toEqual({
+      line: 2,
+      status: 'ERROR',
+      reason: 'UNIT_UNKNOWN',
+      rawValue: '1,1',
+      measuredAt: '2026-10-01T06:15:00.000Z',
+      context: 'OTHER',
+    });
+    // Date, heure ou futur : pas d'instant fiable, donc pas de mesure du tout.
+    for (const over of [{ date: 'x' }, { time: '99:00' }, { date: '01/01/2027' }]) {
+      expect(one({ ...over, value: null }).measuredAt).toBeUndefined();
+    }
+    // Valeur illisible ET date future : c'est la date qui est signalée.
+    expect(one({ date: '01/01/2027', value: null }).reason).toBe('DATE_FUTURE');
   });
 
   it(`futur : jusqu'à ${FUTURE_TOLERANCE_MS / 60000} min de marge (horloge du lecteur), au-delà rejeté`, () => {

@@ -200,9 +200,6 @@ function checkRow(row: ImportRow, options: ValidationOptions): ValidatedRow {
   if (!date) return error('DATE_INVALID');
   const time = row.time === undefined ? date.time : parseTime(row.time);
   if (row.time !== undefined && !time) return error('TIME_INVALID');
-  if (row.value === null) return error('VALUE_INVALID');
-  const rowUnit = row.unit === undefined ? null : parseUnit(row.unit);
-  if (row.unit !== undefined && !rowUnit) return error('UNIT_UNKNOWN');
 
   const local = Date.UTC(
     date.year,
@@ -216,6 +213,13 @@ function checkRow(row: ImportRow, options: ValidationOptions): ValidatedRow {
   if (measuredAt.getTime() > options.now.getTime() + FUTURE_TOLERANCE_MS) {
     return error('DATE_FUTURE');
   }
+
+  // Valeur ou unité illisible, mais date correcte : la ligne garde son instant, pour que le patient
+  // puisse la CORRIGER (valeur et unité) au commit (L4-04) sans refaire le fichier.
+  const readable = { ...base, status: 'ERROR' as const, measuredAt: measuredAt.toISOString() };
+  if (row.value === null) return { ...readable, reason: 'VALUE_INVALID' };
+  const rowUnit = row.unit === undefined ? null : parseUnit(row.unit);
+  if (row.unit !== undefined && !rowUnit) return { ...readable, reason: 'UNIT_UNKNOWN' };
 
   const unit = rowUnit ?? options.defaultUnit;
   const valueMgDl = toMgDl(row.value, unit);

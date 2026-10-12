@@ -4,11 +4,34 @@
 
 Import CSV / Excel avec validation et rapport.
 
-## Routes
+## Routes (L4-04, rôle PATIENT, le patient vient toujours du jeton)
 
-- POST /imports/preview : analyse le fichier, crée un lot `PREVIEW`, renvoie le rapport
-- POST /imports/:id/commit : applique les décisions (Corriger / Ignorer / Accepter)
-- DELETE /imports/:id : annule un lot déjà importé
+- **POST /imports/preview** (multipart : `file`, `defaultUnit`, `mapping` en JSON facultatif) ⇒ 200 `ImportReport`.
+  - Lit le fichier (CSV ou Excel, reconnu d'après son contenu puis son nom) et le valide. Les doublons sont cherchés parmi les mesures **déjà enregistrées** du patient, non supprimées, sur la période du fichier.
+  - Crée un lot `PREVIEW` qui garde les lignes validées. **Aucune mesure n'est écrite.**
+  - Le rapport détaille les lignes non valides avec un message en français, par exemple « Valeur inhabituelle, vérifier l'unité (en mmol/L ?) ».
+  - Erreurs :
+    - 400 sur `file` : fichier manquant, illisible ou colonnes introuvables ;
+    - 400 sur `mapping` : colonne donnée absente du fichier ;
+    - 413 : plus de 5 Mo (refusé dès la réception, le fichier reste en mémoire et n'est jamais écrit sur le disque) ou plus de 5 000 lignes ;
+    - 400 sans profil médical.
+
+    Les refus de réception de `multer`, en anglais, sont traduits par `upload-errors.interceptor.ts`.
+
+  - Limite : 10 aperçus par minute.
+  - Les aperçus abandonnés depuis plus de 24 h sont effacés au passage, car ils gardent des valeurs de santé.
+- **POST /imports/:id/commit** (`decisions`) ⇒ 200 `{ batchId, imported, skipped }`.
+  - Sans décision, les lignes valides sont importées ; les doublons, les incohérentes et les rejetées sont ignorées.
+  - `ACCEPT` importe la ligne telle quelle : une incohérente ou un doublon, choisi par le patient.
+  - `CORRECT` remplace la valeur et l'unité (unité du fichier si absente). La ligne doit avoir une date lisible, ce qui est le cas d'une ligne rejetée pour sa seule valeur, et la valeur corrigée doit être plausible.
+  - Les mesures sont créées (`source = IMPORT`, `importBatchId`) et le lot passe à `COMMITTED` dans **une seule transaction**. Le lot est « pris » d'abord, sous condition `PREVIEW` : un 2e envoi, même simultané, reçoit 409 `IMPORT_ALREADY_COMMITTED` sans rien créer.
+  - Une panne pendant la création annule tout, et le lot peut être importé de nouveau.
+  - Erreurs : décision impossible ⇒ 400 sur `decisions.<i>` (ligne absente, ACCEPT d'une ligne rejetée, correction hors bornes ou sans date) et rien n'est importé ; aperçu de plus de 24 h ⇒ 409 « relancez l'analyse » ; lot d'un autre patient ⇒ 404.
+- **DELETE /imports/:id** ⇒ 200 `{ reverted }`.
+  - Toutes les mesures du lot deviennent des **tombstones** (`deletedAt`, note effacée), y compris celles modifiées depuis l'import, pour que la synchronisation propage la suppression.
+  - Un aperçu peut aussi être abandonné : il ne pourra plus être importé.
+  - Un lot déjà annulé renvoie `reverted: 0` et garde sa date d'annulation d'origine.
+  - Une annulation qui croise un import supprime aussi ses mesures ; un import qui arrive après l'annulation est refusé (409).
 
 ## Règles de gestion
 
@@ -105,20 +128,21 @@ Fonctions pures : lignes lues (CSV ou Excel) ⇒ un statut par ligne, avec la me
 
 - [x] `scripts/sample-data/import-demo-147.csv` : 139 valides, 5 doublons, 3 incohérentes (L4-03, `test/imports-validation.test.ts`).
 - [x] `.xlsx` corrompu : erreur claire, pas de plantage (L4-02 : `CORRUPTED`, testé avec `scripts/sample-data/import-corrupted.xlsx`).
-- [ ] Annuler un lot supprime toutes ses mesures.
+- [x] Annuler un lot supprime toutes ses mesures (L4-04 : tombstones, `test/imports-routes.test.ts` et vérifié sur la vraie base).
 - [x] Ligne 42 (18,7 g/L) signalée « vérifier l'unité » (L4-03 : `OUT_OF_RANGE`, mmol/L proposé).
 
 ## Fichiers
 
-| Fichier                 | Rôle                                                                                                         |
-| ----------------------- | ------------------------------------------------------------------------------------------------------------ |
-| `imports.module.ts`     | Déclaration du module NestJS                                                                                 |
-| `imports.controller.ts` | Routes HTTP : validation Zod (`ZodValidationPipe` + schémas de `@glyka/shared`), pas de logique métier       |
-| `imports.service.ts`    | Logique métier et accès base (Prisma)                                                                        |
-| `csv-parser.ts`         | Lecture d'un fichier CSV (encodage, séparateur, numéros de ligne) : fonctions pures                          |
-| `xlsx-parser.ts`        | Lecture d'un classeur Excel .xlsx (contrôles du ZIP, feuille, cellules ⇒ texte)                              |
-| `import-table.ts`       | Commun CSV / Excel : colonnes, nombres, lignes, erreurs sur le fichier (`ImportFileError`)                   |
-| `import-validation.ts`  | Règles de validation : statut VALID / DUPLICATE / INCONSISTENT / ERROR par ligne, mesure prête à enregistrer |
+| Fichier                        | Rôle                                                                                                         |
+| ------------------------------ | ------------------------------------------------------------------------------------------------------------ |
+| `imports.module.ts`            | Déclaration du module NestJS                                                                                 |
+| `imports.controller.ts`        | Routes HTTP : validation Zod (`ZodValidationPipe` + schémas de `@glyka/shared`), pas de logique métier       |
+| `imports.service.ts`           | Aperçu, import après décisions (`planImport`), annulation ; accès base (Prisma), transactions                |
+| `upload-errors.interceptor.ts` | Refus de réception du fichier (multer, en anglais) ⇒ messages du projet en français                          |
+| `csv-parser.ts`                | Lecture d'un fichier CSV (encodage, séparateur, numéros de ligne) : fonctions pures                          |
+| `xlsx-parser.ts`               | Lecture d'un classeur Excel .xlsx (contrôles du ZIP, feuille, cellules ⇒ texte)                              |
+| `import-table.ts`              | Commun CSV / Excel : colonnes, nombres, lignes, erreurs sur le fichier (`ImportFileError`)                   |
+| `import-validation.ts`         | Règles de validation : statut VALID / DUPLICATE / INCONSISTENT / ERROR par ligne, mesure prête à enregistrer |
 
 ## Rappels
 
