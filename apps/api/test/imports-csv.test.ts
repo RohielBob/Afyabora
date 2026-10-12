@@ -5,15 +5,17 @@ import { join } from 'node:path';
 import { IMPORT_MAX_FILE_BYTES, IMPORT_MAX_ROWS } from '@glyka/shared';
 import { describe, expect, it } from 'vitest';
 import {
-  CsvImportError,
   DELIMITER_SAMPLE_LINES,
   decodeText,
   detectDelimiter,
-  detectMapping,
   parseCsv,
-  parseDecimal,
-  type CsvErrorCode,
 } from '../src/modules/imports/csv-parser';
+import {
+  ImportFileError,
+  detectMapping,
+  parseDecimal,
+  type ImportErrorCode,
+} from '../src/modules/imports/import-table';
 
 const SAMPLES = join(__dirname, '..', '..', '..', 'scripts', 'sample-data');
 const sample = (name: string) => new Uint8Array(readFileSync(join(SAMPLES, name)));
@@ -21,16 +23,16 @@ const utf8 = (text: string) => new TextEncoder().encode(text);
 /** Encode en Windows-1252 (caractères Latin-1 seulement : suffisant pour les accents français). */
 const cp1252 = (text: string) => Uint8Array.from([...text].map((c) => c.charCodeAt(0)));
 
-const errorOf = (run: () => unknown): CsvImportError => {
+const errorOf = (run: () => unknown): ImportFileError => {
   try {
     run();
   } catch (error) {
-    if (error instanceof CsvImportError) return error;
+    if (error instanceof ImportFileError) return error;
     throw error;
   }
   throw new Error('aucune erreur levée');
 };
-const codeOf = (run: () => unknown): CsvErrorCode => errorOf(run).code;
+const codeOf = (run: () => unknown): ImportErrorCode => errorOf(run).code;
 
 describe('fichiers de démonstration (scripts/sample-data)', () => {
   it('import-demo-147.csv : 147 lignes, séparateur « ; », virgule décimale, lignes du fichier', () => {
