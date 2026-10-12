@@ -48,6 +48,7 @@ import { UNAUTHORIZED_MESSAGE } from '../../common/guards/jwt-auth.guard';
 import { PrismaService } from '../../prisma/prisma.service';
 import { AnswerWriter } from './answers/answer-writer.service';
 import { AssistantResponder } from './answers/assistant-responder.service';
+import { CONTEXT_QUESTIONS, CONTEXT_WINDOW_MS } from './answers/conversation-guard';
 
 /** Questions autorisées par patient sur une heure glissante. */
 export const QUESTIONS_PER_HOUR = 20;
@@ -198,7 +199,8 @@ export class ConversationsService {
     if (!conversation || conversation.patientId !== patientId) throw notFound();
     await this.checkQuota(patientId);
 
-    const answer = await this.responder.answer(patientId, input.text);
+    const previous = await this.previousQuestions(conversationId);
+    const answer = await this.responder.answer(patientId, input.text, previous);
     // Avec un modèle de langage : réponse « en préparation », son gabarit déjà enregistré (L9-07).
     const pending = this.writer.willRewrite(answer);
     const answerId = randomUUID();
@@ -285,6 +287,28 @@ export class ConversationsService {
       decryptOptionalText(existing.textEncrypted, this.key()) === input.text;
     if (!same) throw messageIdConflict();
     return this.readPair(input.id);
+  }
+
+  /**
+   * Les questions précédentes de la conversation (L9-08, piège découpé) : les CONTEXT_QUESTIONS plus
+   * récentes des 30 dernières minutes, de la plus ancienne à la plus récente, déchiffrées (illisible ⇒
+   * ignorée). Elles servent seulement au filtre de sécurité, jamais au modèle.
+   */
+  private async previousQuestions(conversationId: string): Promise<string[]> {
+    const rows = (await this.prisma.assistantMessage.findMany({
+      where: {
+        conversationId,
+        role: 'USER',
+        createdAt: { gte: new Date(Date.now() - CONTEXT_WINDOW_MS) },
+      },
+      orderBy: { createdAt: 'desc' },
+      take: CONTEXT_QUESTIONS,
+    })) as MessageRow[];
+    return rows
+      .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
+      .slice(-CONTEXT_QUESTIONS)
+      .map((row) => decryptOptionalText(row.textEncrypted, this.key(), () => undefined))
+      .filter((text): text is string => typeof text === 'string');
   }
 
   private async readPair(questionId: string): Promise<SendAssistantMessageResponse | null> {

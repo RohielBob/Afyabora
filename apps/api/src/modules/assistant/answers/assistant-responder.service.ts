@@ -1,5 +1,6 @@
 // Réponse de l'assistant à une question (L9-06) : l'ordre de décision de l'ADR-0005 complétée.
-//   1. Filtre de sécurité (L3-07, `screenQuestion`) : urgence ⇒ EMERGENCY avec le numéro d'urgence, le
+//   1. Filtre de sécurité (L3-07, `screenQuestion`), en conversation (L9-08, `screenInConversation` : une
+//      question de suite est jugée avec les précédentes) : urgence ⇒ EMERGENCY avec le numéro d'urgence, le
 //      proche et le médecin du profil ; dose, traitement, diagnostic, prédiction, détournement ⇒ REFUSAL.
 //   2. Question sur les MESURES du patient ⇒ MEASUREMENTS : résumé et observations du moteur.
 //   3. Question générale ⇒ SHEET : extrait de la fiche la plus pertinente, citée.
@@ -9,15 +10,12 @@
 import { Injectable } from '@nestjs/common';
 import type { KnowledgeSheetRef } from '@glyka/shared';
 import { PrismaService } from '../../../prisma/prisma.service';
-import {
-  REFUSAL_ANSWERS,
-  normalizeQuestion,
-  screenQuestion,
-} from '../../insights/guardrails/question-guard';
+import { REFUSAL_ANSWERS, normalizeQuestion } from '../../insights/guardrails/question-guard';
 import { InsightsService } from '../../insights/insights.service';
 import { SheetsService } from '../knowledge/sheets.service';
 import { emergencyAnswer, type EmergencyContacts } from './emergency-answer';
 import { composeAnswer, type AnswerRewrite } from './answer-rewrite';
+import { screenInConversation } from './conversation-guard';
 import { measurementRewrite } from './measurement-answer';
 import { focusOf, isMeasurementQuestion, periodOf } from './routing';
 import { bestSheet, sheetAnswer } from './sheet-answer';
@@ -34,8 +32,16 @@ export class AssistantResponder {
     private readonly sheets: SheetsService,
   ) {}
 
-  async answer(patientId: string, question: string): Promise<AssistantAnswer> {
-    const verdict = screenQuestion(question);
+  /**
+   * Réponse à `question`. `previous` : les questions précédentes du patient dans cette conversation (les
+   * plus récentes, de la plus ancienne à la plus récente), pour reconnaître un piège découpé (L9-08).
+   */
+  async answer(
+    patientId: string,
+    question: string,
+    previous: readonly string[] = [],
+  ): Promise<AssistantAnswer> {
+    const verdict = screenInConversation(question, previous);
     if (verdict.refused && verdict.reason === 'EMERGENCY') {
       return this.reply('EMERGENCY', emergencyAnswer(await this.contacts(patientId)), [
         ...this.ref(EMERGENCY_SHEET_ID),

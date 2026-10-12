@@ -723,6 +723,72 @@ describe('L9-05 : conversations de l’assistant (/assistant/conversations)', ()
       expect((await call('DELETE', '/assistant/conversations', tokenFor(awa))).status).toBe(204);
     });
   });
+
+  // ---------------------------------------------------------------- L9-08 : piège découpé
+  describe('L9-08 : piège découpé en plusieurs messages', () => {
+    const lastAnswer = async (res: Response) =>
+      sendAssistantMessageResponseSchema.parse(await res.json()).answer;
+
+    it('« Je suis sous metformine. » puis « Je peux l’arrêter ? » ⇒ refus TRAITEMENT', async () => {
+      const conv = await newConversation(awa);
+      await ask(awa, conv, 'Je suis sous metformine depuis un an.');
+      const answer = await lastAnswer(
+        await ask(awa, conv, 'Je peux l’arrêter si mes valeurs sont bonnes ?'),
+      );
+      expect(answer).toMatchObject({ kind: 'REFUSAL', text: REFUSAL_ANSWERS.TREATMENT });
+    });
+
+    it('urgence puis « Et maintenant ? » ⇒ encore l’urgence', async () => {
+      const conv = await newConversation(awa);
+      await ask(awa, conv, 'Ma glycémie est à 0,4.');
+      const answer = await lastAnswer(await ask(awa, conv, 'Et maintenant je fais quoi ?'));
+      expect(answer.kind).toBe('EMERGENCY');
+    });
+
+    it('question précédente de plus de 30 minutes : n’est plus prise en compte', async () => {
+      const conv = await newConversation(awa);
+      await ask(awa, conv, 'Je suis sous metformine depuis un an.');
+      for (const m of messages) m.createdAt = new Date(Date.now() - 31 * 60 * 1000);
+      const answer = await lastAnswer(
+        await ask(awa, conv, 'Je peux l’arrêter si mes valeurs sont bonnes ?'),
+      );
+      expect(answer.kind).not.toBe('REFUSAL');
+    });
+
+    it('seules les QUESTIONS comptent, jamais les réponses de l’assistant (« secours », « urgence »…)', async () => {
+      const conv = await newConversation(awa);
+      // La réponse (fiche « Quand demander de l'aide ») parle de secours et de numéro d'urgence.
+      const first = await lastAnswer(await ask(awa, conv, 'Quand faut-il appeler le médecin ?'));
+      expect(first.kind).toBe('SHEET');
+      expect(first.text).toMatch(/urgence/);
+      const answer = await lastAnswer(await ask(awa, conv, 'Et pour un enfant ?'));
+      expect(answer.kind).not.toBe('EMERGENCY');
+    });
+
+    it('les questions d’une AUTRE conversation ne comptent pas', async () => {
+      const first = await newConversation(awa);
+      await ask(awa, first, 'Je suis sous metformine depuis un an.');
+      const second = await newConversation(awa);
+      const answer = await lastAnswer(
+        await ask(awa, second, 'Je peux l’arrêter si mes valeurs sont bonnes ?'),
+      );
+      expect(answer.kind).not.toBe('REFUSAL');
+    });
+
+    it('rien dans les journaux : ni la question, ni les précédentes', async () => {
+      const logs: string[] = [];
+      for (const level of ['log', 'warn', 'error'] as const) {
+        vi.spyOn(Logger.prototype, level).mockImplementation((...args: unknown[]) => {
+          logs.push(args.map(String).join(' '));
+        });
+      }
+      const conv = await newConversation(awa);
+      await ask(awa, conv, 'Je suis sous metformine depuis un an.');
+      await ask(awa, conv, 'Je peux l’arrêter si mes valeurs sont bonnes ?');
+      expect(logs.join('\n')).toMatch(/réponse : REFUSAL/);
+      expect(logs.join('\n')).not.toMatch(/metformine|arrêter/i);
+    });
+  });
 });
 
 // ---------------------------------------------------------------- L9-07 : mise en mots par le modèle
