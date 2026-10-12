@@ -57,6 +57,20 @@ export interface ImportReport {
   rows: ImportRowReport[]; // seules les lignes non valides sont détaillées
 }
 
+/**
+ * Réponse 400 `IMPORT_COLUMNS_NOT_FOUND` de POST /imports/preview (contrat 0.4.1) : colonnes de date ou de
+ * valeur introuvables, ou `mapping` qui cite une colonne absente. `columns` = noms des colonnes du fichier
+ * (dans l'ordre, sans les colonnes sans nom) : l'application les fait choisir au patient (L4-06), puis
+ * relance l'aperçu avec `mapping`.
+ */
+export const importColumnsErrorSchema = z.object({
+  message: z.string(),
+  code: z.literal('IMPORT_COLUMNS_NOT_FOUND'),
+  issues: z.array(z.object({ path: z.string(), message: z.string() })).optional(),
+  columns: z.array(z.string()),
+});
+export type ImportColumnsError = z.infer<typeof importColumnsErrorSchema>;
+
 const importDecisionSchema = z
   .object({
     line: z.number().int().positive(),

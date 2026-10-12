@@ -11,8 +11,8 @@ Import CSV / Excel avec validation et rapport.
   - Crée un lot `PREVIEW` qui garde les lignes validées. **Aucune mesure n'est écrite.**
   - Le rapport détaille les lignes non valides avec un message en français, par exemple « Valeur inhabituelle, vérifier l'unité (en mmol/L ?) ».
   - Erreurs :
-    - 400 sur `file` : fichier manquant, illisible ou colonnes introuvables ;
-    - 400 sur `mapping` : colonne donnée absente du fichier ;
+    - 400 sur `file` : fichier manquant ou illisible ;
+    - 400 **`IMPORT_COLUMNS_NOT_FOUND`** (contrat 0.4.1) : colonnes de date ou de valeur introuvables (`issues` sur `file`), ou colonne donnée dans `mapping` absente du fichier (`issues` sur `mapping`). La réponse donne **`columns`**, les noms des colonnes du fichier sans les colonnes sans nom : l'appli les fait choisir au patient (L4-06), puis relance l'aperçu avec `mapping` ;
     - 413 : plus de 5 Mo (refusé dès la réception, le fichier reste en mémoire et n'est jamais écrit sur le disque) ou plus de 5 000 lignes ;
     - 400 sans profil médical.
 
