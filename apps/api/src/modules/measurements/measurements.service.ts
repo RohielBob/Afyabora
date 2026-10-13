@@ -38,6 +38,7 @@ import {
   invalidField,
   notFound as notFoundError,
   notInFuture,
+  type SyncOutcome,
 } from '../../common/data/owned-records';
 import { UNAUTHORIZED_MESSAGE } from '../../common/guards/jwt-auth.guard';
 import { PrismaService } from '../../prisma/prisma.service';
@@ -225,6 +226,88 @@ export class MeasurementsService {
     if (removed.count === 1) return;
     const existing = await this.findOwned(id, patientId);
     if (!existing) throw notFound(); // déjà supprimée : rien à faire (204)
+  }
+
+  // ------------------------------------------------------------------ synchronisation (L8-04)
+
+  /**
+   * Opération « upsert » venue du téléphone (POST /sync/push). Mêmes contrôles que POST et PUT (valeur
+   * plausible ou confirmée, date pas dans le futur, note chiffrée), plus la règle « la dernière écriture
+   * gagne » : `clientUpdatedAt` (horloge du téléphone) doit être au moins aussi récent que la version du
+   * serveur. Une mesure supprimée le reste (suppression définitive). Rejouer la même opération ne change
+   * rien. La condition est vérifiée DANS l'écriture : deux envois simultanés ne s'écrasent pas à tort.
+   */
+  async syncUpsert(
+    patientId: string,
+    input: CreateMeasurementInput,
+    clientUpdatedAt: Date,
+    now = new Date(),
+  ): Promise<SyncOutcome> {
+    const existing = await this.prisma.measurement.findUnique({
+      where: { id: input.id },
+      select: { patientId: true },
+    });
+    if (existing && existing.patientId !== patientId) return 'NOT_OWNED';
+    // Les deux règles (« supprimée, elle le reste » et « la dernière écriture gagne ») sont vérifiées
+    // DANS l'écriture ci-dessous : une seule vérité, sûre même si deux envois arrivent en même temps.
+
+    const data = {
+      valueMgDl: this.checkValue(input.value, input.unit, input.confirmedUnusual),
+      originalValue: input.value,
+      originalUnit: input.unit,
+      measuredAt: this.checkDate(input.measuredAt, now),
+      context: input.context,
+      noteEncrypted: this.encryptNote(input.note),
+      clientUpdatedAt,
+    };
+    if (!existing) {
+      try {
+        await this.prisma.measurement.create({
+          data: { id: input.id, patientId, source: 'MANUAL', ...data },
+        });
+        return 'APPLIED';
+      } catch (error) {
+        // Créée entre-temps (envoi simultané) : on recommence, la règle de date tranche.
+        if (hasPrismaCode(error, 'P2002'))
+          return this.syncUpsert(patientId, input, clientUpdatedAt, now);
+        if (hasPrismaCode(error, 'P2003')) throw await this.noProfile(patientId);
+        throw error;
+      }
+    }
+    const changed = await this.prisma.measurement.updateMany({
+      where: {
+        id: input.id,
+        patientId,
+        deletedAt: null,
+        clientUpdatedAt: { lte: clientUpdatedAt },
+      },
+      data: { ...data, editedAt: now },
+    });
+    return changed.count === 1 ? 'APPLIED' : 'CONFLICT_SERVER_WINS';
+  }
+
+  /**
+   * Opération « delete » venue du téléphone : tombstone (`deletedAt`), note effacée. Inconnue ou déjà
+   * supprimée : rien à faire (APPLIED). Modifiée sur le serveur APRÈS la suppression faite sur le
+   * téléphone : la version du serveur gagne.
+   */
+  async syncDelete(
+    patientId: string,
+    id: string,
+    clientUpdatedAt: Date,
+    now = new Date(),
+  ): Promise<SyncOutcome> {
+    const existing = await this.prisma.measurement.findUnique({
+      where: { id },
+      select: { patientId: true, clientUpdatedAt: true, deletedAt: true },
+    });
+    if (existing && existing.patientId !== patientId) return 'NOT_OWNED';
+    if (!existing || existing.deletedAt) return 'APPLIED';
+    const removed = await this.prisma.measurement.updateMany({
+      where: { id, patientId, deletedAt: null, clientUpdatedAt: { lte: clientUpdatedAt } },
+      data: { deletedAt: now, noteEncrypted: null, clientUpdatedAt },
+    });
+    return removed.count === 1 ? 'APPLIED' : 'CONFLICT_SERVER_WINS';
   }
 
   // ------------------------------------------------------------------ outils

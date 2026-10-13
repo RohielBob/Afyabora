@@ -25,6 +25,7 @@ import {
   invalidField,
   notFound as notFoundError,
   notInFuture,
+  type SyncOutcome,
 } from '../../common/data/owned-records';
 import { decryptOptionalText, encryptOptionalText } from '../../common/crypto/field-encryption';
 import { UNAUTHORIZED_MESSAGE } from '../../common/guards/jwt-auth.guard';
@@ -169,6 +170,78 @@ export class EventsService {
     });
     if (removed.count === 1) return;
     if (!(await this.findOwned(id, patientId))) throw notFound();
+  }
+
+  // ------------------------------------------------------------------ synchronisation (L8-04)
+
+  /**
+   * Opération « upsert » venue du téléphone (POST /sync/push) : mêmes contrôles que POST et PUT (date pas
+   * dans le futur, texte libre chiffré), plus « la dernière écriture gagne » sur `clientUpdatedAt`. Un
+   * événement supprimé le reste. Voir MeasurementsService.syncUpsert (même règle).
+   */
+  async syncUpsert(
+    patientId: string,
+    input: CreateLifeEventInput,
+    clientUpdatedAt: Date,
+    now = new Date(),
+  ): Promise<SyncOutcome> {
+    const existing = await this.prisma.lifeEvent.findUnique({
+      where: { id: input.id },
+      select: { patientId: true },
+    });
+    if (existing && existing.patientId !== patientId) return 'NOT_OWNED';
+    // Les deux règles (« supprimée, elle le reste » et « la dernière écriture gagne ») sont vérifiées
+    // DANS l'écriture ci-dessous : une seule vérité, sûre même si deux envois arrivent en même temps.
+
+    const data = {
+      type: input.type,
+      occurredAt: notInFuture(input.occurredAt, 'occurredAt', now, FUTURE_MESSAGE),
+      label: input.label,
+      detailsEncrypted: this.encrypt(input.details),
+      durationMinutes: input.durationMinutes ?? null,
+      clientUpdatedAt,
+    };
+    if (!existing) {
+      try {
+        await this.prisma.lifeEvent.create({ data: { id: input.id, patientId, ...data } });
+        return 'APPLIED';
+      } catch (error) {
+        if (hasPrismaCode(error, 'P2002'))
+          return this.syncUpsert(patientId, input, clientUpdatedAt, now);
+        if (hasPrismaCode(error, 'P2003')) throw await this.noProfile(patientId);
+        throw error;
+      }
+    }
+    const changed = await this.prisma.lifeEvent.updateMany({
+      where: {
+        id: input.id,
+        patientId,
+        deletedAt: null,
+        clientUpdatedAt: { lte: clientUpdatedAt },
+      },
+      data,
+    });
+    return changed.count === 1 ? 'APPLIED' : 'CONFLICT_SERVER_WINS';
+  }
+
+  /** Opération « delete » venue du téléphone : tombstone, texte libre effacé (même règle que les mesures). */
+  async syncDelete(
+    patientId: string,
+    id: string,
+    clientUpdatedAt: Date,
+    now = new Date(),
+  ): Promise<SyncOutcome> {
+    const existing = await this.prisma.lifeEvent.findUnique({
+      where: { id },
+      select: { patientId: true, clientUpdatedAt: true, deletedAt: true },
+    });
+    if (existing && existing.patientId !== patientId) return 'NOT_OWNED';
+    if (!existing || existing.deletedAt) return 'APPLIED';
+    const removed = await this.prisma.lifeEvent.updateMany({
+      where: { id, patientId, deletedAt: null, clientUpdatedAt: { lte: clientUpdatedAt } },
+      data: { deletedAt: now, detailsEncrypted: null, clientUpdatedAt },
+    });
+    return removed.count === 1 ? 'APPLIED' : 'CONFLICT_SERVER_WINS';
   }
 
   private key(): string {

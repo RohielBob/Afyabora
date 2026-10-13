@@ -63,3 +63,26 @@ export const syncPullQuerySchema = z.object({
   cursor: z.string().optional(),
   limit: z.coerce.number().int().min(1).max(500).default(200),
 });
+
+/**
+ * Enveloppe de POST /sync/push validée par la route (ADR-0004, modification 1) : `deviceId` et 200
+ * opérations au plus. Chaque opération est ensuite validée SÉPARÉMENT avec `syncOpSchema` : une opération
+ * invalide est REJECTED avec sa raison, sans faire échouer tout le lot (400).
+ */
+export const syncPushEnvelopeSchema = z.object({
+  deviceId: z.string().uuid(),
+  ops: z.array(z.unknown()).max(200),
+});
+export type SyncPushEnvelope = z.infer<typeof syncPushEnvelopeSchema>;
+
+/** Réponse de POST /sync/push (vérifiable par le mobile, L8-06). */
+export const syncPushResponseSchema = z.object({
+  results: z.array(
+    z.object({
+      opId: z.string(),
+      result: z.enum(SYNC_OP_RESULTS),
+      reason: z.string().optional(),
+    }),
+  ),
+  serverTime: z.string().datetime({ offset: true }),
+});
