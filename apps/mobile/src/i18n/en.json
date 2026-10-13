@@ -1092,6 +1092,108 @@
         "title": "No file in progress",
         "text": "Choose the file to import again: it is not kept when the app closes."
       }
+    },
+    "report": {
+      "title": "Import report",
+      "analyzed_one": "{{count}} row analysed",
+      "analyzed_other": "{{count}} rows analysed",
+      "label": {
+        "valid": "Valid",
+        "duplicates": "Duplicates",
+        "inconsistent": "To check",
+        "errors": "Errors"
+      },
+      "tile": {
+        "valid": "{{count}} valid",
+        "duplicates": "{{count}} duplicates",
+        "inconsistent": "{{count}} to check",
+        "errors": "{{count}} errors"
+      },
+      "allValid": "Every row is valid: nothing to check.",
+      "group": {
+        "INCONSISTENT": {
+          "title": "To check ({{count}})",
+          "text": "Unusual value or different unit: correct it, accept it as is, or ignore the row."
+        },
+        "DUPLICATE": {
+          "title": "Duplicates ({{count}})",
+          "text": "Same date, time and value as an existing reading: ignored unless you accept them."
+        },
+        "ERROR": {
+          "title": "Errors ({{count}})",
+          "text": "Unreadable row: correct the value, or ignore the row."
+        }
+      },
+      "acceptAll": "Accept all",
+      "ignoreAll": "Ignore all",
+      "line": "Row {{line}}",
+      "empty": "(empty)",
+      "decisionFor": "Decision for row {{line}}",
+      "action": {
+        "IGNORE": "Ignore",
+        "ACCEPT": "Accept",
+        "CORRECT": "Correct"
+      },
+      "correctedValue": "Correct value",
+      "correctedHint": "Value in {{unit}} (change the unit if needed).",
+      "correctedUnit": "Unit of the correct value",
+      "problem": {
+        "missing": "Enter the correct value.",
+        "invalid": "Unreadable value: a number, for example 1.10.",
+        "outOfRange": "Value outside the plausible range (20 to 600 mg/dL): check the unit."
+      },
+      "more_one": "Show {{count}} more row",
+      "more_other": "Show {{count}} more rows",
+      "fixCorrections": "Complete the flagged corrections before importing.",
+      "rowsRefused": "Some decisions were refused: see the flagged rows.",
+      "import_one": "Import {{count}} reading",
+      "import_other": "Import {{count}} readings",
+      "nothingToImport": "Nothing to import",
+      "defaults": "Without a decision, duplicates, rows to check and errors are ignored.",
+      "undoable": "Nothing is imported before this button, and you can undo the import afterwards."
+    },
+    "done": {
+      "title_one": "{{count}} reading imported",
+      "title_other": "{{count}} readings imported",
+      "skipped_zero": "No row ignored.",
+      "skipped_one": "{{count}} row ignored.",
+      "skipped_other": "{{count}} rows ignored.",
+      "sync": "The readings are saved to your account. They will appear in this phone’s history at the next sync.",
+      "finish": "Done",
+      "revert": "Undo this import",
+      "revertConfirmTitle": "Undo this import?",
+      "revertConfirmText_one": "The imported reading will be removed from your account.",
+      "revertConfirmText_other": "The {{count}} imported readings will be removed from your account.",
+      "revertedTitle": "Import undone",
+      "revertedText_zero": "There was no reading to remove.",
+      "revertedText_one": "{{count}} reading removed from your account.",
+      "revertedText_other": "{{count}} readings removed from your account.",
+      "keep": "Keep the import",
+      "revertYes_one": "Remove the reading",
+      "revertYes_other": "Remove the {{count}} readings"
+    },
+    "issue": {
+      "restart": "Start again",
+      "offline": {
+        "title": "No connection",
+        "text": "Nothing was imported. Check your connection, then try again."
+      },
+      "done": {
+        "title": "Already done",
+        "text": "This file was already imported or undone (maybe from another device)."
+      },
+      "expired": {
+        "title": "Analysis too old",
+        "text": "The report is more than 24 hours old: run the analysis of the file again."
+      },
+      "notFound": {
+        "title": "Analysis not found",
+        "text": "Run the analysis of the file again."
+      },
+      "error": {
+        "title": "Import not possible",
+        "text": "Something went wrong. Try again in a moment."
+      }
     }
   }
 }

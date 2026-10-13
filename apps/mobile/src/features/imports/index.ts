@@ -23,7 +23,28 @@ export {
   type PickedFile,
   type PreviewProblem,
 } from './start';
+export {
+  REPORT_GROUPS,
+  ROWS_PAGE,
+  allowedActions,
+  buildDecisions,
+  checkCorrection,
+  chooseForAll,
+  commitProblem,
+  groupRows,
+  importCount,
+  pageOf,
+  type Choices,
+  type CommitProblem,
+  type CorrectionProblem,
+  type ReportGroup,
+  type RowAction,
+  type RowChoice,
+} from './report';
+export { BackButton } from './components/BackButton';
 export { ColumnRoleChoice, NO_COLUMN } from './components/ColumnRoleChoice';
 export { FilePickerCard, useFileSizeLabel } from './components/FilePickerCard';
 export { Note, ProblemAlert } from './components/ImportMessages';
+export { ReportRowCard } from './components/ReportRowCard';
+export { ReportSummary } from './components/ReportSummary';
 export { StepTitle } from './components/StepTitle';

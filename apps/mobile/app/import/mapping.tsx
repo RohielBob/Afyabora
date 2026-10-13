@@ -9,8 +9,9 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { UNIT_LABELS } from '@glyka/shared';
-import { Button, Card, InlineAlert, PressableScale, Screen, Text } from '@/components/ui';
+import { Button, Card, InlineAlert, Screen, Text } from '@/components/ui';
 import {
+  BackButton,
   COLUMN_ROLES,
   ColumnRoleChoice,
   Note,
@@ -24,7 +25,7 @@ import {
   useImportFlow,
   type PreviewProblem,
 } from '@/features/imports';
-import { enterFromBelow, radii, spacing, touchTarget, useReducedMotion, useTheme } from '@/theme';
+import { enterFromBelow, spacing, useReducedMotion, useTheme } from '@/theme';
 
 export default function ImportMappingScreen() {
   const { t } = useTranslation();
@@ -82,7 +83,7 @@ export default function ImportMappingScreen() {
 
   return (
     <Screen>
-      <BackButton onPress={back} />
+      <BackButton onPress={back} label={t('import.mapping.back')} />
       <View style={{ gap: spacing.xs }}>
         <Text variant="overline" tone="primary">
           {t('import.overline')}
@@ -143,32 +144,5 @@ export default function ImportMappingScreen() {
         <Note icon="lock-closed-outline" text={t('import.privacy')} />
       </View>
     </Screen>
-  );
-}
-
-/** « Retour » vers le choix du fichier (le fichier et l'unité choisis sont gardés). */
-function BackButton({ onPress }: { onPress: () => void }) {
-  const { t } = useTranslation();
-  const { colors } = useTheme();
-  return (
-    <PressableScale
-      accessibilityRole="button"
-      accessibilityLabel={t('import.mapping.back')}
-      onPress={onPress}
-      hitSlop={8}
-      style={{
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: spacing.xxs,
-        alignSelf: 'flex-start',
-        minHeight: touchTarget - 8,
-        borderRadius: radii.sm,
-      }}
-    >
-      <Ionicons name="chevron-back" size={20} color={colors.primaryText} />
-      <Text variant="label" tone="primary">
-        {t('common.back')}
-      </Text>
-    </PressableScale>
   );
 }

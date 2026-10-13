@@ -120,3 +120,20 @@ void _reportMatches;
 
 /** Correspondance des colonnes (noms de l'en-tête), envoyée en JSON dans `mapping` (L4-05, L4-06). */
 export type ImportColumnMapping = z.infer<typeof importColumnMappingSchema>;
+
+/** Une décision du patient sur une ligne du rapport (L4-07) : Corriger, Ignorer ou Accepter. */
+export type ImportDecision = z.infer<typeof importDecisionSchema>;
+
+/** Réponse de POST /imports/{id}/commit, vérifiée par le mobile (L4-07). */
+export const importCommitResponseSchema = z.object({
+  batchId: z.string().uuid(),
+  imported: z.number().int().nonnegative(),
+  skipped: z.number().int().nonnegative(),
+});
+export type ImportCommitResponse = z.infer<typeof importCommitResponseSchema>;
+
+/** Réponse de DELETE /imports/{id} : nombre de mesures retirées avec le lot (L4-07). */
+export const importRevertResponseSchema = z.object({
+  reverted: z.number().int().nonnegative(),
+});
+export type ImportRevertResponse = z.infer<typeof importRevertResponseSchema>;

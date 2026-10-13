@@ -4,7 +4,9 @@ import {
   deleteAccountSchema,
   importCommitSchema,
   importPreviewFormSchema,
+  importCommitResponseSchema,
   importReportSchema,
+  importRevertResponseSchema,
   insightsQuerySchema,
   listQuerySchema,
   reportQuerySchema,
@@ -225,5 +227,23 @@ describe('importReportSchema (L4-05 : rapport vérifié par le mobile)', () => {
     expect(importReportSchema.safeParse(row({ rawValue: 1 })).success).toBe(false);
     const { rows: _rows, ...withoutRows } = report;
     expect(importReportSchema.safeParse(withoutRows).success).toBe(false);
+  });
+});
+
+describe('réponses de l’import vérifiées par le mobile (L4-07)', () => {
+  it('commit : lot, importées, ignorées (entiers positifs ou nuls)', () => {
+    const ok = { batchId: ID_A, imported: 141, skipped: 6 };
+    expect(importCommitResponseSchema.parse(ok)).toEqual(ok);
+    expect(importCommitResponseSchema.safeParse({ ...ok, imported: -1 }).success).toBe(false);
+    expect(importCommitResponseSchema.safeParse({ ...ok, batchId: 'x' }).success).toBe(false);
+    expect(importCommitResponseSchema.safeParse({ batchId: ID_A, imported: 1 }).success).toBe(
+      false,
+    );
+  });
+
+  it('annulation : nombre de mesures retirées', () => {
+    expect(importRevertResponseSchema.parse({ reverted: 0 })).toEqual({ reverted: 0 });
+    expect(importRevertResponseSchema.safeParse({ reverted: 1.5 }).success).toBe(false);
+    expect(importRevertResponseSchema.safeParse({}).success).toBe(false);
   });
 });
