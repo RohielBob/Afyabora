@@ -1158,7 +1158,7 @@
       "skipped_zero": "Aucune ligne ignorée.",
       "skipped_one": "{{count}} ligne ignorée.",
       "skipped_other": "{{count}} lignes ignorées.",
-      "sync": "Les mesures sont enregistrées sur votre compte. Elles apparaîtront dans l’historique de ce téléphone à la prochaine synchronisation.",
+      "sync": "Les mesures sont enregistrées sur votre compte. Elles arrivent dans l’historique de ce téléphone dans quelques secondes (synchronisation automatique).",
       "finish": "Terminer",
       "revert": "Annuler cet import",
       "revertConfirmTitle": "Annuler cet import ?",

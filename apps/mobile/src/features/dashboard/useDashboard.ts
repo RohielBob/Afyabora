@@ -1,6 +1,7 @@
 // Données du tableau de bord (L2-05), lues SUR LE TÉLÉPHONE uniquement (CDC F3 : il marche sans réseau) :
 // dernière mesure, modifications en attente d'envoi, seuils du patient et unité préférée.
-// Rechargées à chaque retour sur l'onglet (ex. après avoir noté une mesure avec le bouton « + »).
+// Rechargées à chaque retour sur l'onglet (ex. après avoir noté une mesure avec le bouton « + »), et quand
+// la synchronisation apporte des changements pendant que l'onglet est ouvert (L8-06).
 import { useFocusEffect } from 'expo-router';
 import { useCallback, useRef, useState } from 'react';
 import type { GlucoseThresholds, GlucoseUnit } from '@glyka/shared';
@@ -8,6 +9,7 @@ import { CHART_PERIODS, periodBounds, type ChartPoint } from './chart';
 import { previousBounds } from './stats';
 import { localMeasurements, readUnit, type LatestMeasurement } from '@/features/measurements';
 import { readThresholds } from '@/features/profile';
+import { onSyncedData } from '@/features/sync';
 
 export type DashboardState =
   | { status: 'loading' }
@@ -70,7 +72,9 @@ export function useDashboard(): { state: DashboardState; reload: () => void } {
   useFocusEffect(
     useCallback(() => {
       load();
+      const unsubscribe = onSyncedData(load);
       return () => {
+        unsubscribe();
         lastLoad.current += 1; // onglet quitté : la lecture en cours ne sert plus
       };
     }, [load]),

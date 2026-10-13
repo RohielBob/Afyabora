@@ -3,7 +3,7 @@
 // Décision ligne par ligne ou en lot (Corriger · Ignorer · Accepter), puis « Importer » : c'est le SEUL
 // bouton qui écrit des mesures. Ensuite, l'import peut être annulé (toutes ses mesures retirées).
 // Les mesures importées sont sur le compte (serveur) ; elles arrivent dans l'Historique du téléphone avec
-// la synchronisation (L8-05, L8-06).
+// la synchronisation (L8-05, L8-06), demandée dès la fin de l'import ou de son annulation.
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { useMemo, useState } from 'react';
@@ -32,6 +32,7 @@ import {
   type CorrectionProblem,
   type ReportGroup,
 } from '@/features/imports';
+import { requestSync } from '@/features/sync';
 import { enterFromBelow, radii, spacing, useReducedMotion, useTheme } from '@/theme';
 
 type Phase = 'review' | 'importing' | 'done' | 'reverting' | 'reverted';
@@ -97,6 +98,7 @@ export default function ImportReportScreen() {
     try {
       setResult(await importsApi.commit(report.batchId, decisions));
       setPhase('done');
+      requestSync(); // les mesures importées arrivent dans l'Historique sans attendre
     } catch (error) {
       setIssue(commitProblem(error, decisions));
       setPhase('review');
@@ -109,6 +111,7 @@ export default function ImportReportScreen() {
     try {
       setReverted((await importsApi.revert(report.batchId)).reverted);
       setPhase('reverted');
+      requestSync(); // et en repartent
     } catch (error) {
       setIssue(commitProblem(error, []));
       setPhase('done');

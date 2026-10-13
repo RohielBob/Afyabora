@@ -9,7 +9,11 @@
 //    ne met jamais en file une opération que le serveur refuserait pour son format ;
 //  - les dates sont stockées en ISO UTC (« …Z ») : comparer du texte = comparer des instants ;
 //  - une suppression laisse une « pierre tombale » (deleted_at) et efface le texte libre (note, détails),
-//    comme le serveur.
+//    comme le serveur ;
+//  - une modification ou une suppression porte une date (`clientUpdatedAt`) toujours POSTÉRIEURE à celle de
+//    la version modifiée (editStamp, L8-06) : sinon, sur un téléphone en retard de quelques minutes,
+//    modifier une mesure tout juste reçue du serveur (un import) serait refusée par « la dernière écriture
+//    gagne » et la modification perdue.
 import {
   createLifeEventSchema,
   createMeasurementSchema,
@@ -83,6 +87,16 @@ export class InvalidLocalWrite extends Error {
 }
 
 const utc = (iso: string) => new Date(iso).toISOString();
+
+/**
+ * Date d'une modification ou d'une suppression : maintenant, ou 1 ms après la version modifiée si l'horloge
+ * du téléphone est en retard sur elle. Le serveur compare ces dates (« la dernière écriture gagne ») : une
+ * modification faite APRÈS avoir vu une version doit toujours passer devant elle.
+ */
+export function editStamp(now: string, previous: string): string {
+  const base = Date.parse(previous);
+  return Number.isFinite(base) && base >= Date.parse(now) ? new Date(base + 1).toISOString() : now;
+}
 
 /** Vérifie l'opération avec le schéma partagé (format, payload complet, id cohérent). */
 function checked(op: SyncOp): SyncOp {
@@ -180,6 +194,7 @@ export function planMeasurementUpdate(
         ? false
         : current.confirmed_unusual === 1;
 
+  const stamp = editStamp(ctx.now, current.client_updated_at);
   const row: MeasurementRow = {
     ...current,
     value_mgdl: toMgDl(value, unit),
@@ -189,7 +204,7 @@ export function planMeasurementUpdate(
     context: p.context ?? current.context,
     note,
     confirmed_unusual: confirmed ? 1 : 0,
-    client_updated_at: ctx.now,
+    client_updated_at: stamp,
     updated_at: ctx.now,
     pending_sync: 1,
   };
@@ -205,7 +220,7 @@ export function planMeasurementUpdate(
       entity: 'measurement',
       type: 'upsert',
       entityId: row.id,
-      clientUpdatedAt: ctx.now,
+      clientUpdatedAt: stamp,
       payload: measurementPayload(row),
     }),
   };
@@ -216,12 +231,13 @@ export function planMeasurementDelete(
   current: MeasurementRow,
   ctx: PlanContext,
 ): Plan<MeasurementRow> {
+  const stamp = editStamp(ctx.now, current.client_updated_at);
   return {
     row: {
       ...current,
       note: null,
       deleted_at: current.deleted_at ?? ctx.now,
-      client_updated_at: ctx.now,
+      client_updated_at: stamp,
       updated_at: ctx.now,
       pending_sync: 1,
     },
@@ -230,7 +246,7 @@ export function planMeasurementDelete(
       entity: 'measurement',
       type: 'delete',
       entityId: current.id,
-      clientUpdatedAt: ctx.now,
+      clientUpdatedAt: stamp,
     }),
   };
 }
@@ -293,6 +309,7 @@ export function planEventUpdate(
     );
   }
   const p = parsed.data;
+  const stamp = editStamp(ctx.now, current.client_updated_at);
   const row: EventRow = {
     ...current,
     type: p.type ?? current.type,
@@ -300,7 +317,7 @@ export function planEventUpdate(
     label: p.label ?? current.label,
     details: p.details === undefined ? current.details : p.details.trim() ? p.details.trim() : null,
     duration_minutes: p.durationMinutes ?? current.duration_minutes,
-    client_updated_at: ctx.now,
+    client_updated_at: stamp,
     updated_at: ctx.now,
     pending_sync: 1,
   };
@@ -311,7 +328,7 @@ export function planEventUpdate(
       entity: 'event',
       type: 'upsert',
       entityId: row.id,
-      clientUpdatedAt: ctx.now,
+      clientUpdatedAt: stamp,
       payload: eventPayload(row),
     }),
   };
@@ -319,12 +336,13 @@ export function planEventUpdate(
 
 /** Suppression : pierre tombale + détails effacés (texte libre, potentiellement sensible). */
 export function planEventDelete(current: EventRow, ctx: PlanContext): Plan<EventRow> {
+  const stamp = editStamp(ctx.now, current.client_updated_at);
   return {
     row: {
       ...current,
       details: null,
       deleted_at: current.deleted_at ?? ctx.now,
-      client_updated_at: ctx.now,
+      client_updated_at: stamp,
       updated_at: ctx.now,
       pending_sync: 1,
     },
@@ -333,7 +351,7 @@ export function planEventDelete(current: EventRow, ctx: PlanContext): Plan<Event
       entity: 'event',
       type: 'delete',
       entityId: current.id,
-      clientUpdatedAt: ctx.now,
+      clientUpdatedAt: stamp,
     }),
   };
 }

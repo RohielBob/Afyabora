@@ -18,7 +18,8 @@ Chaque création, modification ou suppression écrit la ligne **et** une opérat
 | ----------------------------------- | -------------------------------------------------------------------------------------------- |
 | `client.ts`                         | Ouvre la base une fois et applique les migrations manquantes (`PRAGMA user_version`)         |
 | `schema.ts`                         | Migrations versionnées. **On n'édite jamais une migration livrée : on en ajoute une.**       |
-| `reset.ts`                          | Effacement à la déconnexion, nombre d'opérations en attente                                  |
+| `reset.ts`                          | Effacement à la déconnexion, nombre d'opérations en attente, compte propriétaire (L8-06)     |
+| `web-memory.ts`                     | Base **en mémoire** de l'aperçu web (mêmes tables), synchronisée comme un téléphone (L8-06)  |
 | `repositories/plans.ts`             | **Logique** des écritures (testée) : ligne à écrire + opération, vérifiée par `syncOpSchema` |
 | `repositories/write.ts`             | Exécution d'un plan : ligne puis opération, dans la transaction en cours                     |
 | `repositories/measurements.repo.ts` | Mesures : créer, lire, lister, modifier, supprimer ; dernière mesure ; points du graphique   |
@@ -34,6 +35,9 @@ Chaque création, modification ou suppression écrit la ligne **et** une opérat
   ne met jamais en file une opération que le serveur refuserait pour son format.
 - Dates stockées en **ISO UTC** (« …Z ») : comparer le texte revient à comparer les instants.
 - Changer la valeur d'une mesure **annule** sa confirmation « inhabituelle », sauf si elle est redonnée.
+- Une modification ou une suppression est datée (`clientUpdatedAt`) **après** la version modifiée
+  (`editStamp`, L8-06) : sur un téléphone en retard, modifier une mesure tout juste reçue du serveur gagne
+  quand même « la dernière écriture gagne ».
 - **Suppression** = pierre tombale (`deleted_at`) + texte libre effacé (note, détails), opération `delete`
   sans payload. Supprimer deux fois ne crée pas de deuxième opération.
 - Modifier une donnée absente ou supprimée : erreur `LocalNotFound` (rien n'est écrit).
@@ -50,6 +54,7 @@ Chaque création, modification ou suppression écrit la ligne **et** une opérat
 
 - `__tests__/plans.test.ts` : chaque plan (création, modification, suppression ; mesures et événements),
   opérations valides pour le serveur, payload complet, confirmation, pierres tombales, refus.
+- `__tests__/reset.test.ts` : compte propriétaire des données locales (garder, attribuer, effacer).
 - `__tests__/repositories.test.ts` : dépôts avec une base **simulée** qui refuse toute écriture hors
   transaction et annule tout en cas d'échec (comme SQLite) : panne pendant l'écriture de l'opération ⇒
   rien n'est gardé.

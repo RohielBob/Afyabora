@@ -1,6 +1,7 @@
 // Où la saisie écrit (L2-03) : TOUJOURS sur le téléphone d'abord (ADR-0004). La mesure et son opération
 // de synchronisation sont écrites dans la même transaction (db/repositories/measurements.repo.ts) ; le
-// moteur de synchronisation (L8-06) les enverra au serveur. On n'appelle jamais l'API pour écrire.
+// moteur de synchronisation (L8-06) les envoie au serveur 3 s après l'écriture (syncAfterLocalWrite). On
+// n'appelle jamais l'API pour écrire.
 // Version web (aperçu de développement, sans SQLite) : local-store.web.ts.
 import type { CreateMeasurementInput, UpdateMeasurementInput } from '@glyka/shared';
 import { countUnsyncedChanges } from '@/db/reset';
@@ -17,12 +18,21 @@ import {
   type LocalMeasurement,
   type MeasurementPoint,
 } from '@/db/repositories/measurements.repo';
+import { syncAfterLocalWrite } from '@/features/sync';
 
 export type { LatestMeasurement, LocalMeasurement, MeasurementPoint };
 
+/** Écrit sur le téléphone, puis programme l'envoi au serveur (une erreur d'écriture n'envoie rien). */
+async function thenSync<T>(write: Promise<T>): Promise<T> {
+  const result = await write;
+  syncAfterLocalWrite();
+  return result;
+}
+
 export const localMeasurements = {
   /** Enregistre la mesure sur le téléphone ; renvoie son identifiant (généré ici, hors-ligne). */
-  save: (input: Omit<CreateMeasurementInput, 'id'>): Promise<string> => createMeasurement(input),
+  save: (input: Omit<CreateMeasurementInput, 'id'>): Promise<string> =>
+    thenSync(createMeasurement(input)),
 
   /** Mesures de la même minute (avertissement de doublon exact). */
   sameMinute: (measuredAt: string) => measurementsInMinute(measuredAt),
@@ -47,8 +57,8 @@ export const localMeasurements = {
 
   /** Modifie une mesure (champs donnés seulement) ; l'objet complet part à la synchronisation (L8-03). */
   update: (id: string, patch: UpdateMeasurementInput): Promise<void> =>
-    updateMeasurement(id, patch),
+    thenSync(updateMeasurement(id, patch)),
 
   /** Supprime une mesure (pierre tombale, note effacée) ; la suppression part à la synchronisation. */
-  remove: (id: string): Promise<void> => deleteMeasurement(id),
+  remove: (id: string): Promise<void> => thenSync(deleteMeasurement(id)),
 };
