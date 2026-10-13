@@ -1,10 +1,15 @@
 // Appels /imports/* (contrat docs/api/openapi.v0.json, L4-04). La réponse est vérifiée avec le schéma de
 // @glyka/shared : une réponse inattendue devient une erreur, jamais un rapport faux.
 import {
+  importCommitResponseSchema,
   importReportSchema,
+  importRevertResponseSchema,
   type GlucoseUnit,
   type ImportColumnMapping,
+  type ImportCommitResponse,
+  type ImportDecision,
   type ImportReport,
+  type ImportRevertResponse,
 } from '@glyka/shared';
 import { api } from '@/lib/api-client';
 import type { PickedFile } from './start';
@@ -57,4 +62,16 @@ export const importsApi = {
         timeoutMs: PREVIEW_TIMEOUT_MS,
       }),
     ),
+  /** Importe le lot avec les décisions du patient (une seule fois : 409 ensuite). */
+  commit: async (batchId: string, decisions: ImportDecision[]): Promise<ImportCommitResponse> =>
+    importCommitResponseSchema.parse(
+      await api(`/imports/${batchId}/commit`, {
+        method: 'POST',
+        body: { decisions },
+        timeoutMs: PREVIEW_TIMEOUT_MS,
+      }),
+    ),
+  /** Annule le lot : toutes ses mesures sont retirées (0 s'il l'était déjà). */
+  revert: async (batchId: string): Promise<ImportRevertResponse> =>
+    importRevertResponseSchema.parse(await api(`/imports/${batchId}`, { method: 'DELETE' })),
 };

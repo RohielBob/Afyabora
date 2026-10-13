@@ -1092,6 +1092,108 @@
         "title": "Aucun fichier en cours",
         "text": "Choisissez de nouveau le fichier à importer : il n’est pas gardé quand l’application se ferme."
       }
+    },
+    "report": {
+      "title": "Rapport d’importation",
+      "analyzed_one": "{{count}} ligne analysée",
+      "analyzed_other": "{{count}} lignes analysées",
+      "label": {
+        "valid": "Valides",
+        "duplicates": "Doublons",
+        "inconsistent": "À vérifier",
+        "errors": "Erreurs"
+      },
+      "tile": {
+        "valid": "{{count}} valides",
+        "duplicates": "{{count}} doublons",
+        "inconsistent": "{{count}} à vérifier",
+        "errors": "{{count}} erreurs"
+      },
+      "allValid": "Toutes les lignes sont valides : rien à vérifier.",
+      "group": {
+        "INCONSISTENT": {
+          "title": "À vérifier ({{count}})",
+          "text": "Valeur inhabituelle ou unité différente : corrigez-la, acceptez-la telle quelle, ou ignorez la ligne."
+        },
+        "DUPLICATE": {
+          "title": "Doublons ({{count}})",
+          "text": "Même date, même heure, même valeur qu’une mesure déjà là : ignorés, sauf si vous les acceptez."
+        },
+        "ERROR": {
+          "title": "Erreurs ({{count}})",
+          "text": "Ligne illisible : corrigez la valeur, ou ignorez la ligne."
+        }
+      },
+      "acceptAll": "Tout accepter",
+      "ignoreAll": "Tout ignorer",
+      "line": "Ligne {{line}}",
+      "empty": "(vide)",
+      "decisionFor": "Décision pour la ligne {{line}}",
+      "action": {
+        "IGNORE": "Ignorer",
+        "ACCEPT": "Accepter",
+        "CORRECT": "Corriger"
+      },
+      "correctedValue": "Bonne valeur",
+      "correctedHint": "Valeur en {{unit}} (changez l’unité si besoin).",
+      "correctedUnit": "Unité de la bonne valeur",
+      "problem": {
+        "missing": "Indiquez la bonne valeur.",
+        "invalid": "Valeur illisible : un nombre, par exemple 1,10.",
+        "outOfRange": "Valeur hors des bornes plausibles (20 à 600 mg/dL) : vérifiez l’unité."
+      },
+      "more_one": "Voir {{count}} ligne de plus",
+      "more_other": "Voir {{count}} lignes de plus",
+      "fixCorrections": "Complétez les corrections signalées avant d’importer.",
+      "rowsRefused": "Certaines décisions ont été refusées : voyez les lignes signalées.",
+      "import_one": "Importer {{count}} mesure",
+      "import_other": "Importer {{count}} mesures",
+      "nothingToImport": "Rien à importer",
+      "defaults": "Sans décision, les doublons, les lignes à vérifier et les erreurs sont ignorés.",
+      "undoable": "Rien n’est importé avant ce bouton, et vous pourrez annuler l’import ensuite."
+    },
+    "done": {
+      "title_one": "{{count}} mesure importée",
+      "title_other": "{{count}} mesures importées",
+      "skipped_zero": "Aucune ligne ignorée.",
+      "skipped_one": "{{count}} ligne ignorée.",
+      "skipped_other": "{{count}} lignes ignorées.",
+      "sync": "Les mesures sont enregistrées sur votre compte. Elles apparaîtront dans l’historique de ce téléphone à la prochaine synchronisation.",
+      "finish": "Terminer",
+      "revert": "Annuler cet import",
+      "revertConfirmTitle": "Annuler cet import ?",
+      "revertConfirmText_one": "La mesure importée sera retirée de votre compte.",
+      "revertConfirmText_other": "Les {{count}} mesures importées seront retirées de votre compte.",
+      "revertedTitle": "Import annulé",
+      "revertedText_zero": "Aucune mesure n’était à retirer.",
+      "revertedText_one": "{{count}} mesure retirée de votre compte.",
+      "revertedText_other": "{{count}} mesures retirées de votre compte.",
+      "keep": "Garder l’import",
+      "revertYes_one": "Retirer la mesure",
+      "revertYes_other": "Retirer les {{count}} mesures"
+    },
+    "issue": {
+      "restart": "Recommencer",
+      "offline": {
+        "title": "Pas de connexion",
+        "text": "Rien n’a été importé. Vérifiez votre connexion, puis réessayez."
+      },
+      "done": {
+        "title": "Déjà fait",
+        "text": "Ce fichier a déjà été importé ou annulé (peut-être depuis un autre appareil)."
+      },
+      "expired": {
+        "title": "Analyse trop ancienne",
+        "text": "Le rapport date de plus de 24 heures : relancez l’analyse du fichier."
+      },
+      "notFound": {
+        "title": "Analyse introuvable",
+        "text": "Relancez l’analyse du fichier."
+      },
+      "error": {
+        "title": "Import impossible",
+        "text": "Une erreur est survenue. Réessayez dans un instant."
+      }
     }
   }
 }

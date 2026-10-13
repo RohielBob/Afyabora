@@ -14,7 +14,13 @@ import { randomUUID } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import type { AddressInfo } from 'node:net';
 import { join } from 'node:path';
-import { IMPORT_MAX_FILE_BYTES, IMPORT_MAX_ROWS, importColumnsErrorSchema } from '@glyka/shared';
+import {
+  IMPORT_MAX_FILE_BYTES,
+  IMPORT_MAX_ROWS,
+  importColumnsErrorSchema,
+  importCommitResponseSchema,
+  importRevertResponseSchema,
+} from '@glyka/shared';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { AllExceptionsFilter } from '../src/common/filters/all-exceptions.filter';
 import { JwtAuthGuard } from '../src/common/guards/jwt-auth.guard';
@@ -611,7 +617,10 @@ describe('L4-04 : routes de l’import (/imports)', () => {
       const res = await commit(id);
 
       expect(res.status).toBe(200);
-      expect(await json(res)).toEqual({ batchId: id, imported: 139, skipped: 8 });
+      const body = await json(res);
+      expect(body).toEqual({ batchId: id, imported: 139, skipped: 8 });
+      // Même forme que celle que le mobile vérifie (L4-07).
+      expect(importCommitResponseSchema.safeParse(body).success).toBe(true);
       expect(measurements).toHaveLength(139);
       expect(measurements[0]).toMatchObject({
         patientId: awa,
@@ -795,7 +804,9 @@ describe('L4-04 : routes de l’import (/imports)', () => {
 
       const res = await revert(id);
       expect(res.status).toBe(200);
-      expect(await json(res)).toEqual({ reverted: 139 });
+      const body = await json(res);
+      expect(body).toEqual({ reverted: 139 });
+      expect(importRevertResponseSchema.safeParse(body).success).toBe(true);
 
       const ofBatch = measurements.filter((m) => m.importBatchId === id);
       expect(ofBatch).toHaveLength(139);
