@@ -69,3 +69,15 @@ export function hasPrismaCode(error: unknown, code: 'P2002' | 'P2003' | 'P2025')
     (error as { code?: unknown }).code === code
   );
 }
+
+// ---------- Synchronisation (L8-04) ----------
+
+/**
+ * Issue d'une opération de synchronisation appliquée par le service d'une entité (mesures, événements) :
+ *  - APPLIED : écrite (ou déjà dans cet état) ;
+ *  - CONFLICT_SERVER_WINS : la version du serveur est plus récente (« la dernière écriture gagne »), ou la
+ *    donnée a déjà été supprimée (une suppression est définitive) ;
+ *  - NOT_OWNED : l'identifiant appartient à un AUTRE patient (refus neutre, rien n'est révélé).
+ * Une donnée invalide lève l'erreur habituelle (400, 422) : la synchronisation en fait un REJECTED.
+ */
+export type SyncOutcome = 'APPLIED' | 'CONFLICT_SERVER_WINS' | 'NOT_OWNED';
