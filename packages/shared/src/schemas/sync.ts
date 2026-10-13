@@ -3,8 +3,8 @@
 // POST /sync/push envoie les opérations ; GET /sync/pull?cursor=… récupère les changements serveur.
 import { z } from 'zod';
 import { SYNC_ENTITIES, SYNC_OP_TYPES } from '../enums';
-import { createMeasurementSchema } from './measurement';
-import { createLifeEventSchema } from './event';
+import { createMeasurementSchema, measurementDtoSchema } from './measurement';
+import { createLifeEventSchema, lifeEventDtoSchema } from './event';
 
 export const syncOpSchema = z
   .object({
@@ -86,3 +86,17 @@ export const syncPushResponseSchema = z.object({
   ),
   serverTime: z.string().datetime({ offset: true }),
 });
+
+/**
+ * Réponse de GET /sync/pull (L8-05), vérifiable par le mobile (L8-06) : changements depuis le curseur,
+ * suppressions comprises (`deletedAt` non nul). `nextCursor` : à garder SEULEMENT après avoir appliqué la
+ * page ; `hasMore` : rappeler la route avec `nextCursor` jusqu'à épuisement.
+ */
+export const syncPullResponseSchema = z.object({
+  measurements: z.array(measurementDtoSchema),
+  events: z.array(lifeEventDtoSchema),
+  nextCursor: z.string().nullable(),
+  hasMore: z.boolean(),
+  serverTime: z.string().datetime({ offset: true }),
+});
+export type SyncPullResponse = z.infer<typeof syncPullResponseSchema>;

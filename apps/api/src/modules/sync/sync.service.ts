@@ -1,5 +1,7 @@
-// Synchronisation hors-ligne, envoi (ticket L8-04, CDC F11, ADR-0004) : POST /sync/push.
+// Synchronisation hors-ligne (CDC F11, ADR-0004) : envoi POST /sync/push (L8-04) et réception
+// GET /sync/pull (L8-05, en bas du fichier).
 //
+// ENVOI (L8-04)
 // Le téléphone écrit d'abord chez lui (SQLite) et empile des opérations ; il les envoie par lots de 200.
 // Règles (ADR-0004 et ses modifications du 2026-10-09) :
 //  - modification 1 : l'ENVELOPPE est validée par la route (deviceId, 200 opérations au plus), puis CHAQUE
@@ -15,6 +17,19 @@
 // Seules les opérations APPLIED et CONFLICT_SERVER_WINS sont notées dans SyncOpLog : une opération REJECTED
 // est réexaminée si elle revient (une date « future » peut devenir valable). Aucune donnée de santé dans les
 // journaux, ni dans les raisons renvoyées.
+//
+// RÉCEPTION (L8-05) : les changements du patient (mesures ET événements, suppressions comprises), dans
+// l'ordre (`updatedAt`, `id`) croissant, par pages de `limit` (200 par défaut, 500 au plus).
+//  - Pendant la lecture, le curseur avance STRICTEMENT après la dernière ligne rendue : aucune ligne perdue
+//    ni répétée, même quand des centaines de lignes ont la même milliseconde (un import entier).
+//  - À la DERNIÈRE page (`hasMore` faux), si la dernière ligne lue date de MOINS de PULL_OVERLAP_MS (heure
+//    du serveur), le curseur rendu recule de cette marge (ADR-0004, modification 4) : la synchronisation
+//    suivante relit ces quelques secondes et rattrape une ligne écrite par une transaction lente (date plus
+//    ancienne, validée après coup). Le téléphone applique tout de façon idempotente. Si la dernière ligne
+//    est plus ancienne que la marge, aucune écriture plus ancienne ne peut encore arriver : pas de recul,
+//    donc pas de relecture inutile (après un import de 141 mesures, elles ne sont pas retéléchargées à
+//    chaque synchronisation). Ce recul n'a lieu qu'en fin de lecture : la pagination ne peut pas boucler.
+//  - Rien de nouveau : le curseur reçu est rendu tel quel (il ne recule pas à chaque appel).
 import {
   BadRequestException,
   HttpException,
@@ -23,14 +38,18 @@ import {
 } from '@nestjs/common';
 import {
   syncOpSchema,
+  type SyncPullResponse,
   type SyncOp,
   type SyncOpResult,
   type SyncPushEnvelope,
   type SyncPushResponse,
+  type syncPullQuerySchema,
 } from '@glyka/shared';
-import type { ZodError } from 'zod';
+import type { ZodError, z } from 'zod';
 import {
   FUTURE_TOLERANCE_MS,
+  invalidField,
+  type SyncPosition,
   hasPrismaCode,
   type SyncOutcome,
 } from '../../common/data/owned-records';
@@ -38,6 +57,36 @@ import { UNAUTHORIZED_MESSAGE } from '../../common/guards/jwt-auth.guard';
 import { PrismaService } from '../../prisma/prisma.service';
 import { EventsService } from '../events/events.service';
 import { MeasurementsService } from '../measurements/measurements.service';
+
+export type SyncPullQuery = z.output<typeof syncPullQuerySchema>;
+
+/** Marge relue en fin de synchronisation (ADR-0004, modification 4). */
+export const PULL_OVERLAP_MS = 5_000;
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+/** Curseur opaque : position (date ISO + identifiant, ou null pour la marge) en base64url. */
+export function encodeSyncCursor(position: SyncPosition): string {
+  return Buffer.from(JSON.stringify([position.at.toISOString(), position.id])).toString(
+    'base64url',
+  );
+}
+
+/** Curseur reçu ⇒ position ; illisible ⇒ 400 sur `cursor` (recommencer depuis le début). */
+export function decodeSyncCursor(cursor: string): SyncPosition {
+  try {
+    const [iso, id] = JSON.parse(Buffer.from(cursor, 'base64url').toString('utf8')) as unknown[];
+    const at = new Date(String(iso));
+    const validId = id === null || (typeof id === 'string' && UUID.test(id));
+    if (typeof iso !== 'string' || Number.isNaN(at.getTime()) || !validId)
+      throw new Error('curseur');
+    return { at, id: id as string | null };
+  } catch {
+    throw invalidField(
+      'cursor',
+      'Curseur invalide : recommencez la synchronisation depuis le début.',
+    );
+  }
+}
 
 export const CLOCK_AHEAD_REASON =
   'Horloge de l’appareil en avance de plus de 5 minutes : opération refusée.';
@@ -175,6 +224,42 @@ export class SyncService {
           clientUpdatedAt,
           now,
         );
+  }
+
+  /** GET /sync/pull : une page de changements (voir l'en-tête du fichier). */
+  async pull(patientId: string, query: SyncPullQuery, now = new Date()): Promise<SyncPullResponse> {
+    const after = query.cursor ? decodeSyncCursor(query.cursor) : null;
+    const take = query.limit + 1; // une de plus par entité : savoir s'il reste des changements
+    const [measurements, events] = await Promise.all([
+      this.measurements.changedSince(patientId, after, take),
+      this.events.changedSince(patientId, after, take),
+    ]);
+    // Les deux listes sont déjà triées : on les fusionne dans le même ordre (`updatedAt`, `id`).
+    const merged = [
+      ...measurements.map((item) => ({ ...item, entity: 'measurement' as const })),
+      ...events.map((item) => ({ ...item, entity: 'event' as const })),
+    ].sort((a, b) => a.at.getTime() - b.at.getTime() || (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
+    const page = merged.slice(0, query.limit);
+    const hasMore = merged.length > query.limit;
+    const last = page.at(-1);
+
+    let nextCursor: string | null;
+    if (!last) nextCursor = query.cursor ?? null;
+    else if (hasMore) nextCursor = encodeSyncCursor({ at: last.at, id: last.id });
+    else if (last.at.getTime() > now.getTime() - PULL_OVERLAP_MS) {
+      nextCursor = encodeSyncCursor({
+        at: new Date(last.at.getTime() - PULL_OVERLAP_MS),
+        id: null,
+      });
+    } else nextCursor = encodeSyncCursor({ at: last.at, id: last.id });
+
+    return {
+      measurements: page.flatMap((item) => (item.entity === 'measurement' ? [item.dto] : [])),
+      events: page.flatMap((item) => (item.entity === 'event' ? [item.dto] : [])),
+      nextCursor,
+      hasMore,
+      serverTime: now.toISOString(),
+    };
   }
 
   /** Sans profil médical, rien ne peut être enregistré : compte supprimé ⇒ 401, sinon 400 explicite. */

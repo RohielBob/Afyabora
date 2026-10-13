@@ -7,7 +7,7 @@ Synchronisation hors-ligne : reçoit les opérations empilées sur le téléphon
 ## Routes
 
 - **POST /sync/push** (L8-04, **fait**) : lot d'opérations (200 au plus), un résultat par opération dans le même ordre (`APPLIED`, `DUPLICATE`, `REJECTED` + raison, `CONFLICT_SERVER_WINS`), et `serverTime`.
-- GET /sync/pull?cursor&limit : changements depuis le curseur (inclut les tombstones)
+- **GET /sync/pull?cursor&limit** (L8-05, **fait**) : changements depuis le curseur (mesures et événements, suppressions comprises), `nextCursor`, `hasMore`, `serverTime`.
 
 ## Règles de gestion
 
@@ -33,12 +33,23 @@ Synchronisation hors-ligne : reçoit les opérations empilées sur le téléphon
 - Aucune donnée de santé dans les journaux, ni dans les raisons renvoyées.
 - Tests : `test/sync-push.test.ts` (28 tests) ; vérifié sur la vraie base (lot de 200, rejeu, conflit, suppression, événement).
 
+## Réception : `GET /sync/pull` (L8-05)
+
+- **Contenu** : les mesures **et** les événements du patient modifiés après le curseur, **suppressions comprises** (`deletedAt` non nul, note ou texte libre déjà effacé), au format des routes classiques (notes déchiffrées pour le patient). Jamais les données d'un autre patient.
+- **Ordre et pages** : tri croissant (`updatedAt`, `id`), en fusionnant les deux tables. `limit` vaut 200 par défaut, 500 au plus. `hasMore` est vrai tant qu'il reste des changements : il faut rappeler la route avec `nextCursor`. Première synchronisation : sans curseur.
+- **Curseur sans perte ni répétition** : pendant la lecture, il avance **strictement** après la dernière ligne rendue (date **et** identifiant). Des centaines de lignes à la même milliseconde sont donc lues une seule fois. C'est le cas d'un import : en base, les 141 mesures de la démo ont toutes la même date de modification.
+- **Marge de relecture** (ADR-0004, modification 4) : à la **dernière** page, si la dernière ligne lue date de moins de 5 s (`PULL_OVERLAP_MS`, heure du serveur), le curseur rendu recule de 5 s. La synchronisation suivante relit ces quelques secondes et rattrape une ligne écrite par une transaction lente. Si la dernière ligne est plus ancienne, aucune écriture plus ancienne ne peut encore arriver : le curseur est exact, et rien n'est retéléchargé inutilement. Le recul n'a lieu qu'en fin de lecture : la pagination ne peut pas boucler.
+- **Rien de nouveau** : le curseur reçu est rendu tel quel.
+- **Curseur opaque** (base64url) ; illisible ou trafiqué ⇒ 400 sur `cursor` : recommencer depuis le début.
+- Le téléphone garde `nextCursor` **seulement après avoir appliqué la page** (contrat), et applique tout de façon idempotente (L8-06).
+- Tests : `test/sync-pull.test.ts` (15 tests) ; vérifié sur la vraie base (import de 141 mesures reçu en pages de 50, modification par push, annulation ⇒ 141 suppressions reçues).
+
 ## Tests obligatoires
 
 - [x] Même lot envoyé deux fois : aucun doublon (L8-04).
 - [x] Suppression hors-ligne propagée (L8-04).
 - [x] Conflit : dernière écriture gagne (L8-04).
-- [ ] Pull paginé : aucun élément perdu ni répété.
+- [x] Pull paginé : aucun élément perdu ni répété (L8-05).
 - [x] Opération invalide n'empêche pas les autres (L8-04).
 
 ## Fichiers

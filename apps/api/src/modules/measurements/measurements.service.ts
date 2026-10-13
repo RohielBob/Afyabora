@@ -37,8 +37,10 @@ import {
   hasPrismaCode,
   invalidField,
   notFound as notFoundError,
+  afterSyncPosition,
   notInFuture,
   type SyncOutcome,
+  type SyncPosition,
 } from '../../common/data/owned-records';
 import { UNAUTHORIZED_MESSAGE } from '../../common/guards/jwt-auth.guard';
 import { PrismaService } from '../../prisma/prisma.service';
@@ -308,6 +310,24 @@ export class MeasurementsService {
       data: { deletedAt: now, noteEncrypted: null, clientUpdatedAt },
     });
     return removed.count === 1 ? 'APPLIED' : 'CONFLICT_SERVER_WINS';
+  }
+
+  /**
+   * Synchronisation, pull (L8-05) : mesures du patient modifiées APRÈS la position, suppressions
+   * comprises (tombstones, note déjà effacée), dans l'ordre (`updatedAt`, `id`) croissant, `take` au plus.
+   */
+  async changedSince(
+    patientId: string,
+    after: SyncPosition | null,
+    take: number,
+  ): Promise<{ at: Date; id: string; dto: MeasurementDto }[]> {
+    const rows = await this.prisma.measurement.findMany({
+      where: { patientId, ...afterSyncPosition(after) },
+      orderBy: [{ updatedAt: 'asc' }, { id: 'asc' }],
+      take,
+      select: SELECT,
+    });
+    return rows.map((row) => ({ at: row.updatedAt, id: row.id, dto: this.toDto(row) }));
   }
 
   // ------------------------------------------------------------------ outils

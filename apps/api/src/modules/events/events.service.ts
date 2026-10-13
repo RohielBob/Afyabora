@@ -24,8 +24,10 @@ import {
   hasPrismaCode,
   invalidField,
   notFound as notFoundError,
+  afterSyncPosition,
   notInFuture,
   type SyncOutcome,
+  type SyncPosition,
 } from '../../common/data/owned-records';
 import { decryptOptionalText, encryptOptionalText } from '../../common/crypto/field-encryption';
 import { UNAUTHORIZED_MESSAGE } from '../../common/guards/jwt-auth.guard';
@@ -242,6 +244,24 @@ export class EventsService {
       data: { deletedAt: now, detailsEncrypted: null, clientUpdatedAt },
     });
     return removed.count === 1 ? 'APPLIED' : 'CONFLICT_SERVER_WINS';
+  }
+
+  /**
+   * Synchronisation, pull (L8-05) : événements du patient modifiés APRÈS la position, suppressions
+   * comprises, dans l'ordre (`updatedAt`, `id`) croissant, `take` au plus (même règle que les mesures).
+   */
+  async changedSince(
+    patientId: string,
+    after: SyncPosition | null,
+    take: number,
+  ): Promise<{ at: Date; id: string; dto: LifeEventDto }[]> {
+    const rows = await this.prisma.lifeEvent.findMany({
+      where: { patientId, ...afterSyncPosition(after) },
+      orderBy: [{ updatedAt: 'asc' }, { id: 'asc' }],
+      take,
+      select: SELECT,
+    });
+    return rows.map((row) => ({ at: row.updatedAt, id: row.id, dto: this.toDto(row) }));
   }
 
   private key(): string {
