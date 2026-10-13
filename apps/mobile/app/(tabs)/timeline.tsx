@@ -137,12 +137,22 @@ export default function TimelineScreen() {
           </Text>
         </View>
         {nothingAtAll ? (
-          <Button
-            label={t('timeline.empty.action')}
-            fullWidth
-            icon={<Ionicons name="add" size={20} color={colors.onPrimary} />}
-            onPress={() => router.push('/measurement/new')}
-          />
+          <View style={{ gap: spacing.sm, alignSelf: 'stretch' }}>
+            <Button
+              label={t('timeline.empty.action')}
+              fullWidth
+              icon={<Ionicons name="add" size={20} color={colors.onPrimary} />}
+              onPress={() => router.push('/measurement/new')}
+            />
+            {/* Historique vide : reprendre un carnet ou un autre lecteur (import CSV / Excel, L4-05). */}
+            <Button
+              label={t('timeline.empty.import')}
+              variant="ghost"
+              fullWidth
+              icon={<Ionicons name="cloud-upload-outline" size={20} color={colors.primaryText} />}
+              onPress={() => router.push('/import')}
+            />
+          </View>
         ) : (
           <Button
             label={t('timeline.filter.all')}

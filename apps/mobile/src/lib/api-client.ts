@@ -49,7 +49,11 @@ export function setTokenRefresher(fn: TokenRefresher | null): void {
   refresher = fn;
 }
 
-type ApiInit = Omit<RequestInit, 'body'> & { auth?: boolean; body?: unknown };
+/**
+ * `body` : objet envoyé en JSON, ou `FormData` envoyé tel quel (multipart : fichier d'import, L4-05).
+ * `timeoutMs` : délai propre à la requête (un fichier de 5 Mo peut dépasser 15 s sur une connexion lente).
+ */
+type ApiInit = Omit<RequestInit, 'body'> & { auth?: boolean; body?: unknown; timeoutMs?: number };
 
 /**
  * Requête vers l'API. Si une route protégée répond 401 (jeton d'accès expiré, 15 min), la session est
@@ -71,23 +75,25 @@ export async function api<T>(path: string, init: ApiInit = {}): Promise<T> {
 }
 
 async function send<T>(path: string, init: ApiInit): Promise<T> {
-  const { auth, body, ...rest } = init;
+  const { auth, body, timeoutMs = TIMEOUT_MS, ...rest } = init;
   const headers = new Headers(rest.headers);
   headers.set('Accept', 'application/json');
-  if (body !== undefined) headers.set('Content-Type', 'application/json');
+  // Multipart : PAS de Content-Type à la main, le navigateur / React Native ajoute la frontière (boundary).
+  const multipart = typeof FormData !== 'undefined' && body instanceof FormData;
+  if (body !== undefined && !multipart) headers.set('Content-Type', 'application/json');
   if (auth !== false) {
     const token = await getAccessToken();
     if (token) headers.set('Authorization', `Bearer ${token}`);
   }
 
   const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
   let response: Response;
   try {
     response = await fetch(`${API_URL}${path}`, {
       ...rest,
       headers,
-      body: body === undefined ? undefined : JSON.stringify(body),
+      body: body === undefined ? undefined : multipart ? (body as FormData) : JSON.stringify(body),
       signal: controller.signal,
     });
   } catch {

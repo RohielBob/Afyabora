@@ -146,7 +146,9 @@
     "signOutConfirmTitle": "Sign out of this phone?",
     "signOutConfirmText": "Your data stays saved in your account. It will be removed from this phone and you can sign in again at any time.",
     "signOutUnsynced_one": "Warning: {{count}} change has not been sent to the server yet. It will be lost if you sign out now. Reconnect to the internet first if possible.",
-    "signOutUnsynced_other": "Warning: {{count}} changes have not been sent to the server yet. They will be lost if you sign out now. Reconnect to the internet first if possible."
+    "signOutUnsynced_other": "Warning: {{count}} changes have not been sent to the server yet. They will be lost if you sign out now. Reconnect to the internet first if possible.",
+    "import": "Import a history",
+    "importHint": "CSV or Excel file from a logbook or a meter"
   },
   "tabs": {
     "home": "Home",
@@ -679,7 +681,8 @@
     "empty": {
       "title": "Your history is empty",
       "text": "Your readings, meals, activities and treatments will appear here, day by day.",
-      "action": "Log a reading"
+      "action": "Log a reading",
+      "import": "Import a file"
     },
     "emptyFilter": {
       "title": "Nothing to show",
@@ -994,5 +997,67 @@
       "sourceHint": "Opens the source in the browser",
       "version": "Version {{version}}"
     }
+  },
+  "import": {
+    "overline": "Import",
+    "title": "Import a history",
+    "intro": "Bring in readings from a logbook or another meter, from a CSV or Excel file. You will see a report before anything is imported.",
+    "close": "Close without importing",
+    "step": {
+      "file": "The file",
+      "unit": "Unit of the values"
+    },
+    "file": {
+      "choose": "Choose a file",
+      "chooseHint": "CSV or Excel (.xlsx) · up to 5 MB and 5,000 rows",
+      "change": "Choose another file",
+      "kind": {
+        "csv": "CSV file",
+        "xlsx": "Excel workbook"
+      }
+    },
+    "size": {
+      "bytes": "{{amount}} B",
+      "kb": "{{amount}} KB",
+      "mb": "{{amount}} MB"
+    },
+    "fileProblem": {
+      "empty": "This file is empty.",
+      "tooLarge": "This file is larger than 5 MB. Keep only the useful readings, or split it into several files.",
+      "oldExcel": "Old Excel format (.xls): open it in Excel, then save it as .xlsx or CSV.",
+      "unsupported": "This file type is not supported. Choose a .csv or .xlsx file."
+    },
+    "unit": {
+      "hint": "Used for rows that do not state their unit.",
+      "example": "e.g. {{value}}"
+    },
+    "analyse": "Analyse the file",
+    "privacy": "Only the file content is sent for analysis. Nothing is imported without your consent, and you can undo it all afterwards.",
+    "network": "Internet connection needed: the analysis runs on the server.",
+    "problem": {
+      "offline": {
+        "title": "No connection",
+        "text": "The analysis runs on the server. Check your connection, then try again."
+      },
+      "tooLarge": {
+        "title": "File too large",
+        "text": "Up to 5 MB and 5,000 rows. Split the file, then try again."
+      },
+      "unreadable": {
+        "title": "Unreadable file"
+      },
+      "tooMany": {
+        "title": "Too many analyses in a row",
+        "text": "Wait a minute, then try again."
+      },
+      "rejected": {
+        "title": "Analysis not possible"
+      },
+      "error": {
+        "title": "Analysis not possible",
+        "text": "Something went wrong. Try again in a moment."
+      }
+    },
+    "stepLabel": "Step {{number}}: {{title}}"
   }
 }

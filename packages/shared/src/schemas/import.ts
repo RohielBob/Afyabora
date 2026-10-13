@@ -92,3 +92,31 @@ export const importCommitSchema = z.object({
     })
     .default([]),
 });
+
+/**
+ * Réponse de POST /imports/preview (rapport d'analyse), vérifiée par le mobile (L4-05) : une réponse
+ * inattendue devient une erreur, jamais un rapport faux. Même forme que `ImportReport` ci-dessus.
+ */
+export const importReportSchema = z.object({
+  batchId: z.string().uuid(),
+  analyzed: z.number().int().nonnegative(),
+  valid: z.number().int().nonnegative(),
+  duplicates: z.number().int().nonnegative(),
+  inconsistent: z.number().int().nonnegative(),
+  errors: z.number().int().nonnegative(),
+  rows: z.array(
+    z.object({
+      line: z.number().int().positive(),
+      status: z.enum(IMPORT_ROW_STATUSES),
+      rawValue: z.string(),
+      message: z.string().optional(),
+    }),
+  ),
+});
+// Garde-fou de typage : le schéma et l'interface du contrat ne peuvent pas diverger.
+type SameShape<A, B> = [A] extends [B] ? ([B] extends [A] ? true : false) : false;
+const _reportMatches: SameShape<z.infer<typeof importReportSchema>, ImportReport> = true;
+void _reportMatches;
+
+/** Correspondance des colonnes (noms de l'en-tête), envoyée en JSON dans `mapping` (L4-05, L4-06). */
+export type ImportColumnMapping = z.infer<typeof importColumnMappingSchema>;

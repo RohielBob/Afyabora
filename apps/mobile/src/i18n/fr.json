@@ -146,7 +146,9 @@
     "signOutConfirmTitle": "Se déconnecter de ce téléphone ?",
     "signOutConfirmText": "Vos données restent enregistrées sur votre compte. Elles seront retirées de ce téléphone et vous pourrez vous reconnecter à tout moment.",
     "signOutUnsynced_one": "Attention : {{count}} modification n'a pas encore été envoyée au serveur. Elle sera perdue si vous vous déconnectez maintenant. Reconnectez-vous d'abord à internet si possible.",
-    "signOutUnsynced_other": "Attention : {{count}} modifications n'ont pas encore été envoyées au serveur. Elles seront perdues si vous vous déconnectez maintenant. Reconnectez-vous d'abord à internet si possible."
+    "signOutUnsynced_other": "Attention : {{count}} modifications n'ont pas encore été envoyées au serveur. Elles seront perdues si vous vous déconnectez maintenant. Reconnectez-vous d'abord à internet si possible.",
+    "import": "Importer un historique",
+    "importHint": "Fichier CSV ou Excel d’un carnet ou d’un lecteur"
   },
   "tabs": {
     "home": "Accueil",
@@ -679,7 +681,8 @@
     "empty": {
       "title": "Votre historique est vide",
       "text": "Vos mesures, repas, activités et traitements apparaîtront ici, jour par jour.",
-      "action": "Noter une mesure"
+      "action": "Noter une mesure",
+      "import": "Importer un fichier"
     },
     "emptyFilter": {
       "title": "Rien à afficher",
@@ -994,5 +997,67 @@
       "sourceHint": "Ouvre la source dans le navigateur",
       "version": "Version {{version}}"
     }
+  },
+  "import": {
+    "overline": "Importer",
+    "title": "Importer un historique",
+    "intro": "Reprenez les mesures d’un carnet ou d’un autre lecteur, depuis un fichier CSV ou Excel. Vous verrez un rapport avant que quoi que ce soit ne soit importé.",
+    "close": "Fermer sans importer",
+    "step": {
+      "file": "Le fichier",
+      "unit": "Unité des valeurs"
+    },
+    "file": {
+      "choose": "Choisir un fichier",
+      "chooseHint": "CSV ou Excel (.xlsx) · 5 Mo et 5 000 lignes au plus",
+      "change": "Changer de fichier",
+      "kind": {
+        "csv": "Fichier CSV",
+        "xlsx": "Classeur Excel"
+      }
+    },
+    "size": {
+      "bytes": "{{amount}} o",
+      "kb": "{{amount}} Ko",
+      "mb": "{{amount}} Mo"
+    },
+    "fileProblem": {
+      "empty": "Ce fichier est vide.",
+      "tooLarge": "Ce fichier dépasse 5 Mo. Gardez seulement les mesures utiles, ou découpez-le en plusieurs fichiers.",
+      "oldExcel": "Ancien format Excel (.xls) : ouvrez-le dans Excel, puis enregistrez-le en .xlsx ou en CSV.",
+      "unsupported": "Ce type de fichier n’est pas pris en charge. Choisissez un fichier .csv ou .xlsx."
+    },
+    "unit": {
+      "hint": "Utilisée pour les lignes qui ne précisent pas leur unité.",
+      "example": "ex. {{value}}"
+    },
+    "analyse": "Analyser le fichier",
+    "privacy": "Seul le contenu du fichier est envoyé pour l’analyse. Rien n’est importé sans votre accord, et vous pourrez tout annuler ensuite.",
+    "network": "Connexion internet nécessaire : l’analyse se fait sur le serveur.",
+    "problem": {
+      "offline": {
+        "title": "Pas de connexion",
+        "text": "L’analyse se fait sur le serveur. Vérifiez votre connexion, puis réessayez."
+      },
+      "tooLarge": {
+        "title": "Fichier trop volumineux",
+        "text": "5 Mo et 5 000 lignes au plus. Découpez le fichier, puis réessayez."
+      },
+      "unreadable": {
+        "title": "Fichier illisible"
+      },
+      "tooMany": {
+        "title": "Trop d’analyses à la suite",
+        "text": "Patientez une minute, puis réessayez."
+      },
+      "rejected": {
+        "title": "Analyse impossible"
+      },
+      "error": {
+        "title": "Analyse impossible",
+        "text": "Une erreur est survenue. Réessayez dans un instant."
+      }
+    },
+    "stepLabel": "Étape {{number}} : {{title}}"
   }
 }
