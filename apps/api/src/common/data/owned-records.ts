@@ -81,3 +81,23 @@ export function hasPrismaCode(error: unknown, code: 'P2002' | 'P2003' | 'P2025')
  * Une donnée invalide lève l'erreur habituelle (400, 422) : la synchronisation en fait un REJECTED.
  */
 export type SyncOutcome = 'APPLIED' | 'CONFLICT_SERVER_WINS' | 'NOT_OWNED';
+
+/**
+ * Position dans le flux des changements (GET /sync/pull, L8-05) : ordre croissant (`updatedAt`, `id`).
+ *  - `id` renseigné : strictement APRÈS cette ligne (pagination sans perte ni répétition, même avec
+ *    beaucoup de lignes à la même milliseconde) ;
+ *  - `id` null : tout ce qui a `updatedAt` ≥ `at` (marge de relecture en fin de synchronisation).
+ */
+export interface SyncPosition {
+  at: Date;
+  id: string | null;
+}
+
+/** Condition Prisma « après la position » (rien si première synchronisation). */
+export function afterSyncPosition(position: SyncPosition | null) {
+  if (!position) return {};
+  if (position.id === null) return { updatedAt: { gte: position.at } };
+  return {
+    OR: [{ updatedAt: { gt: position.at } }, { updatedAt: position.at, id: { gt: position.id } }],
+  };
+}

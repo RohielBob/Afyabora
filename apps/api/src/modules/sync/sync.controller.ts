@@ -1,4 +1,4 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Post, Query } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
@@ -8,14 +8,14 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { syncPushEnvelopeSchema, type SyncPushEnvelope } from '@glyka/shared';
+import { syncPullQuerySchema, syncPushEnvelopeSchema, type SyncPushEnvelope } from '@glyka/shared';
 import { CurrentUser, type AuthUser } from '../../common/decorators/current-user.decorator';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
-import { SyncService } from './sync.service';
+import { SyncService, type SyncPullQuery } from './sync.service';
 
 /**
- * Synchronisation hors-ligne (L8-04 ; pull : L8-05). Le contrôleur ne valide que l'ENVELOPPE du lot
+ * Synchronisation hors-ligne : envoi (L8-04) et réception (L8-05). Le contrôleur ne valide que l'ENVELOPPE du lot
  * (ADR-0004, modification 1) : chaque opération est validée ensuite séparément par SyncService, pour qu'une
  * opération invalide ne fasse pas échouer tout le lot. Le patient est toujours celui du jeton.
  */
@@ -38,5 +38,23 @@ export class SyncController {
     @Body(new ZodValidationPipe(syncPushEnvelopeSchema)) body: SyncPushEnvelope,
   ) {
     return this.sync.push(user.id, body);
+  }
+
+  @Get('pull')
+  @Roles('PATIENT')
+  @ApiOperation({
+    summary: 'Recevoir les changements depuis le curseur, suppressions comprises (L8-05)',
+  })
+  @ApiOkResponse({
+    description: 'Une page de changements ; rappeler avec nextCursor tant que hasMore',
+  })
+  @ApiBadRequestResponse({ description: 'Curseur ou limite invalide' })
+  @ApiUnauthorizedResponse({ description: 'Jeton absent ou invalide' })
+  @ApiForbiddenResponse({ description: 'Réservé aux patients' })
+  pull(
+    @CurrentUser() user: AuthUser,
+    @Query(new ZodValidationPipe(syncPullQuerySchema)) query: SyncPullQuery,
+  ) {
+    return this.sync.pull(user.id, query);
   }
 }
