@@ -1058,6 +1058,40 @@
         "text": "Something went wrong. Try again in a moment."
       }
     },
-    "stepLabel": "Step {{number}}: {{title}}"
+    "stepLabel": "Step {{number}}: {{title}}",
+    "mapping": {
+      "title": "Which columns?",
+      "intro": "We could not recognise every column of “{{name}}”. Show us where the date and the glucose value are: the rest is optional.",
+      "back": "Back to choosing the file",
+      "analyse": "Analyse with these columns",
+      "required": "Required",
+      "optional": "Optional",
+      "none": "None",
+      "usedFor": "already for {{role}}",
+      "missing": "Still to choose: {{roles}}.",
+      "and": " and ",
+      "role": {
+        "date": "Date",
+        "time": "Time",
+        "value": "Glucose",
+        "unit": "Unit",
+        "context": "Time of the reading"
+      },
+      "hint": {
+        "date": "The date of each reading, with or without the time.",
+        "time": "If the time is in a separate column.",
+        "value": "The measured number (e.g. 1.10 or 110).",
+        "unit": "If each row states its unit. Otherwise: {{unit}}, chosen for the file.",
+        "context": "Fasting, before or after a meal…"
+      },
+      "changed": {
+        "title": "Columns to check",
+        "text": "The file does not contain all the chosen columns. Check your choice, then run the analysis again."
+      },
+      "lost": {
+        "title": "No file in progress",
+        "text": "Choose the file to import again: it is not kept when the app closes."
+      }
+    }
   }
 }

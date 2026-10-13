@@ -7,7 +7,7 @@ Choix du fichier, correspondance des colonnes, rapport, décisions ligne par lig
 ## Tickets
 
 - **L4-05** — Mobile : choix du fichier et de l'unité par défaut (**fait**)
-- **L4-06** — Mobile : correspondance des colonnes
+- **L4-06** — Mobile : correspondance des colonnes (**fait**)
 - **L4-07** — Mobile : rapport d'import et actions Corriger / Ignorer / Accepter
 
 ## Parcours
@@ -20,6 +20,13 @@ Choix du fichier, correspondance des colonnes, rapport, décisions ligne par lig
 3. Ensuite :
    - analyse réussie ⇒ `/import/report` (L4-07) ;
    - colonnes introuvables (`400 IMPORT_COLUMNS_NOT_FOUND`, contrat 0.4.1) ⇒ `/import/mapping` (L4-06).
+4. **`/import/mapping` (L4-06)** : le serveur a renvoyé la liste `columns` (noms des colonnes du fichier). Pour chaque rôle, le patient choisit une colonne en pastilles :
+   - **Date** et **Glycémie** sont obligatoires ;
+   - **Heure**, **Unité** et **Moment de la mesure** sont facultatifs (pastille « Aucune ») ; sans colonne d'unité, l'unité choisie pour le fichier s'applique.
+
+   **Une colonne ne sert qu'à un rôle.** La pastille d'une colonne déjà prise indique « déjà pour la date », et la choisir ailleurs la retire de l'autre rôle (`assignColumn`) : pas de conflit à corriger ensuite. « Analyser avec ces colonnes » reste grisé tant que la date et la glycémie manquent, avec « Choisissez encore : … ».
+
+   L'analyse est relancée avec `mapping` (même fichier, même unité) ⇒ rapport (L4-07). Si le serveur renvoie une **autre** liste, seuls les choix encore valables sont gardés (`keepKnownColumns`) et « Colonnes à vérifier » s'affiche. Sans parcours en cours (appli relancée, lien direct), l'écran propose de choisir de nouveau le fichier.
 
 ## Règles
 
@@ -43,20 +50,24 @@ Choix du fichier, correspondance des colonnes, rapport, décisions ligne par lig
   - changer de fichier ou d'unité oublie l'ancien rapport ;
   - le fichier lui-même n'est jamais copié ailleurs que dans le cache du sélecteur.
 - **Envoi** : sur le téléphone, le fichier est désigné par son adresse locale (`{ uri, name, type }`), sans être chargé en mémoire ; sur le web, c'est le vrai fichier (`Blob`). Le client HTTP (`@/lib/api-client`) envoie un `FormData` tel quel, sans `Content-Type` manuel, et accepte un délai propre à chaque requête (`timeoutMs`).
-- **Réponse vérifiée** avec `importReportSchema` (`@glyka/shared`) : une réponse inattendue devient une erreur, jamais un rapport faux.
+- **Réponses vérifiées** avec les schémas de `@glyka/shared` : `importReportSchema` pour le rapport, `importColumnsErrorSchema` pour la liste des colonnes. Une réponse inattendue devient une erreur, jamais un affichage faux.
 
 ## Fichiers
 
-| Fichier                         | Rôle                                                                                                |
-| ------------------------------- | --------------------------------------------------------------------------------------------------- |
-| `start.ts`                      | Contrôle du fichier, taille lisible, exemples d'unités, issue d'une analyse ratée (fonctions pures) |
-| `api.ts`                        | `POST /imports/preview` : formulaire multipart (`buildPreviewForm`), réponse vérifiée               |
-| `flow.ts`                       | Parcours d'import en mémoire, partagé par les 3 écrans (`importFlow`, `useImportFlow`)              |
-| `components/FilePickerCard.tsx` | Zone « Choisir un fichier », puis fiche du fichier choisi (type, taille, « Changer de fichier »)    |
-| `components/StepTitle.tsx`      | Titre d'étape numéroté (« 1 Le fichier »), lu « Étape 1 : Le fichier » par le lecteur d'écran       |
-| `__tests__/start.test.ts`       | Tests : contrôle du fichier, tailles, issues de l'analyse, formulaire, parcours, traductions        |
+| Fichier                           | Rôle                                                                                                          |
+| --------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| `start.ts`                        | Contrôle du fichier, taille lisible, exemples d'unités, issue d'une analyse ratée (fonctions pures)           |
+| `api.ts`                          | `POST /imports/preview` : formulaire multipart (`buildPreviewForm`), réponse vérifiée                         |
+| `mapping.ts`                      | Choix des colonnes : rôles, contrôles (`mappingIssues`), correspondance envoyée (`toMapping`), `assignColumn` |
+| `flow.ts`                         | Parcours d'import en mémoire, partagé par les 3 écrans (`importFlow`, `useImportFlow`)                        |
+| `components/FilePickerCard.tsx`   | Zone « Choisir un fichier », puis fiche du fichier choisi (type, taille, « Changer de fichier »)              |
+| `components/ColumnRoleChoice.tsx` | Choix d'une colonne pour un rôle (pastilles, « Obligatoire » / « Facultatif », « déjà pour… »)                |
+| `components/ImportMessages.tsx`   | Messages communs : échec de l'analyse (`ProblemAlert`) et petites notes (`Note`)                              |
+| `components/StepTitle.tsx`        | Titre d'étape numéroté (« 1 Le fichier »), lu « Étape 1 : Le fichier » par le lecteur d'écran                 |
+| `__tests__/start.test.ts`         | Tests : contrôle du fichier, tailles, issues de l'analyse, formulaire, parcours, traductions                  |
+| `__tests__/mapping.test.ts`       | Tests de L4-06 : rôles, contrôles, déplacement d'une colonne, nouvelle liste, parcours, traductions           |
 
-L'écran est `app/import/index.tsx`. Les tests du client HTTP (multipart, délai) sont dans `src/lib/__tests__/api-client.test.ts`.
+Les écrans sont `app/import/index.tsx` (L4-05) et `app/import/mapping.tsx` (L4-06). Les tests du client HTTP (multipart, délai) sont dans `src/lib/__tests__/api-client.test.ts`.
 
 ## Organisation
 

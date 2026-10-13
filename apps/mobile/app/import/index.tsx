@@ -15,6 +15,8 @@ import { Button, ChoiceGroup, InlineAlert, PressableScale, Screen, Text } from '
 import {
   FilePickerCard,
   IMPORT_PICKER_TYPES,
+  Note,
+  ProblemAlert,
   StepTitle,
   UNIT_EXAMPLES,
   checkFile,
@@ -72,8 +74,12 @@ export default function ImportStartScreen() {
     } catch (error) {
       const found = previewProblem(error);
       // Colonnes introuvables : le patient les choisit lui-même (L4-06), puis l'analyse reprend.
-      if (found.kind === 'columns') router.push('/import/mapping');
-      else setProblem(found);
+      if (found.kind === 'columns') {
+        importFlow.needColumns(found.columns);
+        router.push('/import/mapping');
+      } else {
+        setProblem(found);
+      }
     } finally {
       setSending(false);
     }
@@ -161,71 +167,5 @@ export default function ImportStartScreen() {
         <Note icon="wifi-outline" text={t('import.network')} />
       </Animated.View>
     </Screen>
-  );
-}
-
-/** Message d'échec de l'analyse, avec « Réessayer » quand réessayer a un sens. */
-function ProblemAlert({ problem, onRetry }: { problem: PreviewProblem; onRetry: () => void }) {
-  const { t } = useTranslation();
-  const retry = { actionLabel: t('common.retry'), onAction: onRetry };
-  switch (problem.kind) {
-    case 'offline':
-      return (
-        <InlineAlert
-          tone="warning"
-          title={t('import.problem.offline.title')}
-          message={t('import.problem.offline.text')}
-          {...retry}
-        />
-      );
-    case 'tooMany':
-      return (
-        <InlineAlert
-          tone="warning"
-          title={t('import.problem.tooMany.title')}
-          message={t('import.problem.tooMany.text')}
-          {...retry}
-        />
-      );
-    case 'tooLarge':
-      return (
-        <InlineAlert
-          tone="danger"
-          title={t('import.problem.tooLarge.title')}
-          message={t('import.problem.tooLarge.text')}
-        />
-      );
-    // Le serveur explique précisément pourquoi (classeur abîmé, ancien .xls, profil à compléter…).
-    case 'unreadable':
-    case 'rejected':
-      return (
-        <InlineAlert
-          tone="danger"
-          title={t(`import.problem.${problem.kind}.title`)}
-          message={problem.detail}
-        />
-      );
-    default:
-      return (
-        <InlineAlert
-          tone="danger"
-          title={t('import.problem.error.title')}
-          message={t('import.problem.error.text')}
-          {...retry}
-        />
-      );
-  }
-}
-
-/** Petite note sous le bouton : icône + texte discret. */
-function Note({ icon, text }: { icon: 'lock-closed-outline' | 'wifi-outline'; text: string }) {
-  const { colors } = useTheme();
-  return (
-    <View style={{ flexDirection: 'row', gap: spacing.sm, alignItems: 'flex-start' }}>
-      <Ionicons name={icon} size={16} color={colors.textMuted} style={{ marginTop: 2 }} />
-      <Text variant="caption" tone="muted" style={{ flex: 1 }}>
-        {text}
-      </Text>
-    </View>
   );
 }

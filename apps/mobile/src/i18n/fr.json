@@ -1058,6 +1058,40 @@
         "text": "Une erreur est survenue. Réessayez dans un instant."
       }
     },
-    "stepLabel": "Étape {{number}} : {{title}}"
+    "stepLabel": "Étape {{number}} : {{title}}",
+    "mapping": {
+      "title": "Quelles colonnes ?",
+      "intro": "Nous n’avons pas reconnu toutes les colonnes de « {{name}} ». Indiquez où se trouvent la date et la glycémie : le reste est facultatif.",
+      "back": "Retour au choix du fichier",
+      "analyse": "Analyser avec ces colonnes",
+      "required": "Obligatoire",
+      "optional": "Facultatif",
+      "none": "Aucune",
+      "usedFor": "déjà pour {{role}}",
+      "missing": "Choisissez encore : {{roles}}.",
+      "and": " et ",
+      "role": {
+        "date": "Date",
+        "time": "Heure",
+        "value": "Glycémie",
+        "unit": "Unité",
+        "context": "Moment de la mesure"
+      },
+      "hint": {
+        "date": "La date de chaque mesure, avec ou sans l’heure.",
+        "time": "Si l’heure est dans une colonne à part.",
+        "value": "Le chiffre mesuré (ex. 1,10 ou 110).",
+        "unit": "Si chaque ligne précise son unité. Sinon : {{unit}}, choisie pour le fichier.",
+        "context": "À jeun, avant ou après le repas…"
+      },
+      "changed": {
+        "title": "Colonnes à vérifier",
+        "text": "Le fichier ne contient pas toutes les colonnes choisies. Vérifiez votre choix, puis relancez l’analyse."
+      },
+      "lost": {
+        "title": "Aucun fichier en cours",
+        "text": "Choisissez de nouveau le fichier à importer : il n’est pas gardé quand l’application se ferme."
+      }
+    }
   }
 }

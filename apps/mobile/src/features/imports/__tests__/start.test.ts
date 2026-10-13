@@ -108,12 +108,27 @@ describe('issue d’une analyse ratée', () => {
     expect(
       previewProblem(
         error(400, {
+          message: 'Colonnes de date ou de valeur introuvables',
           code: 'IMPORT_COLUMNS_NOT_FOUND',
-          issues: [{ path: 'file', message: 'Colonnes introuvables' }],
-          columns: ['Quand'],
+          issues: [{ path: 'file', message: 'Colonnes de date ou de valeur introuvables' }],
+          columns: ['Quand', 'Combien'],
         }),
       ),
-    ).toEqual({ kind: 'columns' });
+    ).toEqual({
+      kind: 'columns',
+      columns: ['Quand', 'Combien'],
+      detail: 'Colonnes de date ou de valeur introuvables',
+    });
+  });
+
+  it('colonnes introuvables mais liste illisible (contrat non respecté) ⇒ erreur générique', () => {
+    for (const body of [
+      { code: 'IMPORT_COLUMNS_NOT_FOUND', message: 'x' },
+      { code: 'IMPORT_COLUMNS_NOT_FOUND', message: 'x', columns: [1, 2] },
+      { code: 'IMPORT_COLUMNS_NOT_FOUND', columns: ['Quand'] },
+    ]) {
+      expect(previewProblem(error(400, body))).toEqual({ kind: 'error' });
+    }
   });
 
   it('fichier illisible : le message précis du serveur est gardé', () => {
@@ -202,7 +217,13 @@ describe('parcours d’import en mémoire', () => {
 
   it('démarre avec l’unité préférée, sans fichier ni rapport', () => {
     importFlow.start('MMOL_L');
-    expect(importFlow.get()).toEqual({ file: null, unit: 'MMOL_L', report: null });
+    expect(importFlow.get()).toEqual({
+      file: null,
+      unit: 'MMOL_L',
+      report: null,
+      columns: null,
+      draft: {},
+    });
   });
 
   it('autre fichier ou autre unité ⇒ l’ancien rapport est oublié ; même unité ⇒ rien ne change', () => {
@@ -214,7 +235,13 @@ describe('parcours d’import en mémoire', () => {
     importFlow.chooseUnit('G_L');
     expect(importFlow.get().report).toBe(report);
     importFlow.chooseUnit('MG_DL');
-    expect(importFlow.get()).toEqual({ file, unit: 'MG_DL', report: null });
+    expect(importFlow.get()).toEqual({
+      file,
+      unit: 'MG_DL',
+      report: null,
+      columns: null,
+      draft: {},
+    });
 
     importFlow.analysed(report);
     importFlow.chooseFile({ ...file, name: 'b.csv' });
