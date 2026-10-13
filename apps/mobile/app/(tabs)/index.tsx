@@ -23,12 +23,15 @@ import {
   useDashboard,
   type ChartPeriod,
 } from '@/features/dashboard';
+import { useSyncRefresh } from '@/features/sync';
 import { MedicalDisclaimer } from '@/features/legal';
 import { spacing } from '@/theme';
 
 export default function DashboardScreen() {
   const { t, i18n } = useTranslation();
-  const { state, reload } = useDashboard();
+  const { state, reload, refresh } = useDashboard();
+  // L8-07 : tirer l'écran vers le bas synchronise, puis le relit sans l'effacer.
+  const pull = useSyncRefresh(refresh);
   // Une seule période pour le graphique et les statistiques.
   const [period, setPeriod] = useState<ChartPeriod>(DEFAULT_PERIOD);
   const now = state.status === 'ready' ? state.now : new Date();
@@ -51,7 +54,7 @@ export default function DashboardScreen() {
   });
 
   return (
-    <Screen>
+    <Screen refresh={pull}>
       <View style={{ gap: spacing.xs }}>
         <Text variant="overline" tone="primary">
           {today}

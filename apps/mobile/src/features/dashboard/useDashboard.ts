@@ -29,7 +29,11 @@ export type DashboardState =
       now: Date;
     };
 
-export function useDashboard(): { state: DashboardState; reload: () => void } {
+export function useDashboard(): {
+  state: DashboardState;
+  reload: () => void;
+  refresh: () => void;
+} {
   const [state, setState] = useState<DashboardState>({ status: 'loading' });
   // Numéro de la dernière lecture lancée : une réponse plus ancienne (écran quitté, « Réessayer » appuyé
   // entre-temps) est ignorée au lieu d'écraser la plus récente.
@@ -86,5 +90,7 @@ export function useDashboard(): { state: DashboardState; reload: () => void } {
       setState({ status: 'loading' });
       load();
     },
+    // Après « tirer pour rafraîchir » (L8-07) : relue sans repasser par le squelette de chargement.
+    refresh: load,
   };
 }

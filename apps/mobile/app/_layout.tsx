@@ -6,6 +6,7 @@ import { View } from 'react-native';
 import { AnimatedSplash } from '@/components/brand';
 import { initSession, signOut, useSession } from '@/features/auth';
 import { LockScreen, initAppLock, resetAppLock, useAppLock } from '@/features/security';
+import { useSyncTriggers } from '@/features/sync';
 import { AppProviders } from '@/providers/AppProviders';
 import { useTheme } from '@/theme';
 import { appFonts } from '@/theme/fonts';
@@ -50,6 +51,8 @@ function RootNavigator() {
   const signedIn = session.status === 'signedIn';
   const lock = useAppLock();
   const [splashDone, setSplashDone] = useState(false);
+  // L8-07 : session ouverte ⇒ synchronisation à l'ouverture, au retour du réseau et dans l'application.
+  useSyncTriggers(signedIn);
 
   // Le verrouillage appartient au compte : il est effacé quand la session se termine (déconnexion, expiration).
   useEffect(() => {

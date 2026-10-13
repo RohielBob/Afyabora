@@ -8,7 +8,7 @@ import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { SectionList, View } from 'react-native';
 import Animated from 'react-native-reanimated';
-import { Button, Card, InlineAlert, Screen, Skeleton, Text } from '@/components/ui';
+import { Button, Card, InlineAlert, pullToRefresh, Screen, Skeleton, Text } from '@/components/ui';
 import { dayLabel } from '@/features/dashboard';
 import {
   FilterChips,
@@ -18,13 +18,16 @@ import {
   useTimeline,
   type TimelineFilter,
 } from '@/features/timeline';
+import { useSyncRefresh } from '@/features/sync';
 import { enterFromBelow, fadeIn, radii, spacing, useReducedMotion, useTheme } from '@/theme';
 
 export default function TimelineScreen() {
   const { t, i18n } = useTranslation();
   const { colors } = useTheme();
   const reduced = useReducedMotion();
-  const { state, loadMore, reload } = useTimeline();
+  const { state, loadMore, reload, refresh } = useTimeline();
+  // L8-07 : tirer la liste vers le bas synchronise, puis la relit sans l'effacer.
+  const pull = useSyncRefresh(refresh);
   const [filter, setFilter] = useState<TimelineFilter>('all');
 
   const sections = useMemo(() => {
@@ -198,6 +201,7 @@ export default function TimelineScreen() {
           ListFooterComponent={footer}
           stickySectionHeadersEnabled={false}
           showsVerticalScrollIndicator={false}
+          refreshControl={pullToRefresh(pull)}
           initialNumToRender={20}
           renderSectionHeader={({ section }) => (
             <Animated.View

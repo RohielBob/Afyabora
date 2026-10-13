@@ -32,6 +32,8 @@ export function useTimeline(): {
   state: TimelineState;
   loadMore: () => void;
   reload: () => void;
+  /** Relecture sans effacer la liste (après « tirer pour rafraîchir », L8-07). */
+  refresh: () => void;
 } {
   const [state, setState] = useState<TimelineState>({ status: 'loading' });
   const lastLoad = useRef(0);
@@ -88,5 +90,6 @@ export function useTimeline(): {
       setState({ status: 'loading' });
       load(pagesRef.current, null);
     },
+    refresh: () => load(pagesRef.current, null),
   };
 }

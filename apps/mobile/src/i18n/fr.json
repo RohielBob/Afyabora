@@ -26,7 +26,9 @@
     "pending_one": "{{count}} mesure en attente de synchronisation",
     "pending_other": "{{count}} mesures en attente de synchronisation",
     "offline": "Hors ligne — vos données sont enregistrées sur ce téléphone",
-    "upToDate": "Tout est à jour"
+    "upToDate": "Tout est à jour",
+    "refreshing": "Synchronisation…",
+    "pullToRefresh": "Tirer vers le bas pour synchroniser"
   },
   "safety": {
     "extreme": "Suivez les consignes de votre équipe soignante. En cas de malaise, demandez de l'aide immédiatement."
