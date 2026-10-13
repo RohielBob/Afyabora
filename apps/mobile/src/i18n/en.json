@@ -1158,7 +1158,7 @@
       "skipped_zero": "No row ignored.",
       "skipped_one": "{{count}} row ignored.",
       "skipped_other": "{{count}} rows ignored.",
-      "sync": "The readings are saved to your account. They will appear in this phone’s history at the next sync.",
+      "sync": "The readings are saved to your account. They arrive in this phone’s history within a few seconds (automatic sync).",
       "finish": "Done",
       "revert": "Undo this import",
       "revertConfirmTitle": "Undo this import?",

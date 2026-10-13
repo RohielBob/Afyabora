@@ -1,12 +1,14 @@
 // Données de la chronologie (L2-09), lues SUR LE TÉLÉPHONE (sans réseau) : mesures + événements des
 // 30 derniers jours, puis 30 de plus à chaque « Voir les 30 jours précédents ». Relues à chaque retour sur
-// l'onglet (ex. après une saisie).
+// l'onglet (ex. après une saisie), et quand la synchronisation apporte des changements pendant que l'onglet
+// est ouvert (L8-06 : mesures d'un import, saisies d'un autre appareil).
 import { useFocusEffect } from 'expo-router';
 import { useCallback, useRef, useState } from 'react';
 import type { GlucoseThresholds, GlucoseUnit } from '@glyka/shared';
 import { localEvents } from '@/features/events';
 import { localMeasurements, readUnit } from '@/features/measurements';
 import { readThresholds } from '@/features/profile';
+import { onSyncedData } from '@/features/sync';
 import { fromEvent, fromMeasurement, windowBounds, type TimelineItem } from './timeline';
 
 export type TimelineState =
@@ -67,7 +69,9 @@ export function useTimeline(): {
   useFocusEffect(
     useCallback(() => {
       load(pagesRef.current, null);
+      const unsubscribe = onSyncedData(() => load(pagesRef.current, null));
       return () => {
+        unsubscribe();
         lastLoad.current += 1; // onglet quitté : la lecture en cours ne sert plus
       };
     }, [load]),

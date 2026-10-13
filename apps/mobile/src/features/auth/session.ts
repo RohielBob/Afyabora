@@ -5,10 +5,12 @@
 //    renouvelée en arrière-plan, et fermée seulement si le serveur la refuse ;
 //  - jeton d'accès expiré (15 min) → renouvellement automatique, UN SEUL à la fois (deux renouvellements
 //    en parallèle seraient vus par le serveur comme un vol de session, voir L1-02) ;
-//  - déconnexion : session révoquée côté serveur si possible, puis jetons ET base locale effacés.
+//  - déconnexion : session révoquée côté serveur si possible, puis jetons ET base locale effacés ; le
+//    moteur de synchronisation est arrêté AVANT (L8-06) : il ne peut plus rien écrire dans la base.
 import type { AuthTokens, DoctorVerificationStatus, UserRole } from '@glyka/shared';
 import { useSyncExternalStore } from 'react';
-import { wipeLocalData } from '@/db/reset';
+import { claimLocalData, wipeLocalData } from '@/db/reset';
+import { requestSync, stopSync, syncNow } from '@/features/sync';
 import { ApiError, api, setTokenRefresher } from '@/lib/api-client';
 import {
   clearSessionInfo,
@@ -33,6 +35,9 @@ export type SessionState =
   | { status: 'signedIn'; user: SessionUser };
 
 export type LoginDestination = 'onboarding' | 'home' | 'notPatient';
+
+/** Dernier essai d'envoi à la déconnexion : au-delà, on se déconnecte quand même (bouton toujours réactif). */
+const SIGN_OUT_SYNC_MS = 5_000;
 
 // ---------- Petit magasin d'état observable (sans dépendance) ----------
 let state: SessionState = { status: 'loading' };
@@ -121,9 +126,14 @@ export async function signIn(response: LoginResponse): Promise<LoginDestination>
     await clearAll();
     return 'notPatient';
   }
+  // Données locales d'un AUTRE compte (session expirée sans déconnexion) : arrêtées puis effacées avant
+  // tout ; celles du même compte sont gardées, file d'envoi comprise (ADR-0004, modifications 3 et 6).
+  await stopSync();
+  await claimLocalData(response.user.id);
   await saveTokens(response.accessToken, response.refreshToken);
   await saveSessionInfo(JSON.stringify(response.user));
   setState({ status: 'signedIn', user: response.user });
+  requestSync(); // envoie ce qui attendait, puis reçoit les données du compte (nouveau téléphone : tout)
   return response.user.profileCompleted ? 'home' : 'onboarding';
 }
 
@@ -141,6 +151,17 @@ export async function markProfileCompleted(): Promise<void> {
  * prévient avant (countUnsyncedChanges).
  */
 export async function signOut(): Promise<void> {
+  // ADR-0004, modification 3 : dernier essai d'envoi (5 s au plus) TANT QUE la session est valide, puis
+  // arrêt du moteur ; la base n'est effacée qu'ensuite.
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  await Promise.race([
+    syncNow(),
+    new Promise((resolve) => {
+      timer = setTimeout(() => resolve(undefined), SIGN_OUT_SYNC_MS);
+    }),
+  ]);
+  clearTimeout(timer);
+  await stopSync();
   const refreshToken = await getRefreshToken();
   if (refreshToken) {
     try {

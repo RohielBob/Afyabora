@@ -28,11 +28,31 @@ jest.mock('@/lib/secure-storage', () => ({
   clearSessionInfo: async () => mockVault.delete('session'),
 }));
 
-// ---------- Base locale simulée ----------
-const mockWipeLocalData = jest.fn(async () => undefined);
+// ---------- Base locale et moteur de synchronisation simulés (L8-06) ----------
+// `steps` garde l'ordre des étapes : le moteur doit être arrêté AVANT que la base soit effacée.
+const steps: string[] = [];
+const mockWipeLocalData = jest.fn(async () => {
+  steps.push('wipe');
+});
+const mockClaimLocalData = jest.fn(async (userId: string) => {
+  steps.push(`claim:${userId}`);
+});
 jest.mock('@/db/reset', () => ({
   wipeLocalData: () => mockWipeLocalData(),
+  claimLocalData: (userId: string) => mockClaimLocalData(userId),
   countUnsyncedChanges: async () => 0,
+}));
+let mockSyncNow: () => Promise<unknown> = async () => {
+  steps.push('syncNow');
+};
+jest.mock('@/features/sync', () => ({
+  syncNow: () => mockSyncNow(),
+  stopSync: async () => {
+    steps.push('stopSync');
+  },
+  requestSync: () => {
+    steps.push('requestSync');
+  },
 }));
 
 // ---------- Serveur simulé ----------
@@ -76,6 +96,11 @@ beforeEach(() => {
   mockVault.clear();
   calls.length = 0;
   mockWipeLocalData.mockClear();
+  mockClaimLocalData.mockClear();
+  steps.length = 0;
+  mockSyncNow = async () => {
+    steps.push('syncNow');
+  };
   __resetSessionForTests();
   server = () => json(500);
 });
@@ -97,6 +122,12 @@ describe('connexion (signIn)', () => {
     expect(await signIn(login('DOCTOR'))).toBe('notPatient');
     expect(await signIn(login('ADMIN'))).toBe('notPatient');
     expect(mockVault.size).toBe(0);
+    expect(steps).toEqual([]); // ni base locale touchée, ni synchronisation
+  });
+
+  it('L8-06 : moteur arrêté, base locale rattachée au compte, PUIS synchronisation demandée', async () => {
+    await signIn(login('PATIENT'));
+    expect(steps).toEqual(['stopSync', 'claim:u1', 'requestSync']);
   });
 });
 
@@ -228,6 +259,9 @@ describe('déconnexion (signOut)', () => {
 
     expect(logoutBody).toEqual({ refreshToken: 'refresh-1' });
     expect(mockWipeLocalData).toHaveBeenCalledTimes(1);
+    // Dernier envoi tant que la session est valide, moteur arrêté, et SEULEMENT ENSUITE base effacée.
+    expect(steps.slice(-3)).toEqual(['syncNow', 'stopSync', 'wipe']);
+    expect(calls.indexOf('/auth/logout')).toBeGreaterThanOrEqual(0);
     expect(mockVault.size).toBe(0);
     expect(getSession()).toEqual({ status: 'signedOut', reason: 'signedOut' });
   });
@@ -240,6 +274,22 @@ describe('déconnexion (signOut)', () => {
 
     expect(mockWipeLocalData).toHaveBeenCalledTimes(1);
     expect(mockVault.size).toBe(0);
+    expect(getSession().status).toBe('signedOut');
+  });
+
+  it('dernier envoi trop long : on se déconnecte quand même au bout de 5 s', async () => {
+    await signIn(login('PATIENT'));
+    server = () => json(204);
+    mockSyncNow = () => new Promise(() => undefined); // ne répond jamais
+    jest.useFakeTimers();
+    try {
+      const done = signOut();
+      await jest.advanceTimersByTimeAsync(5_000);
+      await done;
+    } finally {
+      jest.useRealTimers();
+    }
+    expect(steps.slice(-2)).toEqual(['stopSync', 'wipe']);
     expect(getSession().status).toBe('signedOut');
   });
 });

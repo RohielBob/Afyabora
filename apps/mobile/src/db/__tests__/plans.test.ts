@@ -2,6 +2,7 @@
 import { syncOpSchema } from '@glyka/shared';
 import {
   InvalidLocalWrite,
+  editStamp,
   eventPayload,
   measurementPayload,
   planEventCreate,
@@ -209,5 +210,55 @@ describe('événements', () => {
     expect(row).toMatchObject({ details: null, deleted_at: ctx(2).now });
     expect(op).toMatchObject({ entity: 'event', type: 'delete' });
     expect(op.payload).toBeUndefined();
+  });
+});
+
+// L8-06 : une modification doit toujours passer devant la version qu'elle modifie (« la dernière écriture
+// gagne » sur le serveur), même sur un téléphone en retard sur l'horloge du serveur.
+describe('date des modifications (editStamp)', () => {
+  it('maintenant, si le téléphone est à l’heure', () => {
+    expect(editStamp('2026-10-10T08:05:00.000Z', '2026-10-10T08:00:00.000Z')).toBe(
+      '2026-10-10T08:05:00.000Z',
+    );
+  });
+
+  it('1 ms après la version modifiée, si l’horloge du téléphone est en retard (ou égale)', () => {
+    expect(editStamp('2026-10-10T07:58:00.000Z', '2026-10-10T08:00:00.000Z')).toBe(
+      '2026-10-10T08:00:00.001Z',
+    );
+    expect(editStamp('2026-10-10T08:00:00.000Z', '2026-10-10T08:00:00.000Z')).toBe(
+      '2026-10-10T08:00:00.001Z',
+    );
+  });
+
+  it('date précédente illisible : maintenant', () => {
+    expect(editStamp('2026-10-10T08:05:00.000Z', 'abîmée')).toBe('2026-10-10T08:05:00.000Z');
+  });
+
+  it('modifier ou supprimer une mesure reçue du serveur « dans le futur » : opération datée après elle', () => {
+    const received = { ...created().row, client_updated_at: '2026-10-10T09:00:00.000Z' };
+    const update = planMeasurementUpdate(received, { context: 'BEFORE_MEAL' }, ctx(2));
+    expect(update.op.clientUpdatedAt).toBe('2026-10-10T09:00:00.001Z');
+    expect(update.row).toMatchObject({
+      client_updated_at: '2026-10-10T09:00:00.001Z',
+      updated_at: ctx(2).now,
+    });
+    const removal = planMeasurementDelete(received, ctx(2));
+    expect(removal.op.clientUpdatedAt).toBe('2026-10-10T09:00:00.001Z');
+    expect(removal.row.deleted_at).toBe(ctx(2).now);
+  });
+
+  it('pareil pour un événement', () => {
+    const meal = planEventCreate(
+      { id: EVENT_ID, type: 'MEAL', occurredAt: '2026-10-10T12:30:00Z', label: 'Déjeuner' },
+      ctx(1),
+    );
+    const received = { ...meal.row, client_updated_at: '2026-10-10T09:00:00.000Z' };
+    expect(planEventUpdate(received, { label: 'Dîner' }, ctx(2)).op.clientUpdatedAt).toBe(
+      '2026-10-10T09:00:00.001Z',
+    );
+    expect(planEventDelete(received, ctx(2)).row.client_updated_at).toBe(
+      '2026-10-10T09:00:00.001Z',
+    );
   });
 });
