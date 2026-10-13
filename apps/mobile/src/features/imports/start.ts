@@ -3,7 +3,7 @@
 //
 // L'analyse se fait sur le serveur (POST /imports/preview) : elle demande le réseau. Rien n'est gardé sur
 // le téléphone après coup : le fichier reste où il est, seul son contenu est envoyé.
-import { IMPORT_MAX_FILE_BYTES, type GlucoseUnit } from '@glyka/shared';
+import { IMPORT_MAX_FILE_BYTES, importColumnsErrorSchema, type GlucoseUnit } from '@glyka/shared';
 import { ApiError } from '@/lib/api-client';
 
 /** Fichier choisi par le patient (sélecteur de documents). `file` : objet du navigateur (version web). */
@@ -75,7 +75,8 @@ export const UNIT_EXAMPLES: Readonly<Record<GlucoseUnit, number>> = {
  * Issue d'un envoi raté, pour l'écran :
  *  - offline : pas de réponse (réseau coupé, serveur injoignable) ;
  *  - tooLarge : 413 (plus de 5 Mo ou de 5 000 lignes) ;
- *  - columns : 400 IMPORT_COLUMNS_NOT_FOUND ⇒ choisir les colonnes (L4-06) ;
+ *  - columns : 400 IMPORT_COLUMNS_NOT_FOUND (contrat 0.4.1) ⇒ choisir les colonnes (L4-06) parmi
+ *    `columns`, les noms des colonnes du fichier renvoyés par le serveur ;
  *  - unreadable : 400 sur le fichier (classeur abîmé, ancien .xls, une seule colonne…) ;
  *  - tooMany : 429 (10 analyses par minute) ;
  *  - rejected : autre refus du serveur avec un message (ex. profil médical à compléter) ;
@@ -83,7 +84,8 @@ export const UNIT_EXAMPLES: Readonly<Record<GlucoseUnit, number>> = {
  * `detail` : le message précis du serveur, quand il en donne un.
  */
 export type PreviewProblem =
-  | { kind: 'offline' | 'tooLarge' | 'columns' | 'tooMany' | 'error'; detail?: string }
+  | { kind: 'offline' | 'tooLarge' | 'tooMany' | 'error'; detail?: string }
+  | { kind: 'columns'; columns: string[]; detail: string }
   | { kind: 'unreadable' | 'rejected'; detail: string };
 
 export function previewProblem(error: unknown): PreviewProblem {
@@ -91,7 +93,14 @@ export function previewProblem(error: unknown): PreviewProblem {
   if (error.status === 0) return { kind: 'offline' };
   if (error.status === 413) return { kind: 'tooLarge', detail: error.message };
   if (error.status === 429) return { kind: 'tooMany' };
-  if (error.status === 400 && error.code === 'IMPORT_COLUMNS_NOT_FOUND') return { kind: 'columns' };
+  if (error.status === 400 && error.code === 'IMPORT_COLUMNS_NOT_FOUND') {
+    // Réponse vérifiée avec le schéma du contrat : sans liste de colonnes lisible, rien à proposer.
+    const parsed = importColumnsErrorSchema.safeParse(error.body);
+    if (parsed.success) {
+      return { kind: 'columns', columns: parsed.data.columns, detail: parsed.data.message };
+    }
+    return { kind: 'error' };
+  }
   if (error.status === 400) {
     const onFile = error.issues.find((issue) => issue.path === 'file');
     if (onFile) return { kind: 'unreadable', detail: onFile.message };
