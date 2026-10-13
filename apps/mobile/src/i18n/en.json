@@ -26,7 +26,9 @@
     "pending_one": "{{count}} reading waiting to sync",
     "pending_other": "{{count}} readings waiting to sync",
     "offline": "Offline — your data is saved on this phone",
-    "upToDate": "Everything is up to date"
+    "upToDate": "Everything is up to date",
+    "refreshing": "Syncing…",
+    "pullToRefresh": "Pull down to sync"
   },
   "safety": {
     "extreme": "Follow your care team's instructions. If you feel unwell, get help immediately."

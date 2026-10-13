@@ -417,6 +417,37 @@ describe('échecs et nouvel essai', () => {
     expect(state.nextRetryAt).toBe(new Date(phoneClock + 2_000).toISOString());
   });
 
+  it('hors-ligne CONNU (mode avion) : aucune requête, essai de secours dans 5 min seulement', async () => {
+    jest.useFakeTimers();
+    localCreate(uuid(1));
+    let online = false;
+    start({ isOnline: async () => online });
+
+    const state = await engine.runNow();
+
+    expect(server.pushes).toHaveLength(0);
+    expect(server.pulls).toHaveLength(0);
+    expect(state).toMatchObject({ status: 'offline', lastError: 'offline', pendingCount: 1 });
+    expect(state.nextRetryAt).toBe(new Date(phoneClock + 300_000).toISOString());
+    await jest.advanceTimersByTimeAsync(60_000);
+    expect(server.pushes).toHaveLength(0); // pas d'essai toutes les 2 s
+
+    // Retour du réseau (L8-07 : triggers.ts demande une synchronisation tout de suite).
+    online = true;
+    engine.request(0);
+    await jest.advanceTimersByTimeAsync(0);
+    expect(server.measurement(uuid(1))).toBeDefined();
+    expect(engine.getState()).toMatchObject({ status: 'idle', nextRetryAt: null });
+  });
+
+  it('détection du réseau en erreur : on essaie quand même', async () => {
+    localCreate(uuid(1));
+    start({ isOnline: () => Promise.reject(new Error('NetInfo')) });
+    const state = await engine.runNow();
+    expect(state.status).toBe('idle');
+    expect(server.measurement(uuid(1))).toBeDefined();
+  });
+
   it('session expirée (401) : on s’arrête, sans nouvel essai', async () => {
     jest.useFakeTimers();
     server.failNext = [401];

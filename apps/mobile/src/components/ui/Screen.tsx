@@ -5,18 +5,22 @@ import { KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { fadeIn, spacing, useReducedMotion, useTheme } from '@/theme';
+import { pullToRefresh, type RefreshProps } from './PullToRefresh';
 
 export function Screen({
   children,
   scroll = true,
   padded = true,
   scrollKey,
+  refresh,
 }: {
   children: ReactNode;
   scroll?: boolean;
   padded?: boolean;
   /** Quand cette valeur change (ex. étape d'un assistant), l'écran remonte en haut. */
   scrollKey?: string | number;
+  /** « Tirer pour rafraîchir » (L8-07), pour un écran qui défile. */
+  refresh?: RefreshProps;
 }) {
   const { colors } = useTheme();
   const reduced = useReducedMotion();
@@ -57,6 +61,7 @@ export function Screen({
             keyboardShouldPersistTaps="handled"
             keyboardDismissMode="on-drag"
             showsVerticalScrollIndicator={false}
+            refreshControl={pullToRefresh(refresh)}
           >
             {content}
           </ScrollView>

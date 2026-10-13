@@ -22,6 +22,9 @@
 // en erreur ⇒ rien n'est perdu (la file n'est vidée qu'après la réponse) et un nouvel essai est programmé
 // avec un délai croissant : 2 s, 4 s, 8 s… jusqu'à 5 minutes. Session expirée (401) ⇒ on s'arrête : la
 // personne doit se reconnecter.
+// HORS-LIGNE CONNU (mode avion, L8-07) : le téléphone sait qu'il n'a pas de réseau ⇒ aucune requête, pas
+// d'essai toutes les 2 s (batterie) : le retour du réseau relance la synchronisation (triggers.ts) ; un
+// essai de secours est tout de même programmé dans 5 minutes, au cas où la détection se tromperait.
 //
 // CHANGEMENT DE COMPTE : stop() empêche tout cycle en cours d'écrire encore dans la base (il attend la fin
 // de l'écriture en cours, jamais celle d'une requête réseau). La déconnexion l'appelle AVANT d'effacer la
@@ -40,6 +43,7 @@ import {
   MAX_PUSH_BATCHES,
   PULL_PAGE,
   PUSH_BATCH,
+  RETRY_MAX_MS,
   buildPushBatch,
   retryDelay,
   settle,
@@ -102,6 +106,8 @@ export interface SyncDeps {
   api: SyncApi;
   /** Une session est ouverte (jeton présent) : sinon, aucun cycle. */
   canSync: () => Promise<boolean>;
+  /** Le téléphone a du réseau (NetInfo) ; absent = toujours vrai. Hors-ligne connu ⇒ aucune requête. */
+  isOnline?: () => Promise<boolean>;
   now?: () => Date;
 }
 
@@ -123,6 +129,8 @@ class SyncFailure extends Error {
   constructor(
     readonly code: SyncErrorCode,
     readonly retry: boolean,
+    /** Délai imposé avant le nouvel essai (sinon : délai croissant). */
+    readonly delayMs?: number,
   ) {
     super(code);
   }
@@ -256,6 +264,9 @@ export function createSyncEngine(deps: SyncDeps): SyncEngine {
         publish({ status: 'idle' });
         return state;
       }
+      if (deps.isOnline && !(await deps.isOnline().catch(() => true))) {
+        throw new SyncFailure('offline', true, RETRY_MAX_MS);
+      }
       await push(gen);
       await pull(gen);
       const success = now().toISOString();
@@ -276,7 +287,7 @@ export function createSyncEngine(deps: SyncDeps): SyncEngine {
       let nextRetryAt: string | null = null;
       if (failure.retry) {
         failures++;
-        const delay = retryDelay(failures);
+        const delay = failure.delayMs ?? retryDelay(failures);
         nextRetryAt = new Date(now().getTime() + delay).toISOString();
         schedule(delay);
       }

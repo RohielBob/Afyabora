@@ -7,7 +7,7 @@ Outbox, push, pull, connectivité, état affiché à l'utilisateur.
 ## Tickets
 
 - **L8-06** — Moteur de synchronisation mobile : push par lots, pull, reprise avec délai croissant — **fait**
-- **L8-07** — Détection de connectivité et déclencheurs (retour réseau, ouverture, tirer pour rafraîchir)
+- **L8-07** — Détection de connectivité et déclencheurs (retour réseau, ouverture, tirer pour rafraîchir) — **fait**
 - **L8-08** — Coalescence de l'outbox (fonction pure + tests) — fait (`coalesce.ts`)
 - **L8-09** — Tests de conflits et d'idempotence : rejeu, doublon, suppression hors-ligne, dérive d'horloge
 - **L8-10** — Interface : « n mesures en attente », état de synchronisation, erreurs
@@ -27,7 +27,7 @@ Outbox, push, pull, connectivité, état affiché à l'utilisateur.
 | `connectivity.ts`           | Détection du réseau (L8-07)                                                                                         |
 
 Les écrans et les autres features passent par `index.ts` : `requestSync`, `syncAfterLocalWrite`, `syncNow`,
-`stopSync`, `onSyncedData`, `useSyncState`.
+`stopSync`, `onSyncedData`, `useSyncState`, `useSyncTriggers`, `useSyncRefresh`.
 
 ## Le cycle (`engine.ts`)
 
@@ -71,14 +71,28 @@ en retard de quelques minutes, modifier une mesure tout juste importée gagne qu
 Une mesure reçue hors 20–600 mg/dL est marquée « confirmée » (le serveur ne l'accepte que confirmée) : la
 modifier ensuite (sa note par exemple) ne sera pas refusée.
 
-## Déclencheurs (L8-06)
+## Déclencheurs
 
-- **Après une saisie** (mesure créée, modifiée, supprimée ; événement créé) : 3 s plus tard, les saisies
-  rapprochées partent ensemble.
-- **Fin d'un import** et **annulation d'un import** : tout de suite (les mesures arrivent dans l'Historique).
-- **Connexion** : tout de suite (nouveau téléphone : tout le compte arrive).
-- L'Historique et l'Accueil se rechargent quand la réception change des données (`onSyncedData`).
-- L8-07 ajoutera : retour du réseau, ouverture de l'application, « tirer pour rafraîchir ».
+| Quand                                                       | Délai                                                            | Ticket |
+| ----------------------------------------------------------- | ---------------------------------------------------------------- | ------ |
+| Saisie (mesure créée, modifiée, supprimée ; événement créé) | 3 s (regroupe)                                                   | L8-06  |
+| Fin d'un import, annulation d'un import                     | tout de suite                                                    | L8-06  |
+| Connexion, **ouverture de l'application** avec une session  | tout de suite                                                    | L8-07  |
+| **Retour du réseau** (hors-ligne ⇒ en ligne)                | tout de suite                                                    | L8-07  |
+| **Retour dans l'application** (arrière-plan ⇒ premier plan) | tout de suite, sauf synchronisation réussie il y a moins de 30 s | L8-07  |
+| **Tirer pour rafraîchir** (Historique, Accueil)             | tout de suite, puis l'écran est relu                             | L8-07  |
+
+- Les déclencheurs de session sont branchés une seule fois, à la racine (`useSyncTriggers` dans
+  `app/_layout.tsx`), et débranchés à la déconnexion. Logique pure et testée dans `triggers.ts`.
+- Retour dans l'application : seulement depuis l'**arrière-plan**. L'état « inactive » (Face ID, centre de
+  contrôle sur iPhone) ne relance rien.
+- **Hors-ligne connu** (mode avion, NetInfo) : le moteur ne fait **aucune** requête et n'essaie plus toutes
+  les 2 s (batterie). C'est le retour du réseau qui relance l'envoi ; un essai de secours reste programmé
+  dans 5 minutes, au cas où la détection se tromperait. Si la détection du réseau échoue, on essaie quand même.
+- « Tirer pour rafraîchir » n'existe que sur téléphone (`pullToRefresh`, `components/ui`). Sur le web, React
+  Native Web enveloppait la liste dans un conteneur sans hauteur et l'écran s'affichait **vide** : rien n'est
+  ajouté sur le web (vérifié en capture, test dédié).
+- L'Historique et l'Accueil se rechargent aussi quand la réception change des données (`onSyncedData`).
 
 ## Comptes (ADR-0004, modifications 3 et 6)
 
@@ -89,6 +103,13 @@ modifier ensuite (sa note par exemple) ne sera pas refusée.
   avant : ses modifications non envoyées ne partent jamais sur le compte qui se connecte.
 
 ## Tests
+
+- `__tests__/triggers.test.ts` (L8-07) : réseau utilisable ou non, retour du réseau (jamais au premier état),
+  retour dans l'application (arrière-plan seulement, 30 s), branchement et débranchement, tirer pour
+  rafraîchir (écran relu même en cas d'erreur). Moteur : hors-ligne connu, détection en erreur.
+- Vérifié de bout en bout (L8-07, vraie API) : application rechargée avec une session ⇒ 141 mesures reçues
+  sans aucune saisie ; mode avion ⇒ rien n'est tenté, puis envoi 0,25 s après le retour du réseau ; import
+  annulé ailleurs ⇒ 141 suppressions reçues 0,2 s après le retour dans l'application.
 
 - `__tests__/rules.test.ts` : délais, lot coalescé et valide pour le serveur, réglage des réponses, données
   reçues (UTC, confirmation, date qui ne recule pas), décisions.
