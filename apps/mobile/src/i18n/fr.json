@@ -1414,6 +1414,23 @@
         "text": "Créez un QR pour partager votre historique avec un médecin.",
         "action": "Créer un QR"
       }
+    },
+    "live": {
+      "expiresIn": "Expire dans",
+      "remainingA11y": "Accès restant : {{minutes}} min {{seconds}} s",
+      "offline": "Connexion perdue : le minuteur continue, l'état sera vérifié dès le retour du réseau.",
+      "confirm": "Couper l'accès de {{name}} maintenant ? Il ne pourra plus voir vos données.",
+      "confirmNoName": "Couper l'accès du médecin maintenant ? Il ne pourra plus voir vos données.",
+      "confirmYes": "Oui, mettre fin à l'accès",
+      "confirmNo": "Annuler",
+      "checking": "Le QR vient d'être scanné. Vérification…",
+      "newQr": "Créer un nouveau QR",
+      "ended": {
+        "expired": "L'accès de {{name}} est arrivé à son terme.",
+        "expiredNoName": "L'accès est arrivé à son terme.",
+        "revoked": "Vous avez mis fin à l'accès de {{name}}.",
+        "revokedNoName": "Le partage a été arrêté."
+      }
     }
   }
 }
