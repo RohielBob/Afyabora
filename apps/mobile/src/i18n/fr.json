@@ -1365,6 +1365,55 @@
         "title": "Le QR n'a pas pu être créé",
         "text": "Une erreur est survenue. Réessayez dans un instant."
       }
+    },
+    "qr": {
+      "overline": "Partager mon historique",
+      "title": "Montrez ce QR à votre médecin",
+      "scannedTitle": "Votre partage",
+      "intro": "Votre médecin le scanne depuis son portail Afyabora. Le QR change automatiquement, gardez cet écran ouvert.",
+      "qrA11y": "QR de partage, à faire scanner par votre médecin",
+      "expired": "Ce QR n'est plus valable",
+      "renewing": "Nouveau QR…",
+      "next_one": "Nouveau QR dans {{count}} s",
+      "next_other": "Nouveau QR dans {{count}} s",
+      "nextA11y_one": "Nouveau QR dans {{count}} seconde",
+      "nextA11y_other": "Nouveau QR dans {{count}} secondes",
+      "shared": "Partagé",
+      "duration": "Durée de l'accès",
+      "durationValue": "{{duration}}, à partir du scan",
+      "stop": "Arrêter le partage",
+      "close": "Fermer",
+      "doctorNote": "Seul un médecin vérifié peut scanner ce QR. Il ne contient aucune donnée médicale et ne sert qu'une fois.",
+      "problem": {
+        "offline": {
+          "title": "Connexion perdue",
+          "text": "Le QR ne peut pas être renouvelé sans internet. Nouvel essai automatique."
+        },
+        "busy": {
+          "title": "Service très sollicité",
+          "text": "Le nouveau QR arrive dans un instant. Nouvel essai automatique."
+        },
+        "error": {
+          "title": "Le QR n'a pas pu être renouvelé",
+          "text": "Nouvel essai automatique dans un instant."
+        }
+      },
+      "scanned": {
+        "title": "Votre QR a été scanné",
+        "byDoctor": "{{name}} consulte votre dossier",
+        "until": "Accès jusqu'à {{time}}.",
+        "end": "Mettre fin à l'accès",
+        "endFailed": "L'accès n'a pas pu être coupé. Vérifiez votre connexion et réessayez."
+      },
+      "ended": {
+        "title": "Accès terminé",
+        "text": "Le médecin n'a plus accès à vos données. Vous pouvez créer un nouveau QR à tout moment."
+      },
+      "none": {
+        "title": "Aucun QR en cours",
+        "text": "Créez un QR pour partager votre historique avec un médecin.",
+        "action": "Créer un QR"
+      }
     }
   }
 }

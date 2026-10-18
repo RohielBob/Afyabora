@@ -35,10 +35,29 @@ Choix catégories/durée, QR rotatif, suivi en direct, révocation, journal d'ac
   le web, `accessibilityState` ne le produit pas). Textes en français et en anglais (`share.*`).
 - Tests : `__tests__/choice.test.ts`.
 
+### L5-07 — écran du QR avec compte à rebours
+
+- **Écran** `app/share/active.tsx` : le QR (toujours noir sur blanc, même en thème sombre), une barre et
+  « Nouveau QR dans 42 s », ce qui est partagé et la durée, « Arrêter le partage ».
+- **Rotation** (`rotation.ts`, contrôleur sans écran) : jeton de 60 s compté à partir de sa **réception**
+  (jamais comparé à l'heure du serveur : un téléphone en avance tournerait sans fin) ; nouveau QR **10 s
+  avant la fin**, donc toutes les 50 s (`GET /shares/:id/token`).
+  - 409 ⇒ le QR a été scanné : plus de rotation ; l'écran montre « Dr X consulte votre dossier »,
+    « Accès jusqu'à HH:MM » (`GET /shares/:id/status`) et **« Mettre fin à l'accès »** (`DELETE`).
+  - 404 ⇒ partage terminé. Pas de réseau, 429, 503, autre ⇒ nouvel essai à 2 s, 4 s, 8 s puis 15 s,
+    message « Connexion perdue »… avec « Réessayer » ; le QR est **masqué** dès qu'il n'est plus valable.
+  - Retour dans l'application : renouvelle tout de suite si l'heure est passée. Jamais deux demandes en
+    même temps ; écran fermé : plus aucune demande, réponse en route ignorée, minuterie annulée.
+- Fermer avant le scan **arrête** le partage ; après le scan, fermer ne coupe pas l'accès (seul « Mettre
+  fin à l'accès » le fait). Revenir sur l'écran retrouve l'état (le serveur répond 409 ⇒ « scanné »).
+- `useRotatingQr.ts` branche le contrôleur sur l'écran (horloge à la seconde, retour dans l'application).
+  `components/RotatingQr.tsx` dessine le QR et le compte à rebours (`react-native-qrcode-svg`, déjà
+  installé).
+- Tests : `__tests__/rotation.test.ts` (horloge et minuteries simulées).
+
 ## Fichiers prévus
 
-- `RotatingQr.tsx` : renouvelle le jeton toutes les 60 s (L5-07)
-- `useShareStatus.ts` : suivi (polling/SSE) (L5-08)
+- `useShareStatus.ts` : suivi en direct (polling/SSE), minuteur, fin détectée sans attendre (L5-08)
 
 ## Règle importante
 

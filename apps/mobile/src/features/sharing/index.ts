@@ -13,4 +13,21 @@ export {
   type CreateProblem,
 } from './choice';
 export { shareFlow, useShareFlow } from './flow';
+export {
+  ROTATE_BEFORE_END_MS,
+  ROTATION_PERIOD_MS,
+  TOKEN_LIFE_MS,
+  createQrRotator,
+  isTokenAlive,
+  renewOutcome,
+  retryDelayMs,
+  rotationProgress,
+  secondsToNext,
+  type QrRotator,
+  type RenewProblem,
+  type RotationPhase,
+  type RotationState,
+} from './rotation';
+export { useRotatingQr, type RotatingQr as RotatingQrState } from './useRotatingQr';
+export { RotatingQr } from './components/RotatingQr';
 export { CategoryOption } from './components/CategoryOption';

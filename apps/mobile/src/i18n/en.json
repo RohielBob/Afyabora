@@ -1365,6 +1365,55 @@
         "title": "The QR code could not be created",
         "text": "Something went wrong. Try again in a moment."
       }
+    },
+    "qr": {
+      "overline": "Share my history",
+      "title": "Show this QR code to your doctor",
+      "scannedTitle": "Your sharing",
+      "intro": "Your doctor scans it from their Afyabora portal. The QR code changes automatically, keep this screen open.",
+      "qrA11y": "Sharing QR code, for your doctor to scan",
+      "expired": "This QR code is no longer valid",
+      "renewing": "New QR code…",
+      "next_one": "New QR code in {{count}} s",
+      "next_other": "New QR code in {{count}} s",
+      "nextA11y_one": "New QR code in {{count}} second",
+      "nextA11y_other": "New QR code in {{count}} seconds",
+      "shared": "Shared",
+      "duration": "Access duration",
+      "durationValue": "{{duration}}, from the scan",
+      "stop": "Stop sharing",
+      "close": "Close",
+      "doctorNote": "Only a verified doctor can scan this QR code. It holds no medical data and works only once.",
+      "problem": {
+        "offline": {
+          "title": "Connection lost",
+          "text": "The QR code can't be renewed without internet. Retrying automatically."
+        },
+        "busy": {
+          "title": "Service very busy",
+          "text": "The new QR code is coming. Retrying automatically."
+        },
+        "error": {
+          "title": "The QR code could not be renewed",
+          "text": "Retrying automatically in a moment."
+        }
+      },
+      "scanned": {
+        "title": "Your QR code was scanned",
+        "byDoctor": "{{name}} is viewing your record",
+        "until": "Access until {{time}}.",
+        "end": "End access",
+        "endFailed": "Access could not be ended. Check your connection and try again."
+      },
+      "ended": {
+        "title": "Access ended",
+        "text": "The doctor no longer has access to your data. You can create a new QR code at any time."
+      },
+      "none": {
+        "title": "No QR code in progress",
+        "text": "Create a QR code to share your history with a doctor.",
+        "action": "Create a QR code"
+      }
     }
   }
 }
