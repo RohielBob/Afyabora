@@ -6,7 +6,8 @@ import { ButtonLink } from '@/components/ui';
 import { fr } from '@/i18n/fr';
 import { lastMeasurementText, orderedCategories, qualityView, statusView } from './view';
 
-const QUALITY_TONE = {
+/** Couleur du niveau de qualité (toujours avec l'icône et le texte). Aussi utilisée par le dossier (L5-12). */
+export const QUALITY_TONE = {
   GOOD: 'text-success',
   PARTIAL: 'text-warning',
   INSUFFICIENT: 'text-muted',
@@ -46,7 +47,8 @@ function StatusIcon({ active }: { active: boolean }) {
   );
 }
 
-function QualityIcon({ level }: { level: QualityLevel }) {
+/** Trois barres dont le nombre de pleines dit le niveau. Aussi utilisée par le dossier (L5-12). */
+export function QualityIcon({ level }: { level: QualityLevel }) {
   // Trois barres : 3 pleines (bonne), 2 (partielle), 1 (insuffisante) : la forme dit le niveau.
   const filled = level === 'GOOD' ? 3 : level === 'PARTIAL' ? 2 : 1;
   return (

@@ -8,15 +8,39 @@ Onglets du dossier, graphiques, chronologie, résumé IA.
 
 - **L5-12** — Portail : dossier patient (glycémie, chronologie, traitements, nutrition, activité, résumé IA)
 
-## Fichiers prévus
+## Fait (L5-12)
 
-- `tabs/GlucoseTab.tsx` (recharts)
-- `tabs/TimelineTab.tsx`
-- `tabs/TreatmentsTab.tsx`
-- `tabs/NutritionTab.tsx`
-- `tabs/ActivityTab.tsx`
-- `tabs/SummaryTab.tsx`
-- `tabs/ReportTab.tsx`
+- Page `routes/patient-record.tsx` (`/patients/:sessionId`), en **lecture seule** :
+  - en-tête (`RecordHeader.tsx`) : prénom, type de diabète, année du diagnostic, état de l'accès et heure de
+    fin **du serveur**, ce qui est partagé, rappel « outil d'aide, pas un avis médical » ;
+  - **onglets** (`RecordTabs.tsx`, clavier : flèches, Début, Fin) : **seulement ceux des catégories
+    partagées** (`tabsFor`, `view.ts`) ; l'onglet est gardé dans l'adresse (`?onglet=glycemie`) ;
+  - **Vue d'ensemble** (`tabs/OverviewTab.tsx`) : qualité (score, couverture, régularité, fraîcheur), chiffres
+    des 30 jours (moyenne, écart-type, CV, répartition plage / au-dessus / en dessous), seuils du patient ;
+  - **Glycémie** (`tabs/GlucoseTab.tsx` + `GlucoseChart.tsx`, recharts déjà installé, **chargé seulement
+    à l'ouverture de l'onglet**) : graphique avec la plage cible du patient, chaque point a la **forme** de
+    son état (▼ ● ▲) ; tableau de toutes les mesures (valeur, état en symbole + mot, moment, provenance
+    `ProvenanceBadge`, note si partagée) ;
+  - **Chronologie**, **Traitements**, **Nutrition**, **Activité** (`tabs/TimelineTab.tsx`, une seule lecture
+    pour les quatre) : par jour, heure, type (icône + mot), texte ; traitements « déclarés par le patient,
+    aucune dose calculée ni conseillée » ;
+  - **Résumé des analyses** (`tabs/SummaryTab.tsx`) : observations du moteur (gravité en icône + mot, jamais
+    rouge), nombre de mesures justificatives, rappel « pas un diagnostic ».
+- Période 7 / 14 / 30 / 90 jours ; unité du patient par défaut, modifiable (g/L, mg/dL, mmol/L).
+- États glycémiques : `GlucoseStateBadge` (`components/ui`), palette dédiée de `@glyka/ui-tokens` branchée
+  sur le thème (`--afy-state-*`, clair et sombre), **jamais rouge**, toujours symbole + libellé.
+- **Fin d'accès** : dès qu'une réponse dit expiré, arrêté, compte non approuvé ou « pas votre dossier », tout le
+  dossier est **effacé de la mémoire** et remplacé par un message ; un rechargement ne le ramène pas (le
+  serveur refuse). Le résumé est relu toutes les 30 s et à l'heure de fin. Données jamais gardées après
+  avoir quitté la page (`gcTime: 0`).
+- Textes : `fr.record` (`src/i18n/fr.ts`). Tests : `__tests__/view.test.tsx`.
+
+## À venir
+
+- L5-13 : bandeau de compte à rebours et écran « Accès expiré ».
+- L6-04 : onglet « Rapport PDF » (si `REPORT_DOWNLOAD` est partagé).
+- À décider (contrat) : le texte libre et la durée des évènements (dose déclarée d'un traitement, durée d'une
+  activité) et le lot d'import ne sont pas dans `TimelineItem`.
 
 ## Composant déjà prêt
 

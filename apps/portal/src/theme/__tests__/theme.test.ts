@@ -19,6 +19,19 @@ describe('thème du portail', () => {
     }
   });
 
+  it('les états glycémiques ont leurs variables, en clair et en sombre, sans le rouge de la marque', () => {
+    for (const mode of ['light', 'dark'] as const) {
+      const css = colorDeclarations(mode);
+      const { states } = buildTheme(mode);
+      expect(css).toContain(`--afy-state-very-low-bg: ${states.VERY_LOW.bg};`);
+      expect(css).toContain(`--afy-state-in-range-fg: ${states.IN_RANGE.fg};`);
+      expect(css).toContain(`--afy-state-very-high-border: ${states.VERY_HIGH.border};`);
+      for (const tone of Object.values(states)) {
+        expect(Object.values(tone)).not.toContain(brand.red);
+      }
+    }
+  });
+
   it('le mode sombre suit le réglage de l’ordinateur', () => {
     expect(themeStylesheet()).toContain('@media (prefers-color-scheme: dark)');
   });

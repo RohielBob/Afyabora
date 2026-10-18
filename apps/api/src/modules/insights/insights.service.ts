@@ -80,6 +80,21 @@ export class InsightsService {
     return computeQuality(points, lastDaysPeriod(days, now, timeZone), now, timeZone);
   }
 
+  /**
+   * Qualité calculée sur ZÉRO mesure, pour la même période et le même fuseau (portail du médecin, L5-12) :
+   * quand le patient n'a partagé ni ses glycémies ni le résumé, le médecin ne doit rien apprendre de ses
+   * mesures, pas même leur nombre. Le résultat est « insuffisant », sans lire une seule mesure.
+   */
+  async emptyQuality(patientId: string, days: number): Promise<QualityScore> {
+    const profile = await this.prisma.patientProfile.findUnique({
+      where: { userId: patientId },
+      select: { timezoneOffsetMinutes: true },
+    });
+    const timeZone = this.timeZoneOf(profile?.timezoneOffsetMinutes);
+    const now = Date.now();
+    return computeQuality([], lastDaysPeriod(days, now, timeZone), now, timeZone);
+  }
+
   private async load(patientId: string, days: number): Promise<AnalysisInput> {
     const profile = await this.prisma.patientProfile.findUnique({
       where: { userId: patientId },

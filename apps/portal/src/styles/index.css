@@ -65,6 +65,22 @@
   --color-success: var(--afy-success);
   --color-warning: var(--afy-warning);
   --color-info: var(--afy-info);
+  /* États glycémiques (L5-12) : jamais rouges, toujours avec symbole + libellé. */
+  --color-state-very-low-fg: var(--afy-state-very-low-fg);
+  --color-state-very-low-bg: var(--afy-state-very-low-bg);
+  --color-state-very-low-border: var(--afy-state-very-low-border);
+  --color-state-low-fg: var(--afy-state-low-fg);
+  --color-state-low-bg: var(--afy-state-low-bg);
+  --color-state-low-border: var(--afy-state-low-border);
+  --color-state-in-range-fg: var(--afy-state-in-range-fg);
+  --color-state-in-range-bg: var(--afy-state-in-range-bg);
+  --color-state-in-range-border: var(--afy-state-in-range-border);
+  --color-state-high-fg: var(--afy-state-high-fg);
+  --color-state-high-bg: var(--afy-state-high-bg);
+  --color-state-high-border: var(--afy-state-high-border);
+  --color-state-very-high-fg: var(--afy-state-very-high-fg);
+  --color-state-very-high-bg: var(--afy-state-very-high-bg);
+  --color-state-very-high-border: var(--afy-state-very-high-border);
 
   --ease-standard: var(--afy-ease-standard);
   --ease-decelerate: var(--afy-ease-decelerate);

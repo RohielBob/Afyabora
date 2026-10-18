@@ -78,6 +78,10 @@ export type InsightType = (typeof INSIGHT_TYPES)[number];
 export const INSIGHT_SEVERITIES = ['INFO', 'ATTENTION', 'ALERT'] as const;
 export type InsightSeverity = (typeof INSIGHT_SEVERITIES)[number];
 
+/** Nature d'une ligne de la chronologie médicale (contrat : TimelineKind, dossier partagé L5-12). */
+export const TIMELINE_KINDS = ['MEASUREMENT', 'MEAL', 'ACTIVITY', 'TREATMENT', 'ALERT'] as const;
+export type TimelineKind = (typeof TIMELINE_KINDS)[number];
+
 export const NOTIFICATION_CATEGORIES = [
   'MEASUREMENT_REMINDER',
   'GLUCOSE_ALERT',

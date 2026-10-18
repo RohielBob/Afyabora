@@ -2,11 +2,16 @@ import { z } from 'zod';
 import {
   ACCESS_ACTIONS,
   DIABETES_TYPES,
+  GLUCOSE_STATES,
+  GLUCOSE_UNITS,
+  MEASUREMENT_SOURCES,
   QUALITY_LEVELS,
   SHARE_CATEGORIES,
   SHARE_DURATIONS,
   SHARE_STATUSES,
+  TIMELINE_KINDS,
 } from '../enums';
+import { insightSchema, qualityScoreSchema, rangeStatsSchema } from './insights';
 
 export const createShareSchema = z.object({
   categories: z
@@ -151,3 +156,58 @@ export type DoctorSessionDto = z.infer<typeof doctorSessionSchema>;
 /** Réponse de GET /doctor/sessions (L5-11) : accès en cours d'abord, puis du plus récent au plus ancien. */
 export const doctorSessionListSchema = z.object({ items: z.array(doctorSessionSchema) });
 export type DoctorSessionList = z.infer<typeof doctorSessionListSchema>;
+
+// ---------- Dossier partagé, lu par le médecin (contrat : DoctorSummary, TimelineList ; L5-12) ----------
+
+/** Seuils du patient, tels que renvoyés (mg/dL entiers). */
+const thresholdsDtoSchema = z.object({
+  veryLowMgDl: z.number().int(),
+  targetMinMgDl: z.number().int(),
+  targetMaxMgDl: z.number().int(),
+  veryHighMgDl: z.number().int(),
+});
+
+/** Réponse de GET /doctor/sessions/:id/summary : session, identité limitée, qualité, statistiques, analyse. */
+export const doctorSummarySchema = z.object({
+  session: z.object({
+    id: z.string().uuid(),
+    status: z.enum(SHARE_STATUSES),
+    /** Fin de l'accès (heure du serveur). */
+    expiresAt: isoDate.nullable(),
+    categories: z.array(z.enum(SHARE_CATEGORIES)),
+  }),
+  /** Prénom, type, année du diagnostic, unité préférée et seuils : jamais le nom ni la date de naissance. */
+  patient: z.object({
+    firstName: z.string(),
+    diabetesType: z.enum(DIABETES_TYPES),
+    diagnosisYear: z.number().int().nullable(),
+    preferredUnit: z.enum(GLUCOSE_UNITS),
+    thresholds: thresholdsDtoSchema,
+  }),
+  /** 30 derniers jours. Sans glycémies ni résumé partagés : calculée sur zéro mesure (rien n'est révélé). */
+  quality: qualityScoreSchema,
+  /** 30 derniers jours ; null sous 10 mesures ou si les glycémies et le résumé ne sont pas partagés. */
+  stats: rangeStatsSchema.nullable(),
+  /** Présent seulement si le résumé des analyses (AI_SUMMARY) est partagé. */
+  insights: z.array(insightSchema).optional(),
+});
+export type DoctorSummary = z.infer<typeof doctorSummarySchema>;
+
+/** Une ligne de la chronologie : mesure (valeur, état, provenance) ou évènement déclaré (libellé). */
+export const timelineItemSchema = z.object({
+  kind: z.enum(TIMELINE_KINDS),
+  at: isoDate,
+  /** Évènement : texte saisi par le patient. Mesure : contexte (FASTING, AFTER_MEAL…), traduit par l'écran. */
+  label: z.string(),
+  valueMgDl: z.number().int().nullable(),
+  state: z.enum(GLUCOSE_STATES).nullable(),
+  source: z.enum(MEASUREMENT_SOURCES).nullable(),
+});
+export type TimelineItem = z.infer<typeof timelineItemSchema>;
+
+/** Réponse de GET /doctor/sessions/:id/timeline : du plus récent au plus ancien, par curseur. */
+export const timelineListSchema = z.object({
+  items: z.array(timelineItemSchema),
+  nextCursor: z.string().nullable(),
+});
+export type TimelineList = z.infer<typeof timelineListSchema>;
