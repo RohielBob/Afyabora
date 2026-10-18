@@ -1,6 +1,11 @@
-// L5-01 et L5-03 : réponses de POST /shares et POST /shares/claim (forme du contrat).
+// L5-01, L5-03 et L5-04 : réponses de POST /shares, POST /shares/claim et GET /shares/:id/status.
 import { describe, expect, it } from 'vitest';
-import { claimShareResponseSchema, createShareResponseSchema, createShareSchema } from '../src';
+import {
+  claimShareResponseSchema,
+  createShareResponseSchema,
+  createShareSchema,
+  shareStatusResponseSchema,
+} from '../src';
 
 const response = {
   session: {
@@ -95,5 +100,36 @@ describe('claimShareResponseSchema (L5-03)', () => {
     ['identifiant qui n’est pas un UUID', { sessionId: '42' }],
   ])('refuse : %s', (_label, change) => {
     expect(claimShareResponseSchema.safeParse({ ...claimed, ...change }).success).toBe(false);
+  });
+});
+
+describe('shareStatusResponseSchema (L5-04)', () => {
+  const active = {
+    status: 'ACTIVE',
+    expiresAt: '2026-10-07T08:30:00+01:00',
+    claimedAt: '2026-10-07T08:00:00+01:00',
+    doctor: { firstName: 'Aline', lastName: 'Demo', institution: 'Clinique de démonstration' },
+    remainingSeconds: 277,
+  };
+
+  it('accepte l’exemple du contrat, et une session encore en attente', () => {
+    expect(shareStatusResponseSchema.parse(active)).toEqual(active);
+    const pending = {
+      status: 'PENDING',
+      expiresAt: null,
+      claimedAt: null,
+      doctor: null,
+      remainingSeconds: null,
+    };
+    expect(shareStatusResponseSchema.parse(pending)).toEqual(pending);
+  });
+
+  it.each([
+    ['secondes négatives', { remainingSeconds: -1 }],
+    ['secondes non entières', { remainingSeconds: 1.5 }],
+    ['statut inconnu', { status: 'TERMINE' }],
+    ['champ manquant', { doctor: undefined }],
+  ])('refuse : %s', (_label, change) => {
+    expect(shareStatusResponseSchema.safeParse({ ...active, ...change }).success).toBe(false);
   });
 });

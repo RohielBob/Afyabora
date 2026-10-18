@@ -94,28 +94,59 @@ CŒUR DU PRODUIT — partage par QR dynamique : sessions, jetons rotatifs à usa
   instance de l'API. En plus : 20 scans par minute et par IP au plus (`@Throttle`).
 - Tests : `test/sharing-claim-limiter.test.ts` (sans base), `test/sharing-claim.test.ts` (vraie base).
 
+## Fin d'un partage et contrôle à chaque requête (L5-04, **fait**)
+
+- **`DELETE /shares/:id`** (patient, 204) : la session, en attente ou ouverte, passe à `REVOKED`
+  (`revokedAt`) ; ses jetons encore valables expirent ; ligne `SHARE_REVOKED` dans le journal, avec le
+  médecin concerné s'il y en avait un. **Effet immédiat** : la requête suivante du médecin est refusée
+  (`SESSION_REVOKED`). Session d'un autre patient ou inconnue : 404 ; déjà terminée : 204 sans rien changer
+  (pas de seconde ligne de journal) ; échue mais pas encore rangée : elle est **expirée** (pas « arrêtée »).
+  Verrou de la session : révocation et scan simultanés ne laissent jamais un accès ouvert.
+- **`GET /shares/:id/status`** (patient, `shareStatusResponseSchema`) : état, médecin, `claimedAt`,
+  `expiresAt` et `remainingSeconds` calculés par le serveur (seule horloge de référence ; nuls si l'accès
+  n'est pas ouvert). Une session échue est expirée tout de suite. Autre patient : 404 ; médecin : 403.
+- **Expiration** (`share-expiry.ts`) : une session `ACTIVE` dont la fin est passée devient `EXPIRED`, avec
+  une ligne `SHARE_EXPIRED` à l'heure de fin réelle. Deux chemins, une seule règle (`expireDueSessions`) :
+  - **tâche planifiée** `ShareExpiryJob`, chaque minute (`@nestjs/schedule`, déjà installé), par lots de
+    500 ; elle passe les sessions verrouillées (`SKIP LOCKED`) et les reprend au passage suivant ; en cas
+    de panne, un avertissement sans aucune donnée ;
+  - **contrôle à chaque requête** (état, accès du médecin) : n'attend pas la tâche.
+
+  Sessions verrouillées puis revérifiées : tâche, requêtes et révocation simultanées n'écrivent qu'**une**
+  ligne ; une session révoquée reste révoquée.
+
+- **`requireActiveAccess(médecin, session, { category })`** (`ShareLifecycleService`, exporté par le
+  module) : le contrôle que **chaque** route médecin (L5-12, L5-15) fera avant de lire une donnée. Session
+  inconnue : 404 ; pas ouverte par ce médecin : 403 ; révoquée : 403 `SESSION_REVOKED` ; expirée ou échue
+  (horloge du serveur, fin pile comprise) : 403 `SESSION_EXPIRED` ; catégorie non partagée : 403
+  `CATEGORY_NOT_SHARED`.
+- Tests : `test/sharing-expiry.test.ts` (sans base) et `test/sharing-lifecycle.test.ts` (vraie base).
+
 ## Tests obligatoires
 
 - [x] Même QR scanné deux fois : le second refusé (L5-02 sur la consommation, L5-03 par la route `claim`).
 - [x] Jeton de plus de 60 s refusé (idem).
 - [x] Deux claims simultanés : un seul réussit (L5-03 : 10 médecins en même temps, un seul accès, une
       seule ligne de journal).
-- [ ] Après expiration : 403 sur toutes les routes médecin.
-- [ ] Révocation effective en moins de 5 s.
+- [ ] Après expiration : 403 sur toutes les routes médecin. (Contrôle prêt et testé, L5-04 :
+      `requireActiveAccess` ⇒ 403 `SESSION_EXPIRED` ; à vérifier sur chaque route du dossier, L5-12.)
+- [x] Révocation effective en moins de 5 s (L5-04 : immédiate, la requête suivante est refusée).
 - [x] Médecin `PENDING` refusé (L5-03 : 403 `DOCTOR_NOT_APPROVED`, QR non consommé ; `REJECTED` aussi).
 - [x] Le hash seul est en base (aucune colonne ne contient le jeton) (L5-01).
 
 ## Fichiers
 
-| Fichier                  | Rôle                                                                                                   |
-| ------------------------ | ------------------------------------------------------------------------------------------------------ |
-| `sharing.module.ts`      | Déclaration du module NestJS                                                                           |
-| `sharing.controller.ts`  | Routes HTTP : validation Zod (`ZodValidationPipe` + schémas de `@glyka/shared`), pas de logique métier |
-| `sharing.service.ts`     | Logique métier et accès base (Prisma)                                                                  |
-| `share-token.ts`         | Jetons : émission, hash SHA-256, forme attendue (fonctions pures)                                      |
-| `consume-token.ts`       | Consommation atomique d'un jeton (usage unique), appelée par la route du médecin (L5-03)               |
-| `share-claim.service.ts` | Scan par le médecin : approbation, consommation, accès ouvert, journal (L5-03)                         |
-| `claim-limiter.ts`       | Blocage après 5 scans ratés par minute (IP ou compte)                                                  |
+| Fichier                      | Rôle                                                                                                   |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------ |
+| `sharing.module.ts`          | Déclaration du module NestJS                                                                           |
+| `sharing.controller.ts`      | Routes HTTP : validation Zod (`ZodValidationPipe` + schémas de `@glyka/shared`), pas de logique métier |
+| `sharing.service.ts`         | Logique métier et accès base (Prisma)                                                                  |
+| `share-token.ts`             | Jetons : émission, hash SHA-256, forme attendue (fonctions pures)                                      |
+| `consume-token.ts`           | Consommation atomique d'un jeton (usage unique), appelée par la route du médecin (L5-03)               |
+| `share-claim.service.ts`     | Scan par le médecin : approbation, consommation, accès ouvert, journal (L5-03)                         |
+| `share-lifecycle.service.ts` | Révocation, état du partage, contrôle d'accès des routes médecin (L5-04)                               |
+| `share-expiry.ts`            | Expiration des accès : règle commune et tâche planifiée chaque minute (L5-04)                          |
+| `claim-limiter.ts`           | Blocage après 5 scans ratés par minute (IP ou compte)                                                  |
 
 ## Rappels
 
