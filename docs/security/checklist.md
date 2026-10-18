@@ -14,19 +14,28 @@
 ## Autorisation
 
 - [ ] Toute route vérifie le **rôle** ET la **propriété** de la donnée (un patient ne lit jamais les données d'un autre)
-- [ ] Un médecin `PENDING` ou `REJECTED` ne peut pas utiliser `/shares/claim`
+- [x] Un médecin `PENDING` ou `REJECTED` ne peut pas utiliser `/shares/claim` (L5-03 : `test/sharing-claim.test.ts`)
 
 ## Partage par QR (ADR-0003) — tests automatiques obligatoires (L5-14)
 
-- [ ] Le même QR scanné deux fois : le second est refusé
-- [ ] Un jeton de plus de 60 s est refusé
-- [ ] Deux scans simultanés : un seul réussit
-- [ ] Après expiration : 403 sur toutes les routes médecin
-- [ ] Après révocation : accès coupé en moins de 5 s
-- [ ] Une catégorie décochée n'est jamais renvoyée (notes personnelles comprises)
-- [ ] Seul le hash du jeton est en base
-- [ ] Limitation de débit active sur `/shares/claim` et `/e/:token`
-- [ ] Chaque étape écrit dans le journal d'accès
+Tous vérifiés ensemble, de bout en bout, sur une vraie base : `apps/api/test/sharing-security.test.ts` (L5-14).
+La suite a été éprouvée par 16 failles volontaires (jeton réutilisable, accès lu après la fin, catégorie qui
+fuit, jeton en clair, limites désactivées, journal manquant…) : toutes détectées (3 d'entre elles seulement
+quand les DEUX protections redondantes sont retirées ensemble).
+
+- [x] Le même QR scanné deux fois : le second est refusé (même par le même médecin ; jeton remplacé par une
+      rotation refusé aussi)
+- [x] Un jeton de plus de 60 s est refusé
+- [x] Deux scans simultanés : un seul réussit (10 médecins en même temps, une seule ligne de journal)
+- [x] Après expiration : 403 sur toutes les routes médecin (liste lue dans le CONTRAT : une route ajoutée plus
+      tard est contrôlée automatiquement ; `/report` le sera avec L6-04)
+- [x] Après révocation : accès coupé en moins de 5 s (immédiat : la requête suivante est refusée)
+- [x] Une catégorie décochée n'est jamais renvoyée (notes personnelles comprises) : marqueurs uniques semés dans
+      chaque catégorie, aucun ne sort par aucune route quand sa catégorie est décochée
+- [x] Seul le hash du jeton est en base (toutes les tables fouillées)
+- [x] Limitation de débit active sur `/shares/claim` (5 scans ratés ⇒ blocage ; 20 requêtes par minute)
+- [ ] Limitation de débit active sur `/e/:token` (route d'urgence pas encore codée : L6-05, L6-06)
+- [x] Chaque étape écrit dans le journal d'accès (scan, consultation, arrêt, expiration, lus par le patient)
 
 ## Données
 

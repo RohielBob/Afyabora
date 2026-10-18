@@ -138,11 +138,16 @@ CŒUR DU PRODUIT — partage par QR dynamique : sessions, jetons rotatifs à usa
 - [x] Jeton de plus de 60 s refusé (idem).
 - [x] Deux claims simultanés : un seul réussit (L5-03 : 10 médecins en même temps, un seul accès, une
       seule ligne de journal).
-- [ ] Après expiration : 403 sur toutes les routes médecin. (Contrôle prêt et testé, L5-04 :
-      `requireActiveAccess` ⇒ 403 `SESSION_EXPIRED` ; à vérifier sur chaque route du dossier, L5-12.)
+- [x] Après expiration : 403 sur toutes les routes médecin (L5-12 route par route ; L5-14 : toutes les routes
+      médecin du contrat, `test/sharing-security.test.ts`).
 - [x] Révocation effective en moins de 5 s (L5-04 : immédiate, la requête suivante est refusée).
 - [x] Médecin `PENDING` refusé (L5-03 : 403 `DOCTOR_NOT_APPROVED`, QR non consommé ; `REJECTED` aussi).
-- [x] Le hash seul est en base (aucune colonne ne contient le jeton) (L5-01).
+- [x] Le hash seul est en base (aucune colonne ne contient le jeton) (L5-01 ; L5-14 : toutes les tables).
+
+**Suite de sécurité (L5-14)** : `test/sharing-security.test.ts` rejoue toute la checklist du partage
+(`docs/security/checklist.md`) de bout en bout, en attaquant : double scan, jeton échu ou remplacé, scans
+simultanés, fin d'accès sur toutes les routes médecin du contrat, catégories décochées (marqueurs), jeton en
+base, limites de débit, journal lu par le patient, rôle et propriété.
 
 ## Fichiers
 
