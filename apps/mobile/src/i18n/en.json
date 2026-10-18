@@ -1254,5 +1254,117 @@
         "text": "Something went wrong. Try again in a moment."
       }
     }
+  },
+  "share": {
+    "home": {
+      "overline": "Secure sharing",
+      "title": "Share with a doctor",
+      "intro": "Your doctor scans a QR code on your screen and sees, for a limited time, only what you chose.",
+      "promise": {
+        "noData": {
+          "title": "No data in the QR code",
+          "text": "The QR code only holds a secret code that changes every minute and works only once."
+        },
+        "limited": {
+          "title": "Limited access",
+          "text": "You choose what to share and for how long. Only a verified doctor can scan."
+        },
+        "control": {
+          "title": "You stay in control",
+          "text": "You can end access at any time, and see who viewed your data."
+        }
+      },
+      "start": "Share my history",
+      "network": "Sharing needs an internet connection.",
+      "log": "Who viewed my data",
+      "logHint": "Doctors who had access, and when",
+      "emergency": "Emergency card",
+      "emergencyHint": "Information useful to first responders"
+    },
+    "new": {
+      "overline": "Share my history",
+      "title": "What do you want to share?",
+      "close": "Close without sharing",
+      "intro": "The doctor will only see what you tick. Nothing is shared until they scan the QR code.",
+      "what": "What the doctor will be able to see",
+      "count_one": "{{count}} of {{total}}",
+      "count_other": "{{count}} of {{total}}",
+      "noneSelected": "Tick at least one category to create the QR code.",
+      "howLong": "For how long",
+      "durationLabel": "Access duration",
+      "startsAtScan": "The duration starts when the doctor scans the QR code. You can end it sooner.",
+      "generate": "Generate the QR code",
+      "qrNote": "The QR code holds no medical data. It changes every 60 seconds and works only once."
+    },
+    "category": {
+      "GLUCOSE_HISTORY": {
+        "label": "Glucose history",
+        "text": "Your readings, their timing and your target ranges"
+      },
+      "TREATMENTS": {
+        "label": "Declared treatments",
+        "text": "The medicines and doses you logged"
+      },
+      "MEALS": {
+        "label": "Meals",
+        "text": "The meals you logged"
+      },
+      "ACTIVITY": {
+        "label": "Physical activity",
+        "text": "The activities you logged"
+      },
+      "AI_SUMMARY": {
+        "label": "Analysis summary",
+        "text": "Key figures and observations computed by Afyabora"
+      },
+      "REPORT_DOWNLOAD": {
+        "label": "Report download",
+        "text": "The doctor will be able to save a PDF report"
+      },
+      "PERSONAL_NOTES": {
+        "label": "Personal notes",
+        "text": "The free text you wrote in your notes",
+        "note": "Your notes may contain very personal information."
+      }
+    },
+    "duration": {
+      "MIN_5": {
+        "label": "5 min",
+        "hint": "A quick look"
+      },
+      "MIN_30": {
+        "label": "30 min",
+        "hint": "A short visit"
+      },
+      "HOUR_1": {
+        "label": "1 h",
+        "hint": "A long visit"
+      },
+      "CONSULTATION": {
+        "label": "Consultation",
+        "hint": "2 h at most"
+      }
+    },
+    "problem": {
+      "offline": {
+        "title": "No connection",
+        "text": "Sharing needs the internet: the server creates and checks the QR code. Your data stays on this phone."
+      },
+      "tooMany": {
+        "title": "Too many QR codes created",
+        "text": "Wait a minute before creating a new one."
+      },
+      "busy": {
+        "title": "Service temporarily unavailable",
+        "text": "Sharing is very busy. Try again in a moment."
+      },
+      "rejected": {
+        "title": "Sharing is not possible yet"
+      },
+      "error": {
+        "title": "The QR code could not be created",
+        "text": "Something went wrong. Try again in a moment."
+      }
+    }
   }
 }
