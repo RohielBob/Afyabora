@@ -16,7 +16,7 @@ export interface TimelineEntry {
   item: TimelineItem;
 }
 
-/** Mesure ⇒ ligne : valeur, état selon les seuils DU PATIENT, provenance ; le libellé est le contexte. */
+/** Mesure ⇒ ligne : valeur, état selon les seuils DU PATIENT, provenance et lot ; le libellé est le contexte. */
 export function measurementEntry(
   row: {
     id: string;
@@ -24,6 +24,7 @@ export function measurementEntry(
     valueMgDl: number;
     context: MeasurementContext;
     source: MeasurementSource;
+    importBatchId: string | null;
   },
   thresholds: GlucoseThresholds,
 ): TimelineEntry {
@@ -38,16 +39,24 @@ export function measurementEntry(
       valueMgDl: row.valueMgDl,
       state: classifyGlucose(row.valueMgDl, thresholds),
       source: row.source,
+      details: null,
+      durationMinutes: null,
+      importBatchId: row.importBatchId,
     },
   };
 }
 
-/** Évènement déclaré ⇒ ligne : son libellé (texte du patient), sans valeur ni provenance. */
+/**
+ * Évènement déclaré ⇒ ligne : son libellé et sa durée, sans valeur ni provenance. `details` : texte libre
+ * DÉJÀ déchiffré par l'appelant, ou null s'il ne doit pas être envoyé (notes personnelles non partagées).
+ */
 export function eventEntry(row: {
   id: string;
   occurredAt: Date;
   type: LifeEventType;
   label: string;
+  durationMinutes: number | null;
+  details: string | null;
 }): TimelineEntry {
   return {
     id: row.id,
@@ -59,6 +68,9 @@ export function eventEntry(row: {
       valueMgDl: null,
       state: null,
       source: null,
+      details: row.details,
+      durationMinutes: row.durationMinutes,
+      importBatchId: null,
     },
   };
 }

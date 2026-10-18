@@ -113,7 +113,13 @@ export function TimelineTab({
                       aria-label={fill(t.itemA11y, {
                         time: timeText(item.at),
                         kind: t.kind[item.kind],
-                        text: item.state ? `${text}, ${fr.record.states[item.state]}` : text,
+                        text: [
+                          text,
+                          item.state ? fr.record.states[item.state] : null,
+                          item.details ? fill(t.detailsA11y, { details: item.details }) : null,
+                        ]
+                          .filter(Boolean)
+                          .join(', '),
                       })}
                     >
                       <span className="w-12 shrink-0 text-[13px] font-semibold text-muted tabular-nums">
@@ -125,11 +131,22 @@ export function TimelineTab({
                         <KindIcon kind={item.kind} />
                         {t.kind[item.kind]}
                       </span>
-                      <span className="min-w-0 flex-1 text-[14px] text-ink">{text}</span>
+                      <span className="flex min-w-0 flex-1 flex-col gap-0.5">
+                        <span className="text-[14px] text-ink">{text}</span>
+                        {/* Texte libre du patient : seulement s'il partage ses notes (contrat 0.4.2). */}
+                        {item.details ? (
+                          <span className="text-[13px] text-muted italic">« {item.details} »</span>
+                        ) : null}
+                      </span>
                       {item.state || item.source ? (
                         <span className="flex items-center gap-2">
                           {item.state ? <GlucoseStateBadge state={item.state} /> : null}
-                          {item.source ? <ProvenanceBadge source={item.source} /> : null}
+                          {item.source ? (
+                            <ProvenanceBadge
+                              source={item.source}
+                              importBatchId={item.importBatchId}
+                            />
+                          ) : null}
                         </span>
                       ) : null}
                     </li>

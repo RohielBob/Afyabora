@@ -2,6 +2,29 @@
 
 Format : une section par version. Une **rupture** est signalée en tête de section.
 
+## 0.4.2 : 2026-10-18 (après L5-12, accord de l'équipe)
+
+Chronologie du dossier partagé (`GET /doctor/sessions/{sessionId}/timeline`) : le médecin voyait seulement le
+libellé d'un évènement. Il voit maintenant la dose déclarée d'un traitement, la durée d'une activité et le lot
+d'une mesure importée, **dans la limite de ce que le patient partage**.
+
+### Ajouté
+
+- `TimelineItem.details` (texte, nullable) : texte libre d'un évènement (ex. « 500 mg le matin »). Envoyé
+  **seulement si le patient partage aussi ses notes personnelles** (`PERSONAL_NOTES`), comme la note d'une
+  mesure : l'application du patient lui annonce que ce texte n'est « partagé que s'il le choisit ». Sinon
+  `null` ; toujours `null` pour une mesure.
+- `TimelineItem.durationMinutes` (entier, nullable) : durée d'un évènement, si le patient l'a indiquée.
+- `TimelineItem.importBatchId` (uuid, nullable) : lot d'import d'une mesure importée (badge « Import · lot
+  3F2A1C », L4-09) ; `null` sinon.
+- Exemple de `TimelineItem` ; description de `label` (code du contexte pour une mesure).
+- `@glyka/shared` : `timelineItemSchema` suit ces champs.
+
+### Pas de rupture
+
+Champs ajoutés à une réponse de lecture (toujours présents, éventuellement `null`) ; rien n'est retiré ni
+renommé. Seul le portail médecin lit cette réponse.
+
 ## 0.4.1 : 2026-10-12 (L4-04 / L4-06, accord du lead technique)
 
 Import : quand l'aperçu ne trouve pas les colonnes, l'application doit pouvoir les faire choisir au patient.

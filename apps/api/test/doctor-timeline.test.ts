@@ -12,14 +12,28 @@ const T = { veryLowMgDl: 60, targetMinMgDl: 80, targetMaxMgDl: 160, veryHighMgDl
 const at = (minute: number) => new Date(Date.UTC(2026, 9, 18, 8, minute));
 const m = (id: string, minute: number, mgDl = 120) =>
   measurementEntry(
-    { id, measuredAt: at(minute), valueMgDl: mgDl, context: 'AFTER_MEAL', source: 'IMPORT' },
+    {
+      id,
+      measuredAt: at(minute),
+      valueMgDl: mgDl,
+      context: 'AFTER_MEAL',
+      source: 'IMPORT',
+      importBatchId: '3f2a1c9e-1111-4111-8111-111111111111',
+    },
     T,
   );
 const e = (id: string, minute: number) =>
-  eventEntry({ id, occurredAt: at(minute), type: 'TREATMENT', label: 'Insuline' });
+  eventEntry({
+    id,
+    occurredAt: at(minute),
+    type: 'TREATMENT',
+    label: 'Insuline',
+    durationMinutes: null,
+    details: '10 unités le soir',
+  });
 
 describe('lignes de la chronologie', () => {
-  it('mesure : valeur, état selon les seuils DONNÉS, provenance, contexte en code', () => {
+  it('mesure : valeur, état selon les seuils DONNÉS, provenance et lot, contexte en code', () => {
     expect(m('a', 1, 70).item).toEqual({
       kind: 'MEASUREMENT',
       at: at(1).toISOString(),
@@ -27,13 +41,16 @@ describe('lignes de la chronologie', () => {
       valueMgDl: 70,
       state: 'LOW',
       source: 'IMPORT',
+      details: null,
+      durationMinutes: null,
+      importBatchId: '3f2a1c9e-1111-4111-8111-111111111111',
     });
     expect(m('a', 1, 59).item.state).toBe('VERY_LOW');
     expect(m('a', 1, 161).item.state).toBe('HIGH');
     expect(m('a', 1, 241).item.state).toBe('VERY_HIGH');
   });
 
-  it('évènement : son type, son libellé, sans valeur ni état ni provenance', () => {
+  it('évènement : type, libellé, durée et texte reçus, sans valeur ni état ni provenance ni lot', () => {
     expect(e('b', 2).item).toEqual({
       kind: 'TREATMENT',
       at: at(2).toISOString(),
@@ -41,7 +58,19 @@ describe('lignes de la chronologie', () => {
       valueMgDl: null,
       state: null,
       source: null,
+      details: '10 unités le soir',
+      durationMinutes: null,
+      importBatchId: null,
     });
+    const walk = eventEntry({
+      id: 'w',
+      occurredAt: at(3),
+      type: 'ACTIVITY',
+      label: 'Marche',
+      durationMinutes: 40,
+      details: null,
+    });
+    expect(walk.item).toMatchObject({ kind: 'ACTIVITY', durationMinutes: 40, details: null });
   });
 });
 

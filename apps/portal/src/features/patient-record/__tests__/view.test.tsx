@@ -69,6 +69,9 @@ const item = (over: Partial<TimelineItem>): TimelineItem => ({
   valueMgDl: 148,
   state: 'IN_RANGE',
   source: 'MANUAL',
+  details: null,
+  durationMinutes: null,
+  importBatchId: null,
   ...over,
 });
 
@@ -133,6 +136,39 @@ describe('chronologie', () => {
         'G_L',
       ),
     ).toBe('Riz et haricots');
+  });
+
+  it('contrat 0.4.2 : durée après le libellé, texte libre sous la ligne, lot dans le badge', () => {
+    const walk = item({
+      kind: 'ACTIVITY',
+      label: 'Marche',
+      valueMgDl: null,
+      state: null,
+      source: null,
+      durationMinutes: 40,
+    });
+    expect(itemText(walk, 'G_L')).toBe('Marche · 40 min');
+    const html = renderToStaticMarkup(
+      <TimelineTab
+        items={[
+          item({
+            kind: 'TREATMENT',
+            label: 'Metformine',
+            valueMgDl: null,
+            state: null,
+            source: null,
+            details: '500 mg le matin',
+          }),
+          item({ source: 'IMPORT', importBatchId: '3f2a1c9e-1111-4111-8111-111111111111' }),
+        ]}
+        truncated={false}
+        unit="G_L"
+        now={NOW}
+      />,
+    );
+    expect(html).toContain('« 500 mg le matin »');
+    expect(html).toContain('note du patient : 500 mg le matin');
+    expect(html).toContain('Import · lot 3F2A1C');
   });
 
   it('regroupée par jour, dans l’ordre reçu', () => {

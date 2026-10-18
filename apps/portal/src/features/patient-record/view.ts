@@ -128,7 +128,10 @@ export function dayLabel(iso: string, now: Date): string {
 
 // ---------- Chronologie ----------
 
-/** Texte d'une ligne : « 1,20 g/L · À jeun » pour une mesure, le libellé du patient pour un évènement. */
+/**
+ * Texte d'une ligne : « 1,20 g/L · À jeun » pour une mesure ; pour un évènement, le libellé du patient et sa
+ * durée s'il l'a notée (« Marche · 40 min », contrat 0.4.2).
+ */
 export function itemText(item: TimelineItem, unit: GlucoseUnit): string {
   if (item.kind === 'MEASUREMENT' && item.valueMgDl !== null) {
     const context = fr.record.contexts[item.label as keyof typeof fr.record.contexts];
@@ -136,7 +139,9 @@ export function itemText(item: TimelineItem, unit: GlucoseUnit): string {
       ? `${valueText(item.valueMgDl, unit)} · ${context}`
       : valueText(item.valueMgDl, unit);
   }
-  return item.label;
+  return item.durationMinutes
+    ? `${item.label} · ${fill(fr.record.timeline.duration, { count: item.durationMinutes })}`
+    : item.label;
 }
 
 /** Lignes regroupées par jour (l'ordre reçu, du plus récent au plus ancien, est gardé). */

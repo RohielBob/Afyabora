@@ -11,8 +11,8 @@
 // Filtre des catégories, CÔTÉ SERVEUR (une donnée non partagée ne quitte jamais la base) :
 //  - glycémies : GLUCOSE_HISTORY ; note personnelle d'une mesure : seulement avec PERSONAL_NOTES ;
 //  - chronologie : mesures (GLUCOSE_HISTORY), repas (MEALS), activités (ACTIVITY), traitements déclarés
-//    (TREATMENTS), chacun seulement s'il est partagé ; le texte libre des évènements n'est jamais envoyé
-//    (le contrat ne donne que le libellé) ;
+//    (TREATMENTS), chacun seulement s'il est partagé ; durée des évènements et lot des mesures importées ;
+//    texte libre des évènements (ex. dose déclarée) seulement avec PERSONAL_NOTES (contrat 0.4.2) ;
 //  - résumé : identité limitée (prénom, type, année du diagnostic, unité, seuils) toujours ; qualité et
 //    statistiques des 30 derniers jours si les glycémies OU le résumé des analyses sont partagés (sinon
 //    qualité calculée sur zéro mesure et statistiques nulles : rien n'est révélé) ; observations de
@@ -200,6 +200,9 @@ export class DoctorRecordService {
       .map((category) => EVENT_TYPE_OF[category]);
     const after = query.cursor ? decodeCursor(query.cursor) : null;
     const period = this.period(query);
+    // Texte libre des évènements : seulement avec les notes personnelles (contrat 0.4.2), comme la note d'une
+    // mesure. Non partagé : la colonne chiffrée n'est même pas lue.
+    const withNotes = shared('PERSONAL_NOTES');
 
     const [measurements, events] = await Promise.all([
       shared('GLUCOSE_HISTORY')
@@ -213,7 +216,14 @@ export class DoctorRecordService {
               },
               orderBy: [{ measuredAt: 'desc' }, { id: 'desc' }],
               take: query.limit + 1,
-              select: { id: true, measuredAt: true, valueMgDl: true, context: true, source: true },
+              select: {
+                id: true,
+                measuredAt: true,
+                valueMgDl: true,
+                context: true,
+                source: true,
+                importBatchId: true,
+              },
             }),
             this.profileOf(access.patientId),
           ]).then(([rows, profile]) => rows.map((row) => measurementEntry(row, profile.thresholds)))
@@ -230,10 +240,23 @@ export class DoctorRecordService {
               },
               orderBy: [{ occurredAt: 'desc' }, { id: 'desc' }],
               take: query.limit + 1,
-              // Le texte libre chiffré (détails) n'est pas lu : le contrat ne donne que le libellé.
-              select: { id: true, occurredAt: true, type: true, label: true },
+              select: {
+                id: true,
+                occurredAt: true,
+                type: true,
+                label: true,
+                durationMinutes: true,
+                detailsEncrypted: withNotes,
+              },
             })
-            .then((rows) => rows.map(eventEntry))
+            .then((rows) =>
+              rows.map((row) =>
+                eventEntry({
+                  ...row,
+                  details: withNotes ? this.decrypt(row.detailsEncrypted ?? null) : null,
+                }),
+              ),
+            )
         : [],
     ]);
 

@@ -38,8 +38,9 @@ Onglets du dossier, graphiques, chronologie, résumé IA.
 ## À venir
 
 - L6-04 : onglet « Rapport PDF » (si `REPORT_DOWNLOAD` est partagé).
-- À décider (contrat) : le texte libre et la durée des évènements (dose déclarée d'un traitement, durée d'une
-  activité) et le lot d'import ne sont pas dans `TimelineItem`.
+- Contrat 0.4.2 (fait) : la chronologie montre la **durée** d'un évènement (« Marche · 40 min »), le **lot**
+  d'une mesure importée (« Import · lot 3F2A1C ») et le **texte libre** d'un évènement (dose déclarée d'un
+  traitement…) en italique sous la ligne, **seulement si le patient partage ses notes personnelles**.
 
 ## Composant déjà prêt
 

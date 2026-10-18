@@ -62,6 +62,11 @@ import {
   lifeEventDtoSchema,
   unusualValueErrorSchema,
   importColumnsErrorSchema,
+  TIMELINE_KINDS,
+  timelineItemSchema,
+  timelineListSchema,
+  doctorSessionSchema,
+  doctorSummarySchema,
 } from '@glyka/shared';
 
 // Le contrat est un document JSON arbitraire : `any` est volontaire ici (permis dans les tests).
@@ -283,6 +288,7 @@ describe('contrat OpenAPI : énumérations identiques à @glyka/shared', () => {
     ['AssistantMessageStatus', ASSISTANT_MESSAGE_STATUSES],
     ['AssistantAnswerKind', ASSISTANT_ANSWER_KINDS],
     ['KnowledgeSheetStatus', KNOWLEDGE_SHEET_STATUSES],
+    ['TimelineKind', TIMELINE_KINDS],
   ];
 
   it.each(pairs)('%s', (name: string, values: readonly string[]) => {
@@ -455,6 +461,34 @@ describe('contrat OpenAPI : réponses de l’assistant identiques aux schémas Z
   it('une réponse en préparation (exemple de SendAssistantMessageResponse) n’a ni texte ni nature', () => {
     const { answer } = schemas.SendAssistantMessageResponse.example;
     expect(answer).toMatchObject({ status: 'PENDING', text: null, kind: null, sources: [] });
+  });
+});
+
+describe('contrat OpenAPI : réponses du portail médecin identiques aux schémas Zod (L5-11, L5-12, 0.4.2)', () => {
+  // Nom du schéma OpenAPI -> schéma Zod avec lequel le portail vérifie la réponse.
+  const responses: [string, Json][] = [
+    ['DoctorSession', doctorSessionSchema],
+    ['DoctorSummary', doctorSummarySchema],
+    ['TimelineItem', timelineItemSchema],
+    ['TimelineList', timelineListSchema],
+  ];
+
+  it.each(responses)('%s : mêmes champs, mêmes champs obligatoires', (name: string, zod: Json) => {
+    const shape = shapeOf(zod);
+    const { properties, required } = documentedFields(schemas[name]);
+    expect(properties).toEqual(Object.keys(shape).sort());
+    const requiredByZod = Object.keys(shape)
+      .filter((key) => !shape[key].isOptional())
+      .sort();
+    expect(required).toEqual(requiredByZod);
+  });
+
+  it('TimelineItem : exemple accepté ; texte libre, durée et lot nullables (0.4.2)', () => {
+    expect(timelineItemSchema.safeParse(schemas.TimelineItem.example).success).toBe(true);
+    for (const field of ['details', 'durationMinutes', 'importBatchId']) {
+      expect(schemas.TimelineItem.properties[field].nullable).toBe(true);
+    }
+    expect(schemas.TimelineItem.properties.details.description).toContain('PERSONAL_NOTES');
   });
 });
 
