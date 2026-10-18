@@ -44,6 +44,17 @@ export type ShareDuration = (typeof SHARE_DURATIONS)[number];
 export const SHARE_STATUSES = ['PENDING', 'ACTIVE', 'EXPIRED', 'REVOKED'] as const;
 export type ShareStatus = (typeof SHARE_STATUSES)[number];
 
+/** Actions du journal d'accès du patient (contrat : AccessAction). */
+export const ACCESS_ACTIONS = [
+  'SHARE_CLAIMED',
+  'SHARE_VIEWED',
+  'SHARE_REVOKED',
+  'SHARE_EXPIRED',
+  'EMERGENCY_VIEWED',
+  'REPORT_DOWNLOADED',
+] as const;
+export type AccessAction = (typeof ACCESS_ACTIONS)[number];
+
 export const DOCTOR_VERIFICATION_STATUSES = ['PENDING', 'APPROVED', 'REJECTED'] as const;
 export type DoctorVerificationStatus = (typeof DOCTOR_VERIFICATION_STATUSES)[number];
 

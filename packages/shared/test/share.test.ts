@@ -1,6 +1,9 @@
-// L5-01, L5-03 et L5-04 : réponses de POST /shares, POST /shares/claim et GET /shares/:id/status.
+// L5-01, L5-03, L5-04 et L5-05 : réponses du partage (création, scan, état) et journal d'accès.
 import { describe, expect, it } from 'vitest';
 import {
+  ACCESS_ACTIONS,
+  accessLogListSchema,
+  accessLogQuerySchema,
   claimShareResponseSchema,
   createShareResponseSchema,
   createShareSchema,
@@ -131,5 +134,62 @@ describe('shareStatusResponseSchema (L5-04)', () => {
     ['champ manquant', { doctor: undefined }],
   ])('refuse : %s', (_label, change) => {
     expect(shareStatusResponseSchema.safeParse({ ...active, ...change }).success).toBe(false);
+  });
+});
+
+describe('journal d’accès (L5-05)', () => {
+  const entry = {
+    id: '3f2b8c1e-6a4d-4e1b-9c7a-1d2e3f4a5b6c',
+    action: 'SHARE_CLAIMED',
+    at: '2026-10-07T08:30:00+01:00',
+    sessionId: '3f2b8c1e-6a4d-4e1b-9c7a-1d2e3f4a5b6d',
+    actorName: 'Aline Demo',
+  };
+
+  it('les 6 actions du contrat', () => {
+    expect(ACCESS_ACTIONS).toEqual([
+      'SHARE_CLAIMED',
+      'SHARE_VIEWED',
+      'SHARE_REVOKED',
+      'SHARE_EXPIRED',
+      'EMERGENCY_VIEWED',
+      'REPORT_DOWNLOADED',
+    ]);
+  });
+
+  it('accepte une page, et un accès d’urgence anonyme (ni session ni nom)', () => {
+    const page = {
+      items: [entry, { ...entry, action: 'EMERGENCY_VIEWED', sessionId: null, actorName: null }],
+      nextCursor: 'abc',
+    };
+    expect(accessLogListSchema.parse(page)).toEqual(page);
+  });
+
+  it('ne laisse JAMAIS passer l’adresse IP', () => {
+    const parsed = accessLogListSchema.parse({
+      items: [{ ...entry, ip: '10.0.0.1' }],
+      nextCursor: null,
+    });
+    expect(parsed.items[0]).not.toHaveProperty('ip');
+  });
+
+  it.each([
+    ['action inconnue', { action: 'SHARE_DELETED' }],
+    ['date sans fuseau', { at: '2026-10-07T08:30:00' }],
+  ])('refuse : %s', (_label, change) => {
+    expect(
+      accessLogListSchema.safeParse({ items: [{ ...entry, ...change }], nextCursor: null }).success,
+    ).toBe(false);
+  });
+
+  it('paramètres : 500 par défaut, de 1 à 2000, nombres lus dans l’URL', () => {
+    expect(accessLogQuerySchema.parse({})).toEqual({ limit: 500 });
+    expect(accessLogQuerySchema.parse({ limit: '20', cursor: 'x' })).toEqual({
+      limit: 20,
+      cursor: 'x',
+    });
+    for (const limit of ['0', '2001', '1.5', 'beaucoup']) {
+      expect(accessLogQuerySchema.safeParse({ limit }).success).toBe(false);
+    }
   });
 });

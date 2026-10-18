@@ -29,6 +29,7 @@ import {
 } from '@glyka/shared';
 import { UNAUTHORIZED_MESSAGE } from '../../common/guards/jwt-auth.guard';
 import { PrismaService } from '../../prisma/prisma.service';
+import { writeAccessLog } from '../audit/access-log';
 import { ClaimFailureLimiter } from './claim-limiter';
 import { consumeShareToken } from './consume-token';
 import { busyAsUnavailable, CREATE_TRANSACTION } from './sharing.service';
@@ -69,16 +70,16 @@ export class ShareClaimService {
           where: { id: consumed.sessionId },
           data: { status: 'ACTIVE', claimedByDoctorId: doctorId, claimedAt: now, expiresAt },
         });
-        await tx.accessLog.create({
-          data: {
+        await writeAccessLog(tx, [
+          {
             patientId: consumed.patientId,
             actorId: doctorId,
             sessionId: consumed.sessionId,
             action: 'SHARE_CLAIMED',
-            ip: ip ?? null,
+            ip,
             at: now,
           },
-        });
+        ]);
         const patient = await tx.patientProfile.findUniqueOrThrow({
           where: { userId: consumed.patientId },
           select: { firstName: true, diabetesType: true },

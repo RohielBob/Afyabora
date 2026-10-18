@@ -122,6 +122,16 @@ CŒUR DU PRODUIT — partage par QR dynamique : sessions, jetons rotatifs à usa
   `CATEGORY_NOT_SHARED`.
 - Tests : `test/sharing-expiry.test.ts` (sans base) et `test/sharing-lifecycle.test.ts` (vraie base).
 
+## Journal d'accès : `GET /shares/log` (L5-05, **fait**)
+
+- Patient seulement (médecin : 403). Paramètres `accessLogQuerySchema` : `limit` (1 à 2000, 500 par
+  défaut) et `cursor` (sinon 400). Réponse `accessLogListSchema` : lignes du plus récent au plus ancien
+  (`id`, `action`, `at`, `sessionId`, `actorName`) et `nextCursor`. Lignes à la même milliseconde : ni
+  répétées ni oubliées d'une page à l'autre (tri par date puis identifiant).
+- Seulement le journal **de ce patient** ; jamais l'adresse IP ni l'identifiant du médecin (l'IP reste en
+  base pour une enquête en cas d'abus). Lecture seule : le journal ne se modifie ni ne se supprime.
+- Le journal est écrit par le module `audit` (`writeAccessLog`), dans la transaction de chaque évènement.
+
 ## Tests obligatoires
 
 - [x] Même QR scanné deux fois : le second refusé (L5-02 sur la consommation, L5-03 par la route `claim`).
