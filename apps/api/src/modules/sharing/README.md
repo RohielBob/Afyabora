@@ -25,6 +25,29 @@ CŒUR DU PRODUIT — partage par QR dynamique : sessions, jetons rotatifs à usa
 - Toute étape écrit dans `AccessLog` (SHARE_CLAIMED, SHARE_REVOKED, SHARE_EXPIRED…).
 - Une tâche planifiée passe les sessions échues à `EXPIRED`, mais l'expiration est aussi vérifiée à CHAQUE requête.
 
+## Création d'une session : `POST /shares` (L5-01, **fait**)
+
+- **Entrée** (`createShareSchema`) : au moins une catégorie, sans doublon, et une durée (`MIN_5`, `MIN_30`,
+  `HOUR_1`, `CONSULTATION`). Patient seulement (`@Roles('PATIENT')`) ; profil médical obligatoire (sinon 400
+  explicite ; compte supprimé : 401). 10 créations par minute au plus (429 ensuite).
+- **Sortie** (201, `createShareResponseSchema`) : la session **en attente de scan** (`PENDING`, `claimedAt`
+  et `expiresAt` vides : la durée démarre au scan, L5-03 ; catégories triées) et son **premier jeton**.
+- **Jeton** (`share-token.ts`) : 32 octets du générateur cryptographique, en base64url (43 caractères, passe
+  tel quel dans un QR) ; valable 60 s ; **seul son hash SHA-256 est enregistré**, le jeton n'est écrit nulle
+  part (vérifié sur les tables de partage) ni journalisé.
+- **Un seul QR en attente** : une nouvelle session remplace celles encore en attente du même patient
+  (`EXPIRED`, jetons expirés) ; un ancien QR ne peut plus ouvrir d'accès. Les sessions `ACTIVE` et celles
+  des autres patients ne sont pas touchées. Deux créations simultanées (double appui) passent l'une après
+  l'autre (verrou PostgreSQL par patient, `pg_advisory_xact_lock`) : une seule session reste en attente.
+- Session et jeton sont écrits dans **une** transaction. Elle attend jusqu'à 10 s une connexion (2 s par
+  défaut) : sous forte charge, une transaction en attente du verrou garde sa connexion. Base vraiment
+  saturée : **503** « Le partage est momentanément indisponible. Réessayez dans un instant. », jamais 500.
+  (Trouvé en faisant tourner toute la suite : 10 créations simultanées donnaient une erreur 500.)
+- Tests : `test/sharing-token.test.ts` et `test/sharing-service.test.ts` (sans base, tournent partout) ;
+  `test/sharing-create.test.ts`
+  (vraie base PostgreSQL, uniquement sur une base `…_test` : voir le README du module `sync` pour la lancer
+  en local).
+
 ## Tests obligatoires
 
 - [ ] Même QR scanné deux fois : le second refusé.
@@ -33,7 +56,7 @@ CŒUR DU PRODUIT — partage par QR dynamique : sessions, jetons rotatifs à usa
 - [ ] Après expiration : 403 sur toutes les routes médecin.
 - [ ] Révocation effective en moins de 5 s.
 - [ ] Médecin `PENDING` refusé.
-- [ ] Le hash seul est en base (aucune colonne ne contient le jeton).
+- [x] Le hash seul est en base (aucune colonne ne contient le jeton) (L5-01).
 
 ## Fichiers
 

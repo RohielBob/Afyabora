@@ -25,17 +25,7 @@ import {
   OP_ID_TAKEN_REASON,
 } from '../src/modules/sync/sync.service';
 import { PrismaService } from '../src/prisma/prisma.service';
-
-/** Vrai seulement pour une base dont le NOM finit par « _test » (garde-fou contre la base de dev). */
-export function isTestDatabase(url: string | undefined): boolean {
-  if (!url) return false;
-  try {
-    const name = new URL(url).pathname.replace(/^\//, '');
-    return /_test$/.test(name);
-  } catch {
-    return false;
-  }
-}
+import { isTestDatabase } from './support/test-database';
 
 describe('garde-fou de la base des tests d’intégration', () => {
   it('seule une base nommée « …_test » est acceptée', () => {
