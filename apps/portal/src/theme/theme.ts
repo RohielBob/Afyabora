@@ -14,13 +14,24 @@ import {
 /** `primaryText` → `--afy-primary-text` */
 const toVar = (role: string) => `--afy-${role.replace(/[A-Z]/g, (c) => `-${c.toLowerCase()}`)}`;
 
+/** `VERY_LOW` → `very-low` */
+const stateSlug = (state: string) => state.toLowerCase().replace(/_/g, '-');
+
 /** Déclarations CSS des rôles de couleur d'un mode. */
 export function colorDeclarations(mode: ColorMode): string {
-  const colors: ThemeColors = buildTheme(mode).colors;
+  const theme = buildTheme(mode);
+  const colors: ThemeColors = theme.colors;
   // « Afya » du logo : bleu marine en clair, couleur du texte en sombre (marine illisible sur fond sombre).
   const wordmark = mode === 'light' ? brand.navy : colors.text;
   return [
     ...Object.entries(colors).map(([role, value]) => `${toVar(role)}: ${value};`),
+    // États glycémiques (dossier patient, L5-12) : palette dédiée SANS rouge (ADR-0008), toujours avec un
+    // symbole et un libellé à côté. `--afy-state-very-low-fg`, `-bg`, `-border`…
+    ...Object.entries(theme.states).flatMap(([state, tone]) =>
+      Object.entries(tone).map(
+        ([part, value]) => `--afy-state-${stateSlug(state)}-${part}: ${value};`,
+      ),
+    ),
     `--afy-wordmark: ${wordmark};`,
   ].join(' ');
 }

@@ -7,3 +7,5 @@ export { Spinner } from './Spinner';
 export { TextField } from './TextField';
 export { TextLink } from './TextLink';
 export { ProvenanceBadge, provenanceLabel } from './ProvenanceBadge';
+export { GlucoseStateBadge, STATE_CLASSES } from './GlucoseStateBadge';
+export { Segmented } from './Segmented';

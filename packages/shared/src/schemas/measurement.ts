@@ -54,6 +54,13 @@ export const measurementDtoSchema = z.object({
 });
 export type MeasurementDto = z.infer<typeof measurementDtoSchema>;
 
+/** Une page de mesures (contrat : MeasurementList), du plus récent au plus ancien. */
+export const measurementListSchema = z.object({
+  items: z.array(measurementDtoSchema),
+  nextCursor: z.string().nullable(),
+});
+export type MeasurementListDto = z.infer<typeof measurementListSchema>;
+
 export const periodQuerySchema = z.object({
   from: z.string().datetime({ offset: true }).optional(),
   to: z.string().datetime({ offset: true }).optional(),

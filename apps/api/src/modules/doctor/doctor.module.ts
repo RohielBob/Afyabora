@@ -1,12 +1,17 @@
 import { Module } from '@nestjs/common';
 import { InsightsModule } from '../insights/insights.module';
+import { SharingModule } from '../sharing/sharing.module';
 import { DoctorController } from './doctor.controller';
 import { DoctorService } from './doctor.service';
+import { DoctorRecordService } from './record.service';
 
 @Module({
-  imports: [InsightsModule], // qualité des données, même calcul que l'application du patient
+  imports: [
+    InsightsModule, // qualité, statistiques et analyse : même calcul que l'application du patient
+    SharingModule, // contrôle d'accès de chaque lecture du dossier (requireActiveAccess, L5-04)
+  ],
   controllers: [DoctorController],
-  providers: [DoctorService],
+  providers: [DoctorService, DoctorRecordService],
   exports: [DoctorService],
 })
 export class DoctorModule {}

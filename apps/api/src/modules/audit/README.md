@@ -30,8 +30,18 @@ Journal d'accès : trace qui a consulté quoi et quand. Service interne utilisé
 
 ## Tests obligatoires
 
-- [ ] Chaque claim, consultation et révocation produit une ligne. (Scan, révocation et expiration : faits
-      et testés sur le vrai parcours, L5-05. Consultation du dossier : à faire avec les routes médecin, L5-12.)
+- [x] Chaque claim, consultation et révocation produit une ligne. (Scan, révocation et expiration : L5-05.
+      Consultation du dossier : L5-12, **une ligne par moment de lecture**, voir ci-dessous.)
+
+## Règle des consultations (`SHARE_VIEWED`, L5-12, validée en équipe)
+
+- Une ligne par **moment de lecture** du dossier, pas par requête : au plus une par session toutes les
+  5 minutes (`doctor/record-view.ts`). Le patient lit **qui** a regardé et **quand** ; il ne doit pas lire
+  « 14 consultations » pour une seule ouverture du dossier (plusieurs requêtes, page relue toutes les 30 s).
+- Écrite **avant** la lecture, sous verrou de la session : jamais de lecture sans trace, jamais deux lignes
+  pour deux requêtes simultanées. Une lecture refusée n'écrit rien.
+- La **liste** « Mes patients partagés » (L5-11) n'écrit pas de ligne : elle ne lit pas le dossier
+  (seulement la date de la dernière mesure et un score de qualité).
 
 ## Fichiers
 
