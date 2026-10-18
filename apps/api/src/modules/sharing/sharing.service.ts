@@ -16,8 +16,20 @@
 //    Une transaction qui attend son tour garde une connexion à la base : on lui laisse 10 s pour démarrer
 //    (2 s par défaut). Si la base est vraiment saturée, réponse 503 « réessayez », jamais une erreur 500.
 //  - Le jeton n'est jamais enregistré ni journalisé : seul son hash l'est (share-token.ts).
+//
+// L5-02 : GET /shares/:id/token. Tant que la session attend son scan, l'application du patient demande un
+// nouveau jeton (le QR change toutes les 60 s).
+//  - Seul le patient propriétaire l'obtient : la session d'un autre patient est « introuvable » (404), sans
+//    révéler qu'elle existe. Session plus en attente (scannée, expirée, révoquée) : 409 SESSION_NOT_PENDING.
+//    Un QR déjà consommé suffit : la session n'attend plus de scan, même avant que l'accès soit ouvert.
+//  - Le nouveau jeton REMPLACE les précédents : ils expirent immédiatement. Il n'y a jamais qu'UN QR valable
+//    par session ; une photo de l'écran d'il y a 30 s ne sert plus.
+//  - La ligne de la session est verrouillée (SELECT … FOR UPDATE), comme lors d'un scan (consume-token.ts) :
+//    une rotation et un scan simultanés passent l'un après l'autre. Rotations simultanées (deux écrans
+//    ouverts) : à la fin, un seul jeton reste valable.
 import {
   BadRequestException,
+  ConflictException,
   Injectable,
   ServiceUnavailableException,
   UnauthorizedException,
@@ -29,8 +41,9 @@ import type {
   ShareDuration,
   ShareSessionDto,
   ShareStatus,
+  ShareTokenDto,
 } from '@glyka/shared';
-import { hasPrismaCode } from '../../common/data/owned-records';
+import { hasPrismaCode, notFound } from '../../common/data/owned-records';
 import { UNAUTHORIZED_MESSAGE } from '../../common/guards/jwt-auth.guard';
 import { PrismaService } from '../../prisma/prisma.service';
 import { issueShareToken } from './share-token';
@@ -73,6 +86,17 @@ export function toShareSessionDto(row: SessionRow): ShareSessionDto {
 export const CREATE_TRANSACTION = { maxWait: 10_000, timeout: 15_000 } as const;
 
 export const BUSY_MESSAGE = 'Le partage est momentanément indisponible. Réessayez dans un instant.';
+
+export const SESSION_NOT_FOUND_MESSAGE = 'Session de partage introuvable.';
+export const NOT_PENDING_MESSAGE =
+  "Ce partage n'attend plus de scan : il a déjà été ouvert, a expiré ou a été arrêté.";
+
+/** P2028 (base saturée) ⇒ 503 « réessayez » ; toute autre erreur passe telle quelle. */
+function busyAsUnavailable(error: unknown): never {
+  if (hasPrismaCode(error, 'P2028'))
+    throw new ServiceUnavailableException({ message: BUSY_MESSAGE });
+  throw error;
+}
 
 const SESSION_SELECT = {
   id: true,
@@ -129,15 +153,43 @@ export class SharingService {
           select: SESSION_SELECT,
         });
       }, CREATE_TRANSACTION)
-      .catch((error: unknown) => {
-        if (hasPrismaCode(error, 'P2028'))
-          throw new ServiceUnavailableException({ message: BUSY_MESSAGE });
-        throw error;
-      });
+      .catch(busyAsUnavailable);
     return {
       session: toShareSessionDto(session as SessionRow),
       token: { token: issued.token, expiresAt: issued.expiresAt.toISOString() },
     };
+  }
+
+  /** GET /shares/:id/token (L5-02) : nouveau jeton de la session en attente ; les précédents expirent. */
+  async rotate(patientId: string, sessionId: string, now = new Date()): Promise<ShareTokenDto> {
+    const issued = issueShareToken(now);
+    await this.prisma
+      .$transaction(async (tx) => {
+        const [session] = await tx.$queryRaw<{ patientId: string; status: string }[]>`
+          SELECT "patientId", "status"::text AS "status"
+          FROM "ShareSession" WHERE "id" = ${sessionId}::uuid FOR UPDATE`;
+        if (!session || session.patientId !== patientId) {
+          throw notFound(SESSION_NOT_FOUND_MESSAGE);
+        }
+        const consumed = await tx.shareToken.count({
+          where: { sessionId, usedAt: { not: null } },
+        });
+        if (session.status !== 'PENDING' || consumed > 0) {
+          throw new ConflictException({
+            message: NOT_PENDING_MESSAGE,
+            code: 'SESSION_NOT_PENDING',
+          });
+        }
+        await tx.shareToken.updateMany({
+          where: { sessionId, usedAt: null, expiresAt: { gt: now } },
+          data: { expiresAt: now },
+        });
+        await tx.shareToken.create({
+          data: { sessionId, tokenHash: issued.tokenHash, expiresAt: issued.expiresAt },
+        });
+      }, CREATE_TRANSACTION)
+      .catch(busyAsUnavailable);
+    return { token: issued.token, expiresAt: issued.expiresAt.toISOString() };
   }
 
   /** Sans profil médical, pas de partage : compte supprimé ⇒ 401, sinon 400 explicite. */
