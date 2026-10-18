@@ -1254,5 +1254,117 @@
         "text": "Une erreur est survenue. Réessayez dans un instant."
       }
     }
+  },
+  "share": {
+    "home": {
+      "overline": "Partage sécurisé",
+      "title": "Partager avec un médecin",
+      "intro": "Votre médecin scanne un QR sur votre écran et consulte, pendant un temps limité, seulement ce que vous avez choisi.",
+      "promise": {
+        "noData": {
+          "title": "Aucune donnée dans le QR",
+          "text": "Le QR ne contient qu'un code secret qui change toutes les minutes et ne sert qu'une fois."
+        },
+        "limited": {
+          "title": "Un accès limité",
+          "text": "Vous choisissez quoi partager et pendant combien de temps. Seul un médecin vérifié peut scanner."
+        },
+        "control": {
+          "title": "Vous gardez la main",
+          "text": "Vous pouvez mettre fin à l'accès à tout moment, et voir qui a consulté vos données."
+        }
+      },
+      "start": "Partager mon historique",
+      "network": "Le partage nécessite une connexion internet.",
+      "log": "Qui a consulté mes données",
+      "logHint": "Les médecins qui ont eu accès, et quand",
+      "emergency": "Carte d'urgence",
+      "emergencyHint": "Les informations utiles aux secours"
+    },
+    "new": {
+      "overline": "Partager mon historique",
+      "title": "Que voulez-vous partager ?",
+      "close": "Fermer sans partager",
+      "intro": "Le médecin ne verra que ce que vous cochez. Rien n'est partagé tant qu'il n'a pas scanné le QR.",
+      "what": "Ce que le médecin pourra voir",
+      "count_one": "{{count}} sur {{total}}",
+      "count_other": "{{count}} sur {{total}}",
+      "noneSelected": "Cochez au moins une catégorie pour créer le QR.",
+      "howLong": "Pendant combien de temps",
+      "durationLabel": "Durée de l'accès",
+      "startsAtScan": "La durée commence quand le médecin scanne le QR. Vous pourrez y mettre fin avant.",
+      "generate": "Générer le QR",
+      "qrNote": "Le QR ne contient aucune donnée médicale. Il change toutes les 60 secondes et ne sert qu'une fois."
+    },
+    "category": {
+      "GLUCOSE_HISTORY": {
+        "label": "Historique glycémique",
+        "text": "Vos mesures, leurs moments et vos plages cibles"
+      },
+      "TREATMENTS": {
+        "label": "Traitements déclarés",
+        "text": "Les médicaments et prises que vous avez notés"
+      },
+      "MEALS": {
+        "label": "Repas",
+        "text": "Les repas que vous avez notés"
+      },
+      "ACTIVITY": {
+        "label": "Activité physique",
+        "text": "Les activités que vous avez notées"
+      },
+      "AI_SUMMARY": {
+        "label": "Résumé des analyses",
+        "text": "Les chiffres clés et observations calculés par Afyabora"
+      },
+      "REPORT_DOWNLOAD": {
+        "label": "Téléchargement du rapport",
+        "text": "Le médecin pourra enregistrer un rapport PDF"
+      },
+      "PERSONAL_NOTES": {
+        "label": "Notes personnelles",
+        "text": "Le texte libre que vous avez écrit dans vos notes",
+        "note": "Vos notes peuvent contenir des informations très personnelles."
+      }
+    },
+    "duration": {
+      "MIN_5": {
+        "label": "5 min",
+        "hint": "Un coup d'œil"
+      },
+      "MIN_30": {
+        "label": "30 min",
+        "hint": "Une consultation courte"
+      },
+      "HOUR_1": {
+        "label": "1 h",
+        "hint": "Une consultation longue"
+      },
+      "CONSULTATION": {
+        "label": "Consultation",
+        "hint": "2 h au plus"
+      }
+    },
+    "problem": {
+      "offline": {
+        "title": "Pas de connexion",
+        "text": "Le partage a besoin d'internet : le serveur crée et vérifie le QR. Vos données restent sur ce téléphone."
+      },
+      "tooMany": {
+        "title": "Trop de QR créés",
+        "text": "Patientez une minute avant d'en créer un nouveau."
+      },
+      "busy": {
+        "title": "Service momentanément indisponible",
+        "text": "Le partage est très sollicité. Réessayez dans un instant."
+      },
+      "rejected": {
+        "title": "Partage impossible pour l'instant"
+      },
+      "error": {
+        "title": "Le QR n'a pas pu être créé",
+        "text": "Une erreur est survenue. Réessayez dans un instant."
+      }
+    }
   }
 }
