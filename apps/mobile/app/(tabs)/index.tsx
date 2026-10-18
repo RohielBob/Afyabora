@@ -16,14 +16,13 @@ import {
   LatestReading,
   QualityCard,
   StatsCard,
-  SyncStatus,
   greetingKey,
   periodQuality,
   periodStats,
   useDashboard,
   type ChartPeriod,
 } from '@/features/dashboard';
-import { useSyncRefresh } from '@/features/sync';
+import { SyncStatusBanner, useSyncRefresh } from '@/features/sync';
 import { MedicalDisclaimer } from '@/features/legal';
 import { spacing } from '@/theme';
 
@@ -64,6 +63,9 @@ export default function DashboardScreen() {
         </Text>
       </View>
 
+      {/* L8-10 : état de la synchronisation EN HAUT (« Hors ligne » se voit sans faire défiler). */}
+      <SyncStatusBanner index={0} />
+
       {state.status === 'loading' ? <DashboardSkeleton /> : null}
 
       {state.status === 'error' ? (
@@ -103,7 +105,6 @@ export default function DashboardScreen() {
           ) : (
             <EmptyLatest index={0} />
           )}
-          <SyncStatus pending={state.pending} index={4} />
         </>
       ) : null}
 

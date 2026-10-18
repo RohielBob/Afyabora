@@ -55,9 +55,14 @@ export type SyncErrorCode = 'offline' | 'server' | 'session' | 'refused' | 'loca
 
 export interface SyncState {
   status: 'idle' | 'syncing' | 'offline' | 'error';
-  /** Modifications pas encore envoyées (hors opérations refusées). */
+  /**
+   * Données (mesures + événements) avec une modification pas encore envoyée, hors refus. Une DONNÉE compte
+   * une fois, même modifiée trois fois (L8-10 : « 2 mesures en attente »).
+   */
   pendingCount: number;
-  /** Opérations refusées par le serveur, gardées avec leur raison. */
+  pendingMeasurements: number;
+  pendingEvents: number;
+  /** Données dont une modification a été refusée par le serveur (gardée avec sa raison). */
   failedCount: number;
   /** Dernière synchronisation complète réussie (ISO UTC), ou null. */
   lastSuccessAt: string | null;
@@ -69,13 +74,31 @@ export interface SyncState {
 export const INITIAL_SYNC_STATE: SyncState = {
   status: 'idle',
   pendingCount: 0,
+  pendingMeasurements: 0,
+  pendingEvents: 0,
   failedCount: 0,
   lastSuccessAt: null,
   lastError: null,
   nextRetryAt: null,
 };
 
-/** Base locale vue par le moteur : SQLite sur téléphone (db/repositories/sync.repo.ts), mémoire sur le web. */
+export interface SyncCounts {
+  measurements: number;
+  events: number;
+  failed: number;
+}
+
+/** Compteurs ⇒ champs de l'état publié. */
+export function countsState(counts: SyncCounts) {
+  return {
+    pendingCount: counts.measurements + counts.events,
+    pendingMeasurements: counts.measurements,
+    pendingEvents: counts.events,
+    failedCount: counts.failed,
+  };
+}
+
+/** Base locale vue par le moteur : SQLite sur téléphone (sqlite-store.ts), mémoire sur le web. */
 export interface SyncStore {
   /** Identifiant de cet appareil (créé au premier appel, gardé ensuite). */
   deviceId(): Promise<string>;
@@ -90,7 +113,8 @@ export interface SyncStore {
     page: { measurements: MeasurementDto[]; events: LifeEventDto[] },
     nextCursor: string | null,
   ): Promise<number>;
-  counts(): Promise<{ pending: number; failed: number }>;
+  /** Données en attente (par type) et données refusées, chacune comptée UNE fois. */
+  counts(): Promise<SyncCounts>;
   readLastSuccess(): Promise<string | null>;
   writeLastSuccess(iso: string): Promise<void>;
 }
@@ -122,6 +146,13 @@ export interface SyncEngine {
   subscribe(listener: () => void): () => void;
   /** Appelé quand la réception a modifié des données locales (la chronologie se recharge). */
   onDataChanged(listener: () => void): () => void;
+  /** Prévient les écrans que des données locales ont changé hors réception (modification abandonnée). */
+  notifyDataChanged(): void;
+  /**
+   * Relit les compteurs et la dernière synchronisation réussie dans la base, sans lancer de cycle : au
+   * démarrage de l'application, et juste après une saisie (le compteur bouge tout de suite, L8-10).
+   */
+  refresh(): Promise<void>;
 }
 
 /** Échec d'un appel à l'API ou à la base, avec son code pour l'interface. */
@@ -275,8 +306,7 @@ export function createSyncEngine(deps: SyncDeps): SyncEngine {
       failures = 0;
       publish({
         status: 'idle',
-        pendingCount: counts.pending,
-        failedCount: counts.failed,
+        ...countsState(counts),
         lastSuccessAt: success,
         lastError: null,
       });
@@ -295,7 +325,7 @@ export function createSyncEngine(deps: SyncDeps): SyncEngine {
         status: failure.code === 'offline' ? 'offline' : 'error',
         lastError: failure.code,
         nextRetryAt,
-        ...(counts ? { pendingCount: counts.pending, failedCount: counts.failed } : {}),
+        ...(counts ? countsState(counts) : {}),
       });
     }
     return state;
@@ -367,6 +397,18 @@ export function createSyncEngine(deps: SyncDeps): SyncEngine {
     onDataChanged(listener) {
       dataListeners.add(listener);
       return () => dataListeners.delete(listener);
+    },
+    notifyDataChanged() {
+      dataListeners.forEach((listener) => listener());
+    },
+    async refresh() {
+      const gen = generation;
+      const [counts, lastSuccessAt] = await Promise.all([
+        deps.store.counts(),
+        deps.store.readLastSuccess(),
+      ]).catch(() => [null, null] as const);
+      if (gen !== generation || !counts) return; // déconnecté entre-temps, ou base indisponible
+      publish({ ...countsState(counts), lastSuccessAt: state.lastSuccessAt ?? lastSuccessAt });
     },
   };
 }

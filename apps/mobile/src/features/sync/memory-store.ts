@@ -3,10 +3,14 @@
 // tests du moteur (__tests__/engine.test.ts).
 import type { WebMemory } from '@/db/web-memory';
 import type { SyncStore } from './engine';
+import type { RejectedStore } from './rejected';
 import { planPull } from './rules';
 import { KV_CURSOR, KV_DEVICE_ID, KV_LAST_SUCCESS } from './sqlite-store';
 
-export function createMemorySyncStore(memory: WebMemory, newId: () => string): SyncStore {
+export function createMemorySyncStore(
+  memory: WebMemory,
+  newId: () => string,
+): SyncStore & RejectedStore {
   const setKv = (key: string, value: string | null) => {
     if (value === null) memory.kv.delete(key);
     else memory.kv.set(key, value);
@@ -92,8 +96,45 @@ export function createMemorySyncStore(memory: WebMemory, newId: () => string): S
     },
 
     async counts() {
-      const failed = memory.outbox.filter((op) => op.last_error !== null).length;
-      return { pending: memory.outbox.length - failed, failed };
+      // Une DONNÉE compte une fois, même avec plusieurs opérations.
+      const distinct = (keep: (op: WebMemory['outbox'][number]) => boolean) =>
+        new Set(memory.outbox.filter(keep).map((op) => `${op.entity}:${op.entity_id}`)).size;
+      return {
+        measurements: distinct((op) => op.last_error === null && op.entity === 'measurement'),
+        events: distinct((op) => op.last_error === null && op.entity === 'event'),
+        failed: distinct((op) => op.last_error !== null),
+      };
+    },
+
+    async listRejected() {
+      return memory.outbox
+        .filter((op) => op.last_error !== null)
+        .sort((a, b) => a.seq - b.seq)
+        .map((op) => ({
+          opId: op.op_id,
+          entity: op.entity,
+          entityId: op.entity_id,
+          type: op.type,
+          reason: op.last_error as string,
+          attempts: op.attempts,
+          measurement:
+            op.entity === 'measurement' ? (memory.measurements.get(op.entity_id) ?? null) : null,
+          event: op.entity === 'event' ? (memory.events.get(op.entity_id) ?? null) : null,
+        }));
+    },
+
+    async retryRejected(opId) {
+      const op = memory.outbox.find((o) => o.op_id === opId);
+      if (op) op.last_error = null;
+    },
+
+    async discardRejected(opId) {
+      const op = memory.outbox.find((o) => o.op_id === opId);
+      if (!op) return;
+      removeOps((o) => !(o.entity === op.entity && o.entity_id === op.entity_id));
+      if (op.entity === 'measurement') memory.measurements.delete(op.entity_id);
+      else memory.events.delete(op.entity_id);
+      setKv(KV_CURSOR, null); // tout relire : la version du compte revient
     },
 
     async readLastSuccess() {

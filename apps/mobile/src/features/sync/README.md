@@ -10,7 +10,7 @@ Outbox, push, pull, connectivité, état affiché à l'utilisateur.
 - **L8-07** — Détection de connectivité et déclencheurs (retour réseau, ouverture, tirer pour rafraîchir) — **fait**
 - **L8-08** — Coalescence de l'outbox (fonction pure + tests) — fait (`coalesce.ts`)
 - **L8-09** — Tests de conflits et d'idempotence : rejeu, doublon, suppression hors-ligne, dérive d'horloge
-- **L8-10** — Interface : « n mesures en attente », état de synchronisation, erreurs
+- **L8-10** — Interface : « n mesures en attente », état de synchronisation, erreurs — **fait**
 - **L8-17** — Test hors-ligne de bout en bout sur un vrai téléphone (mode avion)
 
 ## Fichiers
@@ -25,9 +25,43 @@ Outbox, push, pull, connectivité, état affiché à l'utilisateur.
 | `store.ts` / `store.web.ts` | Choix de la base selon la plateforme                                                                                |
 | `service.ts`                | LE moteur de l'application, branché sur la vraie base et la vraie API (réponses vérifiées par les schémas partagés) |
 | `connectivity.ts`           | Détection du réseau (L8-07)                                                                                         |
+| `triggers.ts`               | Déclencheurs (L8-07) : ouverture, retour du réseau, retour dans l'application, tirer pour rafraîchir                |
+| `status.ts`                 | Ce que l'écran affiche (L8-10) : état, phrases « 2 mesures en attente », dernière synchro, prochain essai (pur)     |
+| `rejected.ts`               | Modifications refusées (L8-10) : types et description pour l'écran (pure)                                           |
+| `components/`               | `SyncStatusBanner` (Accueil) et `RejectedChangeCard` (écran `app/sync/index.tsx`)                                   |
 
 Les écrans et les autres features passent par `index.ts` : `requestSync`, `syncAfterLocalWrite`, `syncNow`,
-`stopSync`, `onSyncedData`, `useSyncState`, `useSyncTriggers`, `useSyncRefresh`.
+`stopSync`, `onSyncedData`, `useSyncState`, `useSyncTriggers`, `useSyncRefresh`, `listRejectedChanges`,
+`retryRejectedChange`, `discardRejectedChange`, `SyncStatusBanner`.
+
+## À l'écran (L8-10)
+
+**Bandeau de l'Accueil**, EN HAUT (un « Hors ligne » se voit sans faire défiler), qui ouvre l'écran
+« Synchronisation ». Toujours une icône ET un texte ; jamais de rouge (le rouge est l'action principale).
+
+| État du moteur                    | Bandeau                                                                     |
+| --------------------------------- | --------------------------------------------------------------------------- |
+| Rien en attente                   | « Tout est à jour » · « Dernière synchronisation à 14:30 »                  |
+| Données en attente                | « 2 mesures en attente de synchronisation » · « Envoi automatique… »        |
+| Hors ligne (CDC F11)              | « Hors ligne : vos données sont enregistrées sur ce téléphone » · compteur  |
+| Envoi en cours                    | « Synchronisation en cours… » (indicateur qui tourne)                       |
+| Échec (serveur, base, lot refusé) | « Synchronisation impossible pour le moment » · prochain essai · Réessayer  |
+| Session expirée                   | « Session expirée : reconnectez-vous pour synchroniser »                    |
+| Tout envoyé SAUF des refus        | « 1 modification à vérifier » (jamais « Tout est à jour » : ce serait faux) |
+
+- Le compteur compte des **données** (mesures, événements), pas des opérations : trois modifications de la
+  même mesure font « 1 mesure ». Il bouge **dès la saisie** (`refresh`), et la dernière synchronisation
+  réussie est relue dans la base au démarrage.
+- Prochain essai dans moins d'une minute : « Nouvel essai automatique dans quelques secondes ».
+
+**Écran « Synchronisation »** (`app/sync/index.tsx`, depuis le bandeau et le Profil) : état, données en
+attente, dernière synchronisation, « Synchroniser maintenant », tirer pour rafraîchir, et les
+**modifications refusées** avec la raison du serveur et le nombre de refus :
+
+- **Réessayer** : la modification repart (ex. l'horloge du téléphone était en avance et a été corrigée) ;
+- **Abandonner** (confirmation dans la carte) : la modification et la donnée sont retirées du téléphone et
+  tout le compte est relu ; la version enregistrée sur le compte revient. Une **création** refusée n'a
+  jamais existé sur le compte : elle disparaît simplement.
 
 ## Le cycle (`engine.ts`)
 
@@ -38,7 +72,8 @@ Les écrans et les autres features passent par `index.ts` : `requestSync`, `sync
      la même donnée) ; la donnée n'est plus « en attente » s'il ne reste rien pour elle. Une saisie faite
      **pendant** l'envoi reste en attente et part juste après.
    - `REJECTED` ⇒ gardée avec sa raison (`last_error`), **plus renvoyée** (elle serait refusée à nouveau),
-     sans bloquer les autres. Une modification suivante de la même donnée la remplace. L8-10 l'affichera.
+     sans bloquer les autres. Une modification suivante de la même donnée la remplace. L'écran
+     « Synchronisation » la montre (L8-10).
    - Opération sans réponse du serveur ⇒ gardée, nouvel essai plus tard.
 3. **Réception** : `GET /sync/pull` depuis le curseur gardé, page après page. Chaque page est appliquée
    (données **et** suppressions) **puis** le curseur enregistré, dans **une** transaction : une coupure au
@@ -103,6 +138,17 @@ modifier ensuite (sa note par exemple) ne sera pas refusée.
   avant : ses modifications non envoyées ne partent jamais sur le compte qui se connecte.
 
 ## Tests
+
+- `__tests__/status.test.ts` (L8-10) : chaque état du bandeau, refus signalés partout, « à vérifier » au lieu
+  de « Tout est à jour », phrases (mesures, événements, les deux), dernière synchronisation (aujourd'hui,
+  autre jour, jamais ; phrase ou valeur), prochain essai, description des refus. Moteur : compteurs par
+  donnée, relecture au démarrage, refus listés, réessayés, abandonnés (version du compte rétablie, création
+  refusée retirée).
+- Vérifié sur un **vrai SQLite** (L8-10) : compteurs `COUNT(DISTINCT …)`, liste, réessai et abandon des refus.
+- Vérifié de bout en bout (L8-10, vraie API, clair et sombre) : « Tout est à jour » ; mode avion + 2 saisies
+  ⇒ « Hors ligne » et « 2 mesures en attente », puis envoi au retour du réseau ; horloge en avance d'une
+  heure ⇒ refus affiché avec la raison du serveur, « Réessayer » ⇒ « Refusée 2 fois », « Abandonner » ⇒ plus
+  rien ; lot refusé ⇒ « Synchronisation impossible », puis rétabli au nouvel essai automatique.
 
 - `__tests__/triggers.test.ts` (L8-07) : réseau utilisable ou non, retour du réseau (jamais au premier état),
   retour dans l'application (arrière-plan seulement, 30 s), branchement et débranchement, tirer pour

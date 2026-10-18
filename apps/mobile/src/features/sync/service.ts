@@ -8,6 +8,7 @@ import { api } from '@/lib/api-client';
 import { getAccessToken } from '@/lib/secure-storage';
 import { isOnline } from './connectivity';
 import { createSyncEngine, type SyncState } from './engine';
+import type { RejectedChange } from './rejected';
 import { WRITE_DEBOUNCE_MS } from './rules';
 import { syncStore } from './store';
 import { realTriggerSources, startSyncTriggers, usePullToRefresh } from './triggers';
@@ -38,6 +39,7 @@ export function requestSync(): void {
 
 /** Après une saisie sur le téléphone : synchronisation dans 3 s (les saisies rapprochées partent ensemble). */
 export function syncAfterLocalWrite(): void {
+  void engine.refresh(); // L8-10 : « 1 mesure en attente » s'affiche tout de suite
   engine.request(WRITE_DEBOUNCE_MS);
 }
 
@@ -69,6 +71,7 @@ export function useSyncState(): SyncState {
 export function useSyncTriggers(signedIn: boolean): void {
   useEffect(() => {
     if (!signedIn) return undefined;
+    void engine.refresh(); // compteurs et dernière synchronisation réussie, lus dans la base (L8-10)
     return startSyncTriggers({
       request: requestSync,
       lastSuccessAt: () => engine.getState().lastSuccessAt,
@@ -85,4 +88,29 @@ export function useSyncTriggers(signedIn: boolean): void {
  */
 export function useSyncRefresh(after: () => void): { refreshing: boolean; onRefresh: () => void } {
   return usePullToRefresh(syncNow, after);
+}
+
+// ---------- Modifications refusées par le serveur (L8-10, écran « Synchronisation ») ----------
+
+/** Modifications refusées, dans l'ordre où elles ont été faites. */
+export function listRejectedChanges(): Promise<RejectedChange[]> {
+  return syncStore.listRejected();
+}
+
+/** « Réessayer » : la modification repart tout de suite. */
+export async function retryRejectedChange(opId: string): Promise<void> {
+  await syncStore.retryRejected(opId);
+  await engine.refresh();
+  engine.request(0);
+}
+
+/**
+ * « Abandonner » : la modification et la donnée sont retirées du téléphone ; la synchronisation qui suit
+ * relit tout le compte, et la version enregistrée sur le compte (si elle existe) revient.
+ */
+export async function discardRejectedChange(opId: string): Promise<void> {
+  await syncStore.discardRejected(opId);
+  engine.notifyDataChanged();
+  await engine.refresh();
+  engine.request(0);
 }
