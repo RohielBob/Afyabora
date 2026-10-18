@@ -1431,6 +1431,47 @@
         "revoked": "Vous avez mis fin à l'accès de {{name}}.",
         "revokedNoName": "Le partage a été arrêté."
       }
+    },
+    "log": {
+      "overline": "Journal d'accès",
+      "title": "Qui a consulté mes données",
+      "close": "Fermer",
+      "intro": "Chaque accès à votre dossier est enregistré ici. Personne ne peut modifier ce journal.",
+      "loading": "Chargement du journal",
+      "count_one": "{{count}} accès",
+      "count_other": "{{count}} accès",
+      "today": "Aujourd'hui à {{time}}",
+      "onDate": "Le {{date}} à {{time}}",
+      "lasted": "accès de {{duration}}",
+      "doctor": "Dr {{name}}",
+      "unknownDoctor": "Médecin",
+      "end": {
+        "expired": "Arrivé à son terme",
+        "revoked": "Arrêté par vous",
+        "ongoing": "En cours"
+      },
+      "views_one": "{{count}} consultation",
+      "views_other": "{{count}} consultations",
+      "report": "Rapport téléchargé",
+      "emergency": {
+        "title": "Accès d'urgence",
+        "text": "Votre carte d'urgence a été ouverte, sans compte."
+      },
+      "empty": {
+        "title": "Personne n'a encore consulté vos données",
+        "text": "Quand un médecin scanne votre QR, son accès apparaît ici : qui, quand et combien de temps."
+      },
+      "more": "Voir les accès plus anciens",
+      "problem": {
+        "offline": {
+          "title": "Pas de connexion",
+          "text": "Le journal est conservé sur le serveur : reconnectez-vous pour le consulter."
+        },
+        "error": {
+          "title": "Le journal n'a pas pu être chargé",
+          "text": "Réessayez dans un instant."
+        }
+      }
     }
   }
 }

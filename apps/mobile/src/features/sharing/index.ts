@@ -44,3 +44,12 @@ export {
 export { useShareWatch, type ShareWatch } from './useShareWatch';
 export { LiveAccessCard } from './components/LiveAccessCard';
 export { CategoryOption } from './components/CategoryOption';
+export {
+  buildVisits,
+  formatMinutes,
+  visitMinutes,
+  type EmergencyVisit,
+  type ShareVisit,
+  type Visit,
+} from './log';
+export { VisitCard } from './components/VisitCard';
