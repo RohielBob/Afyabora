@@ -1,6 +1,6 @@
 # Module `sharing`
 
-**Lot : L5 · Fonctionnalité : F7 · Tickets : L5-01, L5-02, L5-04, L5-05, L5-14**
+**Lot : L5 · Fonctionnalité : F7 · Tickets : L5-01, L5-02, L5-03, L5-04, L5-05, L5-14**
 
 CŒUR DU PRODUIT — partage par QR dynamique : sessions, jetons rotatifs à usage unique, révocation.
 
@@ -69,26 +69,53 @@ CŒUR DU PRODUIT — partage par QR dynamique : sessions, jetons rotatifs à usa
 - Tests : `test/sharing-token.test.ts`, `test/sharing-service.test.ts` (sans base) ;
   `test/sharing-rotate.test.ts` (vraie base PostgreSQL, base `…_test` uniquement).
 
+## Scan par le médecin : `POST /shares/claim` (L5-03, **fait**)
+
+- **Entrée** (`claimShareSchema`) : `{ token }` (20 à 200 caractères, sinon 400). Rôle `DOCTOR` (patient :
+  403 ; sans connexion : 401).
+- **Médecin approuvé seulement** (`verificationStatus = APPROVED`) : sinon **403 `DOCTOR_NOT_APPROVED`**,
+  vérifié **avant** de toucher au jeton : un compte en attente ou refusé ne consomme pas le QR du patient.
+  Compte supprimé (jeton de connexion encore valable) : 401.
+- **Succès (200, `claimShareResponseSchema`)**, dans **une** transaction (`share-claim.service.ts`) :
+  1. jeton consommé (`consumeShareToken`, usage unique) ;
+  2. session `ACTIVE`, rattachée au médecin, `claimedAt` = maintenant, `expiresAt` = maintenant + durée
+     (`SHARE_DURATION_MINUTES` ; « Consultation » : 2 h) ;
+  3. ligne `SHARE_CLAIMED` dans le journal d'accès (patient, médecin, session, adresse IP ; jamais le jeton).
+
+  Réponse : session, fin de l'accès, catégories choisies et, du patient, **seulement** le prénom et le type
+  de diabète (`PatientPublicIdentity`). Les données viendront par les routes du dossier (L5-12).
+
+- **Échec : toujours 404 `TOKEN_INVALID` « QR invalide ou expiré »**, que le jeton soit inconnu, mal formé,
+  expiré, remplacé, déjà utilisé, ou que la session soit expirée ou révoquée : on ne dit pas pourquoi.
+- **Blocage** (`claim-limiter.ts`) : 5 scans ratés en 60 s, par adresse IP **ou** par compte médecin ⇒
+  **429** « Trop de QR invalides scannés… » avec `retryAfterSeconds` et l'en-tête `Retry-After`, même avec
+  un bon QR (qui n'est alors pas consommé). Les scans réussis ne comptent pas. Chaque essai compte dès son
+  début (des essais simultanés ne passent pas tous). Compteurs en mémoire : suffisant pour une seule
+  instance de l'API. En plus : 20 scans par minute et par IP au plus (`@Throttle`).
+- Tests : `test/sharing-claim-limiter.test.ts` (sans base), `test/sharing-claim.test.ts` (vraie base).
+
 ## Tests obligatoires
 
-- [ ] Même QR scanné deux fois : le second refusé. (Vérifié sur la consommation, L5-02 ; à revérifier par
-      la route `claim`, L5-03.)
-- [ ] Jeton de plus de 60 s refusé. (Idem.)
-- [ ] Deux claims simultanés : un seul réussit. (Idem : 10 consommations simultanées, une seule réussit.)
+- [x] Même QR scanné deux fois : le second refusé (L5-02 sur la consommation, L5-03 par la route `claim`).
+- [x] Jeton de plus de 60 s refusé (idem).
+- [x] Deux claims simultanés : un seul réussit (L5-03 : 10 médecins en même temps, un seul accès, une
+      seule ligne de journal).
 - [ ] Après expiration : 403 sur toutes les routes médecin.
 - [ ] Révocation effective en moins de 5 s.
-- [ ] Médecin `PENDING` refusé.
+- [x] Médecin `PENDING` refusé (L5-03 : 403 `DOCTOR_NOT_APPROVED`, QR non consommé ; `REJECTED` aussi).
 - [x] Le hash seul est en base (aucune colonne ne contient le jeton) (L5-01).
 
 ## Fichiers
 
-| Fichier                 | Rôle                                                                                                   |
-| ----------------------- | ------------------------------------------------------------------------------------------------------ |
-| `sharing.module.ts`     | Déclaration du module NestJS                                                                           |
-| `sharing.controller.ts` | Routes HTTP : validation Zod (`ZodValidationPipe` + schémas de `@glyka/shared`), pas de logique métier |
-| `sharing.service.ts`    | Logique métier et accès base (Prisma)                                                                  |
-| `share-token.ts`        | Jetons : émission, hash SHA-256, forme attendue (fonctions pures)                                      |
-| `consume-token.ts`      | Consommation atomique d'un jeton (usage unique), appelée par la route du médecin (L5-03)               |
+| Fichier                  | Rôle                                                                                                   |
+| ------------------------ | ------------------------------------------------------------------------------------------------------ |
+| `sharing.module.ts`      | Déclaration du module NestJS                                                                           |
+| `sharing.controller.ts`  | Routes HTTP : validation Zod (`ZodValidationPipe` + schémas de `@glyka/shared`), pas de logique métier |
+| `sharing.service.ts`     | Logique métier et accès base (Prisma)                                                                  |
+| `share-token.ts`         | Jetons : émission, hash SHA-256, forme attendue (fonctions pures)                                      |
+| `consume-token.ts`       | Consommation atomique d'un jeton (usage unique), appelée par la route du médecin (L5-03)               |
+| `share-claim.service.ts` | Scan par le médecin : approbation, consommation, accès ouvert, journal (L5-03)                         |
+| `claim-limiter.ts`       | Blocage après 5 scans ratés par minute (IP ou compte)                                                  |
 
 ## Rappels
 

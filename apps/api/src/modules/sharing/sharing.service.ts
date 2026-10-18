@@ -92,7 +92,7 @@ export const NOT_PENDING_MESSAGE =
   "Ce partage n'attend plus de scan : il a déjà été ouvert, a expiré ou a été arrêté.";
 
 /** P2028 (base saturée) ⇒ 503 « réessayez » ; toute autre erreur passe telle quelle. */
-function busyAsUnavailable(error: unknown): never {
+export function busyAsUnavailable(error: unknown): never {
   if (hasPrismaCode(error, 'P2028'))
     throw new ServiceUnavailableException({ message: BUSY_MESSAGE });
   throw error;

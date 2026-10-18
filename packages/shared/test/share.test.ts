@@ -1,6 +1,6 @@
-// L5-01 : réponse de POST /shares, vérifiable par l'application du patient (forme du contrat).
+// L5-01 et L5-03 : réponses de POST /shares et POST /shares/claim (forme du contrat).
 import { describe, expect, it } from 'vitest';
-import { createShareResponseSchema, createShareSchema } from '../src';
+import { claimShareResponseSchema, createShareResponseSchema, createShareSchema } from '../src';
 
 const response = {
   session: {
@@ -65,5 +65,35 @@ describe('createShareSchema', () => {
     expect(createShareSchema.safeParse({ categories: ['MEALS'], duration: 'JOUR' }).success).toBe(
       false,
     );
+  });
+});
+
+describe('claimShareResponseSchema (L5-03)', () => {
+  const claimed = {
+    sessionId: '3f2b8c1e-6a4d-4e1b-9c7a-1d2e3f4a5b6c',
+    expiresAt: '2026-10-07T08:30:00+01:00',
+    categories: ['GLUCOSE_HISTORY', 'MEALS'],
+    patient: { firstName: 'Jean', diabetesType: 'TYPE_2' },
+  };
+
+  it('accepte l’exemple du contrat', () => {
+    expect(claimShareResponseSchema.parse(claimed)).toEqual(claimed);
+  });
+
+  it('ne laisse passer AUCUN autre renseignement sur le patient (nom, date de naissance…)', () => {
+    const parsed = claimShareResponseSchema.parse({
+      ...claimed,
+      patient: { ...claimed.patient, lastName: 'Dupont', birthDate: '1990-01-01' },
+    });
+    expect(parsed.patient).toEqual({ firstName: 'Jean', diabetesType: 'TYPE_2' });
+  });
+
+  it.each([
+    ['catégorie inconnue', { categories: ['DOSSIER_COMPLET'] }],
+    ['type de diabète inconnu', { patient: { firstName: 'Jean', diabetesType: 'TYPE_3' } }],
+    ['date sans fuseau', { expiresAt: '2026-10-07T08:30:00' }],
+    ['identifiant qui n’est pas un UUID', { sessionId: '42' }],
+  ])('refuse : %s', (_label, change) => {
+    expect(claimShareResponseSchema.safeParse({ ...claimed, ...change }).success).toBe(false);
   });
 });

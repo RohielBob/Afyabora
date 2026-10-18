@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { SHARE_CATEGORIES, SHARE_DURATIONS, SHARE_STATUSES } from '../enums';
+import { DIABETES_TYPES, SHARE_CATEGORIES, SHARE_DURATIONS, SHARE_STATUSES } from '../enums';
 
 export const createShareSchema = z.object({
   categories: z
@@ -56,3 +56,23 @@ export const createShareResponseSchema = z.object({
   token: shareTokenSchema,
 });
 export type CreateShareResponse = z.infer<typeof createShareResponseSchema>;
+
+// ---------- Scan par le médecin (contrat : ClaimShareResponse, PatientPublicIdentity) ----------
+
+/** Ce que le médecin apprend du patient en scannant : le prénom et le type de diabète, rien de plus. */
+export const patientPublicIdentitySchema = z.object({
+  firstName: z.string(),
+  diabetesType: z.enum(DIABETES_TYPES),
+});
+export type PatientPublicIdentity = z.infer<typeof patientPublicIdentitySchema>;
+
+/** Réponse de POST /shares/claim (L5-03) : l'accès est ouvert jusqu'à `expiresAt`. */
+export const claimShareResponseSchema = z.object({
+  sessionId: z.string().uuid(),
+  /** Fin de l'accès : heure du scan + durée choisie par le patient. */
+  expiresAt: isoDate,
+  /** Seules ces catégories seront visibles par le médecin. */
+  categories: z.array(z.enum(SHARE_CATEGORIES)),
+  patient: patientPublicIdentitySchema,
+});
+export type ClaimShareResponse = z.infer<typeof claimShareResponseSchema>;
