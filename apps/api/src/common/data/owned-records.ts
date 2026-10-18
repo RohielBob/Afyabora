@@ -60,8 +60,14 @@ export function afterCursor(field: string, cursor: { at: Date; id: string }) {
 
 // ---------- Erreurs Prisma ----------
 
-/** P2002 = valeur unique déjà prise ; P2003 = clé étrangère absente ; P2025 = ligne introuvable. */
-export function hasPrismaCode(error: unknown, code: 'P2002' | 'P2003' | 'P2025'): boolean {
+/**
+ * P2002 = valeur unique déjà prise ; P2003 = clé étrangère absente ; P2025 = ligne introuvable ;
+ * P2028 = transaction impossible à démarrer ou trop longue (base saturée).
+ */
+export function hasPrismaCode(
+  error: unknown,
+  code: 'P2002' | 'P2003' | 'P2025' | 'P2028',
+): boolean {
   return (
     typeof error === 'object' &&
     error !== null &&
