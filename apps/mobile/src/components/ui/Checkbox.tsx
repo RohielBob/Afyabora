@@ -30,6 +30,9 @@ export function Checkbox({
       <Pressable
         accessibilityRole="checkbox"
         accessibilityState={{ checked }}
+        // Sur le web, `accessibilityState` ne produit pas `aria-checked` (vérifié dans le navigateur) : on le
+        // donne aussi directement, pour que le lecteur d'écran dise « cochée » ou « non cochée ».
+        aria-checked={checked}
         accessibilityLabel={accessibilityLabel}
         accessibilityHint={error}
         onPress={() => onChange(!checked)}
