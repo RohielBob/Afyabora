@@ -193,7 +193,7 @@ export const doctorSummarySchema = z.object({
 });
 export type DoctorSummary = z.infer<typeof doctorSummarySchema>;
 
-/** Une ligne de la chronologie : mesure (valeur, état, provenance) ou évènement déclaré (libellé). */
+/** Une ligne de la chronologie : mesure (valeur, état, provenance, lot) ou évènement déclaré (libellé, durée, texte). */
 export const timelineItemSchema = z.object({
   kind: z.enum(TIMELINE_KINDS),
   at: isoDate,
@@ -202,6 +202,12 @@ export const timelineItemSchema = z.object({
   valueMgDl: z.number().int().nullable(),
   state: z.enum(GLUCOSE_STATES).nullable(),
   source: z.enum(MEASUREMENT_SOURCES).nullable(),
+  /** Texte libre d'un évènement : seulement si les notes personnelles sont partagées (contrat 0.4.2). */
+  details: z.string().nullable(),
+  /** Durée d'un évènement en minutes, si indiquée (contrat 0.4.2). */
+  durationMinutes: z.number().int().nullable(),
+  /** Lot d'import d'une mesure importée (contrat 0.4.2). */
+  importBatchId: z.string().uuid().nullable(),
 });
 export type TimelineItem = z.infer<typeof timelineItemSchema>;
 

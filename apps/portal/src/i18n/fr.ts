@@ -410,6 +410,8 @@ export const fr = {
       },
       more: 'Seules les {{count}} lignes les plus récentes sont affichées.',
       showMore: 'Afficher plus',
+      duration: '{{count}} min',
+      detailsA11y: 'note du patient : {{details}}',
       treatmentsHint:
         'Traitements déclarés par le patient, tels qu’il les a notés. Afyabora ne calcule ni ne conseille aucune dose.',
       listA11y: 'Chronologie, du plus récent au plus ancien',

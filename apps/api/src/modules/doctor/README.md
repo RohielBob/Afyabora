@@ -49,9 +49,10 @@ inchangé. Service : `record.service.ts` ; chronologie : `timeline.ts` ; journal
     (`MEALS`), activités (`ACTIVITY`), traitements déclarés (`TREATMENTS`), chacun seulement s'il est partagé ;
     au moins une de ces catégories, sinon 403. Mesures et évènements mélangés dans un seul ordre (date puis
     identifiant, décroissants), pages par curseur **à travers les deux tables** sans doublon ni oubli. Libellé :
-    texte du patient pour un évènement, **code du contexte** pour une mesure (le portail le traduit). Le texte
-    libre chiffré des évènements n'est pas envoyé (le contrat ne donne que le libellé). Pas de ligne `ALERT`
-    (une mesure porte déjà son état) ;
+    texte du patient pour un évènement, **code du contexte** pour une mesure (le portail le traduit). Contrat
+    0.4.2 : **durée** d'un évènement et **lot** d'une mesure importée toujours ; **texte libre** d'un évènement
+    (dose déclarée…) **seulement avec `PERSONAL_NOTES`** (sinon la colonne chiffrée n'est même pas lue), comme
+    la note d'une mesure. Pas de ligne `ALERT` (une mesure porte déjà son état) ;
   - `/summary` : prénom, type, année du diagnostic, unité, seuils (jamais le nom ni la date de naissance) ;
     qualité et statistiques des 30 derniers jours si `GLUCOSE_HISTORY` **ou** `AI_SUMMARY` est partagé (sinon
     qualité calculée sur **zéro** mesure et statistiques nulles : rien n'est révélé, et le contrat, qui exige

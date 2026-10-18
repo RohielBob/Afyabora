@@ -114,6 +114,7 @@ describe.skipIf(!isTestDatabase(DB_URL))(
       label: string,
       hoursAgo: number,
       id = randomUUID(),
+      durationMinutes: number | null = null,
     ) =>
       prisma.lifeEvent.create({
         data: {
@@ -123,6 +124,7 @@ describe.skipIf(!isTestDatabase(DB_URL))(
           label,
           occurredAt: new Date(Date.now() - hoursAgo * HOUR),
           detailsEncrypted: encryptField('détail privé', KEY),
+          durationMinutes,
           clientUpdatedAt: new Date(),
         },
       });
@@ -470,18 +472,78 @@ describe.skipIf(!isTestDatabase(DB_URL))(
         const id = await opened(['GLUCOSE_HISTORY', 'MEALS']);
         const page = await ok<TimelineList>('timeline', id);
         expect(timelineListSchema.parse(page)).toEqual(page);
+        // Sans « notes personnelles » : aucun texte libre (contrat 0.4.2).
+        const none = { details: null, durationMinutes: null, importBatchId: null };
         expect(page.items.map(({ at: _at, ...rest }) => rest)).toEqual([
-          { kind: 'MEASUREMENT', label: 'FASTING', valueMgDl: 70, state: 'LOW', source: 'MANUAL' },
-          { kind: 'MEAL', label: 'Riz et haricots', valueMgDl: null, state: null, source: null },
+          {
+            kind: 'MEASUREMENT',
+            label: 'FASTING',
+            valueMgDl: 70,
+            state: 'LOW',
+            source: 'MANUAL',
+            ...none,
+          },
+          {
+            kind: 'MEAL',
+            label: 'Riz et haricots',
+            valueMgDl: null,
+            state: null,
+            source: null,
+            ...none,
+          },
           {
             kind: 'MEASUREMENT',
             label: 'FASTING',
             valueMgDl: 250,
             state: 'VERY_HIGH',
             source: 'MANUAL',
+            ...none,
           },
         ]);
         expect(JSON.stringify(page)).not.toMatch(/détail privé|Marche|Metformine|Paul/);
+      });
+
+      it('contrat 0.4.2 : durée toujours ; texte libre SEULEMENT avec les notes personnelles ; lot d’une mesure importée', async () => {
+        const batch = await prisma.importBatch.create({
+          data: {
+            patientId: awa,
+            fileName: 'export.csv',
+            status: 'COMMITTED',
+            defaultUnit: 'G_L',
+            parsedRows: [],
+          },
+        });
+        const imported = await measure(awa, 1);
+        await prisma.measurement.update({
+          where: { id: imported.id },
+          data: { source: 'IMPORT', importBatchId: batch.id },
+        });
+        await event(awa, 'ACTIVITY', 'Marche', 2, randomUUID(), 40);
+        await event(awa, 'TREATMENT', 'Metformine', 3);
+
+        const categories = ['GLUCOSE_HISTORY', 'ACTIVITY', 'TREATMENTS'];
+        const without = await opened(categories);
+        const plain = await ok<TimelineList>('timeline', without);
+        expect(timelineListSchema.parse(plain)).toEqual(plain);
+        expect(
+          plain.items.map((i) => [i.kind, i.durationMinutes, i.details, i.importBatchId]),
+        ).toEqual([
+          ['MEASUREMENT', null, null, batch.id],
+          ['ACTIVITY', 40, null, null],
+          ['TREATMENT', null, null, null],
+        ]);
+        expect(JSON.stringify(plain)).not.toContain('détail privé');
+
+        const withNotes = await opened([...categories, 'PERSONAL_NOTES'], awa, drB);
+        const res = await read('timeline', withNotes, '', drB);
+        const page = res.body as unknown as TimelineList;
+        expect(page.items.map((i) => [i.kind, i.details])).toEqual([
+          ['MEASUREMENT', null], // la note d'une mesure reste dans GET /measurements
+          ['ACTIVITY', 'détail privé'],
+          ['TREATMENT', 'détail privé'],
+        ]);
+        await prisma.measurement.deleteMany({ where: { importBatchId: batch.id } });
+        await prisma.importBatch.delete({ where: { id: batch.id } });
       });
 
       it('sans glycémies : seulement les évènements partagés ; aucune catégorie de la chronologie : 403', async () => {

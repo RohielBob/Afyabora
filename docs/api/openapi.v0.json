@@ -2,7 +2,7 @@
   "openapi": "3.0.3",
   "info": {
     "title": "Glyka API",
-    "version": "0.4.1",
+    "version": "0.4.2",
     "description": "Contrat de l'API Glyka — **version 0 (gelée)**. Les écrans du mobile et du portail se développent contre ce document avant que l'API soit prête.\n\n## Conventions\n- **Format** : JSON en UTF-8. Dates en ISO 8601 avec fuseau. Identifiants en UUID.\n- **Glycémie** : stockée et renvoyée en **mg/dL entier** (`valueMgDl`) ; la valeur saisie et son unité d'origine sont conservées (`originalValue`, `originalUnit`). 1 g/L = 100 mg/dL.\n- **Authentification** : `Authorization: Bearer <jeton d'accès>` (15 minutes). Les routes publiques sont marquées `security: []`.\n- **Identifiants créés par le client** : mesures et événements portent un UUID généré sur l'appareil, ce qui rend les envois répétables sans doublon.\n- **Erreurs** : corps `{ message, code?, issues?, retryAfterSeconds? }`. Jamais de détail interne ni de donnée de santé.\n- **Pagination** : `limit` et `cursor` opaque ; réponse `{ items, nextCursor }`. `nextCursor` nul = dernière page.\n- **Extensions** : `x-roles`, `x-lot`, `x-ticket`, `x-priority` (P0/P1), `x-status` (`implemented` / `planned`).\n\n## Règle de changement\nAjouter une route ou un champ optionnel est compatible. Tout autre changement est une **rupture** : annoncée à l'équipe, consignée dans `docs/api/CHANGELOG.md`, validée par le lead technique.\n",
     "x-contract-status": "frozen-v0",
     "x-frozen-on": "2026-10-07"
@@ -5336,7 +5336,8 @@
             "example": "2026-10-07T08:30:00+01:00"
           },
           "label": {
-            "type": "string"
+            "type": "string",
+            "description": "Évènement : libellé saisi par le patient. Mesure : code du contexte (FASTING, AFTER_MEAL…), traduit par l’écran."
           },
           "valueMgDl": {
             "type": "integer",
@@ -5357,6 +5358,22 @@
                 "$ref": "#/components/schemas/MeasurementSource"
               }
             ]
+          },
+          "details": {
+            "type": "string",
+            "nullable": true,
+            "description": "Texte libre d’un évènement (ex. dose déclarée d’un traitement, contenu d’un repas). Envoyé SEULEMENT si le patient partage aussi ses notes personnelles (PERSONAL_NOTES) ; sinon null. Toujours null pour une mesure. (0.4.2)"
+          },
+          "durationMinutes": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Durée d’un évènement en minutes (ex. activité), si le patient l’a indiquée ; null pour une mesure. (0.4.2)"
+          },
+          "importBatchId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true,
+            "description": "Lot d’import d’une mesure importée (badge « Import · lot 3F2A1C ») ; null sinon. (0.4.2)"
           }
         },
         "required": [
@@ -5365,8 +5382,22 @@
           "label",
           "valueMgDl",
           "state",
-          "source"
-        ]
+          "source",
+          "details",
+          "durationMinutes",
+          "importBatchId"
+        ],
+        "example": {
+          "kind": "TREATMENT",
+          "at": "2026-10-07T08:30:00+01:00",
+          "label": "Metformine",
+          "valueMgDl": null,
+          "state": null,
+          "source": null,
+          "details": "500 mg le matin",
+          "durationMinutes": null,
+          "importBatchId": null
+        }
       },
       "TimelineList": {
         "type": "object",
