@@ -76,3 +76,18 @@ export const claimShareResponseSchema = z.object({
   patient: patientPublicIdentitySchema,
 });
 export type ClaimShareResponse = z.infer<typeof claimShareResponseSchema>;
+
+// ---------- Suivi d'une session par le patient (contrat : ShareStatusResponse) ----------
+
+/** Réponse de GET /shares/:id/status (L5-04). Le serveur est la seule horloge de référence. */
+export const shareStatusResponseSchema = z.object({
+  status: z.enum(SHARE_STATUSES),
+  /** Fin de l'accès (fixée au scan) ; nulle tant que la session attend. */
+  expiresAt: isoDate.nullable(),
+  claimedAt: isoDate.nullable(),
+  /** Le médecin qui a scanné ; nul tant que la session attend. */
+  doctor: doctorIdentitySchema.nullable(),
+  /** Secondes d'accès restantes, calculées par le serveur ; nulles si l'accès n'est pas ouvert. */
+  remainingSeconds: z.number().int().min(0).nullable(),
+});
+export type ShareStatusResponse = z.infer<typeof shareStatusResponseSchema>;

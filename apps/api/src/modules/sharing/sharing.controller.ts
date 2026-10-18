@@ -1,10 +1,21 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Ip, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Ip,
+  Param,
+  Post,
+} from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
   ApiConflictResponse,
   ApiCreatedResponse,
   ApiForbiddenResponse,
+  ApiNoContentResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
@@ -19,6 +30,7 @@ import { CurrentUser, type AuthUser } from '../../common/decorators/current-user
 import { Roles } from '../../common/decorators/roles.decorator';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
 import { ShareClaimService } from './share-claim.service';
+import { ShareLifecycleService } from './share-lifecycle.service';
 import { SharingService } from './sharing.service';
 
 /** Créer des QR à la chaîne n'a aucun usage légitime : 10 par minute au plus. */
@@ -50,6 +62,7 @@ export class SharingController {
   constructor(
     private readonly sharing: SharingService,
     private readonly claims: ShareClaimService,
+    private readonly lifecycle: ShareLifecycleService,
   ) {}
 
   @Post()
@@ -111,8 +124,33 @@ export class SharingController {
     return this.claims.claim(user.id, body.token, ip);
   }
 
+  @Get(':id/status')
+  @Roles('PATIENT')
+  @ApiOperation({ summary: "Suivre l'état d'une session (L5-04)" })
+  @ApiOkResponse({ description: 'État courant ; le serveur est la seule horloge de référence' })
+  @ApiBadRequestResponse({ description: 'Identifiant invalide' })
+  @ApiUnauthorizedResponse({ description: 'Jeton absent ou invalide' })
+  @ApiForbiddenResponse({ description: 'Réservé aux patients' })
+  @ApiNotFoundResponse({ description: 'Session introuvable (ou qui ne vous appartient pas)' })
+  status(@CurrentUser() user: AuthUser, @Param('id', SESSION_ID) id: string) {
+    return this.lifecycle.status(user.id, id);
+  }
+
+  @Delete(':id')
+  @Roles('PATIENT')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiOperation({ summary: "Mettre fin à l'accès (L5-04)" })
+  @ApiNoContentResponse({
+    description: "Accès révoqué : le médecin n'a plus accès dès sa requête suivante",
+  })
+  @ApiBadRequestResponse({ description: 'Identifiant invalide' })
+  @ApiUnauthorizedResponse({ description: 'Jeton absent ou invalide' })
+  @ApiForbiddenResponse({ description: 'Réservé aux patients' })
+  @ApiNotFoundResponse({ description: 'Session introuvable (ou qui ne vous appartient pas)' })
+  async revoke(@CurrentUser() user: AuthUser, @Param('id', SESSION_ID) id: string) {
+    await this.lifecycle.revoke(user.id, id);
+  }
+
   // Routes suivantes du module (voir README.md) :
-  // TODO(L5-04, L5-06) GET /shares/:id/status : état (PENDING / ACTIVE / EXPIRED / REVOKED) pour l'app patient
-  // TODO(L5-04) DELETE /shares/:id : révocation immédiate
   // TODO(L5-05) GET /shares/log : journal d'accès du patient
 }
