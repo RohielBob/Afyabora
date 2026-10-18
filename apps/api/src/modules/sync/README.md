@@ -51,6 +51,45 @@ Synchronisation hors-ligne : reçoit les opérations empilées sur le téléphon
 - [x] Conflit : dernière écriture gagne (L8-04).
 - [x] Pull paginé : aucun élément perdu ni répété (L8-05).
 - [x] Opération invalide n'empêche pas les autres (L8-04).
+- [x] Les mêmes règles vérifiées sur une **vraie base PostgreSQL**, envois simultanés compris (L8-09).
+
+## Tests d'intégration sur une vraie base (L8-09)
+
+`test/sync-integration.test.ts` : vrai serveur HTTP, vraies gardes, vrais services, **vrai Prisma sur
+PostgreSQL**. Les tests L8-04 / L8-05 utilisent une base simulée, qui ne reproduit ni les contraintes
+d'unicité réelles, ni les envois **simultanés**, ni la précision réelle des dates.
+
+- **Rejeu et doublons** : même lot deux fois (APPLIED puis DUPLICATE) ; même lot envoyé **5 fois en même
+  temps** (jamais d'erreur, 20 lignes et 20 entrées de journal) ; même donnée créée **en même temps par 10
+  appareils**, 10 fois de suite (une seule ligne, jamais d'erreur) ; opération invalide au milieu d'un lot.
+- **Suppression hors-ligne** : propagée (pierre tombale, note effacée, reçue par un autre appareil) ; créée
+  puis supprimée dans le même lot ; donnée inconnue ; suppression définitive (modification plus récente
+  refusée) ; suppression plus ancienne qu'une modification faite ailleurs (la modification gagne).
+- **Dérive d'horloge** : en avance de 4 min acceptée, de 6 min refusée (rien d'écrit, rien dans le journal) ;
+  mesure datée dans le futur ; téléphone en **retard** (sa modification plus ancienne n'écrase rien).
+- **« La dernière écriture gagne » sous concurrence** : 8 versions envoyées en même temps, dans le désordre,
+  5 fois : la plus récente gagne toujours.
+- **Propriété** : identifiant ou `opId` d'un autre patient refusés, rien n'est changé ni révélé.
+- **Réception** : 250 mesures à la **même** date de modification (un import) reçues par pages de 40, chacune
+  une fois ; ensuite, une modification ⇒ un seul élément.
+- 15 erreurs volontaires dans le code serveur (conditions d'écriture, journal, horloge, lot, curseur) :
+  toutes détectées par ces tests seuls.
+
+**Garde-fou** : ces tests écrivent et effacent des données ; ils ne tournent **que** si `DATABASE_URL`
+désigne une base dont le nom finit par `_test` (sinon ignorés : la base de développement n'est jamais
+touchée). La CI les lance sur `glyka_test` après `prisma migrate deploy`. En local (PowerShell, base `glyka`
+de `pnpm db:up` laissée intacte) :
+
+```powershell
+docker exec glyka-repo-db-1 psql -U glyka -d glyka -c "CREATE DATABASE glyka_test"
+$env:DATABASE_URL = "postgresql://glyka:glyka_dev_password@localhost:5432/glyka_test"
+pnpm --filter @glyka/api exec prisma migrate deploy
+pnpm --filter @glyka/api test -- sync-integration
+Remove-Item Env:DATABASE_URL
+```
+
+(La première commande une seule fois. Si le mot de passe de la base a été changé dans le `.env` de
+Docker, utiliser celui-là.)
 
 ## Fichiers
 
