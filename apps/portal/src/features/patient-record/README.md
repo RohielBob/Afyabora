@@ -29,15 +29,14 @@ Onglets du dossier, graphiques, chronologie, résumé IA.
 - Période 7 / 14 / 30 / 90 jours ; unité du patient par défaut, modifiable (g/L, mg/dL, mmol/L).
 - États glycémiques : `GlucoseStateBadge` (`components/ui`), palette dédiée de `@glyka/ui-tokens` branchée
   sur le thème (`--afy-state-*`, clair et sombre), **jamais rouge**, toujours symbole + libellé.
-- **Fin d'accès** : dès qu'une réponse dit expiré, arrêté, compte non approuvé ou « pas votre dossier », tout le
-  dossier est **effacé de la mémoire** et remplacé par un message ; un rechargement ne le ramène pas (le
-  serveur refuse). Le résumé est relu toutes les 30 s et à l'heure de fin. Données jamais gardées après
-  avoir quitté la page (`gcTime: 0`).
+- **Fin d'accès** (L5-13) : bandeau « Accès valable : 04:37 » à l'heure du serveur ; à zéro, ou dès qu'une
+  réponse dit expiré, arrêté, compte non approuvé ou « pas votre dossier », tout le dossier est **effacé de la
+  mémoire** et l'écran « Accès expiré » le remplace (voir la feature `sessions`). Le résumé est relu toutes
+  les 30 s (arrêt par le patient). Données jamais gardées après avoir quitté la page (`gcTime: 0`).
 - Textes : `fr.record` (`src/i18n/fr.ts`). Tests : `__tests__/view.test.tsx`.
 
 ## À venir
 
-- L5-13 : bandeau de compte à rebours et écran « Accès expiré ».
 - L6-04 : onglet « Rapport PDF » (si `REPORT_DOWNLOAD` est partagé).
 - À décider (contrat) : le texte libre et la durée des évènements (dose déclarée d'un traitement, durée d'une
   activité) et le lot d'import ne sont pas dans `TimelineItem`.

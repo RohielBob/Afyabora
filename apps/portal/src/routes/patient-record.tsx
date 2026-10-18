@@ -4,20 +4,21 @@
 //  - Données : résumé (toujours), mesures (onglet Glycémie), chronologie (Chronologie, Traitements,
 //    Nutrition, Activité : une seule lecture pour les quatre), sur la période choisie (7 à 90 jours).
 //    L'unité est celle du patient, modifiable (g/L, mg/dL, mmol/L) : la valeur en base ne change pas.
+//  - BANDEAU PERMANENT (L5-13) : « Accès valable : 04:37 », à l'heure du serveur (AccessBanner).
 //  - FIN D'ACCÈS (CDC F8 : « à l'expiration, les données disparaissent de l'écran et un rechargement ne
-//    les ramène pas ») : dès qu'une réponse dit « expiré », « arrêté », « compte non approuvé » ou « pas
-//    votre dossier », TOUT le dossier est effacé de la mémoire et un message le remplace. Le résumé est
-//    relu toutes les 30 s et à l'heure de fin donnée par le serveur, pour s'en apercevoir sans attendre un
-//    clic. Le serveur reste la seule autorité : il refuse chaque requête après la fin.
+//    les ramène pas ») : quand le compte à rebours arrive à zéro, ou dès qu'une réponse dit « expiré »,
+//    « arrêté », « compte non approuvé » ou « pas votre dossier », TOUT le dossier est effacé de la
+//    mémoire et la page « Accès expiré » le remplace (`/expired?motif=…`, sans retour possible vers le
+//    dossier). Le résumé est relu toutes les 30 s pour voir un arrêt par le patient sans attendre un clic.
+//    Le serveur reste la seule autorité : il refuse chaque requête après la fin.
 //  - Les données ne sont jamais gardées en cache après avoir quitté la page (gcTime 0) ni stockées.
 //  - Chaque lecture est enregistrée côté serveur dans le journal du patient (une ligne par moment de
 //    lecture, pas par requête : module `doctor` de l'API).
-// Le bandeau de compte à rebours et l'écran « Accès expiré » arrivent avec L5-13.
 import { UNIT_LABELS, type GlucoseUnit } from '@glyka/shared';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { useEffect, useState } from 'react';
-import { useParams, useSearchParams } from 'react-router-dom';
-import { Alert, Button, ButtonLink, Segmented, Spinner } from '@/components/ui';
+import { useCallback, useEffect, useState } from 'react';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { Alert, Button, Segmented, Spinner } from '@/components/ui';
 import { recordApi } from '@/features/patient-record/api';
 import { RecordHeader } from '@/features/patient-record/RecordHeader';
 import { RecordTabs, TabPanel } from '@/features/patient-record/RecordTabs';
@@ -25,6 +26,7 @@ import { GlucoseTab } from '@/features/patient-record/tabs/GlucoseTab';
 import { OverviewTab } from '@/features/patient-record/tabs/OverviewTab';
 import { SummaryTab } from '@/features/patient-record/tabs/SummaryTab';
 import { TimelineTab } from '@/features/patient-record/tabs/TimelineTab';
+import { AccessBanner } from '@/features/sessions/AccessBanner';
 import {
   DEFAULT_PERIOD,
   PERIODS,
@@ -39,6 +41,7 @@ import {
   type RecordTab,
 } from '@/features/patient-record/view';
 import { fill, fr } from '@/i18n/fr';
+import { MOTIF } from './expired';
 
 /** Relecture du résumé : un arrêt par le patient est vu en 30 s au plus. */
 export const RECORD_REFRESH_MS = 30_000;
@@ -61,34 +64,6 @@ const TIMELINE_TABS: readonly RecordTab[] = ['timeline', 'treatments', 'meals', 
 /** Pas de nouvel essai sur un refus (403, 404) : seulement une fois sur un problème de réseau. */
 const retry = (count: number, error: unknown) =>
   recordProblem(error).kind === 'network' && count < 1;
-
-function Ended({ reason }: { reason: EndReason }) {
-  const text = fr.record.ended[reason];
-  return (
-    <section className="animate-enter mx-auto flex max-w-xl flex-col items-center gap-4 rounded-2xl border border-line bg-surface p-10 text-center">
-      <span className="flex size-12 items-center justify-center rounded-full bg-surface-muted text-muted">
-        <svg
-          aria-hidden="true"
-          viewBox="0 0 24 24"
-          className="size-6"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <rect x="5" y="11" width="14" height="10" rx="2" />
-          <path d="M8 11V7a4 4 0 0 1 8 0v4" />
-        </svg>
-      </span>
-      <h1 className="text-[22px] font-bold text-ink">{text.title}</h1>
-      <p className="text-[15px] text-muted">{text.text}</p>
-      <ButtonLink to="/patients" className="sm:w-auto sm:min-w-[240px]">
-        {fr.record.ended.back}
-      </ButtonLink>
-    </section>
-  );
-}
 
 function Problem({ error, onRetry }: { error: unknown; onRetry: () => void }) {
   const offline = recordProblem(error).kind === 'network';
@@ -118,6 +93,7 @@ export default function PatientRecordRoute() {
   const { sessionId = '' } = useParams();
   const [params, setParams] = useSearchParams();
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const [ended, setEnded] = useState<EndReason | null>(null);
   const [period, setPeriod] = useState<PeriodDays>(DEFAULT_PERIOD);
   const [unitChoice, setUnitChoice] = useState<GlucoseUnit | null>(null);
@@ -161,25 +137,23 @@ export default function PatientRecordRoute() {
     const problem = error ? recordProblem(error) : null;
     if (problem?.kind === 'ended') reason = problem.reason;
   }
+  // Fin d'accès (réponse du serveur ou compte à rebours à zéro) : plus aucune requête, dossier effacé de
+  // la mémoire, puis la page « Accès expiré » REMPLACE le dossier dans l'historique du navigateur.
+  const end = useCallback(
+    (why: EndReason) => {
+      setEnded(why);
+      void queryClient.cancelQueries({ queryKey: ['record', sessionId] });
+      queryClient.removeQueries({ queryKey: ['record', sessionId] });
+      navigate(`/expired?motif=${MOTIF[why]}`, { replace: true });
+    },
+    [navigate, queryClient, sessionId],
+  );
   useEffect(() => {
-    if (!reason) return;
-    setEnded(reason);
-    queryClient.removeQueries({ queryKey: ['record', sessionId] });
-  }, [reason, queryClient, sessionId]);
+    if (reason) end(reason);
+  }, [reason, end]);
+  const onCountdownEnd = useCallback(() => end('EXPIRED'), [end]);
 
-  // À l'heure de fin donnée par le SERVEUR : relire le résumé. Le serveur dit alors « expiré » (et tout est
-  // effacé) ; si l'horloge de l'ordinateur est en avance, la relecture toutes les 30 s prend le relais.
-  const expiresAt = summary.data?.session.expiresAt ?? null;
-  useEffect(() => {
-    if (!expiresAt || ended) return;
-    const timer = setTimeout(
-      () => void queryClient.invalidateQueries({ queryKey: ['record', sessionId, 'summary'] }),
-      Math.max(0, Date.parse(expiresAt) - Date.now()) + 1000,
-    );
-    return () => clearTimeout(timer);
-  }, [expiresAt, ended, queryClient, sessionId]);
-
-  if (ended) return <Ended reason={ended} />;
+  if (ended) return null;
 
   const now = new Date();
   const to = now.getTime();
@@ -198,7 +172,10 @@ export default function PatientRecordRoute() {
 
       {summary.data ? (
         <>
-          <RecordHeader summary={summary.data} now={now} />
+          {summary.data.session.expiresAt ? (
+            <AccessBanner expiresAt={summary.data.session.expiresAt} onEnd={onCountdownEnd} />
+          ) : null}
+          <RecordHeader summary={summary.data} />
           <RecordTabs tabs={tabs} current={tab} onSelect={selectTab} />
           {withPeriod || withUnit ? (
             <div className="flex flex-wrap items-center gap-x-6 gap-y-3">

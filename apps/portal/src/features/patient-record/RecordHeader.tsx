@@ -1,15 +1,13 @@
 // En-tête du dossier (L5-12) : prénom, type de diabète et année du diagnostic (rien de plus sur l'identité),
-// état de l'accès avec l'heure de fin donnée par le SERVEUR, ce que le patient a partagé, avertissement
-// « outil d'aide ». Le compte à rebours et l'écran « Accès expiré » arrivent avec L5-13.
+// ce que le patient a partagé, avertissement « outil d'aide ». L'état de l'accès et son heure de fin sont
+// dans le bandeau permanent au-dessus (AccessBanner, L5-13).
 import type { DoctorSummary } from '@glyka/shared';
 import { TextLink } from '@/components/ui';
-import { statusView } from '@/features/sessions/view';
 import { fill, fr } from '@/i18n/fr';
 import { orderedCategories } from './view';
 
-export function RecordHeader({ summary, now }: { summary: DoctorSummary; now: Date }) {
+export function RecordHeader({ summary }: { summary: DoctorSummary }) {
   const { patient, session } = summary;
-  const status = statusView(session, now);
   return (
     <header className="animate-enter flex flex-col gap-4">
       <TextLink to="/patients" className="inline-flex w-fit items-center gap-1 text-[14px]">
@@ -43,23 +41,6 @@ export function RecordHeader({ summary, now }: { summary: DoctorSummary; now: Da
           </p>
         </div>
         <div className="flex flex-col gap-2 lg:items-end">
-          <span className="inline-flex w-fit items-center gap-1.5 rounded-full bg-primary-soft px-3 py-1.5 text-[13px] font-semibold text-primary-text">
-            <svg
-              aria-hidden="true"
-              viewBox="0 0 24 24"
-              className="size-3.5"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z" />
-              <circle cx="12" cy="12" r="3" />
-            </svg>
-            {status.label}
-            {status.when ? <span className="font-normal">· {status.when}</span> : null}
-          </span>
           <p className="text-[13px] text-muted lg:text-right">
             <span className="font-semibold text-ink">{fr.patients.shared}</span>{' '}
             {orderedCategories(session.categories)

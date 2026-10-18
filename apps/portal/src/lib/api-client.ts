@@ -3,6 +3,7 @@
 // secondes d'attente. Un problème de réseau (serveur injoignable, délai dépassé) a le statut 0.
 // Le jeton d'accès vit EN MÉMOIRE seulement (jamais dans le stockage du navigateur).
 import { API_URL } from './config';
+import { noteServerDate } from './server-clock';
 
 /** Délai maximum d'une requête : au-delà, on considère le serveur injoignable. */
 const TIMEOUT_MS = 15_000;
@@ -87,6 +88,7 @@ async function send<T>(path: string, init: ApiInit): Promise<T> {
     clearTimeout(timer);
   }
 
+  noteServerDate(response.headers.get('Date')); // horloge du serveur (compte à rebours, L5-13)
   const data: unknown = await response.json().catch(() => undefined); // 204 : pas de corps
   if (!response.ok) {
     throw new ApiError(

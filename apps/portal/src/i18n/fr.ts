@@ -448,25 +448,6 @@ export const fr = {
       NIGHT: 'La nuit',
       OTHER: 'Autre',
     },
-    ended: {
-      EXPIRED: {
-        title: 'Accès expiré',
-        text: 'La durée choisie par le patient est écoulée. Le dossier n’est plus affiché ; le patient peut vous montrer un nouveau QR.',
-      },
-      REVOKED: {
-        title: 'Le patient a mis fin au partage',
-        text: 'Le dossier n’est plus affiché. Le patient peut vous montrer un nouveau QR s’il le souhaite.',
-      },
-      OTHER: {
-        title: 'Ce dossier n’est pas accessible',
-        text: 'Ce partage n’a pas été ouvert par votre compte, ou il n’existe pas.',
-      },
-      APPROVAL: {
-        title: 'Votre compte n’est plus approuvé',
-        text: 'L’accès aux dossiers est réservé aux médecins dont le compte est vérifié.',
-      },
-      back: 'Retour à mes patients',
-    },
     problem: {
       network: {
         title: 'Le serveur ne répond pas',
@@ -478,6 +459,40 @@ export const fr = {
       },
     },
     retry: 'Réessayer',
+  },
+  access: {
+    valid: 'Accès valable : {{time}}',
+    ended: 'Accès expiré',
+    soon: 'Se termine bientôt',
+    until: 'Fin de l’accès à {{when}}',
+    a11yMinutes: 'Accès valable encore {{count}} minutes',
+    a11yLastMinute: 'Accès valable moins d’une minute',
+    announce5: 'Il reste 5 minutes d’accès au dossier.',
+    announce1: 'Il reste 1 minute d’accès au dossier.',
+  },
+  expired: {
+    overline: 'Dossier fermé',
+    erased: 'Les données de ce dossier ont été effacées de cet ordinateur.',
+    patients: 'Mes patients',
+    scan: 'Scanner un nouveau QR',
+    reason: {
+      EXPIRED: {
+        title: 'Accès expiré',
+        text: 'La durée choisie par le patient est écoulée. Pour consulter à nouveau son dossier, demandez-lui de vous montrer un nouveau QR.',
+      },
+      REVOKED: {
+        title: 'Le patient a mis fin au partage',
+        text: 'Le patient a arrêté l’accès depuis son application. Il peut vous montrer un nouveau QR s’il le souhaite.',
+      },
+      APPROVAL: {
+        title: 'Votre compte n’est plus approuvé',
+        text: 'L’accès aux dossiers est réservé aux médecins dont le compte est vérifié.',
+      },
+      OTHER: {
+        title: 'Ce dossier n’est pas accessible',
+        text: 'Ce partage n’a pas été ouvert par votre compte, ou il n’existe pas.',
+      },
+    },
   },
   notFound: {
     title: 'Page introuvable',
