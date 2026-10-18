@@ -34,7 +34,6 @@ une saisie). Pendant la lecture : squelette de la carte ; base illisible : messa
 | `useDashboard.ts`                  | Lecture locale : dernière mesure, en attente, seuils, unité |
 | `components/LatestReading.tsx`     | Carte « Dernière mesure »                                   |
 | `components/EmptyLatest.tsx`       | Aucune mesure encore                                        |
-| `components/SyncStatus.tsx`        | « Tout est à jour » / « N en attente »                      |
 | `components/DashboardSkeleton.tsx` | Squelette pendant la lecture                                |
 | `__tests__/latest.test.ts`         | Tests de la logique                                         |
 

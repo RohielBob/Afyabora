@@ -32,4 +32,3 @@ export { GlucoseChart } from './components/GlucoseChart';
 export { LatestReading } from './components/LatestReading';
 export { QualityCard } from './components/QualityCard';
 export { StatsCard } from './components/StatsCard';
-export { SyncStatus } from './components/SyncStatus';

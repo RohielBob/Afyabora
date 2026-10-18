@@ -8,6 +8,7 @@ import type { OutboxRow } from '@/db/repositories/outbox.repo';
 import type { EventRow, MeasurementRow } from '@/db/repositories/plans';
 import { saveRow, type LocalDb } from '@/db/repositories/write';
 import type { SyncStore } from './engine';
+import type { RejectedChange, RejectedStore } from './rejected';
 import { planPull, type Settlement, type SyncEntity } from './rules';
 
 /** Clés de la table `kv` (vidée à la déconnexion avec le reste, db/reset.ts). */
@@ -42,7 +43,7 @@ async function writeKv(db: LocalDb, key: string, value: string | null): Promise<
 export function createSqliteSyncStore(
   open: () => Promise<LocalDb>,
   newId: () => string,
-): SyncStore {
+): SyncStore & RejectedStore {
   return {
     async deviceId() {
       const db = await open();
@@ -152,12 +153,75 @@ export function createSqliteSyncStore(
 
     async counts() {
       const db = await open();
-      const row = await db.getFirstAsync<{ pending: number | null; failed: number | null }>(
-        `SELECT SUM(CASE WHEN last_error IS NULL THEN 1 ELSE 0 END) AS pending,
-                SUM(CASE WHEN last_error IS NULL THEN 0 ELSE 1 END) AS failed
+      // Une DONNÉE compte une fois, même avec plusieurs opérations (COUNT DISTINCT ignore les NULL).
+      const row = await db.getFirstAsync<{ measurements: number; events: number; failed: number }>(
+        `SELECT
+           COUNT(DISTINCT CASE WHEN last_error IS NULL AND entity = 'measurement' THEN entity_id END) AS measurements,
+           COUNT(DISTINCT CASE WHEN last_error IS NULL AND entity = 'event' THEN entity_id END) AS events,
+           COUNT(DISTINCT CASE WHEN last_error IS NOT NULL THEN entity || ':' || entity_id END) AS failed
          FROM outbox`,
       );
-      return { pending: row?.pending ?? 0, failed: row?.failed ?? 0 };
+      return {
+        measurements: row?.measurements ?? 0,
+        events: row?.events ?? 0,
+        failed: row?.failed ?? 0,
+      };
+    },
+
+    async listRejected() {
+      const db = await open();
+      const ops = await db.getAllAsync<
+        Pick<OutboxRow, 'op_id' | 'entity' | 'entity_id' | 'type' | 'attempts'> & {
+          last_error: string;
+        }
+      >(
+        `SELECT op_id, entity, entity_id, type, attempts, last_error FROM outbox
+         WHERE last_error IS NOT NULL ORDER BY seq ASC`,
+      );
+      const changes: RejectedChange[] = [];
+      for (const op of ops) {
+        const row = await db.getFirstAsync<MeasurementRow | EventRow>(
+          `SELECT * FROM ${TABLE[op.entity]} WHERE id = ?`,
+          op.entity_id,
+        );
+        changes.push({
+          opId: op.op_id,
+          entity: op.entity,
+          entityId: op.entity_id,
+          type: op.type,
+          reason: op.last_error,
+          attempts: op.attempts,
+          measurement: op.entity === 'measurement' ? (row as MeasurementRow | null) : null,
+          event: op.entity === 'event' ? (row as EventRow | null) : null,
+        });
+      }
+      return changes;
+    },
+
+    async retryRejected(opId) {
+      const db = await open();
+      await db.withTransactionAsync(async () => {
+        await db.runAsync('UPDATE outbox SET last_error = NULL WHERE op_id = ?', opId);
+      });
+    },
+
+    async discardRejected(opId) {
+      const db = await open();
+      await db.withTransactionAsync(async () => {
+        const op = await db.getFirstAsync<{ entity: SyncEntity; entity_id: string }>(
+          'SELECT entity, entity_id FROM outbox WHERE op_id = ?',
+          opId,
+        );
+        if (!op) return;
+        await db.runAsync(
+          'DELETE FROM outbox WHERE entity = ? AND entity_id = ?',
+          op.entity,
+          op.entity_id,
+        );
+        await db.runAsync(`DELETE FROM ${TABLE[op.entity]} WHERE id = ?`, op.entity_id);
+        // Tout relire : la version du compte (si elle existe) revient sur le téléphone.
+        await writeKv(db, KV_CURSOR, null);
+      });
     },
 
     async readLastSuccess() {

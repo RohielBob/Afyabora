@@ -49,6 +49,12 @@ export default function ProfileScreen() {
           onPress={() => router.push('/settings')}
         />
         <ListRow
+          icon={<Ionicons name="sync-outline" size={20} color={colors.primaryText} />}
+          title={t('profile.sync')}
+          subtitle={t('profile.syncHint')}
+          onPress={() => router.push('/sync')}
+        />
+        <ListRow
           icon={<Ionicons name="cloud-upload-outline" size={20} color={colors.primaryText} />}
           title={t('profile.import')}
           subtitle={t('profile.importHint')}

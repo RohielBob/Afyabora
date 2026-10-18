@@ -43,6 +43,7 @@ const PRIVATE_SCREENS = [
   'share/new',
   'emergency/index',
   'emergency/edit',
+  'sync/index',
 ] as const;
 
 function RootNavigator() {

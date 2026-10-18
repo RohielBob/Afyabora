@@ -1,5 +1,6 @@
 // Données du tableau de bord (L2-05), lues SUR LE TÉLÉPHONE uniquement (CDC F3 : il marche sans réseau) :
-// dernière mesure, modifications en attente d'envoi, seuils du patient et unité préférée.
+// dernière mesure, seuils du patient et unité préférée. L'état de la synchronisation (en attente, hors
+// ligne) est affiché par le bandeau de la feature `sync`, branché sur le moteur (L8-10).
 // Rechargées à chaque retour sur l'onglet (ex. après avoir noté une mesure avec le bouton « + »), et quand
 // la synchronisation apporte des changements pendant que l'onglet est ouvert (L8-06).
 import { useFocusEffect } from 'expo-router';
@@ -17,7 +18,6 @@ export type DashboardState =
   | {
       status: 'ready';
       latest: LatestMeasurement | null;
-      pending: number;
       /**
        * Mesures de la plus longue période (90 jours) ET de la période précédente (90 jours d'avant, pour la
        * comparaison L2-07), de la plus ancienne à la plus récente.
@@ -51,16 +51,14 @@ export function useDashboard(): {
     };
     Promise.all([
       localMeasurements.latest(),
-      localMeasurements.pendingCount(),
       localMeasurements.between(longest.from, longest.to),
       readThresholds(),
     ])
-      .then(([latest, pending, points, thresholds]) => {
+      .then(([latest, points, thresholds]) => {
         if (id === lastLoad.current)
           setState({
             status: 'ready',
             latest,
-            pending,
             points,
             thresholds,
             unit: readUnit(),

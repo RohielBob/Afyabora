@@ -3,6 +3,7 @@
 // locales passent par les VRAIS plans (db/repositories/plans.ts), comme sur téléphone.
 import type { CreateMeasurementInput } from '@glyka/shared';
 import {
+  planEventCreate,
   planMeasurementCreate,
   planMeasurementDelete,
   planMeasurementUpdate,
@@ -10,6 +11,7 @@ import {
 import { createWebMemory, enqueueInMemory, type WebMemory } from '@/db/web-memory';
 import { createSyncEngine, type SyncEngine, type SyncStore } from '../engine';
 import { createMemorySyncStore } from '../memory-store';
+import type { RejectedStore } from '../rejected';
 import { KV_CURSOR } from '../sqlite-store';
 import { FakeApiError, FakeServer } from './fake-server';
 
@@ -20,7 +22,7 @@ const nextId = () => uuid(++ids);
 
 let memory: WebMemory;
 let server: FakeServer;
-let store: SyncStore;
+let store: SyncStore & RejectedStore;
 let engine: SyncEngine;
 let signedIn: boolean;
 /** Horloge du téléphone (ms) : avance d'une minute à chaque écriture locale. */
@@ -509,6 +511,129 @@ describe('échecs et nouvel essai', () => {
     expect(delays).toEqual([
       2_000, 4_000, 8_000, 16_000, 32_000, 64_000, 128_000, 256_000, 300_000, 300_000,
     ]);
+  });
+});
+
+describe('compteurs et modifications refusées (L8-10)', () => {
+  it('une donnée compte UNE fois, mesures et événements séparés', async () => {
+    localCreate(uuid(1));
+    localUpdate(uuid(1), 140);
+    localUpdate(uuid(1), 150); // 3 opérations, 1 mesure
+    localCreate(uuid(2));
+    const plan = planEventCreate(
+      { id: uuid(3), type: 'MEAL', occurredAt: '2026-10-09T12:00:00.000Z', label: 'Déjeuner' },
+      ctx(),
+    );
+    memory.events.set(uuid(3), plan.row);
+    enqueueInMemory(memory, plan.op);
+
+    await engine.refresh();
+
+    expect(engine.getState()).toMatchObject({
+      status: 'idle',
+      pendingCount: 3,
+      pendingMeasurements: 2,
+      pendingEvents: 1,
+      failedCount: 0,
+    });
+  });
+
+  it('refresh : relit la dernière synchronisation réussie gardée dans la base, sans cycle', async () => {
+    memory.kv.set('sync_last_success', '2026-10-17T08:00:00.000Z');
+    await engine.refresh();
+    expect(engine.getState().lastSuccessAt).toBe('2026-10-17T08:00:00.000Z');
+    expect(server.pushes).toHaveLength(0);
+    expect(server.pulls).toHaveLength(0);
+  });
+
+  it('refresh : base indisponible ⇒ l’état ne change pas', async () => {
+    start({
+      store: {
+        ...store,
+        counts: () => Promise.reject(new Error('base')),
+      },
+    });
+    await engine.refresh();
+    expect(engine.getState()).toMatchObject({ pendingCount: 0, lastSuccessAt: null });
+  });
+
+  it('refusée : comptée à part ; « Réessayer » la renvoie, « Abandonner » rétablit la version du compte', async () => {
+    server.writeMeasurement(input(uuid(1), 100));
+    await engine.runNow();
+    const refused = localUpdate(uuid(1), 700);
+    server.refuse.set(refused, 'Valeur inhabituelle : vérifiez la saisie.');
+    let state = await engine.runNow();
+    expect(state).toMatchObject({ failedCount: 1, pendingCount: 0 });
+
+    const [change] = await store.listRejected();
+    expect(change).toMatchObject({
+      opId: refused,
+      entity: 'measurement',
+      entityId: uuid(1),
+      reason: 'Valeur inhabituelle : vérifiez la saisie.',
+      attempts: 1,
+    });
+    expect(change?.measurement?.value_mgdl).toBe(700);
+
+    // « Réessayer » : renvoyée (et refusée à nouveau ici : 2 refus).
+    await store.retryRejected(refused);
+    state = await engine.runNow();
+    expect(server.pushes.at(-1)?.map((op) => op.opId)).toEqual([refused]);
+    expect((await store.listRejected())[0]?.attempts).toBe(2);
+
+    // « Abandonner » : modification et donnée retirées, tout relu ⇒ la version du compte (100) revient.
+    await store.discardRejected(refused);
+    expect(memory.outbox).toHaveLength(0);
+    expect(memory.measurements.has(uuid(1))).toBe(false);
+    state = await engine.runNow();
+    expect(server.pulls.at(-1)).toBeNull();
+    expect(memory.measurements.get(uuid(1))?.value_mgdl).toBe(100);
+    expect(state).toMatchObject({ failedCount: 0, pendingCount: 0 });
+  });
+
+  it('abandonner une CRÉATION refusée : la donnée disparaît du téléphone (elle n’a jamais existé sur le compte)', async () => {
+    const refused = localCreate(uuid(9), 700);
+    server.refuse.set(refused, 'Valeur inhabituelle.');
+    await engine.runNow();
+    await store.discardRejected(refused);
+    await engine.runNow();
+    expect(memory.measurements.has(uuid(9))).toBe(false);
+    expect(await store.listRejected()).toEqual([]);
+  });
+
+  it('la liste des refus ignore les modifications normales en attente', async () => {
+    const refused = localCreate(uuid(1), 700);
+    server.refuse.set(refused, 'Valeur inhabituelle.');
+    await engine.runNow();
+    localCreate(uuid(2)); // en attente, pas refusée
+    const list = await store.listRejected();
+    expect(list.map((c) => c.opId)).toEqual([refused]);
+  });
+
+  it('refresh lancé juste avant une déconnexion : rien n’est affiché ensuite', async () => {
+    let release: (value: { measurements: number; events: number; failed: number }) => void = () =>
+      undefined;
+    start({
+      store: {
+        ...store,
+        counts: () =>
+          new Promise((resolve) => {
+            release = resolve;
+          }),
+      },
+    });
+    const refreshing = engine.refresh();
+    await engine.stop();
+    release({ measurements: 5, events: 0, failed: 0 });
+    await refreshing;
+    expect(engine.getState().pendingCount).toBe(0);
+  });
+
+  it('notifyDataChanged prévient les écrans', () => {
+    const changed = jest.fn();
+    engine.onDataChanged(changed);
+    engine.notifyDataChanged();
+    expect(changed).toHaveBeenCalledTimes(1);
   });
 });
 
