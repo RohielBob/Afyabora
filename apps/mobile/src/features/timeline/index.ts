@@ -15,5 +15,5 @@ export {
 } from './timeline';
 export { useTimeline, type TimelineState } from './useTimeline';
 export { FilterChips } from './components/FilterChips';
-export { ProvenanceBadge } from './components/ProvenanceBadge';
+export { ProvenanceBadge, provenanceText } from './components/ProvenanceBadge';
 export { TimelineRow } from './components/TimelineRow';

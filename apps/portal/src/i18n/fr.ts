@@ -168,6 +168,14 @@ export const fr = {
     signingOut: 'Déconnexion…',
     menu: 'Compte',
   },
+  // L4-09 : provenance d'une mesure (même règle et mêmes mots que l'application du patient).
+  provenance: {
+    MANUAL: 'Saisie',
+    IMPORT: 'Import',
+    DEVICE: 'Appareil',
+    importBatch: 'Import · lot {{batch}}',
+    a11y: 'Provenance : {{label}}',
+  },
   notFound: {
     title: 'Page introuvable',
     text: 'Cette adresse ne correspond à aucune page du portail.',

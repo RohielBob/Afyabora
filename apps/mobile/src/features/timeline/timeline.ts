@@ -152,7 +152,5 @@ export function windowBounds(pages: number, now: Date): { fromIso: string; toIso
   return { fromIso: from.toISOString(), toIso: to.toISOString() };
 }
 
-/** Lot d'import en clair et court (« Lot 3F2A1C ») : assez pour le reconnaître, sans l'identifiant entier. */
-export function shortBatchId(id: string): string {
-  return id.replace(/-/g, '').slice(0, 6).toUpperCase();
-}
+/** Lot d'import court (« 3F2A1C ») : la règle est dans @glyka/shared, commune au portail (L4-09). */
+export { shortBatchId } from '@glyka/shared';

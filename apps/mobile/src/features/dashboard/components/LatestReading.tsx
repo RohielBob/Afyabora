@@ -11,6 +11,7 @@ import Animated, { FadeIn } from 'react-native-reanimated';
 import { classifyGlucose, type GlucoseThresholds, type GlucoseUnit } from '@glyka/shared';
 import { Button, Card, PressableScale, RangeBadge, Text } from '@/components/ui';
 import { formatClock, formatReading, type LatestMeasurement } from '@/features/measurements';
+import { ProvenanceBadge, provenanceText } from '@/features/timeline';
 import { durations, radii, spacing, useReducedMotion, useTheme } from '@/theme';
 import { ageOf, dayLabel } from '../latest';
 
@@ -83,12 +84,12 @@ export function LatestReading({
               key={latest.id}
               entering={reduced ? undefined : FadeIn.duration(durations.base)}
               accessible
-              accessibilityLabel={t('dashboard.latest.a11y', {
+              accessibilityLabel={`${t('dashboard.latest.a11y', {
                 value,
                 state: t(`glucose.state.${state}`),
                 context,
                 when,
-              })}
+              })}. ${provenanceText(t, latest.source, latest.importBatchId)}`}
               style={{ gap: spacing.sm }}
             >
               <View
@@ -112,6 +113,8 @@ export function LatestReading({
                 </Text>
                 <Ionicons name="chevron-forward" size={16} color={colors.textSubtle} />
               </View>
+              {/* L4-09 : d'où vient cette mesure (saisie, import et son lot, appareil). */}
+              <ProvenanceBadge source={latest.source} importBatchId={latest.importBatchId} />
             </Animated.View>
           </PressableScale>
 

@@ -123,6 +123,9 @@ export interface LatestMeasurement {
   valueMgDl: number;
   measuredAt: string;
   context: MeasurementContext;
+  /** Provenance (L4-09) : saisie, import (avec son lot) ou appareil. */
+  source: MeasurementSource;
+  importBatchId: string | null;
   /** Pas encore envoyée au serveur. */
   pendingSync: boolean;
 }
@@ -138,9 +141,12 @@ export async function latestMeasurement(): Promise<LatestMeasurement | null> {
     valueMgDl: number;
     measuredAt: string;
     context: MeasurementContext;
+    source: MeasurementSource;
+    importBatchId: string | null;
     pendingSync: number;
   }>(
-    `SELECT id, value_mgdl AS valueMgDl, measured_at AS measuredAt, context, pending_sync AS pendingSync
+    `SELECT id, value_mgdl AS valueMgDl, measured_at AS measuredAt, context, source,
+            import_batch_id AS importBatchId, pending_sync AS pendingSync
      FROM measurements
      WHERE deleted_at IS NULL
      ORDER BY measured_at DESC
