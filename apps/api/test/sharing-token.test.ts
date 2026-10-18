@@ -1,10 +1,11 @@
-// Ticket L5-01 : jetons du QR de partage (share-token.ts), fonctions pures (ADR-0003).
+// Tickets L5-01 et L5-02 : jetons du QR de partage (share-token.ts), fonctions pures (ADR-0003).
 import { createHash } from 'node:crypto';
 import { SHARE_TOKEN_TTL_SECONDS } from '@glyka/shared';
 import { describe, expect, it } from 'vitest';
 import {
   SHARE_TOKEN_BYTES,
   hashShareToken,
+  isWellFormedShareToken,
   issueShareToken,
 } from '../src/modules/sharing/share-token';
 
@@ -55,4 +56,36 @@ describe('hashShareToken', () => {
     expect(hashShareToken(token)).toBe(hashShareToken(token));
     expect(hashShareToken(`${token}x`)).not.toBe(hashShareToken(token));
   });
+});
+
+describe('isWellFormedShareToken (L5-02)', () => {
+  it('accepte les jetons émis', () => {
+    for (let i = 0; i < 100; i++)
+      expect(isWellFormedShareToken(issueShareToken(NOW).token)).toBe(true);
+  });
+
+  it.each([
+    ['vide', ''],
+    ['trop court (42)', 'a'.repeat(42)],
+    ['trop long (44)', 'a'.repeat(44)],
+    ['base64 classique (« + »)', `${'a'.repeat(42)}+`],
+    ['base64 classique (« / »)', `${'a'.repeat(42)}/`],
+    ['remplissage « = »', `${'a'.repeat(42)}=`],
+    ['espace', `${'a'.repeat(42)} `],
+    [
+      'retour à la ligne',
+      `${'a'.repeat(43)}
+`,
+    ],
+    ['adresse web', 'https://afyabora.example/partage?jeton=abc'],
+  ])('refuse : %s', (_label, text) => {
+    expect(isWellFormedShareToken(text)).toBe(false);
+  });
+
+  it.each([[null], [undefined], [42], [{ token: 'a'.repeat(43) }]])(
+    'refuse ce qui n’est pas du texte : %j',
+    (value) => {
+      expect(isWellFormedShareToken(value)).toBe(false);
+    },
+  );
 });

@@ -10,6 +10,17 @@ import { SHARE_TOKEN_TTL_SECONDS } from '@glyka/shared';
 /** Taille du jeton en octets (ADR-0003 : au moins 32). */
 export const SHARE_TOKEN_BYTES = 32;
 
+/** Forme exacte d'un jeton émis : 32 octets en base64url, soit 43 caractères. */
+const SHARE_TOKEN_PATTERN = /^[A-Za-z0-9_-]{43}$/;
+
+/**
+ * Le texte lu dans un QR a-t-il la forme d'un jeton Afyabora ? Un texte quelconque (autre QR, saisie
+ * fantaisiste) est écarté AVANT toute lecture en base (L5-02).
+ */
+export function isWellFormedShareToken(token: unknown): token is string {
+  return typeof token === 'string' && SHARE_TOKEN_PATTERN.test(token);
+}
+
 /** Empreinte enregistrée en base (hexadécimal, 64 caractères). */
 export function hashShareToken(token: string): string {
   return createHash('sha256').update(token, 'utf8').digest('hex');

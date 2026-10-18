@@ -48,11 +48,33 @@ CŒUR DU PRODUIT — partage par QR dynamique : sessions, jetons rotatifs à usa
   (vraie base PostgreSQL, uniquement sur une base `…_test` : voir le README du module `sync` pour la lancer
   en local).
 
+## Rotation du QR et usage unique (L5-02, **fait**)
+
+- **`GET /shares/:id/token`** (200, `shareTokenSchema`) : nouveau jeton, valable 60 s, tant que la session
+  attend son scan. Il **remplace** les précédents, qui expirent tout de suite : il n'y a jamais qu'**un** QR
+  valable par session. Patient propriétaire seulement : la session d'un autre patient (ou inconnue) répond
+  404 sans révéler qu'elle existe ; identifiant non UUID : 400 sur `id` ; médecin : 403 ; 30 rotations par
+  minute au plus (l'application en demande une par minute) ; base saturée : 503.
+- **409 `SESSION_NOT_PENDING`** : session déjà ouverte, expirée ou révoquée, **ou dont le QR vient d'être
+  consommé** (même avant que l'accès soit ouvert).
+- **Consommation** (`consume-token.ts`, `consumeShareToken(tx, jeton, maintenant)`) : la route du médecin
+  (`POST /shares/claim`, L5-03) l'appellera dans **sa** transaction puis ouvrira l'accès. Elle renvoie la
+  session (patient, catégories, durée) ou `null`, sans dire pourquoi. Un jeton est accepté seulement s'il
+  est bien formé (sinon aucune lecture en base), connu, jamais utilisé, dans ses 60 s, et si sa session est
+  en attente.
+- **Atomicité** : la ligne de la session est verrouillée (`SELECT … FOR UPDATE`) par le scan **et** par la
+  rotation, toujours avant les jetons (même ordre ⇒ pas d'interblocage). Le jeton est marqué utilisé par
+  une mise à jour conditionnelle (« seulement s'il ne l'est pas déjà ») ; les autres jetons encore valables
+  de la session expirent. Deux scans simultanés : un seul réussit.
+- Tests : `test/sharing-token.test.ts`, `test/sharing-service.test.ts` (sans base) ;
+  `test/sharing-rotate.test.ts` (vraie base PostgreSQL, base `…_test` uniquement).
+
 ## Tests obligatoires
 
-- [ ] Même QR scanné deux fois : le second refusé.
-- [ ] Jeton de plus de 60 s refusé.
-- [ ] Deux claims simultanés : un seul réussit.
+- [ ] Même QR scanné deux fois : le second refusé. (Vérifié sur la consommation, L5-02 ; à revérifier par
+      la route `claim`, L5-03.)
+- [ ] Jeton de plus de 60 s refusé. (Idem.)
+- [ ] Deux claims simultanés : un seul réussit. (Idem : 10 consommations simultanées, une seule réussit.)
 - [ ] Après expiration : 403 sur toutes les routes médecin.
 - [ ] Révocation effective en moins de 5 s.
 - [ ] Médecin `PENDING` refusé.
@@ -65,6 +87,8 @@ CŒUR DU PRODUIT — partage par QR dynamique : sessions, jetons rotatifs à usa
 | `sharing.module.ts`     | Déclaration du module NestJS                                                                           |
 | `sharing.controller.ts` | Routes HTTP : validation Zod (`ZodValidationPipe` + schémas de `@glyka/shared`), pas de logique métier |
 | `sharing.service.ts`    | Logique métier et accès base (Prisma)                                                                  |
+| `share-token.ts`        | Jetons : émission, hash SHA-256, forme attendue (fonctions pures)                                      |
+| `consume-token.ts`      | Consommation atomique d'un jeton (usage unique), appelée par la route du médecin (L5-03)               |
 
 ## Rappels
 
