@@ -1413,6 +1413,13 @@
         "title": "No QR code in progress",
         "text": "Create a QR code to share your history with a doctor.",
         "action": "Create a QR code"
+      },
+      "backup": {
+        "show": "Doctor has no camera? Show the backup code",
+        "label": "Backup code",
+        "a11y": "Backup code, to type or paste in the doctor's portal",
+        "hint": "The doctor enters it in their portal, under “Scan a QR code”. Like the QR code, it changes every minute and works only once.",
+        "hide": "Hide the code"
       }
     },
     "live": {

@@ -53,3 +53,4 @@ export {
   type Visit,
 } from './log';
 export { VisitCard } from './components/VisitCard';
+export { BackupCode, groupCode } from './components/BackupCode';

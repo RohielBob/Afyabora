@@ -15,9 +15,11 @@ import { View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { Button, Card, InlineAlert, PressableScale, Screen, Spinner, Text } from '@/components/ui';
 import {
+  BackupCode,
   LiveAccessCard,
   RotatingQr,
   SHARE_CATEGORY_ORDER,
+  isTokenAlive,
   remainingSeconds,
   shareFlow,
   sharingApi,
@@ -149,6 +151,8 @@ export default function ShareActiveScreen() {
           <Animated.View entering={enterFromBelow(0, reduced)}>
             <RotatingQr state={qr.state} now={qr.now} />
           </Animated.View>
+          {/* L5-10 : le même jeton en texte, pour un médecin sans caméra. */}
+          <BackupCode token={qr.state.token} alive={isTokenAlive(qr.state, qr.now)} />
           {phase === 'retrying' && qr.state.problem ? (
             <InlineAlert
               tone="warning"
