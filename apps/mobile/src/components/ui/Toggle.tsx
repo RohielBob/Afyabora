@@ -51,6 +51,9 @@ export function Toggle({
     <Pressable
       accessibilityRole="switch"
       accessibilityState={{ checked: value, disabled: !!disabled }}
+      // Sur le web, `accessibilityState` ne produit pas `aria-checked` (vérifié dans le navigateur) : on le
+      // donne aussi directement, pour que le lecteur d'écran dise « activé » ou « désactivé ».
+      aria-checked={value}
       accessibilityLabel={label}
       accessibilityHint={hint}
       disabled={disabled}

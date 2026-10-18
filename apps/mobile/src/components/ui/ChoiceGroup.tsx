@@ -49,6 +49,9 @@ export function ChoiceGroup<T extends string>({
               key={option.value}
               accessibilityRole="radio"
               accessibilityState={{ selected }}
+              // Sur le web, `accessibilityState` ne produit pas `aria-checked` (vérifié dans le navigateur) : on le
+              // donne aussi directement, pour que le lecteur d'écran dise quelle option est choisie.
+              aria-checked={selected}
               accessibilityLabel={option.hint ? `${option.label}, ${option.hint}` : option.label}
               onPress={() => onChange(option.value)}
               style={{

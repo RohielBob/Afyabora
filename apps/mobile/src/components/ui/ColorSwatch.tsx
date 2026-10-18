@@ -26,6 +26,9 @@ export function ColorSwatch({
     <PressableScale
       accessibilityRole="radio"
       accessibilityState={{ selected }}
+      // Sur le web, `accessibilityState` ne produit pas `aria-checked` (vérifié dans le navigateur) : on le
+      // donne aussi directement, pour que le lecteur d'écran dise quelle couleur est choisie.
+      aria-checked={selected}
       accessibilityLabel={`Couleur ${label}`}
       onPress={onPress}
       style={{ alignItems: 'center', gap: spacing.xs + 2, width: 72 }}
