@@ -2,6 +2,7 @@ import { z } from 'zod';
 import {
   ACCESS_ACTIONS,
   DIABETES_TYPES,
+  QUALITY_LEVELS,
   SHARE_CATEGORIES,
   SHARE_DURATIONS,
   SHARE_STATUSES,
@@ -125,3 +126,28 @@ export const accessLogListSchema = z.object({
   nextCursor: z.string().nullable(),
 });
 export type AccessLogList = z.infer<typeof accessLogListSchema>;
+
+// ---------- Patients partagés du médecin (contrat : DoctorSession, DoctorSessionList) ----------
+
+/** Une session de partage vue par le médecin (L5-11) : patient, état, catégories, dernière donnée, qualité. */
+export const doctorSessionSchema = z.object({
+  sessionId: z.string().uuid(),
+  status: z.enum(SHARE_STATUSES),
+  /** Heure du scan. */
+  claimedAt: isoDate,
+  /** Fin de l'accès (heure du serveur). */
+  expiresAt: isoDate.nullable(),
+  categories: z.array(z.enum(SHARE_CATEGORIES)),
+  patient: patientPublicIdentitySchema,
+  /** Dernière mesure : seulement pendant l'accès et si l'historique glycémique est partagé ; sinon null. */
+  lastMeasurementAt: isoDate.nullable(),
+  /** Qualité des données (30 derniers jours) : mêmes conditions ; sinon null. */
+  quality: z
+    .object({ score: z.number().int().min(0).max(100), level: z.enum(QUALITY_LEVELS) })
+    .nullable(),
+});
+export type DoctorSessionDto = z.infer<typeof doctorSessionSchema>;
+
+/** Réponse de GET /doctor/sessions (L5-11) : accès en cours d'abord, puis du plus récent au plus ancien. */
+export const doctorSessionListSchema = z.object({ items: z.array(doctorSessionSchema) });
+export type DoctorSessionList = z.infer<typeof doctorSessionListSchema>;

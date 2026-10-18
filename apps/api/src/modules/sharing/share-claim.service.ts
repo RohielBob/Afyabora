@@ -14,12 +14,7 @@
 //  - Réponse : la session, la fin de l'accès, les catégories partagées et, du patient, seulement le prénom
 //    et le type de diabète (contrat : PatientPublicIdentity). Les données arriveront par les routes du
 //    dossier, filtrées par catégorie (L5-12).
-import {
-  ForbiddenException,
-  Injectable,
-  NotFoundException,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import {
   SHARE_DURATION_MINUTES,
   type ClaimShareResponse,
@@ -27,16 +22,16 @@ import {
   type ShareCategory,
   type ShareDuration,
 } from '@glyka/shared';
-import { UNAUTHORIZED_MESSAGE } from '../../common/guards/jwt-auth.guard';
 import { PrismaService } from '../../prisma/prisma.service';
 import { writeAccessLog } from '../audit/access-log';
 import { ClaimFailureLimiter } from './claim-limiter';
 import { consumeShareToken } from './consume-token';
+import { requireApprovedDoctor } from './doctor-approval';
 import { busyAsUnavailable, CREATE_TRANSACTION } from './sharing.service';
 
 export const TOKEN_INVALID_MESSAGE = 'QR invalide ou expiré';
-export const DOCTOR_NOT_APPROVED_MESSAGE =
-  "Votre compte médecin n'est pas encore approuvé : vous ne pouvez pas encore consulter de dossier.";
+// Le contrôle « médecin approuvé » est partagé avec le portail (L5-11) : doctor-approval.ts.
+export { DOCTOR_NOT_APPROVED_MESSAGE } from './doctor-approval';
 
 /** Fin de l'accès : heure du scan + durée choisie par le patient. */
 export function accessEndsAt(claimedAt: Date, duration: ShareDuration): Date {
@@ -57,7 +52,7 @@ export class ShareClaimService {
     ip: string | undefined,
     now = new Date(),
   ): Promise<ClaimShareResponse> {
-    await this.requireApprovedDoctor(doctorId);
+    await requireApprovedDoctor(this.prisma, doctorId);
     const keys = [`doctor:${doctorId}`, ...(ip ? [`ip:${ip}`] : [])];
     const succeeded = this.limiter.begin(keys, now);
 
@@ -101,20 +96,5 @@ export class ShareClaimService {
         diabetesType: opened.patient.diabetesType as DiabetesType,
       },
     };
-  }
-
-  /** Médecin APPROUVÉ seulement ; compte supprimé ⇒ 401. */
-  private async requireApprovedDoctor(doctorId: string): Promise<void> {
-    const doctor = await this.prisma.user.findUnique({
-      where: { id: doctorId },
-      select: { doctorProfile: { select: { verificationStatus: true } } },
-    });
-    if (!doctor) throw new UnauthorizedException({ message: UNAUTHORIZED_MESSAGE });
-    if (doctor.doctorProfile?.verificationStatus !== 'APPROVED') {
-      throw new ForbiddenException({
-        message: DOCTOR_NOT_APPROVED_MESSAGE,
-        code: 'DOCTOR_NOT_APPROVED',
-      });
-    }
   }
 }
