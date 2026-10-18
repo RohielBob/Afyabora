@@ -13,6 +13,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
+import { writeAccessLog } from '../audit/access-log';
 
 /** Au plus autant de sessions par passage de la tâche (le reste au passage suivant). */
 export const EXPIRY_BATCH = 500;
@@ -45,15 +46,16 @@ export async function expireDueSessions(
     where: { id: { in: due.map((s) => s.id) }, status: 'ACTIVE' },
     data: { status: 'EXPIRED' },
   });
-  await tx.accessLog.createMany({
-    data: due.map((s) => ({
+  await writeAccessLog(
+    tx,
+    due.map((s) => ({
       patientId: s.patientId,
       actorId: s.claimedByDoctorId,
       sessionId: s.id,
       action: 'SHARE_EXPIRED',
       at: s.expiresAt,
     })),
-  });
+  );
   return due.length;
 }
 

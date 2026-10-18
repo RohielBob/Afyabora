@@ -23,6 +23,7 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import type { ShareCategory, ShareStatus, ShareStatusResponse } from '@glyka/shared';
 import { notFound } from '../../common/data/owned-records';
+import { writeAccessLog } from '../audit/access-log';
 import { PrismaService } from '../../prisma/prisma.service';
 import { expireDueSessions } from './share-expiry';
 import {
@@ -83,15 +84,15 @@ export class ShareLifecycleService {
           where: { sessionId, usedAt: null, expiresAt: { gt: now } },
           data: { expiresAt: now },
         });
-        await tx.accessLog.create({
-          data: {
+        await writeAccessLog(tx, [
+          {
             patientId,
             actorId: session.claimedByDoctorId,
             sessionId,
             action: 'SHARE_REVOKED',
             at: now,
           },
-        });
+        ]);
       }, CREATE_TRANSACTION)
       .catch(busyAsUnavailable);
   }

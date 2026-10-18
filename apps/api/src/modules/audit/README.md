@@ -13,9 +13,25 @@ Journal d'accès : trace qui a consulté quoi et quand. Service interne utilisé
 - Une ligne par évènement : acteur, patient, session, action, IP, date.
 - Jamais de contenu médical dans le journal. Le journal n'est ni modifiable ni supprimable par l'utilisateur.
 
+## Ce qui est fait (L5-05)
+
+- **Écriture** : `access-log.ts`, `writeAccessLog(client, lignes)`, est le **seul** endroit qui écrit dans
+  `AccessLog`. Les actions sont typées (`ACCESS_ACTIONS` de `@glyka/shared`) : une faute de frappe ne compile
+  pas. On écrit avec la transaction de l'évènement : l'évènement et sa trace réussissent ou échouent
+  ensemble. Utilisé par le scan (`SHARE_CLAIMED`, L5-03), la révocation (`SHARE_REVOKED`) et l'expiration
+  (`SHARE_EXPIRED`, L5-04). `AuditService.record()` pour les autres modules (consultation du dossier L5-12,
+  urgence L6, rapport).
+- **Lecture** : `AuditService.list()` sert `GET /shares/log` (module `sharing`) : du plus récent au plus
+  ancien, par pages (curseur ; 500 lignes par défaut, 2000 au plus), avec le **nom** du médecin (une seule
+  requête par page). Jamais l'adresse IP ni l'identifiant du médecin. Accès d'urgence anonyme ou compte
+  médecin supprimé : ligne gardée, sans nom.
+- Personne ne peut modifier ni supprimer une ligne : aucune route ne le permet (testé).
+- Tests : `test/audit-access-log.test.ts` (sans base), `test/sharing-log.test.ts` (vraie base).
+
 ## Tests obligatoires
 
-- [ ] Chaque claim, consultation et révocation produit une ligne.
+- [ ] Chaque claim, consultation et révocation produit une ligne. (Scan, révocation et expiration : faits
+      et testés sur le vrai parcours, L5-05. Consultation du dossier : à faire avec les routes médecin, L5-12.)
 
 ## Fichiers
 
@@ -24,6 +40,7 @@ Journal d'accès : trace qui a consulté quoi et quand. Service interne utilisé
 | `audit.module.ts`     | Déclaration du module NestJS                                                                           |
 | `audit.controller.ts` | Routes HTTP : validation Zod (`ZodValidationPipe` + schémas de `@glyka/shared`), pas de logique métier |
 | `audit.service.ts`    | Logique métier et accès base (Prisma)                                                                  |
+| `access-log.ts`       | Seule écriture du journal d'accès (actions typées, dans la transaction de l'évènement)                 |
 
 ## Rappels
 

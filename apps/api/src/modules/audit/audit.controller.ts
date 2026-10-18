@@ -8,6 +8,6 @@ import { AuditService } from './audit.service';
 export class AuditController {
   constructor(private readonly audit: AuditService) {}
 
-  // Routes à implémenter (voir README.md du module) :
-  // TODO(L5-05) (service interne, pas de route publique ; le patient lit son journal via GET /shares/log)
+  // Aucune route publique (L5-05) : AuditService est un service interne ; le patient lit son journal par
+  // GET /shares/log (module `sharing`). Personne ne peut modifier ni supprimer une ligne du journal.
 }

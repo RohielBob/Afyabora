@@ -1,5 +1,11 @@
 import { z } from 'zod';
-import { DIABETES_TYPES, SHARE_CATEGORIES, SHARE_DURATIONS, SHARE_STATUSES } from '../enums';
+import {
+  ACCESS_ACTIONS,
+  DIABETES_TYPES,
+  SHARE_CATEGORIES,
+  SHARE_DURATIONS,
+  SHARE_STATUSES,
+} from '../enums';
 
 export const createShareSchema = z.object({
   categories: z
@@ -91,3 +97,31 @@ export const shareStatusResponseSchema = z.object({
   remainingSeconds: z.number().int().min(0).nullable(),
 });
 export type ShareStatusResponse = z.infer<typeof shareStatusResponseSchema>;
+
+// ---------- Journal d'accès du patient (contrat : AccessLogEntry, AccessLogList) ----------
+
+/** Paramètres de GET /shares/log (L5-05) : taille de page et curseur, comme les autres listes. */
+export const accessLogQuerySchema = z.object({
+  limit: z.coerce.number().int().min(1).max(2000).default(500),
+  /** Curseur opaque renvoyé par la page précédente (`nextCursor`). */
+  cursor: z.string().max(500).optional(),
+});
+export type AccessLogQuery = z.infer<typeof accessLogQuerySchema>;
+
+/** Une ligne du journal : qui, quoi, quand. Jamais de donnée médicale, jamais l'adresse IP. */
+export const accessLogEntrySchema = z.object({
+  id: z.string().uuid(),
+  action: z.enum(ACCESS_ACTIONS),
+  at: isoDate,
+  sessionId: z.string().uuid().nullable(),
+  /** Nom du médecin ; nul pour un accès d'urgence anonyme (ou un compte médecin supprimé). */
+  actorName: z.string().nullable(),
+});
+export type AccessLogEntry = z.infer<typeof accessLogEntrySchema>;
+
+/** Réponse de GET /shares/log (L5-05) : du plus récent au plus ancien. */
+export const accessLogListSchema = z.object({
+  items: z.array(accessLogEntrySchema),
+  nextCursor: z.string().nullable(),
+});
+export type AccessLogList = z.infer<typeof accessLogListSchema>;

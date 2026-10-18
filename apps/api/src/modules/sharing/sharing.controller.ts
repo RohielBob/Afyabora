@@ -8,6 +8,7 @@ import {
   Ip,
   Param,
   Post,
+  Query,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -24,11 +25,18 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
-import { claimShareSchema, createShareSchema, type CreateShareInput } from '@glyka/shared';
+import {
+  accessLogQuerySchema,
+  claimShareSchema,
+  createShareSchema,
+  type AccessLogQuery,
+  type CreateShareInput,
+} from '@glyka/shared';
 import { uuidParam } from '../../common/data/owned-records';
 import { CurrentUser, type AuthUser } from '../../common/decorators/current-user.decorator';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
+import { AuditService } from '../audit/audit.service';
 import { ShareClaimService } from './share-claim.service';
 import { ShareLifecycleService } from './share-lifecycle.service';
 import { SharingService } from './sharing.service';
@@ -63,6 +71,7 @@ export class SharingController {
     private readonly sharing: SharingService,
     private readonly claims: ShareClaimService,
     private readonly lifecycle: ShareLifecycleService,
+    private readonly audit: AuditService,
   ) {}
 
   @Post()
@@ -151,6 +160,17 @@ export class SharingController {
     await this.lifecycle.revoke(user.id, id);
   }
 
-  // Routes suivantes du module (voir README.md) :
-  // TODO(L5-05) GET /shares/log : journal d'accès du patient
+  @Get('log')
+  @Roles('PATIENT')
+  @ApiOperation({ summary: 'Qui a consulté mes données (L5-05)' })
+  @ApiOkResponse({ description: "Journal d'accès, du plus récent au plus ancien" })
+  @ApiBadRequestResponse({ description: 'Taille de page ou curseur invalide' })
+  @ApiUnauthorizedResponse({ description: 'Jeton absent ou invalide' })
+  @ApiForbiddenResponse({ description: 'Réservé aux patients' })
+  log(
+    @CurrentUser() user: AuthUser,
+    @Query(new ZodValidationPipe(accessLogQuerySchema)) query: AccessLogQuery,
+  ) {
+    return this.audit.list(user.id, query);
+  }
 }
