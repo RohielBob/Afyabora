@@ -1,7 +1,7 @@
 // Branche le contrôleur de rotation (rotation.ts) sur un écran React (L5-07) : vraie horloge, vraies
 // minuteries, retour dans l'application (une minuterie peut avoir été suspendue en arrière-plan), et une
 // horloge qui avance chaque seconde pour le compte à rebours. Quitter l'écran arrête tout.
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { AppState } from 'react-native';
 import type { CreateShareResponse } from '@glyka/shared';
 import { sharingApi } from './api';
@@ -48,10 +48,8 @@ export function useRotatingQr(share: CreateShareResponse | null): RotatingQr {
     };
   }, [share]);
 
-  return {
-    state,
-    now,
-    retryNow: () => rotator.current?.retryNow(),
-    stop: () => rotator.current?.stop(),
-  };
+  // Fonctions stables : un écran peut les mettre dans les dépendances d'un effet sans le relancer à chaque rendu.
+  const retryNow = useCallback(() => rotator.current?.retryNow(), []);
+  const stop = useCallback(() => rotator.current?.stop(), []);
+  return { state, now, retryNow, stop };
 }

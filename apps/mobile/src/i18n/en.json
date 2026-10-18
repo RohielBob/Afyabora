@@ -1414,6 +1414,23 @@
         "text": "Create a QR code to share your history with a doctor.",
         "action": "Create a QR code"
       }
+    },
+    "live": {
+      "expiresIn": "Expires in",
+      "remainingA11y": "Access remaining: {{minutes}} min {{seconds}} s",
+      "offline": "Connection lost: the timer keeps running, the status will be checked when you're back online.",
+      "confirm": "End {{name}}'s access now? They will no longer see your data.",
+      "confirmNoName": "End the doctor's access now? They will no longer see your data.",
+      "confirmYes": "Yes, end access",
+      "confirmNo": "Cancel",
+      "checking": "The QR code was just scanned. Checking…",
+      "newQr": "Create a new QR code",
+      "ended": {
+        "expired": "{{name}}'s access has reached its end.",
+        "expiredNoName": "Access has reached its end.",
+        "revoked": "You ended {{name}}'s access.",
+        "revokedNoName": "Sharing was stopped."
+      }
     }
   }
 }

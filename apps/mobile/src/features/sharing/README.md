@@ -55,9 +55,25 @@ Choix catégories/durée, QR rotatif, suivi en direct, révocation, journal d'ac
   installé).
 - Tests : `__tests__/rotation.test.ts` (horloge et minuteries simulées).
 
-## Fichiers prévus
+### L5-08 — suivi en direct
 
-- `useShareStatus.ts` : suivi en direct (polling/SSE), minuteur, fin détectée sans attendre (L5-08)
+- **Suivi** (`watch.ts`, contrôleur sans écran) : `GET /shares/:id/status` toutes les **3 s** tant que le QR
+  attend (le scan se voit en 1,5 à 2 s), toutes les **10 s** pendant l'accès (un arrêt fait ailleurs se
+  voit en 10 s au plus), et **pile à la fin du minuteur**. Pas de réseau : la dernière vue reste, message,
+  nouvel essai à 2, 4, 8 puis 15 s. 404 ⇒ terminé. Pause en arrière-plan (aucune requête), relecture au
+  retour. Minuteur : secondes restantes **données par le serveur**, comptées depuis la réception.
+- **Écran** (`app/share/active.tsx`, `components/LiveAccessCard.tsx`) : « **Dr X consulte votre
+  dossier** » avec l'établissement, minuteur « Expire dans 29:58 » (« 1:59:30 » au-delà d'une heure),
+  « Accès jusqu'à 18:12 », **« Mettre fin à l'accès »** avec confirmation (« Couper l'accès de Dr X
+  maintenant ? »). Fin : « Accès terminé » avec la raison (arrivé à son terme / vous y avez mis fin) et
+  **« Créer un nouveau QR »**.
+- `useShareWatch.ts` branche le suivi sur l'écran ; la rotation du QR (L5-07) s'arrête dès que le suivi
+  voit le scan.
+- Tests : `__tests__/watch.test.ts` (horloge et minuteries simulées).
+
+## Reste à faire
+
+- L5-09 : écran « Qui a consulté mes données » (journal, `GET /shares/log`).
 
 ## Règle importante
 

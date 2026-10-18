@@ -30,4 +30,17 @@ export {
 } from './rotation';
 export { useRotatingQr, type RotatingQr as RotatingQrState } from './useRotatingQr';
 export { RotatingQr } from './components/RotatingQr';
+export {
+  ACTIVE_POLL_MS,
+  WAITING_POLL_MS,
+  createShareWatcher,
+  formatRemaining,
+  remainingSeconds,
+  viewOf,
+  type ShareView,
+  type ShareWatcher,
+  type WatchState,
+} from './watch';
+export { useShareWatch, type ShareWatch } from './useShareWatch';
+export { LiveAccessCard } from './components/LiveAccessCard';
 export { CategoryOption } from './components/CategoryOption';
