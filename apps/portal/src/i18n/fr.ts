@@ -176,6 +176,89 @@ export const fr = {
     importBatch: 'Import · lot {{batch}}',
     a11y: 'Provenance : {{label}}',
   },
+  // L5-10 : scanner le QR d'un patient (caméra, photo, code de secours).
+  scan: {
+    overline: 'Partage patient',
+    title: 'Scanner le QR du patient',
+    intro:
+      'Le patient ouvre Afyabora, puis Partager › Générer le QR. Présentez son écran à la caméra : l’accès s’ouvre aussitôt, pour la durée qu’il a choisie.',
+    claiming: 'Ouverture de l’accès…',
+    claimingText: 'Le QR est vérifié par le serveur.',
+    tips: [
+      'Le QR change toutes les minutes et ne sert qu’une fois.',
+      'Tenez l’écran du téléphone à 20–30 cm de la caméra, sans reflet.',
+      'Vous ne verrez que les données que le patient a choisi de partager.',
+    ],
+    camera: {
+      title: 'Caméra',
+      idle: 'La caméra s’allume seulement quand vous le demandez, et s’éteint dès que le QR est lu.',
+      start: 'Activer la caméra',
+      stop: 'Arrêter la caméra',
+      viewA11y: 'Image de la caméra',
+      problem: {
+        denied: {
+          title: 'Accès à la caméra refusé',
+          text: 'Autorisez la caméra pour ce site dans votre navigateur (icône à gauche de l’adresse), ou utilisez une photo ou le code de secours.',
+        },
+        none: {
+          title: 'Aucune caméra détectée',
+          text: 'Branchez une webcam, ou utilisez une photo du QR ou le code de secours.',
+        },
+        busy: {
+          title: 'Caméra déjà utilisée',
+          text: 'Fermez l’autre application qui utilise la caméra (visioconférence…), puis réessayez.',
+        },
+        insecure: {
+          title: 'Caméra indisponible sur cette adresse',
+          text: 'Le navigateur ne donne la caméra qu’aux sites sécurisés (https). Utilisez une photo du QR ou le code de secours.',
+        },
+        other: {
+          title: 'La caméra n’a pas pu démarrer',
+          text: 'Réessayez, ou utilisez une photo du QR ou le code de secours.',
+        },
+      },
+    },
+    backup: {
+      title: 'Pas de caméra ?',
+      intro: 'Deux solutions de secours, aussi sûres que le scan.',
+    },
+    photo: {
+      title: 'Photo du QR',
+      text: 'Prenez l’écran du patient en photo (par exemple avec votre téléphone), puis choisissez l’image. Elle est lue sur ce poste, jamais envoyée.',
+      action: 'Choisir une photo du QR',
+    },
+    code: {
+      label: 'Code de secours',
+      hint: 'Le code affiché sous le QR, à coller ou recopier (les espaces sont ignorés).',
+      submit: 'Ouvrir l’accès',
+    },
+    problem: {
+      notAfyabora: {
+        title: 'Ce n’est pas un QR de partage Afyabora',
+        text: 'Vérifiez que le patient affiche bien l’écran « Montrez ce QR à votre médecin » dans l’application.',
+      },
+      invalid: {
+        title: 'QR invalide ou expiré',
+        text: 'Demandez au patient d’afficher un nouveau QR, puis scannez-le de nouveau.',
+      },
+      notApproved: {
+        title: 'Compte pas encore approuvé',
+        text: 'Votre compte doit être validé avant de pouvoir ouvrir un dossier patient.',
+      },
+      blocked: {
+        title: 'Trop de QR invalides',
+        text: 'Pour protéger les patients, les scans sont bloqués quelques instants. Réessayez dans {{seconds}} s.',
+      },
+      network: {
+        title: 'Le serveur ne répond pas',
+        text: 'Vérifiez votre connexion, puis scannez de nouveau.',
+      },
+      server: {
+        title: 'Le service rencontre un problème',
+        text: 'Réessayez dans quelques instants.',
+      },
+    },
+  },
   notFound: {
     title: 'Page introuvable',
     text: 'Cette adresse ne correspond à aucune page du portail.',

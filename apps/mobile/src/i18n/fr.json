@@ -1413,6 +1413,13 @@
         "title": "Aucun QR en cours",
         "text": "Créez un QR pour partager votre historique avec un médecin.",
         "action": "Créer un QR"
+      },
+      "backup": {
+        "show": "Le médecin n'a pas de caméra ? Afficher le code de secours",
+        "label": "Code de secours",
+        "a11y": "Code de secours, à recopier ou coller dans le portail du médecin",
+        "hint": "Le médecin le saisit dans son portail, rubrique « Scanner un QR ». Comme le QR, il change toutes les minutes et ne sert qu'une fois.",
+        "hide": "Masquer le code"
       }
     },
     "live": {

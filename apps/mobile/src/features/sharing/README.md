@@ -71,6 +71,12 @@ Choix catégories/durée, QR rotatif, suivi en direct, révocation, journal d'ac
   voit le scan.
 - Tests : `__tests__/watch.test.ts` (horloge et minuteries simulées).
 
+### L5-10 (côté téléphone) — code de secours
+
+- Sous le QR : « Le médecin n'a pas de caméra ? Afficher le code de secours » (`components/BackupCode.tsx`).
+  Le même jeton que le QR, par groupes de 4 caractères (`groupCode`), sélectionnable ; il suit la rotation
+  et disparaît quand le QR n'est plus valable. Le portail ignore les espaces.
+
 ### L5-09 — « Qui a consulté mes données »
 
 - **Écran** `app/share/log.tsx` (depuis l'onglet « Partager ») : le journal de `GET /shares/log` regroupé
