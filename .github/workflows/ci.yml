@@ -41,5 +41,8 @@ jobs:
       - run: pnpm format:check
       - run: pnpm lint
       - run: pnpm typecheck
+      # L8-09 : les tests d'intégration de la synchronisation tournent sur la VRAIE base PostgreSQL du
+      # service ci-dessus (glyka_test) ; ses tables sont créées ici à partir des migrations.
+      - run: pnpm --filter @glyka/api exec prisma migrate deploy
       - run: pnpm test
       - run: pnpm build
