@@ -20,7 +20,9 @@ async function bootstrap() {
   // l'aperçu web de l'app mobile (Expo, port 8081). Les applications natives ne sont pas concernées par CORS.
   const allowedOrigins = [process.env.PORTAL_URL ?? 'http://localhost:5173'];
   if (process.env.NODE_ENV !== 'production') allowedOrigins.push('http://localhost:8081');
-  app.enableCors({ origin: allowedOrigins, credentials: true });
+  // `Date` est lisible par le portail : son compte à rebours d'accès suit l'horloge du SERVEUR, pas celle de
+  // l'ordinateur du médecin (L5-13). Cet en-tête existe déjà dans chaque réponse ; il est seulement exposé.
+  app.enableCors({ origin: allowedOrigins, credentials: true, exposedHeaders: ['Date'] });
   app.useGlobalFilters(new AllExceptionsFilter());
 
   const config = new DocumentBuilder()
