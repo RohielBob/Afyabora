@@ -17,6 +17,20 @@ Lecture des dossiers partagés pour le portail médecin (lecture seule, filtrée
 - Chaque consultation écrit une ligne dans `AccessLog`.
 - `/report` exige la catégorie `REPORT_DOWNLOAD`.
 
+## `GET /doctor/sessions` (L5-11, **fait**)
+
+- Médecin **approuvé** seulement (`sharing/doctor-approval.ts`, partagé avec le scan L5-03), revérifié à
+  chaque requête : en attente ou refusé ⇒ 403 `DOCTOR_NOT_APPROVED` ; patient ⇒ 403 (rôle) ; compte supprimé
+  ⇒ 401.
+- Sessions **scannées par ce médecin**, en cours et terminées (accès en cours d'abord, puis du plus récent au
+  plus ancien ; 100 au plus). Les accès échus sont **expirés avant la lecture** (`expireDueSessions`).
+- Du patient : prénom et type de diabète seulement. **Dernière mesure et qualité** (30 jours, même calcul
+  que l'application, `InsightsService.quality`) **seulement pendant l'accès et si l'historique glycémique
+  est partagé** ; sinon `null`.
+- La liste ne lit pas le dossier : **aucune ligne** dans le journal du patient (les consultations du dossier,
+  L5-12, y seront écrites).
+- Tests : `test/doctor-sessions.test.ts` (vraie base).
+
 ## Tests obligatoires
 
 - [ ] 403 après expiration même si la page est encore ouverte.
