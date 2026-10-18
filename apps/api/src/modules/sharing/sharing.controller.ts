@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Ip, Param, Post } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
@@ -13,11 +13,12 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
-import { createShareSchema, type CreateShareInput } from '@glyka/shared';
+import { claimShareSchema, createShareSchema, type CreateShareInput } from '@glyka/shared';
 import { uuidParam } from '../../common/data/owned-records';
 import { CurrentUser, type AuthUser } from '../../common/decorators/current-user.decorator';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
+import { ShareClaimService } from './share-claim.service';
 import { SharingService } from './sharing.service';
 
 /** Créer des QR à la chaîne n'a aucun usage légitime : 10 par minute au plus. */
@@ -28,6 +29,12 @@ const CREATE_LIMIT = { default: { limit: 10, ttl: 60_000 } };
  * coupure réseau et un second écran ouvert. 30 par minute au plus.
  */
 const ROTATE_LIMIT = { default: { limit: 30, ttl: 60_000 } };
+
+/**
+ * Scan : la protection principale est le blocage après 5 scans RATÉS (claim-limiter.ts) ; ceci limite en
+ * plus le nombre total de scans par adresse IP (un cabinet scanne rarement plus d'un QR par minute).
+ */
+const CLAIM_LIMIT = { default: { limit: 20, ttl: 60_000 } };
 
 const SESSION_ID = uuidParam();
 
@@ -40,7 +47,10 @@ const SESSION_ID = uuidParam();
 @ApiBearerAuth()
 @Controller('shares')
 export class SharingController {
-  constructor(private readonly sharing: SharingService) {}
+  constructor(
+    private readonly sharing: SharingService,
+    private readonly claims: ShareClaimService,
+  ) {}
 
   @Post()
   @Roles('PATIENT')
@@ -78,9 +88,31 @@ export class SharingController {
     return this.sharing.rotate(user.id, id);
   }
 
+  @Post('claim')
+  @Roles('DOCTOR')
+  @HttpCode(HttpStatus.OK)
+  @Throttle(CLAIM_LIMIT)
+  @ApiOperation({ summary: 'Scanner le QR d’un patient (médecin approuvé, L5-03)' })
+  @ApiOkResponse({ description: 'Accès ouvert : la durée démarre maintenant' })
+  @ApiBadRequestResponse({ description: 'Corps invalide' })
+  @ApiUnauthorizedResponse({ description: 'Jeton de connexion absent ou invalide' })
+  @ApiForbiddenResponse({
+    description: 'Réservé aux médecins approuvés (code DOCTOR_NOT_APPROVED)',
+  })
+  @ApiNotFoundResponse({
+    description: 'QR invalide, expiré ou déjà utilisé (code TOKEN_INVALID, sans autre précision)',
+  })
+  @ApiTooManyRequestsResponse({ description: 'Trop de scans ratés ou trop de scans en une minute' })
+  claim(
+    @CurrentUser() user: AuthUser,
+    @Body(new ZodValidationPipe(claimShareSchema)) body: { token: string },
+    @Ip() ip: string | undefined,
+  ) {
+    return this.claims.claim(user.id, body.token, ip);
+  }
+
   // Routes suivantes du module (voir README.md) :
   // TODO(L5-04, L5-06) GET /shares/:id/status : état (PENDING / ACTIVE / EXPIRED / REVOKED) pour l'app patient
   // TODO(L5-04) DELETE /shares/:id : révocation immédiate
-  // TODO(L5-03) POST /shares/claim : le médecin consomme le jeton (médecin approuvé uniquement)
   // TODO(L5-05) GET /shares/log : journal d'accès du patient
 }
