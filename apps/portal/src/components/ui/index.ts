@@ -6,3 +6,4 @@ export { Checkbox } from './Checkbox';
 export { Spinner } from './Spinner';
 export { TextField } from './TextField';
 export { TextLink } from './TextLink';
+export { ProvenanceBadge, provenanceLabel } from './ProvenanceBadge';

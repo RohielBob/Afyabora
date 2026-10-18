@@ -7,7 +7,10 @@ Liste groupée par jour, filtres, badges de provenance.
 ## Tickets
 
 - **L2-09** — Mobile : chronologie (groupée par jour, filtres, badges de provenance) — **fait**
-- **L4-09** — Badge de provenance (saisie, import, appareil) sur mesure, chronologie et portail
+- **L4-09** — Badge de provenance (saisie, import, appareil) sur mesure, chronologie et portail — **fait** :
+  règle unique dans `@glyka/shared` (`provenanceOf`, `shortBatchId`), commune au portail ; badge sur la
+  chronologie, le détail d'une mesure et la carte « Dernière mesure » de l'Accueil ; texte aussi lu par le
+  lecteur d'écran (`provenanceText`) ; le portail a le même badge (`components/ui/ProvenanceBadge.tsx`).
 
 ## Chronologie (L2-09)
 
@@ -37,7 +40,7 @@ Onglet **Historique** (`app/(tabs)/timeline.tsx`) :
 | `useTimeline.ts`                 | Lecture locale (mesures + événements + seuils), « voir plus »           |
 | `components/FilterChips.tsx`     | Pastilles de filtre                                                     |
 | `components/TimelineRow.tsx`     | Une ligne (mesure ou événement)                                         |
-| `components/ProvenanceBadge.tsx` | Badge saisie / import + lot / appareil                                  |
+| `components/ProvenanceBadge.tsx` | Badge saisie / import + lot / appareil ; `provenanceText` (L4-09)       |
 | `__tests__/timeline.test.ts`     | Tests de la logique                                                     |
 
 ## Tests obligatoires (L2-09)

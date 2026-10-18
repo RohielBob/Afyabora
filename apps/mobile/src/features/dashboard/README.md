@@ -32,7 +32,7 @@ une saisie). Pendant la lecture : squelette de la carte ; base illisible : messa
 | ---------------------------------- | ----------------------------------------------------------- |
 | `latest.ts`                        | Logique : jour (calendrier), ancienneté, salutation         |
 | `useDashboard.ts`                  | Lecture locale : dernière mesure, en attente, seuils, unité |
-| `components/LatestReading.tsx`     | Carte « Dernière mesure »                                   |
+| `components/LatestReading.tsx`     | Carte « Dernière mesure », avec sa provenance (L4-09)       |
 | `components/EmptyLatest.tsx`       | Aucune mesure encore                                        |
 | `components/DashboardSkeleton.tsx` | Squelette pendant la lecture                                |
 | `__tests__/latest.test.ts`         | Tests de la logique                                         |

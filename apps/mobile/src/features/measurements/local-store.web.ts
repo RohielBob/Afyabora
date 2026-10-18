@@ -6,6 +6,7 @@
 import {
   type CreateMeasurementInput,
   type MeasurementContext,
+  type MeasurementSource,
   type UpdateMeasurementInput,
 } from '@glyka/shared';
 import {
@@ -24,6 +25,8 @@ export interface LatestMeasurement {
   valueMgDl: number;
   measuredAt: string;
   context: MeasurementContext;
+  source: MeasurementSource;
+  importBatchId: string | null;
   pendingSync: boolean;
 }
 
@@ -69,6 +72,8 @@ export const localMeasurements = {
           valueMgDl: last.value_mgdl,
           measuredAt: last.measured_at,
           context: last.context,
+          source: last.source,
+          importBatchId: last.import_batch_id,
           pendingSync: last.pending_sync === 1,
         }
       : null;
