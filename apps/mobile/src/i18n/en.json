@@ -1431,6 +1431,47 @@
         "revoked": "You ended {{name}}'s access.",
         "revokedNoName": "Sharing was stopped."
       }
+    },
+    "log": {
+      "overline": "Access log",
+      "title": "Who viewed my data",
+      "close": "Close",
+      "intro": "Every access to your record is recorded here. Nobody can change this log.",
+      "loading": "Loading the log",
+      "count_one": "{{count}} access",
+      "count_other": "{{count}} accesses",
+      "today": "Today at {{time}}",
+      "onDate": "On {{date}} at {{time}}",
+      "lasted": "{{duration}} of access",
+      "doctor": "Dr {{name}}",
+      "unknownDoctor": "Doctor",
+      "end": {
+        "expired": "Reached its end",
+        "revoked": "Ended by you",
+        "ongoing": "In progress"
+      },
+      "views_one": "{{count}} view",
+      "views_other": "{{count}} views",
+      "report": "Report downloaded",
+      "emergency": {
+        "title": "Emergency access",
+        "text": "Your emergency card was opened, without an account."
+      },
+      "empty": {
+        "title": "Nobody has viewed your data yet",
+        "text": "When a doctor scans your QR code, their access shows up here: who, when and for how long."
+      },
+      "more": "See older accesses",
+      "problem": {
+        "offline": {
+          "title": "No connection",
+          "text": "The log is kept on the server: reconnect to view it."
+        },
+        "error": {
+          "title": "The log could not be loaded",
+          "text": "Try again in a moment."
+        }
+      }
     }
   }
 }

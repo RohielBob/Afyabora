@@ -71,9 +71,19 @@ Choix catégories/durée, QR rotatif, suivi en direct, révocation, journal d'ac
   voit le scan.
 - Tests : `__tests__/watch.test.ts` (horloge et minuteries simulées).
 
-## Reste à faire
+### L5-09 — « Qui a consulté mes données »
 
-- L5-09 : écran « Qui a consulté mes données » (journal, `GET /shares/log`).
+- **Écran** `app/share/log.tsx` (depuis l'onglet « Partager ») : le journal de `GET /shares/log` regroupé
+  en **visites** (`log.ts`) : « **Dr Prénom Nom** » (compte supprimé : « Médecin », décision d'équipe),
+  date (« Aujourd'hui à 18:34 », « Le 17 octobre à 18:33 »), **durée réelle** (« accès de 12 min »),
+  **fin** en icône + libellé (« Arrivé à son terme », « Arrêté par vous », « En cours »), consultations et
+  rapport téléchargé ; **accès d'urgence** à part. Un QR arrêté avant tout scan n'apparaît pas.
+- Pages de 500 lignes, « Voir les accès plus anciens » (une visite coupée entre deux pages est
+  recomposée, une ligne reçue deux fois ne compte qu'une fois), tirer pour rafraîchir, journal vide
+  expliqué, hors ligne : message et « Réessayer ».
+- **Limite connue** : le CDC demande aussi les **catégories partagées** ; le contrat du journal
+  (`AccessLogEntry`) ne les contient pas. À ajouter au contrat si l'équipe le décide.
+- Tests : `__tests__/log.test.ts`.
 
 ## Règle importante
 
