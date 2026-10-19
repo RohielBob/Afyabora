@@ -1,15 +1,26 @@
 {
-  "cli": { "version": ">= 12.0.0" },
+  "cli": { "version": ">= 12.0.0", "appVersionSource": "local" },
   "build": {
+    "base": {
+      "node": "20.18.0",
+      "pnpm": "9.12.0",
+      "env": { "HUSKY": "0" }
+    },
     "development": {
+      "extends": "base",
       "developmentClient": true,
       "distribution": "internal",
       "android": { "buildType": "apk" }
     },
     "preview": {
+      "extends": "base",
       "distribution": "internal",
-      "android": { "buildType": "apk" }
+      "android": { "buildType": "apk" },
+      "env": { "EXPO_PUBLIC_API_URL": "https://afyabora-api.onrender.com" }
     },
-    "production": {}
+    "production": {
+      "extends": "base",
+      "env": { "EXPO_PUBLIC_API_URL": "https://afyabora-api.onrender.com" }
+    }
   }
 }

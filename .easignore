@@ -1,0 +1,36 @@
+# Fichiers JAMAIS envoyés aux serveurs d'Expo pendant `eas build` (ticket L0-11).
+# Quand ce fichier existe, EAS l'utilise À LA PLACE de .gitignore : il reprend donc toutes les lignes de
+# .gitignore (à garder synchronisées), puis ajoute les fichiers personnels et les secrets possibles.
+
+# --- Repris de .gitignore ---
+node_modules/
+dist/
+build/
+.turbo/
+.expo/
+coverage/
+*.log
+.env
+.env.*
+!.env.example
+.DS_Store
+*.tsbuildinfo
+apps/mobile/android/
+apps/mobile/ios/
+apps/api/uploads/
+code_complet_pour_ia.txt
+docs/api/openapi.generated.json
+
+# --- En plus pour EAS : fichiers personnels et outils locaux (non suivis par Git) ---
+regrouper.py
+AGENTS.md
+.claude/
+*.zip
+# Clés et identifiants : jamais envoyés, même s'ils traînaient dans le dossier.
+*.jks
+*.keystore
+*.p8
+*.p12
+*.pem
+credentials.json
+google-services.json
