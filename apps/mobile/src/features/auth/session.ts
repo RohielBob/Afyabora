@@ -10,6 +10,7 @@
 import type { AuthTokens, DoctorVerificationStatus, UserRole } from '@glyka/shared';
 import { useSyncExternalStore } from 'react';
 import { claimLocalData, wipeLocalData } from '@/db/reset';
+import { clearQrImages, clearStoredQr } from '@/features/emergency';
 import { clearReportFiles } from '@/features/report';
 import { requestSync, stopSync, syncNow } from '@/features/sync';
 import { ApiError, api, setTokenRefresher } from '@/lib/api-client';
@@ -173,6 +174,8 @@ export async function signOut(): Promise<void> {
   }
   await wipeLocalData();
   clearReportFiles(); // L6-03 : le dernier rapport PDF rangé sur le téléphone ne reste pas après le départ
+  clearQrImages(); // L6-06 : ni l'image du QR d'urgence…
+  await clearStoredQr().catch(() => undefined); // … ni son jeton (le QR imprimé, lui, marche toujours)
   await endSession('signedOut');
 }
 

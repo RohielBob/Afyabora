@@ -45,6 +45,13 @@ jest.mock('@/db/reset', () => ({
 // Rapport PDF rangé sur le téléphone (L6-03) : effacé à la déconnexion.
 const mockClearReportFiles = jest.fn();
 jest.mock('@/features/report', () => ({ clearReportFiles: () => mockClearReportFiles() }));
+// QR d'urgence (L6-06) : jeton et image effacés à la déconnexion.
+const mockClearStoredQr = jest.fn(async () => undefined);
+const mockClearQrImages = jest.fn();
+jest.mock('@/features/emergency', () => ({
+  clearStoredQr: () => mockClearStoredQr(),
+  clearQrImages: () => mockClearQrImages(),
+}));
 let mockSyncNow: () => Promise<unknown> = async () => {
   steps.push('syncNow');
 };
@@ -101,6 +108,8 @@ beforeEach(() => {
   mockWipeLocalData.mockClear();
   mockClaimLocalData.mockClear();
   mockClearReportFiles.mockClear();
+  mockClearStoredQr.mockClear();
+  mockClearQrImages.mockClear();
   steps.length = 0;
   mockSyncNow = async () => {
     steps.push('syncNow');
@@ -264,6 +273,8 @@ describe('déconnexion (signOut)', () => {
     expect(logoutBody).toEqual({ refreshToken: 'refresh-1' });
     expect(mockWipeLocalData).toHaveBeenCalledTimes(1);
     expect(mockClearReportFiles).toHaveBeenCalledTimes(1); // L6-03 : plus de rapport PDF sur le téléphone
+    expect(mockClearStoredQr).toHaveBeenCalledTimes(1); // L6-06 : plus de jeton du QR d'urgence…
+    expect(mockClearQrImages).toHaveBeenCalledTimes(1); // … ni d'image du QR
     // Dernier envoi tant que la session est valide, moteur arrêté, et SEULEMENT ENSUITE base effacée.
     expect(steps.slice(-3)).toEqual(['syncNow', 'stopSync', 'wipe']);
     expect(calls.indexOf('/auth/logout')).toBeGreaterThanOrEqual(0);
