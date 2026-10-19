@@ -60,9 +60,41 @@ type ApiInit = Omit<RequestInit, 'body'> & { auth?: boolean; body?: unknown; tim
  * renouvelée UNE fois puis la requête rejouée. Les routes publiques (`auth: false`) ne déclenchent jamais
  * de renouvellement (pas de boucle avec /auth/refresh).
  */
-export async function api<T>(path: string, init: ApiInit = {}): Promise<T> {
+export function api<T>(path: string, init: ApiInit = {}): Promise<T> {
+  return withRefresh(init, () =>
+    send(
+      path,
+      init,
+      'application/json',
+      async (response) => (await response.json().catch(() => undefined)) as T, // 204 : pas de corps
+    ),
+  );
+}
+
+/** Fichier reçu de l'API (rapport PDF, L6-03) : son contenu et les en-têtes de la réponse. */
+export interface ApiFile {
+  bytes: Uint8Array;
+  headers: Headers;
+}
+
+/**
+ * Téléchargement d'un fichier (L6-03) : mêmes règles que `api` (jeton, renouvellement de session, délai,
+ * erreurs en ApiError avec le code du serveur), mais la réponse est lue en octets. Le délai couvre aussi
+ * la réception du fichier : une connexion qui se coupe au milieu devient « serveur injoignable ».
+ */
+export function apiFile(path: string, init: Omit<ApiInit, 'body'> = {}): Promise<ApiFile> {
+  return withRefresh(init, () =>
+    send(path, init, 'application/pdf, application/json', async (response) => ({
+      bytes: new Uint8Array(await response.arrayBuffer()),
+      headers: response.headers,
+    })),
+  );
+}
+
+/** Lance `run` ; si la route protégée répond 401, renouvelle la session puis le relance UNE fois. */
+async function withRefresh<T>(init: ApiInit, run: () => Promise<T>): Promise<T> {
   try {
-    return await send<T>(path, init);
+    return await run();
   } catch (error) {
     if (!(error instanceof ApiError) || error.status !== 401 || init.auth === false || !refresher) {
       throw error;
@@ -70,14 +102,24 @@ export async function api<T>(path: string, init: ApiInit = {}): Promise<T> {
     const outcome = await refresher();
     if (outcome === 'offline') throw new ApiError(0, 'Serveur injoignable');
     if (outcome === 'expired') throw error; // la session est fermée : l'écran de connexion s'affiche
-    return send<T>(path, init); // nouveau jeton : on rejoue une seule fois
+    return run(); // nouveau jeton : on rejoue une seule fois
   }
 }
 
-async function send<T>(path: string, init: ApiInit): Promise<T> {
+/**
+ * Une requête : en-têtes, jeton, délai. Une réponse en erreur devient une ApiError (corps JSON du
+ * serveur) ; sinon `read` lit le corps (JSON ou octets) PENDANT le délai : un corps qui n'arrive jamais
+ * ne bloque pas l'écran.
+ */
+async function send<T>(
+  path: string,
+  init: ApiInit,
+  accept: string,
+  read: (response: Response) => Promise<T>,
+): Promise<T> {
   const { auth, body, timeoutMs = TIMEOUT_MS, ...rest } = init;
   const headers = new Headers(rest.headers);
-  headers.set('Accept', 'application/json');
+  headers.set('Accept', accept);
   // Multipart : PAS de Content-Type à la main, le navigateur / React Native ajoute la frontière (boundary).
   const multipart = typeof FormData !== 'undefined' && body instanceof FormData;
   if (body !== undefined && !multipart) headers.set('Content-Type', 'application/json');
@@ -88,27 +130,34 @@ async function send<T>(path: string, init: ApiInit): Promise<T> {
 
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
-  let response: Response;
   try {
-    response = await fetch(`${API_URL}${path}`, {
-      ...rest,
-      headers,
-      body: body === undefined ? undefined : multipart ? (body as FormData) : JSON.stringify(body),
-      signal: controller.signal,
-    });
-  } catch {
-    throw new ApiError(0, 'Serveur injoignable');
+    let response: Response;
+    try {
+      response = await fetch(`${API_URL}${path}`, {
+        ...rest,
+        headers,
+        body:
+          body === undefined ? undefined : multipart ? (body as FormData) : JSON.stringify(body),
+        signal: controller.signal,
+      });
+    } catch {
+      throw new ApiError(0, 'Serveur injoignable');
+    }
+
+    if (!response.ok) {
+      const data: unknown = await response.json().catch(() => undefined);
+      throw new ApiError(
+        response.status,
+        (data as { message?: string } | undefined)?.message ?? 'Erreur du serveur',
+        data,
+      );
+    }
+    try {
+      return await read(response);
+    } catch {
+      throw new ApiError(0, 'Serveur injoignable'); // corps coupé en route ou délai dépassé
+    }
   } finally {
     clearTimeout(timer);
   }
-
-  const data: unknown = await response.json().catch(() => undefined); // 204 : pas de corps
-  if (!response.ok) {
-    throw new ApiError(
-      response.status,
-      (data as { message?: string } | undefined)?.message ?? 'Erreur du serveur',
-      data,
-    );
-  }
-  return data as T;
 }

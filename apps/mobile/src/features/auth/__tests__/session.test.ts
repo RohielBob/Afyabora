@@ -42,6 +42,9 @@ jest.mock('@/db/reset', () => ({
   claimLocalData: (userId: string) => mockClaimLocalData(userId),
   countUnsyncedChanges: async () => 0,
 }));
+// Rapport PDF rangé sur le téléphone (L6-03) : effacé à la déconnexion.
+const mockClearReportFiles = jest.fn();
+jest.mock('@/features/report', () => ({ clearReportFiles: () => mockClearReportFiles() }));
 let mockSyncNow: () => Promise<unknown> = async () => {
   steps.push('syncNow');
 };
@@ -97,6 +100,7 @@ beforeEach(() => {
   calls.length = 0;
   mockWipeLocalData.mockClear();
   mockClaimLocalData.mockClear();
+  mockClearReportFiles.mockClear();
   steps.length = 0;
   mockSyncNow = async () => {
     steps.push('syncNow');
@@ -259,6 +263,7 @@ describe('déconnexion (signOut)', () => {
 
     expect(logoutBody).toEqual({ refreshToken: 'refresh-1' });
     expect(mockWipeLocalData).toHaveBeenCalledTimes(1);
+    expect(mockClearReportFiles).toHaveBeenCalledTimes(1); // L6-03 : plus de rapport PDF sur le téléphone
     // Dernier envoi tant que la session est valide, moteur arrêté, et SEULEMENT ENSUITE base effacée.
     expect(steps.slice(-3)).toEqual(['syncNow', 'stopSync', 'wipe']);
     expect(calls.indexOf('/auth/logout')).toBeGreaterThanOrEqual(0);
@@ -273,6 +278,7 @@ describe('déconnexion (signOut)', () => {
     await signOut();
 
     expect(mockWipeLocalData).toHaveBeenCalledTimes(1);
+    expect(mockClearReportFiles).toHaveBeenCalledTimes(1);
     expect(mockVault.size).toBe(0);
     expect(getSession().status).toBe('signedOut');
   });

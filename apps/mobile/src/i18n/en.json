@@ -1255,6 +1255,98 @@
       }
     }
   },
+  "report": {
+    "overline": "PDF report",
+    "title": "Prepare my appointment",
+    "intro": "A clear report of your readings to give your doctor: via WhatsApp, by email, printed or shown on your phone.",
+    "close": "Close",
+    "period": "Report period",
+    "few": {
+      "title": "Few readings in this period",
+      "text_one": "{{count}} reading over these {{days}} days. The report will still be created and will say so.",
+      "text_other": "{{count}} readings over these {{days}} days. The report will still be created and will say so."
+    },
+    "contents": {
+      "title": "What the report contains",
+      "identity": {
+        "title": "You and your follow-up",
+        "text": "First name, last name, diabetes type, year of diagnosis and your target ranges."
+      },
+      "quality": {
+        "title": "Readings and data quality",
+        "text": "Number of readings, average, variability, days without readings."
+      },
+      "ranges": {
+        "title": "Time in target range",
+        "text": "Share of readings below, within and above the range."
+      },
+      "episodes": {
+        "title": "Episodes and unusual values",
+        "text": "Dated moments below or above your thresholds."
+      },
+      "points": {
+        "title": "Points to review with your doctor",
+        "text": "The analysis observations, in plain sentences."
+      },
+      "chart": {
+        "title": "Chart and details",
+        "text": "Every reading of the period, in your unit, with the days without readings."
+      },
+      "private": "Your personal notes are never in the report. The file only leaves your phone if you share it."
+    },
+    "pending_one": "{{count}} reading has not been sent yet: it will be sent before the report is created.",
+    "pending_other": "{{count}} readings have not been sent yet: they will be sent before the report is created.",
+    "create": "Create and share the PDF",
+    "phase": {
+      "syncing": "Sending your latest readings…",
+      "creating": "Creating the report…",
+      "sharing": "Opening sharing…"
+    },
+    "network": "The report is created by the server: an Internet connection is required.",
+    "shareTitle": "Share the report",
+    "shareAgain": "Share again",
+    "createAgain": "Create a new report",
+    "done": {
+      "title": "Report ready",
+      "text": "{{filename}}. You can share it again, for example by email too."
+    },
+    "unsent": {
+      "title_one": "{{count}} reading is not in the report",
+      "title_other": "{{count}} readings are not in the report",
+      "text_one": "It could not be sent yet. It stays on your phone and will be sent as soon as possible; create a new report afterwards.",
+      "text_other": "They could not be sent yet. They stay on your phone and will be sent as soon as possible; create a new report afterwards."
+    },
+    "problem": {
+      "offline": {
+        "title": "No connection",
+        "text": "The report is created by the server. Reconnect to the Internet and try again."
+      },
+      "tooMany": {
+        "title": "Too many reports at once",
+        "text": "Wait a minute before creating another one."
+      },
+      "noProfile": {
+        "title": "Medical profile to complete",
+        "text": "The report needs your medical profile (diabetes type, target ranges)."
+      },
+      "cannotShare": {
+        "title": "Sharing unavailable",
+        "text": "This device cannot share a file."
+      },
+      "error": {
+        "title": "The report could not be created",
+        "text": "Something went wrong. Try again in a moment."
+      }
+    },
+    "doctor": {
+      "title": "Your doctor can also download it",
+      "text": "Tick “PDF report” when you share your history by QR."
+    },
+    "entry": {
+      "title": "Prepare my appointment",
+      "body": "A PDF report of your readings to give your doctor."
+    }
+  },
   "share": {
     "home": {
       "overline": "Secure sharing",
@@ -1279,6 +1371,8 @@
       "log": "Who viewed my data",
       "logHint": "Doctors who had access, and when",
       "emergency": "Emergency card",
+      "report": "Prepare my appointment",
+      "reportHint": "A PDF report of your readings for your doctor",
       "emergencyHint": "Information useful to first responders"
     },
     "new": {

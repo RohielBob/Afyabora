@@ -1255,6 +1255,98 @@
       }
     }
   },
+  "report": {
+    "overline": "Rapport PDF",
+    "title": "Préparer ma consultation",
+    "intro": "Un rapport clair de vos mesures, à remettre à votre médecin : par WhatsApp, par e-mail, imprimé ou montré sur votre téléphone.",
+    "close": "Fermer",
+    "period": "Période du rapport",
+    "few": {
+      "title": "Peu de mesures sur cette période",
+      "text_one": "{{count}} mesure sur ces {{days}} jours. Le rapport sera créé quand même et le signalera.",
+      "text_other": "{{count}} mesures sur ces {{days}} jours. Le rapport sera créé quand même et le signalera."
+    },
+    "contents": {
+      "title": "Ce que contient le rapport",
+      "identity": {
+        "title": "Vous et votre suivi",
+        "text": "Prénom, nom, type de diabète, année du diagnostic et vos plages cibles."
+      },
+      "quality": {
+        "title": "Mesures et qualité des données",
+        "text": "Nombre de mesures, moyenne, variabilité, jours sans mesure."
+      },
+      "ranges": {
+        "title": "Temps dans la plage cible",
+        "text": "Part des mesures en dessous, dans la plage et au-dessus."
+      },
+      "episodes": {
+        "title": "Épisodes et valeurs inhabituelles",
+        "text": "Les moments en dessous ou au-dessus de vos seuils, datés."
+      },
+      "points": {
+        "title": "Points à examiner avec votre médecin",
+        "text": "Les observations de l'analyse, en phrases simples."
+      },
+      "chart": {
+        "title": "Graphique et détail",
+        "text": "Toutes les mesures de la période, dans votre unité, avec les jours sans mesure."
+      },
+      "private": "Vos notes personnelles ne sont jamais dans le rapport. Le fichier ne quitte le téléphone que si vous le partagez."
+    },
+    "pending_one": "{{count}} mesure n'est pas encore envoyée : elle partira avant la création du rapport.",
+    "pending_other": "{{count}} mesures ne sont pas encore envoyées : elles partiront avant la création du rapport.",
+    "create": "Créer et partager le PDF",
+    "phase": {
+      "syncing": "Envoi de vos dernières mesures…",
+      "creating": "Création du rapport…",
+      "sharing": "Ouverture du partage…"
+    },
+    "network": "Le rapport est créé par le serveur : connexion Internet nécessaire.",
+    "shareTitle": "Partager le rapport",
+    "shareAgain": "Partager à nouveau",
+    "createAgain": "Créer un nouveau rapport",
+    "done": {
+      "title": "Rapport prêt",
+      "text": "{{filename}}. Vous pouvez le partager à nouveau, par exemple aussi par e-mail."
+    },
+    "unsent": {
+      "title_one": "{{count}} mesure n'est pas dans le rapport",
+      "title_other": "{{count}} mesures ne sont pas dans le rapport",
+      "text_one": "Elle n'a pas encore pu être envoyée. Elle reste sur votre téléphone et partira dès que possible ; créez un nouveau rapport ensuite.",
+      "text_other": "Elles n'ont pas encore pu être envoyées. Elles restent sur votre téléphone et partiront dès que possible ; créez un nouveau rapport ensuite."
+    },
+    "problem": {
+      "offline": {
+        "title": "Pas de connexion",
+        "text": "Le rapport est créé par le serveur. Reconnectez-vous à Internet puis réessayez."
+      },
+      "tooMany": {
+        "title": "Trop de rapports d'un coup",
+        "text": "Attendez une minute avant d'en créer un autre."
+      },
+      "noProfile": {
+        "title": "Profil médical à compléter",
+        "text": "Le rapport a besoin de votre profil médical (type de diabète, plages cibles)."
+      },
+      "cannotShare": {
+        "title": "Partage indisponible",
+        "text": "Cet appareil ne propose pas de partager un fichier."
+      },
+      "error": {
+        "title": "Le rapport n'a pas pu être créé",
+        "text": "Une erreur est survenue. Réessayez dans un instant."
+      }
+    },
+    "doctor": {
+      "title": "Votre médecin peut aussi le télécharger",
+      "text": "Cochez « Rapport PDF » quand vous partagez votre historique par QR."
+    },
+    "entry": {
+      "title": "Préparer ma consultation",
+      "body": "Un rapport PDF de vos mesures, à remettre à votre médecin."
+    }
+  },
   "share": {
     "home": {
       "overline": "Partage sécurisé",
@@ -1279,6 +1371,8 @@
       "log": "Qui a consulté mes données",
       "logHint": "Les médecins qui ont eu accès, et quand",
       "emergency": "Carte d'urgence",
+      "report": "Préparer ma consultation",
+      "reportHint": "Un rapport PDF de vos mesures à remettre au médecin",
       "emergencyHint": "Les informations utiles aux secours"
     },
     "new": {

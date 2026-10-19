@@ -10,6 +10,7 @@
 import type { AuthTokens, DoctorVerificationStatus, UserRole } from '@glyka/shared';
 import { useSyncExternalStore } from 'react';
 import { claimLocalData, wipeLocalData } from '@/db/reset';
+import { clearReportFiles } from '@/features/report';
 import { requestSync, stopSync, syncNow } from '@/features/sync';
 import { ApiError, api, setTokenRefresher } from '@/lib/api-client';
 import {
@@ -171,6 +172,7 @@ export async function signOut(): Promise<void> {
     }
   }
   await wipeLocalData();
+  clearReportFiles(); // L6-03 : le dernier rapport PDF rangé sur le téléphone ne reste pas après le départ
   await endSession('signedOut');
 }
 

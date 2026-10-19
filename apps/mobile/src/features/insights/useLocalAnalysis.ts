@@ -1,8 +1,10 @@
 // Analyse des N derniers jours, calculée sur le téléphone (L8-11) : pour l'écran « Analyse » (L3-04) et
-// le travail hors-ligne (L3-09). Relue à chaque retour sur l'écran (ex. après une nouvelle mesure) et à
-// chaque changement de période.
+// le travail hors-ligne (L3-09) et l'aperçu du rapport (L6-03). Relue à chaque retour sur l'écran (ex. après
+// une nouvelle mesure), à chaque changement de période, et quand la synchronisation apporte des données
+// (sinon, juste après la connexion, l'écran resterait sur « 0 mesure » alors que les mesures arrivent).
 import { useFocusEffect } from 'expo-router';
 import { useCallback, useRef, useState } from 'react';
+import { onSyncedData } from '@/features/sync';
 import { loadLocalAnalysis, type LocalAnalysis } from './local-analysis';
 
 export type LocalAnalysisState =
@@ -35,7 +37,9 @@ export function useLocalAnalysis(days: number): {
   useFocusEffect(
     useCallback(() => {
       load();
+      const unsubscribe = onSyncedData(load); // relue sans squelette : les chiffres se mettent à jour
       return () => {
+        unsubscribe();
         lastLoad.current += 1; // écran quitté : la lecture en cours ne sert plus
       };
     }, [load]),

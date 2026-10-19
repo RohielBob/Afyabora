@@ -1,7 +1,7 @@
 // Onglet « Partager » (L5-06, CDC F7 étape 1) : point d'entrée du partage avec un médecin. Il explique en
 // trois points ce qui se passe (le QR ne contient aucune donnée, l'accès est limité, le patient garde la
 // main), mène à « Partager mon historique », et donne accès au journal « Qui a consulté mes données »
-// (L5-09) et à la carte d'urgence (L6-06). Le partage exige le réseau : c'est dit dès cet écran.
+// (L5-09), au rapport « Préparer ma consultation » (L6-03) et à la carte d'urgence (L6-06). Le partage exige le réseau : c'est dit dès cet écran.
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import type { ComponentProps } from 'react';
@@ -87,6 +87,12 @@ export default function ShareScreen() {
       </Animated.View>
 
       <Card variant="outlined" index={2} style={{ padding: 6, gap: 0 }}>
+        <ListRow
+          icon={<Ionicons name="document-text-outline" size={20} color={colors.primaryText} />}
+          title={t('share.home.report')}
+          subtitle={t('share.home.reportHint')}
+          onPress={() => router.push('/report')}
+        />
         <ListRow
           icon={<Ionicons name="eye-outline" size={20} color={colors.primaryText} />}
           title={t('share.home.log')}
