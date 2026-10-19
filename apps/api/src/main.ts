@@ -16,6 +16,11 @@ async function bootstrap() {
   // multer (5 Mo), pas par ici.
   app.useBodyParser('json', { limit: JSON_BODY_LIMIT });
   app.use(helmet());
+  // Hébergé derrière un relais (L0-10) : l'adresse IP du VRAI client est lue dans X-Forwarded-For, en ne
+  // faisant confiance qu'au nombre de relais annoncé (jamais « tous » : un client pourrait sinon inventer son
+  // adresse et contourner les limites de débit).
+  const proxyHops = Number(process.env.TRUST_PROXY_HOPS ?? 0);
+  if (proxyHops > 0) app.set('trust proxy', proxyHops);
   // CORS : seul le portail web peut appeler l'API depuis un navigateur. En développement, on autorise aussi
   // l'aperçu web de l'app mobile (Expo, port 8081). Les applications natives ne sont pas concernées par CORS.
   const allowedOrigins = [process.env.PORTAL_URL ?? 'http://localhost:5173'];

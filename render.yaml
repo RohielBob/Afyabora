@@ -1,0 +1,92 @@
+# Hébergement d'Afyabora sur Render (ticket L0-10) : l'API et le portail, décrits en un seul fichier
+# (« Blueprint » Render). Guide pas à pas : docs/deploy/hebergement.md.
+#
+# - La base de données n'est PAS ici : elle est chez Neon (PostgreSQL gratuit, sans date d'expiration).
+# - Les SECRETS ne sont jamais écrits ici (« sync: false ») : on les colle dans le tableau de bord de Render,
+#   qui les demande à la création. Ce fichier peut donc être public.
+# - Région Francfort (Europe) pour les deux services.
+# - Données de DÉMONSTRATION uniquement (comptes fictifs) : l'offre gratuite n'est pas prévue pour de vraies
+#   données de santé.
+
+services:
+  # ---------------------------------------------------------------- API (NestJS, image Docker du dépôt)
+  - type: web
+    name: afyabora-api
+    runtime: docker
+    region: frankfurt
+    # Offre gratuite : le service s'endort après 15 min sans visite (réveil en 50 s environ).
+    # Passer à « starter » (7 $/mois) pour qu'il reste éveillé (ex. juste avant la démonstration).
+    plan: free
+    branch: develop
+    dockerfilePath: ./infra/docker/api.Dockerfile
+    dockerContext: .
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      # Render place UN relais devant l'API : l'adresse IP du vrai client est lue dans X-Forwarded-For.
+      - key: TRUST_PROXY_HOPS
+        value: '1'
+      # Secrets (à coller dans le tableau de bord de Render, jamais dans ce fichier) :
+      - key: DATABASE_URL # Neon, connexion DIRECTE (sans « -pooler »), avec ?sslmode=require
+        sync: false
+      - key: JWT_ACCESS_SECRET # 48 octets aléatoires en base64 (commande dans le guide)
+        sync: false
+      - key: FIELD_ENCRYPTION_KEY # 32 octets aléatoires en base64 (commande dans le guide)
+        sync: false
+      # Envoi des emails (inscription, mot de passe oublié) : Brevo.
+      - key: SMTP_HOST
+        value: smtp-relay.brevo.com
+      - key: SMTP_PORT
+        value: '587'
+      - key: SMTP_SECURE
+        value: 'false' # port 587 : STARTTLS exigé par l'API dès qu'un identifiant est donné
+      - key: SMTP_USER # identifiant SMTP de Brevo
+        sync: false
+      - key: SMTP_PASS # clé SMTP de Brevo
+        sync: false
+      - key: SMTP_FROM # ex. Afyabora <adresse-verifiee-chez-brevo@exemple.com>
+        sync: false
+      # Adresses publiques (à corriger si Render a dû choisir d'autres noms) :
+      - key: PORTAL_URL
+        value: https://afyabora-portail.onrender.com
+      - key: API_PUBLIC_URL
+        value: https://afyabora-api.onrender.com
+      # Pas de modèle de langage hébergé : l'application utilise les phrases du moteur (prévu, ADR-0005).
+      - key: LLM_PROVIDER
+        value: none
+
+  # ---------------------------------------------------------------- Portail (React, site statique)
+  - type: web
+    name: afyabora-portail
+    runtime: static
+    branch: develop
+    buildCommand: corepack enable && pnpm install --frozen-lockfile --filter "@glyka/portal..." && pnpm --filter "@glyka/portal..." build
+    staticPublishPath: ./apps/portal/dist
+    envVars:
+      - key: NODE_VERSION
+        value: '20'
+      - key: HUSKY
+        value: '0' # pas de hooks Git pendant la construction
+      - key: VITE_API_URL
+        value: https://afyabora-api.onrender.com
+    routes:
+      # Application d'une seule page : toutes les adresses (/patients/…, /e/<jeton>…) servent index.html.
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    headers:
+      # Page publique de la carte d'urgence : jamais indexée, jamais de jeton transmis à un autre site.
+      - path: /e/*
+        name: X-Robots-Tag
+        value: noindex, nofollow
+      - path: /e/*
+        name: Referrer-Policy
+        value: no-referrer
+      # Le portail ne s'affiche jamais dans le cadre d'un autre site.
+      - path: /*
+        name: X-Frame-Options
+        value: DENY
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff

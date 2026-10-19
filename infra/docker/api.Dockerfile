@@ -1,4 +1,4 @@
-# Image de l'API Glyka (profil « full » de docker-compose.yml). Ticket L0-05.
+# Image de l'API Glyka (profil « full » de docker-compose.yml, et hébergement : render.yaml). Tickets L0-05, L0-10.
 # Construire depuis la RACINE du dépôt : docker build -f infra/docker/api.Dockerfile .
 #
 # Choix :
@@ -39,4 +39,9 @@ EXPOSE 3000
 HEALTHCHECK --interval=15s --timeout=3s --start-period=30s --retries=5 \
   CMD node -e "fetch('http://127.0.0.1:' + (process.env.PORT || 3000) + '/health').then((r) => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"
 
-CMD ["node", "dist/main.js"]
+# Au démarrage : les migrations de la base d'abord (L0-10), puis l'API.
+#  - `prisma migrate deploy` applique SEULEMENT les migrations pas encore appliquées, dans l'ordre, et
+#    n'efface jamais de données (contrairement à `migrate reset` ou `migrate dev`, jamais utilisés ici).
+#  - Si une migration échoue, l'API ne démarre pas : jamais un serveur sur une base à moitié à jour.
+#  - `exec` : l'API remplace le shell (elle reçoit directement l'arrêt envoyé par l'hébergeur).
+CMD ["sh", "-c", "/app/node_modules/.bin/prisma migrate deploy && exec node dist/main.js"]

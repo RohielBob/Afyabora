@@ -17,6 +17,28 @@ describe('validation de la configuration', () => {
     expect(env.PORT).toBe(3000);
     expect(env.NODE_ENV).toBe('development');
     expect(env.SMTP_PORT).toBe(1025);
+    expect(env.SMTP_SECURE).toBe(false);
+    expect(env.SMTP_USER).toBeUndefined();
+    expect(env.TRUST_PROXY_HOPS).toBe(0);
+  });
+
+  it('hébergement (L0-10) : identifiant SMTP, TLS et nombre de relais', () => {
+    const env = validateEnv({
+      ...validEnv(),
+      SMTP_USER: 'expediteur@exemple.test',
+      SMTP_PASS: 'mot-de-passe-de-test',
+      SMTP_SECURE: 'true',
+      TRUST_PROXY_HOPS: '1',
+    });
+    expect(env.SMTP_SECURE).toBe(true);
+    expect(env.SMTP_USER).toBe('expediteur@exemple.test');
+    expect(env.TRUST_PROXY_HOPS).toBe(1);
+    // Champ laissé vide dans le tableau de bord de l'hébergeur = non renseigné.
+    expect(
+      validateEnv({ ...validEnv(), SMTP_USER: '', SMTP_SECURE: '' }).SMTP_USER,
+    ).toBeUndefined();
+    expect(() => validateEnv({ ...validEnv(), SMTP_SECURE: 'oui' })).toThrow(/SMTP_SECURE/);
+    expect(() => validateEnv({ ...validEnv(), TRUST_PROXY_HOPS: '9' })).toThrow(/TRUST_PROXY_HOPS/);
   });
 
   it("refuse le secret JWT d'exemple de .env.example", () => {

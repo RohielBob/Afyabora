@@ -28,8 +28,22 @@ const envSchema = z.object({
   SMTP_HOST: z.string().default('localhost'),
   SMTP_PORT: z.coerce.number().default(1025),
   SMTP_FROM: z.string().default('Afyabora <no-reply@afyabora.local>'),
+  // Hébergement (L0-10) : un vrai service d'envoi (ex. Brevo) demande un identifiant, un mot de passe et une
+  // connexion chiffrée. Sans identifiant (Mailpit en développement), rien de tout cela n'est utilisé.
+  SMTP_USER: z.preprocess((v) => (v === '' ? undefined : v), z.string().optional()),
+  SMTP_PASS: z.preprocess((v) => (v === '' ? undefined : v), z.string().optional()),
+  // « true » : TLS dès la connexion (port 465). « false » : connexion en clair puis STARTTLS exigé si un
+  // identifiant est donné (port 587). Mailpit (port 1025) : en clair.
+  SMTP_SECURE: z.preprocess(
+    (v) => (v === '' || v === undefined ? 'false' : v),
+    z.enum(['true', 'false']).transform((v) => v === 'true'),
+  ),
   PORTAL_URL: z.string().url().default('http://localhost:5173'),
   API_PUBLIC_URL: z.string().url().default('http://localhost:3000'),
+  // Nombre de relais (proxys) devant l'API chez l'hébergeur (L0-10 ; Render : 1). Sans ce réglage, toutes les
+  // requêtes sembleraient venir de l'adresse du relais : les limites de débit par adresse IP seraient
+  // partagées par TOUS les utilisateurs, et le journal d'accès noterait la mauvaise adresse. 0 = aucun relais.
+  TRUST_PROXY_HOPS: z.coerce.number().int().min(0).max(5).default(0),
   // Modèle de langage (L3-05, ADR-0005) : « none » = gabarits du moteur seulement (défaut, la démo n'en
   // dépend jamais) ; « ollama » = modèle LOCAL (https://ollama.com), sans service externe.
   LLM_PROVIDER: z.enum(['none', 'ollama']).default('none'),
