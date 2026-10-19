@@ -21,6 +21,7 @@ import {
   useAppLock,
   verifyPin,
   type BiometricSupport,
+  StorageProtectionCard,
   type PinPadHandle,
 } from '@/features/security';
 import { enterFromBelow, spacing, useReducedMotion } from '@/theme';
@@ -228,14 +229,16 @@ export default function SecurityScreen() {
         ) : null}
       </Card>
 
-      <Card variant="tinted" index={1}>
+      <StorageProtectionCard index={1} />
+
+      <Card variant="tinted" index={2}>
         <Text variant="subheading">{t('security.settings.tipsTitle')}</Text>
         <Text variant="bodySmall" tone="muted">
           {t('security.settings.tips')}
         </Text>
       </Card>
 
-      <Card variant="outlined" index={2}>
+      <Card variant="outlined" index={3}>
         <Text variant="overline" tone="primary">
           {t('security.settings.soonTitle')}
         </Text>

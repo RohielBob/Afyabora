@@ -22,3 +22,4 @@ export {
 } from './lock-rules';
 export { LockScreen } from './components/LockScreen';
 export { PinPad, type PinPadHandle } from './components/PinPad';
+export { StorageProtectionCard } from './components/StorageProtectionCard';

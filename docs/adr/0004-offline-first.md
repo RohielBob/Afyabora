@@ -35,7 +35,7 @@ Le téléphone possède une **base SQLite locale**, source de vérité pour l'af
 
 - **L'architecture mobile doit être local-first dès le jour 2** : impossible de la « greffer » à la fin.
 - Complexité supplémentaire (outbox, curseur, tombstones, tests de conflits) : lot L8, ticket XL L8-06 à découper.
-- Chiffrement de la base locale (SQLCipher) à valider (ticket L8-02) ; nécessite un development build.
+- Chiffrement de la base locale : **décidé et fait (L8-02, 2026-10-19)** : SQLCipher (AES-256) avec une clé aléatoire de 32 octets dans SecureStore ; refus d'enregistrer en clair dans l'APK final ; sauvegarde Android désactivée. Détails : `apps/mobile/src/db/README.md`. Nécessite un APK (EAS) : Expo Go n'a pas SQLCipher.
 - L'horloge de l'appareil peut dériver : le serveur rejette une `measuredAt` à plus de 5 minutes dans le futur.
 
 ## Modifications décidées à l'acceptation (réunion du 2026-10-09, L8-01)

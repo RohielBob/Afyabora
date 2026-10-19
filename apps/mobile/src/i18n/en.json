@@ -434,7 +434,21 @@
       "tipsTitle": "Good to know",
       "tips": "Your code is never stored in plain text. After 5 errors, you must wait before trying again. Forgot your code? You can sign out and sign in again with your password.",
       "soonTitle": "Coming soon",
-      "soon": "Export your data and delete your account (ticket L1-14)."
+      "soon": "Export your data and delete your account (ticket L1-14).",
+      "storage": {
+        "title": "Health data on this phone",
+        "loading": "Checking…",
+        "encrypted": "Encrypted",
+        "encryptedHint": "Local database encrypted (AES-256, SQLCipher). The key is kept in the phone’s secure storage.",
+        "unencrypted": "Not encrypted",
+        "unencryptedHint": "Development mode (Expo Go): encryption is only active in the installed app (APK).",
+        "web": "Web preview",
+        "webHint": "Nothing is saved on this device: data stays in memory during the visit.",
+        "error": "Unavailable",
+        "errorHint": "The local database could not be opened. Close and reopen the app.",
+        "migrated": "The data already saved on this phone has been encrypted.",
+        "reset": "This phone’s database was unreadable and has been recreated. Your data is being reloaded from the server; only entries that were never synced may have been lost."
+      }
     }
   },
   "legal": {

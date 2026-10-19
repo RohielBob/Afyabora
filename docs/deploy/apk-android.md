@@ -3,13 +3,13 @@
 **Ticket L0-11.** But : un fichier **APK** à installer sur n'importe quel téléphone Android, qui parle à l'API
 hébergée (`https://afyabora-api.onrender.com`, ticket L0-10). Plus besoin d'Expo Go ni du PC allumé.
 
-| Question                 | Réponse                                                                                                    |
-| ------------------------ | ---------------------------------------------------------------------------------------------------------- |
-| Où est construit l'APK ? | Sur les serveurs d'Expo (**EAS Build**), gratuit (file d'attente : de quelques minutes à plus d'une heure) |
-| Quel profil ?            | **`preview`** : APK installable directement, adresse de l'API hébergée intégrée                            |
-| Play Store ?             | Non : distribution « interne » (lien de téléchargement). Le profil `production` sera pour plus tard        |
-| Et Windows / iPhone ?    | Windows : le **portail** (navigateur). iPhone : demande un compte Apple payant, pas prévu dans le MVP      |
-| Données sur le téléphone | Base locale **pas encore chiffrée** (L8-02, SQLCipher) : **comptes de démonstration uniquement**           |
+| Question                 | Réponse                                                                                                         |
+| ------------------------ | --------------------------------------------------------------------------------------------------------------- |
+| Où est construit l'APK ? | Sur les serveurs d'Expo (**EAS Build**), gratuit (file d'attente : de quelques minutes à plus d'une heure)      |
+| Quel profil ?            | **`preview`** : APK installable directement, adresse de l'API hébergée intégrée                                 |
+| Play Store ?             | Non : distribution « interne » (lien de téléchargement). Le profil `production` sera pour plus tard             |
+| Et Windows / iPhone ?    | Windows : le **portail** (navigateur). iPhone : demande un compte Apple payant, pas prévu dans le MVP           |
+| Données sur le téléphone | Base locale **chiffrée** (SQLCipher, L8-02). Vérifier : Réglages ⇒ Sécurité ⇒ « Données de santé… : Chiffrées » |
 
 Ce qui est déjà réglé dans le dépôt :
 
