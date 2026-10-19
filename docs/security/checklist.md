@@ -34,7 +34,9 @@ quand les DEUX protections redondantes sont retirées ensemble).
       chaque catégorie, aucun ne sort par aucune route quand sa catégorie est décochée
 - [x] Seul le hash du jeton est en base (toutes les tables fouillées)
 - [x] Limitation de débit active sur `/shares/claim` (5 scans ratés ⇒ blocage ; 20 requêtes par minute)
-- [ ] Limitation de débit active sur `/e/:token` (route d'urgence pas encore codée : L6-05, L6-06)
+- [x] Limitation de débit active sur `/e/:token` (L6-05 : 10 ouvertures par minute et par adresse IP ; jeton
+      de 32 octets, seul son hash en base ; carte désactivée ou QR régénéré ⇒ 404 immédiat ; chaque ouverture
+      journalisée et notifiée au patient)
 - [x] Chaque étape écrit dans le journal d'accès (scan, consultation, arrêt, expiration, lus par le patient)
 
 ## Données
