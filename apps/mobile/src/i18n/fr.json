@@ -224,6 +224,19 @@
     "appearanceHint": "Thème clair ou sombre, couleur d'accent",
     "units": "Unités et seuils",
     "unitsHint": "Unité préférée, plage cible, seuils d'alerte",
+    "unitsScreen": {
+      "intro": "Unité d’affichage, plage cible et seuils d’alerte. À définir avec votre médecin : Afyabora ne donne jamais de conseil de traitement.",
+      "saved": "Enregistré. Vos mesures s’affichent maintenant en {{unit}}.",
+      "discard": "Annuler les modifications",
+      "storedNote": "Vos mesures déjà enregistrées ne changent pas : seul leur affichage suit l’unité choisie.",
+      "problem": {
+        "offline": "Pas de connexion : ce réglage a besoin d’Internet. Réessayez quand le réseau sera revenu.",
+        "noProfile": "Complétez d’abord votre profil : ces réglages en font partie.",
+        "invalid": "Le serveur a refusé ces valeurs. Vérifiez l’ordre : très bas < plage cible < très haut.",
+        "profile": "Votre profil contient une information incomplète : complétez-le avant de modifier ces réglages.",
+        "error": "Le réglage n’a pas pu être enregistré. Réessayez dans un instant."
+      }
+    },
     "notifications": "Notifications",
     "notificationsHint": "Rappels, alertes, heures calmes",
     "security": "Sécurité",

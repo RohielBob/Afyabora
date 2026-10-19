@@ -8,21 +8,11 @@
 // On ne passe à l'étape suivante que si l'étape est valide (mêmes règles que le serveur).
 // Chaque étape apparaît en glissant ; la barre de progression se remplit.
 import { router } from 'expo-router';
-import { useMemo, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View, type TextInput } from 'react-native';
 import Animated, { FadeIn, SlideInLeft, SlideInRight } from 'react-native-reanimated';
-import type { GlucoseUnit } from '@glyka/shared';
-import {
-  Button,
-  Card,
-  Checkbox,
-  ChoiceGroup,
-  InlineAlert,
-  Screen,
-  Text,
-  TextField,
-} from '@/components/ui';
+import { Button, Card, ChoiceGroup, InlineAlert, Screen, Text, TextField } from '@/components/ui';
 import {
   SuccessState,
   authErrorMessage,
@@ -34,11 +24,9 @@ import { writeUnit } from '@/features/measurements';
 import {
   STEPS,
   SUGGESTED_COUNTRIES,
-  THRESHOLD_KEYS,
   StepProgress,
-  ThresholdBar,
-  convertThresholds,
-  displayToMgDl,
+  ThresholdsEditor,
+  UNIT_LABEL,
   finalPayload,
   firstInvalidStep,
   initialDraft,
@@ -53,7 +41,6 @@ import {
 } from '@/features/profile';
 import { durations, easing, spacing, useReducedMotion } from '@/theme';
 
-const UNIT_LABEL: Record<GlucoseUnit, string> = { G_L: 'g/L', MG_DL: 'mg/dL', MMOL_L: 'mmol/L' };
 const FORM_STEPS = STEPS.length - 1; // le résumé n'est pas compté comme une étape à remplir
 
 export default function ProfileSetupScreen() {
@@ -123,14 +110,6 @@ export default function ProfileSetupScreen() {
     await markProfileCompleted(); // l'accueil devient accessible (session, L1-07)
     router.replace('/(tabs)');
   };
-
-  const thresholdsMgDl = useMemo(
-    () =>
-      Object.fromEntries(
-        THRESHOLD_KEYS.map((key) => [key, displayToMgDl(draft.thresholds[key], draft.unit)]),
-      ) as Record<(typeof THRESHOLD_KEYS)[number], number | null>,
-    [draft.thresholds, draft.unit],
-  );
 
   if (done) {
     return (
@@ -258,64 +237,19 @@ export default function ProfileSetupScreen() {
         {step === 'thresholds' ? (
           <>
             <Text tone="muted">{t('onboarding.thresholds.intro')}</Text>
-            <ChoiceGroup
-              label={t('onboarding.thresholds.unit')}
-              value={draft.unit}
-              columns={3}
-              onChange={(unit) =>
-                update({ unit, thresholds: convertThresholds(draft.thresholds, draft.unit, unit) })
+            <ThresholdsEditor
+              value={{
+                unit: draft.unit,
+                thresholds: draft.thresholds,
+                reviewed: draft.thresholdsReviewedByClinician,
+              }}
+              onChange={({ reviewed, ...patch }) =>
+                update({
+                  ...patch,
+                  ...(reviewed !== undefined ? { thresholdsReviewedByClinician: reviewed } : {}),
+                })
               }
-              options={(['G_L', 'MG_DL', 'MMOL_L'] as const).map((value) => ({
-                value,
-                label: UNIT_LABEL[value],
-              }))}
-            />
-            <InlineAlert tone="info" message={t('onboarding.thresholds.doctorNote')} />
-            <ThresholdBar mgDl={thresholdsMgDl} />
-            {/* Deux groupes alignés : plage cible (de / à), puis seuils d'alerte (très bas / très haut). */}
-            {(
-              [
-                ['rangeTitle', ['targetMinMgDl', 'targetMaxMgDl'], 'rangeHint'],
-                ['alertTitle', ['veryLowMgDl', 'veryHighMgDl'], 'alertHint'],
-              ] as const
-            ).map(([title, keys, hint]) => (
-              <View key={title} style={{ gap: spacing.sm }}>
-                <Text variant="subheading">
-                  {t(`onboarding.thresholds.${title}`)} ({UNIT_LABEL[draft.unit]})
-                </Text>
-                <View style={{ flexDirection: 'row', gap: spacing.md }}>
-                  {keys.map((key) => (
-                    <View key={key} style={{ flex: 1 }}>
-                      <TextField
-                        label={t(`onboarding.thresholds.short.${key}`)}
-                        value={draft.thresholds[key]}
-                        onChangeText={(text) =>
-                          update({ thresholds: { ...draft.thresholds, [key]: text } })
-                        }
-                        error={err(`thresholds.${key}`)}
-                        keyboardType="decimal-pad"
-                        maxLength={6}
-                      />
-                    </View>
-                  ))}
-                </View>
-                <Text variant="caption" tone="muted">
-                  {t(`onboarding.thresholds.${hint}`)}
-                </Text>
-              </View>
-            ))}
-            <Button
-              label={t('onboarding.thresholds.reset')}
-              variant="ghost"
-              onPress={() => update({ thresholds: initialDraftThresholds(draft.unit) })}
-            />
-            <Checkbox
-              checked={draft.thresholdsReviewedByClinician}
-              onChange={(thresholdsReviewedByClinician) =>
-                update({ thresholdsReviewedByClinician })
-              }
-              label={t('onboarding.thresholds.reviewed')}
-              accessibilityLabel={t('onboarding.thresholds.reviewed')}
+              error={err}
             />
           </>
         ) : null}
@@ -465,10 +399,6 @@ export default function ProfileSetupScreen() {
       </View>
     </Screen>
   );
-}
-
-function initialDraftThresholds(unit: GlucoseUnit) {
-  return convertThresholds(initialDraft().thresholds, 'G_L', unit);
 }
 
 /** Résumé : une carte par étape, chacune avec « Modifier ». */
