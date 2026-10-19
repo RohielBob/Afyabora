@@ -1347,6 +1347,120 @@
       "body": "A PDF report of your readings to give your doctor."
     }
   },
+  "emergency": {
+    "editCard": "Edit my card",
+    "overline": "Share",
+    "title": "Emergency card",
+    "close": "Close",
+    "intro": "A card for emergency responders, separate from sharing with your doctor. Print its QR or use it as a wallpaper: whoever scans it only sees what you choose.",
+    "status": {
+      "on": "Card active",
+      "off": "Card disabled",
+      "onText": "The QR works: it shows your card to whoever scans it.",
+      "offText": "The QR shows nothing, even printed. Turn the card on for it to work.",
+      "toggle": "Card active",
+      "emptyHint": "Fill in your card first (“Edit my card”)."
+    },
+    "qr": {
+      "hint": "Print it or use it as a wallpaper. It contains neither your name nor any health data.",
+      "export": "Save as image",
+      "shareTitle": "Image of my emergency card",
+      "exportProblem": {
+        "title": "The image could not be saved",
+        "text": "Try again in a moment."
+      },
+      "regenerate": "Generate a new QR",
+      "confirm": {
+        "title": "Replace your QR?",
+        "text": "The old QR will stop working immediately, including printed copies and wallpapers.",
+        "yes": "Yes, generate a new QR",
+        "no": "Cancel"
+      },
+      "elsewhere": {
+        "title": "Your QR is not on this phone",
+        "text": "It was created on another phone or before the app was reinstalled. Generate a new one here: the old one will stop working.",
+        "action": "Generate a new QR"
+      }
+    },
+    "image": {
+      "title": "EMERGENCY CARD",
+      "instruction": "In an emergency, scan this QR",
+      "audience": "Health professionals and first responders",
+      "a11y": "Image of your emergency card QR, to print or use as a wallpaper."
+    },
+    "preview": {
+      "title": "What a responder will see",
+      "empty": "Your card is empty: add only what you want responders to see.",
+      "updated": "Updated on {{date}}."
+    },
+    "field": {
+      "fullName": "Name",
+      "diabetesType": "Diabetes",
+      "declaredTreatment": "Declared treatment",
+      "allergies": "Allergies",
+      "bloodGroup": "Blood group",
+      "lastKnownGlucoseMgDl": "Last known glucose",
+      "emergencyContactName": "Emergency contact",
+      "emergencyContactPhone": "Contact phone"
+    },
+    "edit": {
+      "title": "Edit my card",
+      "cancel": "Close without saving",
+      "intro": "Every item is optional: fill in only what you want responders to see.",
+      "profile": {
+        "title": "Use my profile",
+        "text": "Your name, diabetes type and emergency contact, for fields that are still empty.",
+        "action": "Use my profile",
+        "applied": "Profile information added. Check it before saving.",
+        "nothing": "Nothing to add: these fields are already filled in.",
+        "failed": "Your profile could not be read (connection?)."
+      },
+      "hint": {
+        "diabetesType": "E.g. Type 1, Type 2.",
+        "declaredTreatment": "What you take, in your own words. E.g. Long-acting insulin in the evening.",
+        "allergies": "E.g. Penicillin. Leave empty if none.",
+        "glucose": "Only this value is shown: never your history.",
+        "phone": "With the country code, e.g. +243 81 000 0000."
+      },
+      "noBloodGroup": "Not given",
+      "useLatest": "Use my latest reading ({{value}}, {{date}})",
+      "privacy": "This information is only visible when your card is active and someone scans your QR. Each opening is reported to you.",
+      "fixErrors": "Fix the highlighted fields before saving.",
+      "save": "Save my card",
+      "error": {
+        "tooLong": "Too long: {{max}} characters at most.",
+        "glucoseInvalid": "Enter a number, e.g. 1.32.",
+        "glucoseRange": "Out of range (20 to 600 mg/dL).",
+        "phoneInvalid": "Enter a number made of digits (a leading “+” is allowed)."
+      }
+    },
+    "log": {
+      "title": "Who opened my card",
+      "text": "Each opening is listed in “Who viewed my data” and reported to you."
+    },
+    "problem": {
+      "offline": {
+        "title": "No connection",
+        "text": "The card is edited online. Reconnect to the Internet and try again."
+      },
+      "noProfile": {
+        "title": "Medical profile to complete",
+        "text": "Your emergency card needs your medical profile."
+      },
+      "tooMany": {
+        "title": "Too many requests",
+        "text": "Wait a minute before trying again."
+      },
+      "invalid": {
+        "title": "Information refused",
+        "text": "Some information on the card is not valid. Please check it."
+      },
+      "error": {
+        "title": "Something went wrong",
+        "text": "Try again in a moment."
+      }
+    }
+  },
   "share": {
     "home": {
       "overline": "Secure sharing",

@@ -1347,6 +1347,120 @@
       "body": "Un rapport PDF de vos mesures, à remettre à votre médecin."
     }
   },
+  "emergency": {
+    "editCard": "Modifier ma carte",
+    "overline": "Partager",
+    "title": "Carte d'urgence",
+    "close": "Fermer",
+    "intro": "Une fiche pour les secours, séparée du partage avec votre médecin. Son QR s'imprime ou se met en fond d'écran : la personne qui le scanne voit seulement ce que vous choisissez.",
+    "status": {
+      "on": "Carte active",
+      "off": "Carte désactivée",
+      "onText": "Le QR fonctionne : il montre votre carte à qui le scanne.",
+      "offText": "Le QR ne montre rien, même imprimé. Activez la carte pour qu'il fonctionne.",
+      "toggle": "Carte active",
+      "emptyHint": "Remplissez d'abord votre carte (« Modifier ma carte »)."
+    },
+    "qr": {
+      "hint": "Imprimez-la ou mettez-la en fond d'écran. Elle ne contient ni votre nom ni aucune donnée de santé.",
+      "export": "Enregistrer en image",
+      "shareTitle": "Image de ma carte d'urgence",
+      "exportProblem": {
+        "title": "L'image n'a pas pu être enregistrée",
+        "text": "Réessayez dans un instant."
+      },
+      "regenerate": "Générer un nouveau QR",
+      "confirm": {
+        "title": "Remplacer votre QR ?",
+        "text": "L'ancien QR cessera de marcher tout de suite, y compris les copies imprimées ou en fond d'écran.",
+        "yes": "Oui, générer un nouveau QR",
+        "no": "Annuler"
+      },
+      "elsewhere": {
+        "title": "Votre QR n'est pas sur ce téléphone",
+        "text": "Il a été créé sur un autre téléphone ou avant une réinstallation de l'application. Générez-en un nouveau ici : l'ancien cessera de marcher.",
+        "action": "Générer un nouveau QR"
+      }
+    },
+    "image": {
+      "title": "CARTE D'URGENCE",
+      "instruction": "En cas d'urgence, scannez ce QR",
+      "audience": "Professionnels de santé et secouristes",
+      "a11y": "Image du QR de votre carte d'urgence, à imprimer ou à mettre en fond d'écran."
+    },
+    "preview": {
+      "title": "Ce que verra le secouriste",
+      "empty": "Votre carte est vide : ajoutez seulement ce que vous voulez montrer aux secours.",
+      "updated": "Mise à jour le {{date}}."
+    },
+    "field": {
+      "fullName": "Nom",
+      "diabetesType": "Diabète",
+      "declaredTreatment": "Traitement déclaré",
+      "allergies": "Allergies",
+      "bloodGroup": "Groupe sanguin",
+      "lastKnownGlucoseMgDl": "Dernière glycémie connue",
+      "emergencyContactName": "Contact d'urgence",
+      "emergencyContactPhone": "Téléphone du contact"
+    },
+    "edit": {
+      "title": "Modifier ma carte",
+      "cancel": "Fermer sans enregistrer",
+      "intro": "Chaque information est facultative : remplissez seulement ce que vous voulez montrer aux secours.",
+      "profile": {
+        "title": "Reprendre mon profil",
+        "text": "Votre nom, votre type de diabète et votre contact d'urgence, pour les champs encore vides.",
+        "action": "Reprendre mon profil",
+        "applied": "Informations du profil ajoutées. Vérifiez-les avant d'enregistrer.",
+        "nothing": "Rien à ajouter : ces champs sont déjà remplis.",
+        "failed": "Le profil n'a pas pu être lu (connexion ?)."
+      },
+      "hint": {
+        "diabetesType": "Ex. Type 1, Type 2.",
+        "declaredTreatment": "Ce que vous prenez, avec vos mots. Ex. Insuline lente le soir.",
+        "allergies": "Ex. Pénicilline. Laissez vide si aucune.",
+        "glucose": "Seule cette valeur est montrée : jamais votre historique.",
+        "phone": "Avec l'indicatif du pays, ex. +243 81 000 0000."
+      },
+      "noBloodGroup": "Non indiqué",
+      "useLatest": "Utiliser ma dernière mesure ({{value}}, le {{date}})",
+      "privacy": "Ces informations ne sont visibles que si votre carte est active et que quelqu'un scanne votre QR. Chaque ouverture vous est signalée.",
+      "fixErrors": "Corrigez les champs signalés avant d'enregistrer.",
+      "save": "Enregistrer ma carte",
+      "error": {
+        "tooLong": "Trop long : {{max}} caractères au plus.",
+        "glucoseInvalid": "Saisissez un nombre, ex. 1,32.",
+        "glucoseRange": "Valeur hors limites (20 à 600 mg/dL).",
+        "phoneInvalid": "Saisissez un numéro composé de chiffres (le « + » est permis au début)."
+      }
+    },
+    "log": {
+      "title": "Qui a ouvert ma carte",
+      "text": "Chaque ouverture est inscrite dans « Qui a consulté mes données » et vous est notifiée."
+    },
+    "problem": {
+      "offline": {
+        "title": "Pas de connexion",
+        "text": "La carte se modifie en ligne. Reconnectez-vous à Internet puis réessayez."
+      },
+      "noProfile": {
+        "title": "Profil médical à compléter",
+        "text": "Votre carte d'urgence a besoin de votre profil médical."
+      },
+      "tooMany": {
+        "title": "Trop de demandes",
+        "text": "Attendez une minute avant de réessayer."
+      },
+      "invalid": {
+        "title": "Information refusée",
+        "text": "Une information de la carte n'est pas valable. Vérifiez-la."
+      },
+      "error": {
+        "title": "Une erreur est survenue",
+        "text": "Réessayez dans un instant."
+      }
+    }
+  },
   "share": {
     "home": {
       "overline": "Partage sécurisé",
