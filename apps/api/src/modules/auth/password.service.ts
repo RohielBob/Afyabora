@@ -7,6 +7,8 @@ import { generateOpaqueToken, hashToken } from '../../common/crypto/tokens';
 import { MailService } from '../../common/mail/mail.service';
 import { PrismaService } from '../../prisma/prisma.service';
 import { buildResetPasswordMail } from './auth.mails';
+import { buildTeamDoctorToReviewMail } from './doctor-review.mails';
+import { findDoctorSummary, TeamNotifier } from './team-notifier';
 
 /** Lien de réinitialisation valable 1 heure : court, car il donne accès au compte. */
 export const RESET_PASSWORD_TTL_MINUTES = 60;
@@ -25,6 +27,7 @@ export class PasswordService {
     private readonly prisma: PrismaService,
     private readonly mail: MailService,
     private readonly config: ConfigService,
+    private readonly team: TeamNotifier,
   ) {}
 
   /** POST /auth/forgot-password : envoie un lien si le compte existe ; sinon ne fait rien. Réponse identique. */
@@ -74,7 +77,7 @@ export class PasswordService {
     const passwordHash = await argon2.hash(newPassword, { type: argon2.argon2id });
     const now = new Date();
 
-    await this.prisma.$transaction(async (tx) => {
+    const doctorToReview = await this.prisma.$transaction(async (tx) => {
       const found = await tx.emailToken.findUnique({
         where: { tokenHash: hashToken(token) },
         select: { id: true, userId: true, type: true, usedAt: true, expiresAt: true },
@@ -110,7 +113,12 @@ export class PasswordService {
         where: { userId: found.userId, revokedAt: null },
         data: { revokedAt: now },
       });
+
+      // Adresse confirmée par ce lien (compte jamais vérifié) d'un médecin : comme après verify-email,
+      // son compte attend maintenant la vérification de l'équipe.
+      return user && !user.emailVerifiedAt ? findDoctorSummary(tx, found.userId) : null;
     });
+    if (doctorToReview) this.team.notify((to) => buildTeamDoctorToReviewMail(to, doctorToReview));
 
     return { message: PASSWORD_RESET_MESSAGE };
   }

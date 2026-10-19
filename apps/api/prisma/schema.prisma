@@ -157,15 +157,19 @@ model PatientProfile {
 }
 
 model DoctorProfile {
-  userId             String                   @id @db.Uuid
-  user               User                     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  firstName          String
-  lastName           String
-  licenseNumber      String
-  institution        String
-  verificationStatus DoctorVerificationStatus @default(PENDING)
-  verifiedAt         DateTime?
-  createdAt          DateTime                 @default(now())
+  userId               String                   @id @db.Uuid
+  user                 User                     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  firstName            String
+  lastName             String
+  licenseNumber        String
+  institution          String
+  verificationStatus   DoctorVerificationStatus @default(PENDING)
+  verifiedAt           DateTime?
+  /// Email « compte approuvé / refusé » à envoyer au médecin. L'outil d'administration (admin:doctors) le
+  /// met à true en décidant ; l'API (DoctorDecisionMailJob, chaque minute) envoie l'email puis le remet à
+  /// false. Ainsi la clé du service d'envoi reste sur le serveur, jamais sur le poste de l'administrateur.
+  decisionEmailPending Boolean                  @default(false)
+  createdAt            DateTime                 @default(now())
 
   claimedSessions ShareSession[]
 }

@@ -185,3 +185,32 @@ export function formatTable(doctors: readonly DoctorAccount[]): string {
       .trimEnd();
   return [line(headers), line(widths.map((w) => '-'.repeat(w))), ...rows.map(line)].join('\n');
 }
+
+// ---------- Messages ----------
+
+/** Affiché après une approbation ou un refus : c'est l'API qui prévient le médecin, pas cet outil. */
+export const DECISION_MAIL_NOTE = [
+  'Le médecin recevra un email avec cette décision, envoyé par l’API dans la minute qui suit',
+  '(et une copie arrive dans la boîte de l’équipe, si TEAM_NOTIFY_EMAIL est configurée).',
+  'API hébergée en veille (offre gratuite) : l’email part à son réveil ; ouvrez <adresse-de-l-api>/health pour la réveiller.',
+  'Approuvé : le médecin doit se déconnecter puis se reconnecter au portail pour accéder aux dossiers.',
+].join('\n');
+
+/**
+ * Résumé d'une erreur en UNE ligne utile. Les erreurs Prisma commencent par une ligne vide puis
+ * « Invalid `prisma.….findMany()` invocation: » : la vraie cause vient après (avant ce correctif, seule la
+ * première ligne, vide, était affichée : « ✖ » sans explication). Prisma n'écrit jamais le mot de passe.
+ */
+export function errorSummary(error: unknown): string {
+  if (!(error instanceof Error)) return String(error);
+  const cause =
+    error.message
+      .split('\n')
+      .map((line) => line.trim())
+      .find((line) => line !== '' && !/^Invalid `.*` invocation/.test(line))
+      ?.replace(/^error:\s*/i, '') ?? error.name;
+  if (/URL must start with the protocol/i.test(cause)) {
+    return `${cause}\n  ⇒ DATABASE_URL est vide ou mal collée : elle doit commencer par postgresql://`;
+  }
+  return cause;
+}

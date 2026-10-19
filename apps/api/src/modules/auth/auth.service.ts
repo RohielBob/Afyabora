@@ -6,6 +6,8 @@ import { generateOpaqueToken, hashToken } from '../../common/crypto/tokens';
 import { MailService } from '../../common/mail/mail.service';
 import { PrismaService } from '../../prisma/prisma.service';
 import { buildVerifyEmailMail } from './auth.mails';
+import { buildTeamDoctorRegisteredMail, buildTeamDoctorToReviewMail } from './doctor-review.mails';
+import { findDoctorSummary, TeamNotifier } from './team-notifier';
 
 /** Durée de validité du lien de vérification (décision L1-01, réunion du 2026-10-09). */
 export const VERIFY_EMAIL_TTL_HOURS = 24;
@@ -32,6 +34,7 @@ export class AuthService {
     private readonly prisma: PrismaService,
     private readonly mail: MailService,
     private readonly config: ConfigService,
+    private readonly team: TeamNotifier,
   ) {}
 
   /** POST /auth/register (L1-01). */
@@ -55,7 +58,7 @@ export class AuthService {
   /** POST /auth/verify-email (L1-01) : consomme le jeton (une seule fois) et marque l'adresse comme vérifiée. */
   async verifyEmail(token: string): Promise<{ message: string }> {
     const now = new Date();
-    await this.prisma.$transaction(async (tx) => {
+    const doctorToReview = await this.prisma.$transaction(async (tx) => {
       // On ne stocke que le hash : on hache le jeton reçu pour le retrouver.
       const found = await tx.emailToken.findUnique({
         where: { tokenHash: hashToken(token) },
@@ -73,11 +76,15 @@ export class AuthService {
       });
       if (consumed.count !== 1) throw invalidVerifyToken();
 
-      await tx.user.updateMany({
+      const verified = await tx.user.updateMany({
         where: { id: found.userId, emailVerifiedAt: null },
         data: { emailVerifiedAt: now },
       });
+      // Adresse confirmée À L'INSTANT d'un médecin : son compte attend maintenant l'équipe.
+      return verified.count === 1 ? findDoctorSummary(tx, found.userId) : null;
     });
+    // Après la transaction (validée) : l'équipe est prévenue qu'un compte attend sa vérification.
+    if (doctorToReview) this.team.notify((to) => buildTeamDoctorToReviewMail(to, doctorToReview));
     return { message: EMAIL_VERIFIED_MESSAGE };
   }
 
@@ -129,6 +136,8 @@ export class AuthService {
       throw error;
     }
     await this.sendVerificationEmail(userId, email, role === 'DOCTOR'); // cas 1
+    // Nouveau compte médecin : l'équipe est prévenue (une seule fois, pas aux réinscriptions du cas 2).
+    if (doctor) this.team.notify((to) => buildTeamDoctorRegisteredMail(to, { email, ...doctor }));
   }
 
   private async sendVerificationEmail(userId: string, email: string, isDoctor: boolean) {

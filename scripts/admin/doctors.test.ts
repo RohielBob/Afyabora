@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import { describe, test } from 'node:test';
 import type { DoctorStore, RejectEffects } from './doctor-store.ts';
 import { run } from './doctors-cli.ts';
-import { formatTable, parseArgs, planAction, type DoctorAccount } from './doctors.ts';
+import { errorSummary, formatTable, parseArgs, planAction, type DoctorAccount } from './doctors.ts';
 
 const NOW = new Date(Date.UTC(2026, 9, 10, 15, 0));
 
@@ -130,6 +130,8 @@ describe('outil en ligne de commande', () => {
     assert.equal(result.asked.length, 1);
     assert.match(result.out, /APPROUVÉ/);
     assert.match(result.out, /se reconnecter/);
+    // C'est l'API qui prévient le médecin : l'outil le dit (plus de « Prévenez le médecin »).
+    assert.match(result.out, /recevra un email avec cette décision/);
   });
 
   test('« non » à la confirmation : rien n’est modifié', async () => {
@@ -162,6 +164,7 @@ describe('outil en ligne de commande', () => {
     assert.deepEqual(calls, [`reject:d1:${NOW.toISOString()}`]);
     assert.match(result.out, /Sessions de connexion fermées : 2/);
     assert.match(result.out, /partages en cours arrêtés : 1/);
+    assert.match(result.out, /recevra un email avec cette décision/);
   });
 
   test('adresse non confirmée : approbation refusée, aucune question, rien modifié', async () => {
@@ -214,5 +217,38 @@ describe('affichage', () => {
     assert.ok(header && rule && row);
     assert.equal(header.indexOf('Statut'), row.indexOf('en attente'));
     assert.match(row, /…/);
+  });
+});
+
+describe('erreurs', () => {
+  // Messages RÉELS de Prisma 5.22 (relevés le 2026-10-19) : la vraie cause est après l'en-tête « Invalid … ».
+  const invocation = (cause: string) =>
+    new Error(`\nInvalid \`prisma.doctorProfile.findMany()\` invocation:\n\n\n${cause}`);
+
+  test('base injoignable : la cause est affichée (avant : « ✖ » seul)', () => {
+    assert.equal(
+      errorSummary(
+        invocation(
+          "Can't reach database server at `127.0.0.1:5999`\n\nPlease make sure your database server is running at `127.0.0.1:5999`.",
+        ),
+      ),
+      "Can't reach database server at `127.0.0.1:5999`",
+    );
+  });
+
+  test('adresse de la base vide ou mal collée : cause + conseil', () => {
+    const summary = errorSummary(
+      invocation(
+        'error: Error validating datasource `db`: the URL must start with the protocol `postgresql://` or `postgres://`.\n  -->  schema.prisma:9',
+      ),
+    );
+    assert.match(summary, /^Error validating datasource `db`: the URL must start/);
+    assert.match(summary, /DATABASE_URL est vide ou mal collée/);
+  });
+
+  test('erreur ordinaire : sa première ligne ; message vide : son type', () => {
+    assert.equal(errorSummary(new Error('Panne\ndétails')), 'Panne');
+    assert.equal(errorSummary(new TypeError('')), 'TypeError');
+    assert.equal(errorSummary('texte'), 'texte');
   });
 });

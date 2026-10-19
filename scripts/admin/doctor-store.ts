@@ -76,10 +76,12 @@ export function prismaDoctorStore(prisma: PrismaClient): DoctorStore {
       return row ? toAccount(row) : null;
     },
 
+    // decisionEmailPending : l'API (DoctorDecisionMailJob) enverra l'email de décision au médecin dans la
+    // minute. Cet outil n'envoie rien lui-même : la clé du service d'envoi reste sur le serveur.
     async approve(userId, now) {
       await prisma.doctorProfile.update({
         where: { userId },
-        data: { verificationStatus: 'APPROVED', verifiedAt: now },
+        data: { verificationStatus: 'APPROVED', verifiedAt: now, decisionEmailPending: true },
       });
     },
 
@@ -88,7 +90,7 @@ export function prismaDoctorStore(prisma: PrismaClient): DoctorStore {
       const [, sessions, shares] = await prisma.$transaction([
         prisma.doctorProfile.update({
           where: { userId },
-          data: { verificationStatus: 'REJECTED', verifiedAt: now },
+          data: { verificationStatus: 'REJECTED', verifiedAt: now, decisionEmailPending: true },
         }),
         prisma.refreshToken.updateMany({
           where: { userId, revokedAt: null },

@@ -66,9 +66,18 @@ chiffrées deviendraient illisibles. Ces deux secrets sont différents de ceux d
    - **Identifiant** (« Login », souvent `xxxx@smtp-brevo.com`) ⇒ **`SMTP_USER`** ;
    - **Clé SMTP** ⇒ **`SMTP_PASS`** (affichée une seule fois).
 4. **`SMTP_FROM`** : `Afyabora <l-adresse-validee@exemple.com>` (l'adresse validée à l'étape 2).
+5. **`TEAM_NOTIFY_EMAIL`** : l'adresse de la **boîte de l'équipe** (ex. l'email Gmail du groupe), une vraie
+   boîte que vous lisez. Elle reçoit les alertes « nouvelle inscription médecin », « un médecin attend votre
+   vérification » et « médecin prévenu », et les réponses des médecins aux emails de décision.
 
-Serveur et port sont déjà dans `render.yaml` (`smtp-relay.brevo.com`, port 587). L'API **exige une
-connexion chiffrée** dès qu'un identifiant est donné : le mot de passe ne part jamais en clair.
+> **Envoyer et recevoir, ce sont deux adresses différentes.** `SMTP_FROM` est l'expéditeur affiché : une adresse
+> fournie par Brevo (`…@…brevosend.com`) peut **envoyer**, mais elle n'a pas de boîte de réception.
+> `TEAM_NOTIFY_EMAIL` est l'adresse qui **reçoit** : elle doit être une vraie boîte.
+
+Serveur et port sont déjà dans `render.yaml` (`smtp-relay.brevo.com`, **port 2525**). Pas 587 : depuis
+septembre 2025, l'offre gratuite de Render **bloque les ports email 25, 465 et 587** (l'email de vérification
+ne partait jamais, sans erreur visible pour l'utilisateur). Brevo accepte aussi 2525. L'API **exige une
+connexion chiffrée** (STARTTLS) dès qu'un identifiant est donné : le mot de passe ne part jamais en clair.
 
 ## 4. L'API et le portail (Render)
 
@@ -77,7 +86,9 @@ connexion chiffrée** dès qu'un identifiant est donné : le mot de passe ne par
 2. **New ⇒ Blueprint** ⇒ choisis le dépôt `RohielBob/Afyabora`, branche `develop`. Render lit `render.yaml`
    et annonce deux services : `afyabora-api` et `afyabora-portail`.
 3. Render demande les valeurs marquées « sync: false » : colle **`DATABASE_URL`**, **`JWT_ACCESS_SECRET`**,
-   **`FIELD_ENCRYPTION_KEY`**, **`SMTP_USER`**, **`SMTP_PASS`**, **`SMTP_FROM`**.
+   **`FIELD_ENCRYPTION_KEY`**, **`SMTP_USER`**, **`SMTP_PASS`**, **`SMTP_FROM`**, **`TEAM_NOTIFY_EMAIL`**.
+   Service **déjà créé** avant l'ajout d'une variable au fichier : Render ne la demande pas ; ajoute-la dans
+   **afyabora-api ⇒ Environment ⇒ Add Environment Variable**, puis **Save Changes**.
 4. **Apply**. Premières constructions : l'API ≈ 10 min (image Docker), le portail ≈ 5 min.
 5. **Si Render a dû choisir d'autres noms** (nom déjà pris) : les adresses changent. Corrige alors dans le
    tableau de bord :
@@ -98,23 +109,56 @@ Puis ouvre <https://afyabora-portail.onrender.com> : la page de connexion du por
 
 ## 6. Premiers comptes de démonstration
 
-**Un médecin** : inscris-toi sur le portail (rôle médecin), clique le lien reçu par email, puis approuve le
-compte depuis ton PC **en visant la base Neon** (la variable passe avant le fichier `.env` local) :
+**Un médecin** : inscris-toi sur le portail (rôle médecin), puis clique le lien reçu par email.
+
+La « vérification par l'équipe » ne se fait **pas par email** : un membre de l'équipe approuve (ou refuse) le
+compte depuis son PC, avec l'outil `admin:doctors`, **en visant la base Neon**.
+
+1. La boîte de l'équipe (`TEAM_NOTIFY_EMAIL`) reçoit « nouvelle inscription médecin », puis « un médecin attend
+   votre vérification » avec les commandes prêtes à copier.
+2. Chez Neon, copie l'adresse de connexion **directe**. Dans PowerShell, à la racine du dépôt, elle est lue
+   depuis le presse-papiers **sans s'afficher** (ne la colle jamais dans une commande ni dans un message) :
 
 ```powershell
-$env:DATABASE_URL = "colle-ici-l-adresse-Neon"
+$env:DATABASE_URL = Get-Clipboard
+```
+
+```powershell
 pnpm admin:doctors list
-pnpm admin:doctors approve adresse-du-medecin@exemple.com
-Remove-Item Env:DATABASE_URL
 ```
-
-**Des patients fictifs avec 90 jours de mesures** (facultatif) :
 
 ```powershell
-$env:DATABASE_URL = "colle-ici-l-adresse-Neon"
-pnpm db:seed
+pnpm admin:doctors approve adresse-du-medecin@exemple.com
+```
+
+3. **Toujours** retirer la variable à la fin (sinon les commandes suivantes visent la base hébergée) :
+
+```powershell
 Remove-Item Env:DATABASE_URL
 ```
+
+4. Le médecin reçoit automatiquement l'email « compte approuvé » (ou « non validé »), envoyé par l'API dans
+   la minute, et l'équipe en reçoit une copie. L'outil n'envoie rien lui-même : la clé Brevo reste chez
+   Render. **API en veille** (offre gratuite) : l'email part à son réveil ; ouvre `/health` pour la réveiller.
+
+**Des patients fictifs avec 90 jours de mesures** (facultatif). Les médecins de démonstration ne reçoivent
+aucun email (ils sont approuvés directement, sans passer par l'outil) :
+
+```powershell
+$env:DATABASE_URL = Get-Clipboard
+```
+
+```powershell
+pnpm db:seed
+```
+
+```powershell
+Remove-Item Env:DATABASE_URL
+```
+
+> **Si l'adresse Neon a été affichée ou partagée par erreur** (discussion, capture, commande copiée) :
+> Neon ⇒ **Branches** ⇒ `main` ⇒ **Roles** ⇒ ⋯ ⇒ **Reset password**, puis remplace `DATABASE_URL` dans
+> Render (**Environment** ⇒ **Save Changes**).
 
 ## 7. Au quotidien
 
@@ -137,10 +181,13 @@ Remove-Item Env:DATABASE_URL
 
 ## 9. Dépannage
 
-| Problème                                                    | Cause probable                                                                       |
-| ----------------------------------------------------------- | ------------------------------------------------------------------------------------ |
-| Journaux de l'API : « Configuration invalide »              | Un secret manque ou a le mauvais format (voir le nom indiqué)                        |
-| Journaux : erreur de migration ou de connexion à la base    | `DATABASE_URL` avec `-pooler`, ou sans `?sslmode=require`                            |
-| Email de vérification jamais reçu                           | Expéditeur pas validé chez Brevo, ou `SMTP_FROM` ≠ adresse validée                   |
-| Portail : « Le serveur ne répond pas » ou erreur CORS       | `PORTAL_URL` (API) ou `VITE_API_URL` (portail) ne correspond pas aux vraies adresses |
-| Portail : page blanche sur `/patients/…` après rechargement | Règle de réécriture absente (elle est dans `render.yaml`)                            |
+| Problème                                                    | Cause probable                                                                        |
+| ----------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| Journaux de l'API : « Configuration invalide »              | Un secret manque ou a le mauvais format (voir le nom indiqué)                         |
+| Journaux : erreur de migration ou de connexion à la base    | `DATABASE_URL` avec `-pooler`, ou sans `?sslmode=require`                             |
+| Email de vérification jamais reçu                           | Expéditeur pas validé chez Brevo, ou `SMTP_FROM` ≠ adresse validée                    |
+| Journaux : « Échec d'envoi de l'email… » (aucun email)      | `SMTP_PORT` à 587 : bloqué par l'offre gratuite de Render ⇒ mettre **2525**           |
+| Aucune alerte dans la boîte de l'équipe                     | `TEAM_NOTIFY_EMAIL` absente du service `afyabora-api` (Environment)                   |
+| `admin:doctors` : « DATABASE_URL est vide ou mal collée »   | Presse-papiers vide ou autre texte : recopier l'adresse Neon, refaire `Get-Clipboard` |
+| Portail : « Le serveur ne répond pas » ou erreur CORS       | `PORTAL_URL` (API) ou `VITE_API_URL` (portail) ne correspond pas aux vraies adresses  |
+| Portail : page blanche sur `/patients/…` après rechargement | Règle de réécriture absente (elle est dans `render.yaml`)                             |
