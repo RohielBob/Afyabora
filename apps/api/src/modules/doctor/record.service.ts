@@ -46,6 +46,8 @@ import {
   CREATE_TRANSACTION,
   SESSION_NOT_FOUND_MESSAGE,
 } from '../sharing/sharing.service';
+import { ReportsService, type ConsultationReport } from '../reports/reports.service';
+import type { ReportDays } from '../reports/report-data';
 import { recordView } from './record-view';
 import { eventEntry, measurementEntry, mergeTimeline } from './timeline';
 
@@ -75,6 +77,7 @@ export class DoctorRecordService {
     private readonly lifecycle: ShareLifecycleService,
     private readonly insights: InsightsService,
     private readonly config: ConfigService,
+    private readonly reports: ReportsService,
   ) {}
 
   // ------------------------------------------------------------------ résumé
@@ -267,6 +270,39 @@ export class DoctorRecordService {
     };
   }
 
+  // ------------------------------------------------------------------ rapport PDF
+
+  /**
+   * GET /doctor/sessions/:id/report (L6-02) : le rapport « Préparer ma consultation » du patient, s'il a coché
+   * « Rapport PDF » (REPORT_DOWNLOAD). Le patient a choisi de remettre CE document : il est complet (mêmes
+   * chiffres que le rapport du patient), sans note personnelle (le rapport n'en contient jamais). Chaque
+   * téléchargement écrit une ligne REPORT_DOWNLOADED AVANT la génération ; l'auteur imprimé est le médecin.
+   */
+  async report(
+    doctorId: string,
+    sessionId: string,
+    days: ReportDays,
+    ip?: string,
+  ): Promise<ConsultationReport> {
+    const access = await this.open(
+      doctorId,
+      sessionId,
+      { category: 'REPORT_DOWNLOAD' },
+      ip,
+      'REPORT_DOWNLOADED',
+    );
+    const doctor = await this.prisma.doctorProfile.findUnique({
+      where: { userId: doctorId },
+      select: { firstName: true, lastName: true },
+    });
+    const name = doctor ? `${doctor.firstName} ${doctor.lastName}`.trim() : '';
+    return this.reports.consultation(
+      access.patientId,
+      days,
+      name ? { kind: 'DOCTOR', name } : { kind: 'PATIENT' },
+    );
+  }
+
   // ------------------------------------------------------------------ contrôle d'accès
 
   /**
@@ -278,6 +314,7 @@ export class DoctorRecordService {
     sessionId: string,
     need: Need,
     ip?: string,
+    action: 'SHARE_VIEWED' | 'REPORT_DOWNLOADED' = 'SHARE_VIEWED',
   ): Promise<ActiveAccess> {
     await requireApprovedDoctor(this.prisma, doctorId);
     const access = await this.lifecycle.requireActiveAccess(doctorId, sessionId, {
@@ -290,7 +327,7 @@ export class DoctorRecordService {
       });
     }
     const stillOpen = await this.prisma
-      .$transaction((tx) => recordView(tx, { sessionId, doctorId, ip }), CREATE_TRANSACTION)
+      .$transaction((tx) => recordView(tx, { sessionId, doctorId, ip, action }), CREATE_TRANSACTION)
       .catch(busyAsUnavailable);
     if (!stillOpen) {
       // Arrêté ou échu entre le contrôle et le verrou : le contrôle, rejoué, donne la bonne erreur.

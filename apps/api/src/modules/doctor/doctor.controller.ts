@@ -1,4 +1,4 @@
-import { Controller, Get, Ip, Param, Query } from '@nestjs/common';
+import { Controller, Get, Header, Ip, Param, Query, Res, StreamableFile } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
@@ -6,15 +6,21 @@ import {
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
+  ApiProduces,
   ApiTags,
+  ApiTooManyRequestsResponse,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { listQuerySchema, type ListQuery } from '@glyka/shared';
+import { Throttle } from '@nestjs/throttler';
+import { listQuerySchema, reportQuerySchema, type ListQuery } from '@glyka/shared';
+import type { Response } from 'express';
 import { uuidParam } from '../../common/data/owned-records';
 import { CurrentUser, type AuthUser } from '../../common/decorators/current-user.decorator';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
 import { DoctorService } from './doctor.service';
+import type { ReportDays } from '../reports/report-data';
+import { REPORT_LIMIT, sendPdf } from '../reports/reports.controller';
 import { DoctorRecordService } from './record.service';
 
 const SESSION_ID = uuidParam();
@@ -103,6 +109,30 @@ export class DoctorController {
     return this.record.timeline(user.id, id, query, ip);
   }
 
-  // Route suivante du module (voir README.md) :
-  // TODO(L6-04) GET /doctor/sessions/:id/report (rapport PDF, catégorie REPORT_DOWNLOAD)
+  @Get('sessions/:id/report')
+  @Roles('DOCTOR')
+  @Throttle(REPORT_LIMIT)
+  @Header('Cache-Control', 'no-store')
+  @ApiOperation({
+    summary:
+      'Dossier partagé : rapport PDF (catégorie REPORT_DOWNLOAD), téléchargement journalisé (L6-02)',
+  })
+  @ApiProduces('application/pdf')
+  @ApiOkResponse({
+    description: 'Rapport PDF ; une ligne REPORT_DOWNLOADED dans le journal du patient',
+  })
+  @ApiBadRequestResponse({ description: 'Identifiant ou période invalide (14, 30 ou 90)' })
+  @ApiUnauthorizedResponse({ description: 'Jeton absent ou invalide' })
+  @ApiForbiddenResponse({ description: RECORD_FORBIDDEN })
+  @ApiNotFoundResponse({ description: 'Session introuvable' })
+  @ApiTooManyRequestsResponse({ description: 'Trop de rapports demandés en une minute' })
+  async report(
+    @CurrentUser() user: AuthUser,
+    @Param('id', SESSION_ID) id: string,
+    @Query(new ZodValidationPipe(reportQuerySchema)) query: { period: number },
+    @Ip() ip: string | undefined,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<StreamableFile> {
+    return sendPdf(res, await this.record.report(user.id, id, query.period as ReportDays, ip));
+  }
 }

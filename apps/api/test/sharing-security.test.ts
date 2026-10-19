@@ -48,8 +48,11 @@ const DOCTOR_SESSION_ROUTES = Object.entries(contract.paths)
   .filter(([path, item]) => path.startsWith('/doctor/sessions/{sessionId}/') && item.get)
   .map(([path]) => path.replace('/doctor/sessions/{sessionId}/', ''));
 
-/** Routes du contrat pas encore codées (le ticket qui les apporte sera contrôlé automatiquement ici). */
-const NOT_YET_CODED = ['report']; // L6-04
+/**
+ * Routes du contrat pas encore codées (le ticket qui les apporte est contrôlé automatiquement ici). Vide
+ * depuis L6-02 : `/report` (rapport PDF) est contrôlé comme les autres.
+ */
+const NOT_YET_CODED: string[] = [];
 
 /** Marqueurs semés dans chaque catégorie : s'ils sortent alors que la catégorie est décochée, c'est une fuite. */
 const MARK = {
@@ -103,11 +106,13 @@ describe.skipIf(!isTestDatabase(DB_URL))('L5-14 : sécurité du partage par QR (
       ...(body === undefined ? {} : { body: JSON.stringify(body) }),
     });
     const text = await res.text();
+    // Le rapport (L6-02) est un PDF, pas du JSON : son texte reste fouillé par les marqueurs.
+    const json = !(res.headers.get('content-type') ?? '').startsWith('application/pdf');
     return {
       status: res.status,
       text,
       headers: res.headers,
-      body: (text ? JSON.parse(text) : {}) as Record<string, unknown>,
+      body: (json && text ? JSON.parse(text) : {}) as Record<string, unknown>,
     };
   };
   const share = async (categories: ShareCategory[], patient = awa, url = baseUrl) =>

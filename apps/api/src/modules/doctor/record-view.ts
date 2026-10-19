@@ -12,6 +12,8 @@
 //    arrêté n'est plus lu ni journalisé). Jamais de lecture sans trace.
 //  - Comme toutes les lignes du journal : qui, quoi, quand, quelle session, quelle adresse IP. Jamais de
 //    donnée médicale, ni l'onglet consulté.
+//  - TÉLÉCHARGEMENT du rapport PDF (L6-02) : une ligne REPORT_DOWNLOADED à CHAQUE téléchargement (jamais
+//    regroupée : chaque copie du rapport qui sort est tracée), même verrou, même contrôle, avant la génération.
 import type { Prisma } from '@prisma/client';
 import { writeAccessLog } from '../audit/access-log';
 
@@ -33,9 +35,16 @@ interface LockedSession {
  */
 export async function recordView(
   tx: Prisma.TransactionClient,
-  input: { sessionId: string; doctorId: string; ip?: string | null },
+  input: {
+    sessionId: string;
+    doctorId: string;
+    ip?: string | null;
+    /** Consultation (par défaut, regroupée par 5 min) ou téléchargement du rapport (toujours écrit). */
+    action?: 'SHARE_VIEWED' | 'REPORT_DOWNLOADED';
+  },
   clock: () => Date = () => new Date(),
 ): Promise<boolean> {
+  const action = input.action ?? 'SHARE_VIEWED';
   const [session] = await tx.$queryRaw<LockedSession[]>`
     SELECT "status"::text AS "status", "expiresAt", "patientId", "claimedByDoctorId"
     FROM "ShareSession" WHERE "id" = ${input.sessionId}::uuid FOR UPDATE`;
@@ -49,19 +58,22 @@ export async function recordView(
   ) {
     return false;
   }
-  const recent = await tx.accessLog.findFirst({
-    where: {
-      sessionId: input.sessionId,
-      action: 'SHARE_VIEWED',
-      at: { gt: new Date(now.getTime() - VIEW_LOG_WINDOW_MS) },
-    },
-    select: { id: true },
-  });
+  const recent =
+    action === 'SHARE_VIEWED'
+      ? await tx.accessLog.findFirst({
+          where: {
+            sessionId: input.sessionId,
+            action: 'SHARE_VIEWED',
+            at: { gt: new Date(now.getTime() - VIEW_LOG_WINDOW_MS) },
+          },
+          select: { id: true },
+        })
+      : null;
   if (!recent) {
     await writeAccessLog(tx, [
       {
         patientId: session.patientId,
-        action: 'SHARE_VIEWED',
+        action,
         at: now,
         actorId: input.doctorId,
         sessionId: input.sessionId,
