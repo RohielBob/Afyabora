@@ -2,6 +2,7 @@
 // main, importée (avec son lot : CA « un élément importé affiche son lot d'import ») ou venue d'un appareil.
 // UNE seule règle, utilisée par le téléphone ET le portail du médecin : les deux affichent la même chose.
 import type { MeasurementSource } from './enums';
+import { shortCode } from './short-code';
 
 export interface Provenance {
   source: MeasurementSource;
@@ -11,7 +12,7 @@ export interface Provenance {
 
 /** Lot d'import court (« 3F2A1C ») : assez pour le reconnaître, sans afficher l'identifiant entier. */
 export function shortBatchId(id: string): string {
-  return id.replace(/-/g, '').slice(0, 6).toUpperCase();
+  return shortCode(id);
 }
 
 export function provenanceOf(

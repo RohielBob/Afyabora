@@ -51,7 +51,9 @@ Rapport PDF « Préparer ma consultation ».
   « Rapport PDF » (`REPORT_DOWNLOAD`) ; mêmes contrôles que le dossier (médecin approuvé, accès ouvert, sa
   session) ; **chaque téléchargement écrit une ligne `REPORT_DOWNLOADED`** dans le journal du patient (jamais
   regroupée), sous verrou, AVANT la génération. Le rapport est celui du patient de la session, avec « à la
-  demande du Dr Prénom Nom, avec l'accord du patient ».
+  demande du Dr Prénom Nom, avec l'accord du patient ». Nom du fichier : celui du patient suivi du **code
+  court du partage** (`afyabora-rapport-AAAA-MM-JJ-30j-7EA972.pdf`, `withShareCode`, choix de l'équipe) pour
+  que le médecin distingue ses patients, toujours sans leur nom.
 - `ReportsService` lit le profil et les mesures non supprimées de la fenêtre d'analyse (exactement ce que lit
   l'écran « Analyse »), puis appelle le modèle de L6-01.
 - 10 rapports par minute au plus (génération coûteuse).

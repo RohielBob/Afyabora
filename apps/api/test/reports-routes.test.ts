@@ -19,7 +19,11 @@ import { JwtAuthGuard } from '../src/common/guards/jwt-auth.guard';
 import { RolesGuard } from '../src/common/guards/roles.guard';
 import { DoctorModule } from '../src/modules/doctor/doctor.module';
 import { ReportsModule } from '../src/modules/reports/reports.module';
-import { ReportsService, reportFilename } from '../src/modules/reports/reports.service';
+import {
+  ReportsService,
+  reportFilename,
+  withShareCode,
+} from '../src/modules/reports/reports.service';
 import { ClaimFailureLimiter } from '../src/modules/sharing/claim-limiter';
 import { SharingModule } from '../src/modules/sharing/sharing.module';
 import { PrismaService } from '../src/prisma/prisma.service';
@@ -271,6 +275,15 @@ describe.skipIf(!isTestDatabase(DB_URL))(
           'afyabora-rapport-2026-10-20-30j.pdf',
         );
       });
+
+      it('nom du rapport du médecin : code court du partage avant « .pdf »', () => {
+        expect(
+          withShareCode(
+            'afyabora-rapport-2026-10-20-30j.pdf',
+            '7ea97249-f951-4671-add5-710f4c6df047',
+          ),
+        ).toBe('afyabora-rapport-2026-10-20-30j-7EA972.pdf');
+      });
     });
 
     // ------------------------------------------------------------------ médecin
@@ -283,6 +296,13 @@ describe.skipIf(!isTestDatabase(DB_URL))(
         expect(first.headers.get('content-type')).toBe('application/pdf');
         expect(first.headers.get('cache-control')).toBe('no-store');
         expect(first.bytes.subarray(0, 5).toString()).toBe('%PDF-');
+        // Code court du partage dans le nom (L6-04), jamais le nom du patient.
+        const code = id.replace(/-/g, '').slice(0, 6).toUpperCase();
+        expect(first.headers.get('content-disposition')).toMatch(
+          new RegExp(
+            `^attachment; filename="afyabora-rapport-\\d{4}-\\d{2}-\\d{2}-30j-${code}\\.pdf"$`,
+          ),
+        );
         expect((await download(id, drA, '?period=90')).status).toBe(200);
         const downloads = await lines(id, 'REPORT_DOWNLOADED');
         expect(downloads).toHaveLength(2); // jamais regroupées, contrairement aux consultations
