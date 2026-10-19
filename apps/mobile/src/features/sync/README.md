@@ -127,7 +127,7 @@ modifier ensuite (sa note par exemple) ne sera pas refusée.
 - « Tirer pour rafraîchir » n'existe que sur téléphone (`pullToRefresh`, `components/ui`). Sur le web, React
   Native Web enveloppait la liste dans un conteneur sans hauteur et l'écran s'affichait **vide** : rien n'est
   ajouté sur le web (vérifié en capture, test dédié).
-- L'Historique et l'Accueil se rechargent aussi quand la réception change des données (`onSyncedData`).
+- L'Historique, l'Accueil, l'Analyse et l'aperçu du rapport (L6-03) se rechargent aussi quand la réception change des données (`onSyncedData`).
 
 ## Comptes (ADR-0004, modifications 3 et 6)
 

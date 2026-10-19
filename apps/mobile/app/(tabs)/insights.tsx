@@ -8,6 +8,7 @@
 //  - en ligne : les phrases déjà reformulées par l'IA du serveur remplacent celles du téléphone, seulement
 //    si elles décrivent exactement les mêmes faits (L3-09) ; hors-ligne, rien ne change ;
 //  - une question sur ces chiffres ? accès à l'assistant « Afyabora » (L9-09) ;
+//  - « Préparer ma consultation » : le rapport PDF de ces mesures (L6-03) ;
 //  - avertissement « outil d'aide, pas un avis médical ».
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -29,6 +30,7 @@ import {
 } from '@/features/insights';
 import { MedicalDisclaimer } from '@/features/legal';
 import { readUnit } from '@/features/measurements';
+import { ReportEntryCard } from '@/features/report';
 import { spacing } from '@/theme';
 
 export default function InsightsScreen() {
@@ -122,6 +124,7 @@ export default function InsightsScreen() {
       ) : null}
 
       {state.status === 'ready' ? <AssistantEntryCard index={2} /> : null}
+      {state.status === 'ready' ? <ReportEntryCard index={3} /> : null}
 
       <View style={{ marginTop: 'auto' }}>
         <MedicalDisclaimer variant="compact" />
