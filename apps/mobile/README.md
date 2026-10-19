@@ -24,8 +24,9 @@ cd apps/mobile && npx expo install --fix     # aligne les versions Expo/React Na
 pnpm dev:mobile                               # Expo
 ```
 
-> **Important :** les notifications push et le chiffrement SQLite exigent un **development build** (APK EAS, ticket L0-11), pas Expo Go.
-> `eas build --profile development --platform android`
+> **APK Android (L0-11)** : `npx eas-cli@latest build --platform android --profile preview` (dans `apps/mobile`),
+> branché sur l'API hébergée. Guide pas à pas : [`docs/deploy/apk-android.md`](../../docs/deploy/apk-android.md).
+> Les notifications push et le chiffrement SQLite (L8) demanderont aussi un APK, pas Expo Go.
 
 ## Structure
 

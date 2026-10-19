@@ -4,6 +4,8 @@ import type { ExpoConfig } from 'expo/config';
 // bundle iOS) restent « glyka » pour l'instant — voir docs/adr/0007-nom-afyabora-identifiants-internes.md.
 const config: ExpoConfig = {
   name: 'Afyabora',
+  // Compte Expo propriétaire du projet EAS (L0-11) : celui qui construit l'APK doit en être membre.
+  owner: 'iron-hawk48',
   slug: 'glyka',
   scheme: 'glyka',
   version: '0.1.0',
@@ -30,7 +32,9 @@ const config: ExpoConfig = {
   experiments: { typedRoutes: true },
   extra: {
     apiUrl: process.env.EXPO_PUBLIC_API_URL ?? 'http://10.0.2.2:3000',
-    eas: { projectId: process.env.EAS_PROJECT_ID },
+    // Projet EAS @iron-hawk48/glyka (L0-11, construction de l'APK). Pas un secret : il identifie seulement
+    // le projet chez Expo. EAS_PROJECT_ID permet de viser un autre projet sans modifier ce fichier.
+    eas: { projectId: process.env.EAS_PROJECT_ID ?? '7a2f9e36-296a-47d5-a46f-a5c7dd598ef8' },
   },
 };
 
