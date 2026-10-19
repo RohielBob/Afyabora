@@ -80,10 +80,13 @@ describe('onglets', () => {
     expect(tabsFor([])).toEqual(['overview']);
     expect(tabsFor(['MEALS'])).toEqual(['overview', 'timeline', 'meals']);
     expect(tabsFor(['GLUCOSE_HISTORY'])).toEqual(['overview', 'glucose', 'timeline']);
+    // « Rapport PDF » (L6-04) : un onglet seulement si le patient l'a coché.
     expect(tabsFor(['AI_SUMMARY', 'PERSONAL_NOTES', 'REPORT_DOWNLOAD'])).toEqual([
       'overview',
       'summary',
+      'report',
     ]);
+    expect(tabsFor(['REPORT_DOWNLOAD'])).toEqual(['overview', 'report']);
     expect(tabsFor(['GLUCOSE_HISTORY', 'TREATMENTS', 'MEALS', 'ACTIVITY', 'AI_SUMMARY'])).toEqual([
       'overview',
       'glucose',

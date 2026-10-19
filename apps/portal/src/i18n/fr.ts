@@ -336,6 +336,7 @@ export const fr = {
       meals: 'Nutrition',
       activity: 'Activité',
       summary: 'Résumé des analyses',
+      report: 'Rapport PDF',
     },
     period: 'Période',
     periodDays: '{{days}} j',
@@ -449,6 +450,46 @@ export const fr = {
       BEDTIME: 'Au coucher',
       NIGHT: 'La nuit',
       OTHER: 'Autre',
+    },
+    report: {
+      title: 'Rapport « Préparer ma consultation »',
+      intro:
+        'Le patient vous autorise à télécharger son rapport : une synthèse claire de ses glycémies, à garder dans son dossier ou à imprimer.',
+      period: 'Période du rapport',
+      download: 'Télécharger le PDF',
+      downloading: 'Création du rapport…',
+      contentsTitle: 'Ce que contient le rapport',
+      contents: [
+        'Identité du patient (prénom, nom, type de diabète, année du diagnostic) et ses plages cibles',
+        'Qualité des données, nombre de mesures, moyenne, écart-type et variabilité',
+        'Temps dans la plage cible, en dessous et au-dessus',
+        'Épisodes en dessous et au-dessus de la cible, valeurs inhabituelles, jours sans mesure',
+        'Points à examiner, graphique de toutes les mesures de la période',
+      ],
+      private: 'Les notes personnelles du patient ne sont jamais dans le rapport.',
+      logged:
+        'Chaque téléchargement est inscrit dans le journal du patient, qui voit « Rapport téléchargé ».',
+      signed: 'Le rapport indique qu’il a été généré à votre demande, avec l’accord du patient.',
+      done: 'Rapport téléchargé',
+      doneText: '{{filename}} · à {{time}}',
+      problem: {
+        tooMany: {
+          title: 'Trop de rapports d’un coup',
+          text: 'Attendez une minute avant d’en télécharger un autre.',
+        },
+        notShared: {
+          title: 'Le patient ne partage plus son rapport',
+          text: 'Le téléchargement du rapport n’est pas autorisé pour ce partage.',
+        },
+        network: {
+          title: 'Le serveur ne répond pas',
+          text: 'Vérifiez votre connexion, puis réessayez.',
+        },
+        server: {
+          title: 'Le rapport n’a pas pu être créé',
+          text: 'Réessayez dans quelques instants.',
+        },
+      },
     },
     problem: {
       network: {
