@@ -10,7 +10,7 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import * as argon2 from 'argon2';
 import { randomUUID } from 'node:crypto';
 import type { AddressInfo } from 'node:net';
-import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { generateOpaqueToken, hashToken } from '../src/common/crypto/tokens';
 import { AllExceptionsFilter } from '../src/common/filters/all-exceptions.filter';
 import { JwtAuthGuard } from '../src/common/guards/jwt-auth.guard';
@@ -83,6 +83,15 @@ const fakePrisma = {
       return { count: rows.length };
     },
   },
+  // Fiche médecin lue pour l'alerte « médecin à vérifier » envoyée à l'équipe.
+  doctorProfile: {
+    findUnique: async ({ where }: { where: { userId: string } }) => {
+      const doctor = db.doctors.find((d) => d.userId === where.userId);
+      if (!doctor) return null;
+      const { userId, verificationStatus: _status, ...details } = doctor;
+      return { ...details, user: { email: db.users.find((u) => u.id === userId)!.email } };
+    },
+  },
   emailToken: {
     findUnique: async ({ where }: { where: { tokenHash: string } }) =>
       db.tokens.find((t) => t.tokenHash === where.tokenHash) ?? null,
@@ -141,6 +150,7 @@ const fakeConfigValues: Record<string, string> = {
   PORTAL_URL: `${PORTAL_URL}/`, // « / » final volontaire : le lien ne doit pas contenir « // »
 };
 const fakeConfig = {
+  get: (key: string) => fakeConfigValues[key],
   getOrThrow: (key: string) => {
     const value = fakeConfigValues[key];
     if (value === undefined) throw new Error(`Configuration absente du test : ${key}`);
@@ -406,6 +416,7 @@ describe('L1-01 : inscription et vérification de l’adresse email', () => {
           verificationStatus: 'PENDING',
         }),
       ]);
+      // Boîte de l'équipe non configurée (cas par défaut) : aucune alerte, seulement le lien au médecin.
       expect(sentMails).toHaveLength(1);
       expect(sentMails[0]!.text).toContain('examiné');
     });
@@ -490,6 +501,95 @@ describe('L1-01 : inscription et vérification de l’adresse email', () => {
 
       expect(res.status).toBe(400);
       expect(db.users[0]!.emailVerifiedAt).toBeNull();
+    });
+  });
+
+  describe('alertes à la boîte de l’équipe (TEAM_NOTIFY_EMAIL)', () => {
+    const TEAM = 'equipe@afyabora.test';
+    const doctor = {
+      email: 'dr.mbala@example.com',
+      password: PASSWORD,
+      consent: true,
+      firstName: 'Aline',
+      lastName: 'Mbala',
+      licenseNumber: 'CNOM-12345',
+      institution: 'Hôpital de démonstration',
+    };
+    const teamMails = () => sentMails.filter((m) => m.to === TEAM);
+    const doctorToken = () => tokenFrom(sentMails.find((m) => m.to === doctor.email));
+
+    beforeEach(() => {
+      fakeConfigValues.TEAM_NOTIFY_EMAIL = TEAM;
+    });
+    afterEach(() => {
+      delete fakeConfigValues.TEAM_NOTIFY_EMAIL;
+    });
+
+    it('inscription médecin : lien au médecin ET alerte « nouvelle inscription » à l’équipe', async () => {
+      expect((await post('/auth/register-doctor', doctor)).status).toBe(202);
+
+      expect(sentMails.filter((m) => m.to === doctor.email)).toHaveLength(1);
+      const [alert] = teamMails();
+      expect(teamMails()).toHaveLength(1);
+      expect(alert!.subject).toBe('Afyabora : nouvelle inscription médecin');
+      expect(alert!.text).toContain('Dr Aline Mbala');
+      expect(alert!.text).toContain('CNOM-12345');
+      expect(alert!.text).toContain('Hôpital de démonstration');
+      expect(alert!.text).toContain(doctor.email);
+      // L'alerte ne contient jamais le lien (ni le jeton) de vérification du médecin.
+      expect(alert!.text).not.toContain('verify-email');
+      expect(alert!.html).not.toContain('verify-email');
+    });
+
+    it('réinscription d’un médecin non vérifié : nouveau lien, mais pas de seconde alerte', async () => {
+      await post('/auth/register-doctor', doctor);
+      await post('/auth/register-doctor', doctor);
+      expect(sentMails.filter((m) => m.to === doctor.email)).toHaveLength(2);
+      expect(teamMails()).toHaveLength(1);
+    });
+
+    it('adresse confirmée par le médecin : alerte « à vérifier » avec les commandes, une seule fois', async () => {
+      await post('/auth/register-doctor', doctor);
+      const token = doctorToken();
+      sentMails = [];
+
+      expect((await post('/auth/verify-email', { token })).status).toBe(200);
+      const [alert] = teamMails();
+      expect(teamMails()).toHaveLength(1);
+      expect(alert!.subject).toBe('Afyabora : un médecin attend votre vérification');
+      expect(alert!.text).toContain(`pnpm admin:doctors approve ${doctor.email}`);
+      expect(alert!.text).toContain(`pnpm admin:doctors reject ${doctor.email}`);
+
+      // Lien rejoué : refusé, aucune nouvelle alerte.
+      expect((await post('/auth/verify-email', { token })).status).toBe(400);
+      expect(teamMails()).toHaveLength(1);
+    });
+
+    it('adresse déjà confirmée autrement (ex. mot de passe oublié) puis lien ouvert : pas de seconde alerte', async () => {
+      await post('/auth/register-doctor', doctor);
+      const token = doctorToken();
+      db.users[0]!.emailVerifiedAt = new Date(); // confirmée entre-temps (et déjà signalée à l'équipe)
+      sentMails = [];
+
+      expect((await post('/auth/verify-email', { token })).status).toBe(200);
+      expect(teamMails()).toHaveLength(0);
+    });
+
+    it('patient : ni à l’inscription ni à la confirmation (aucune donnée de patient vers l’équipe)', async () => {
+      await post('/auth/register', {
+        email: 'jean@example.com',
+        password: PASSWORD,
+        consent: true,
+      });
+      await post('/auth/verify-email', { token: tokenFrom(sentMails[0]) });
+      expect(teamMails()).toHaveLength(0);
+    });
+
+    it('panne du service d’envoi : les réponses ne changent pas (202 puis 200)', async () => {
+      mailFails = true;
+      expect((await post('/auth/register-doctor', doctor)).status).toBe(202);
+      expect((await post('/auth/verify-email', { token: doctorToken() })).status).toBe(200);
+      expect(teamMails()).toHaveLength(2); // tentées toutes les deux, échecs sans conséquence
     });
   });
 });

@@ -41,6 +41,17 @@ describe('validation de la configuration', () => {
     expect(() => validateEnv({ ...validEnv(), TRUST_PROXY_HOPS: '9' })).toThrow(/TRUST_PROXY_HOPS/);
   });
 
+  it("boîte de l'équipe : facultative, vide = absente, adresse email exigée", () => {
+    expect(validateEnv(validEnv()).TEAM_NOTIFY_EMAIL).toBeUndefined();
+    expect(validateEnv({ ...validEnv(), TEAM_NOTIFY_EMAIL: '' }).TEAM_NOTIFY_EMAIL).toBeUndefined();
+    expect(
+      validateEnv({ ...validEnv(), TEAM_NOTIFY_EMAIL: 'equipe@exemple.test' }).TEAM_NOTIFY_EMAIL,
+    ).toBe('equipe@exemple.test');
+    expect(() => validateEnv({ ...validEnv(), TEAM_NOTIFY_EMAIL: 'equipe' })).toThrow(
+      /TEAM_NOTIFY_EMAIL/,
+    );
+  });
+
   it("refuse le secret JWT d'exemple de .env.example", () => {
     expect(() =>
       validateEnv({

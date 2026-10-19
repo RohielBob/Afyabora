@@ -40,6 +40,8 @@ export interface OutgoingMail {
   text: string;
   /** Version HTML : même contenu, avec un lien cliquable. */
   html: string;
+  /** Adresse qui reçoit les réponses (ex. boîte de l'équipe), quand l'expéditeur ne peut pas en recevoir. */
+  replyTo?: string;
 }
 
 @Injectable()
@@ -71,6 +73,7 @@ export class MailService {
       subject: mail.subject,
       text: mail.text,
       html: mail.html,
+      ...(mail.replyTo ? { replyTo: mail.replyTo } : {}),
     });
   }
 }

@@ -65,6 +65,16 @@ Comptes, sessions et sécurité des accès (patients et médecins).
 - Médecin : `DoctorProfile` créé avec `verificationStatus = PENDING` (approbation : L1-12).
 - Le profil patient (nom, date de naissance, seuils…) n'est pas créé à l'inscription : c'est l'assistant de profil (L1-05).
 
+### Vérification des comptes médecins par email (2026-10-19, après L0-10)
+
+- **Boîte de l'équipe** `TEAM_NOTIFY_EMAIL` (facultative ; vide = aucune alerte). Elle reçoit :
+  - « nouvelle inscription médecin » : à la **création** du compte (pas aux réinscriptions d'une adresse non vérifiée) ;
+  - « un médecin attend votre vérification » : quand le médecin **confirme son adresse** (lien de vérification, ou lien de réinitialisation sur un compte jamais vérifié), une seule fois, avec les commandes `pnpm admin:doctors approve|reject` ;
+  - « médecin prévenu » : copie de la décision, une fois l'email parti chez le médecin.
+- **Aucune alerte pour un patient** : savoir qu'une personne utilise Afyabora est déjà une donnée de santé.
+- **Décision au médecin** : `admin:doctors approve|reject` met `DoctorProfile.decisionEmailPending = true` ; la tâche `DoctorDecisionMailJob` (chaque minute, au plus 20 par passage) envoie « compte approuvé » (lien `PORTAL_URL/login`, se reconnecter) ou « non validé », avec `Reply-To` = boîte de l'équipe si elle est configurée. Réservation atomique (un seul envoi même avec deux passages simultanés) ; en cas d'échec, la marque est remise et l'envoi réessayé au passage suivant. L'outil n'envoie rien lui-même : la clé du service d'envoi reste sur le serveur.
+- Champs saisis par le médecin (nom, numéro d'ordre, établissement) : **échappés** dans le HTML, jamais dans l'objet de l'email. Envois non attendus : une panne d'envoi ne change aucune réponse ; journal sans adresse ni contenu (type d'erreur seulement).
+
 ## Tests obligatoires
 
 - [x] Connexion refusée sans email vérifié (`test/auth-session.test.ts`).
@@ -112,3 +122,5 @@ Service d'envoi partagé : `src/common/mail/mail.service.ts` (SMTP ; Mailpit en 
 - Chaque route vérifie le **rôle** (`@Roles`) **et** la **propriété** de la donnée.
 - Toute entrée est validée avec un schéma de `@glyka/shared`.
 - Aucun secret ni donnée de santé dans les logs.
+- [x] (emails médecin) Alertes à l'équipe : inscription (une fois), adresse confirmée (une fois, aussi par mot de passe oublié), rien pour un patient, rien sans boîte configurée, panne sans effet (`test/auth-register.test.ts`, `test/auth-password.test.ts`, `test/doctor-review-mails.test.ts`).
+- [x] (emails médecin) Décision : email au médecin + copie à l'équipe, une seule fois, nouvel essai après panne, un seul envoi avec deux passages simultanés, HTML échappé (`test/doctor-review-mails.test.ts`, vraie base).

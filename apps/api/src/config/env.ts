@@ -38,6 +38,10 @@ const envSchema = z.object({
     (v) => (v === '' || v === undefined ? 'false' : v),
     z.enum(['true', 'false']).transform((v) => v === 'true'),
   ),
+  // Boîte de l'ÉQUIPE (une vraie boîte lue par l'équipe, pas l'adresse d'envoi) : elle reçoit les alertes
+  // « nouveau médecin inscrit », « adresse confirmée, à vérifier » et « décision envoyée au médecin ».
+  // Vide ou absente : aucune alerte n'est envoyée (l'outil admin:doctors reste la référence).
+  TEAM_NOTIFY_EMAIL: z.preprocess((v) => (v === '' ? undefined : v), z.string().email().optional()),
   PORTAL_URL: z.string().url().default('http://localhost:5173'),
   API_PUBLIC_URL: z.string().url().default('http://localhost:3000'),
   // Nombre de relais (proxys) devant l'API chez l'hébergeur (L0-10 ; Render : 1). Sans ce réglage, toutes les

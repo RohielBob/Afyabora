@@ -55,7 +55,20 @@ interface RefreshRow {
   revokedAt: Date | null;
 }
 
-const db = { users: [] as UserRow[], tokens: [] as TokenRow[], refresh: [] as RefreshRow[] };
+interface DoctorRow {
+  userId: string;
+  firstName: string;
+  lastName: string;
+  licenseNumber: string;
+  institution: string;
+}
+
+const db = {
+  users: [] as UserRow[],
+  tokens: [] as TokenRow[],
+  refresh: [] as RefreshRow[],
+  doctors: [] as DoctorRow[],
+};
 
 const fakePrisma = {
   user: {
@@ -102,6 +115,15 @@ const fakePrisma = {
       return { count: rows.length };
     },
   },
+  // Fiche médecin lue pour l'alerte à l'équipe (adresse confirmée par le lien de réinitialisation).
+  doctorProfile: {
+    findUnique: async ({ where }: { where: { userId: string } }) => {
+      const doctor = db.doctors.find((d) => d.userId === where.userId);
+      if (!doctor) return null;
+      const { userId, ...details } = doctor;
+      return { ...details, user: { email: db.users.find((u) => u.id === userId)!.email } };
+    },
+  },
   refreshToken: {
     create: async ({ data }: { data: Omit<RefreshRow, 'id' | 'rotatedAt' | 'revokedAt'> }) => {
       const row: RefreshRow = { ...data, id: randomUUID(), rotatedAt: null, revokedAt: null };
@@ -138,6 +160,7 @@ const fakeConfigValues: Record<string, string> = {
   PORTAL_URL: `${PORTAL_URL}/`,
   ACCESS_TOKEN_TTL_SECONDS: '900',
   REFRESH_TOKEN_TTL_DAYS: '30',
+  TEAM_NOTIFY_EMAIL: 'equipe@afyabora.test',
 };
 const fakeConfig = {
   get: (key: string) => fakeConfigValues[key],
@@ -243,6 +266,7 @@ describe('L1-03 : mot de passe oublié et réinitialisation', () => {
     db.users = [];
     db.tokens = [];
     db.refresh = [];
+    db.doctors = [];
     sentMails = [];
     throttleEnabled = false;
   });
@@ -347,6 +371,38 @@ describe('L1-03 : mot de passe oublié et réinitialisation', () => {
       expect((await reset(tokenFrom(sentMails[0]))).status).toBe(200);
       expect(user.emailVerifiedAt).toBeInstanceOf(Date);
       expect((await login(NEW_PASSWORD)).status).toBe(200);
+    });
+
+    it('médecin jamais vérifié : l’adresse est confirmée par ce lien, l’équipe est prévenue (une fois)', async () => {
+      const user = addUser({ emailVerifiedAt: null, email: 'dr.amina@example.org' });
+      db.doctors.push({
+        userId: user.id,
+        firstName: 'Amina',
+        lastName: 'Diallo',
+        licenseNumber: 'CD-12345',
+        institution: 'Clinique Ngaliema',
+      });
+      await forgot('dr.amina@example.org');
+
+      expect((await reset(tokenFrom(sentMails[0]))).status).toBe(200);
+      const team = sentMails.filter((m) => m.to === 'equipe@afyabora.test');
+      expect(team).toHaveLength(1);
+      expect(team[0]!.subject).toBe('Afyabora : un médecin attend votre vérification');
+      expect(team[0]!.text).toContain('pnpm admin:doctors approve dr.amina@example.org');
+
+      // Nouvelle réinitialisation : l'adresse était déjà confirmée, aucune nouvelle alerte.
+      await forgot('dr.amina@example.org');
+      expect(
+        (await reset(tokenFrom(sentMails.at(-1)), 'encore-un-autre-mot-de-passe')).status,
+      ).toBe(200);
+      expect(sentMails.filter((m) => m.to === 'equipe@afyabora.test')).toHaveLength(1);
+    });
+
+    it('patient jamais vérifié : aucune alerte à l’équipe', async () => {
+      addUser({ emailVerifiedAt: null });
+      await forgot();
+      await reset(tokenFrom(sentMails[0]));
+      expect(sentMails.filter((m) => m.to === 'equipe@afyabora.test')).toHaveLength(0);
     });
 
     it('lien à usage unique : la 2e utilisation est refusée (TOKEN_INVALID)', async () => {

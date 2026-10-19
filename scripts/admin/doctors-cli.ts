@@ -8,7 +8,16 @@ import { createInterface } from 'node:readline/promises';
 import { pathToFileURL } from 'node:url';
 import { PrismaClient } from '@prisma/client';
 import { prismaDoctorStore, type DoctorStore } from './doctor-store.ts';
-import { USAGE, formatDoctor, formatTable, parseArgs, planAction, statusLabel } from './doctors.ts';
+import {
+  DECISION_MAIL_NOTE,
+  USAGE,
+  errorSummary,
+  formatDoctor,
+  formatTable,
+  parseArgs,
+  planAction,
+  statusLabel,
+} from './doctors.ts';
 
 export interface CliDeps {
   store: DoctorStore;
@@ -89,9 +98,6 @@ export async function run(argv: readonly string[], deps: CliDeps): Promise<numbe
   if (command.kind === 'approve') {
     await store.approve(doctor.userId, now());
     print(`✔ ${doctor.email} : APPROUVÉ.`);
-    print(
-      'Prévenez le médecin : il doit se déconnecter puis se reconnecter au portail pour accéder aux dossiers.',
-    );
   } else {
     const effects = await store.reject(doctor.userId, now());
     print(`✔ ${doctor.email} : REFUSÉ.`);
@@ -99,6 +105,7 @@ export async function run(argv: readonly string[], deps: CliDeps): Promise<numbe
       `  Sessions de connexion fermées : ${effects.revokedSessions} · partages en cours arrêtés : ${effects.endedShares}`,
     );
   }
+  print(DECISION_MAIL_NOTE);
   return 0;
 }
 
@@ -125,7 +132,7 @@ export async function main(argv: readonly string[]): Promise<void> {
     });
   } catch (error) {
     // Message court, sans pile technique ni donnée sensible (ex. base injoignable).
-    console.error(`✖ ${error instanceof Error ? error.message.split('\n')[0] : String(error)}`);
+    console.error(`✖ ${errorSummary(error)}`);
     process.exitCode = 1;
   } finally {
     await prisma.$disconnect();
