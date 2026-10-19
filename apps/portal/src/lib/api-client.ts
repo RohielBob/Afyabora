@@ -53,49 +53,98 @@ export type ApiInit = Omit<RequestInit, 'body'> & { auth?: boolean; body?: unkno
  * renouvelée UNE fois puis la requête rejouée. Les routes publiques (`auth: false`) ne déclenchent
  * jamais de renouvellement (pas de boucle avec /auth/refresh).
  */
-export async function api<T>(path: string, init: ApiInit = {}): Promise<T> {
+export function api<T>(path: string, init: ApiInit = {}): Promise<T> {
+  return withRefresh(init, () =>
+    send(
+      path,
+      init,
+      'application/json',
+      TIMEOUT_MS,
+      async (response) => (await response.json().catch(() => undefined)) as T, // 204 : pas de corps
+    ),
+  );
+}
+
+/** Un rapport de 90 jours sur une connexion lente : plus long qu'une lecture ordinaire. */
+export const FILE_TIMEOUT_MS = 60_000;
+
+/**
+ * Téléchargement d'un fichier (rapport PDF, L6-04) : mêmes règles que `api` (jeton, renouvellement de
+ * session, erreurs en ApiError avec le code du serveur), mais la réponse est lue en octets. Le délai
+ * couvre aussi la réception : une connexion coupée au milieu devient « serveur injoignable ».
+ */
+export function apiFile(path: string): Promise<Uint8Array> {
+  return withRefresh({}, () =>
+    send(
+      path,
+      {},
+      'application/pdf, application/json',
+      FILE_TIMEOUT_MS,
+      async (response) => new Uint8Array(await response.arrayBuffer()),
+    ),
+  );
+}
+
+/** Lance `run` ; si la route protégée répond 401, renouvelle la session puis le relance UNE fois. */
+async function withRefresh<T>(init: ApiInit, run: () => Promise<T>): Promise<T> {
   try {
-    return await send<T>(path, init);
+    return await run();
   } catch (error) {
     if (!(error instanceof ApiError) || error.status !== 401 || init.auth === false || !refresher) {
       throw error;
     }
     if (!(await refresher())) throw error;
-    return send<T>(path, init); // nouveau jeton : on rejoue une seule fois
+    return run(); // nouveau jeton : on rejoue une seule fois
   }
 }
 
-async function send<T>(path: string, init: ApiInit): Promise<T> {
+/**
+ * Une requête : en-têtes, jeton, délai. Une réponse en erreur devient une ApiError (corps JSON du
+ * serveur) ; sinon `read` lit le corps (JSON ou octets) PENDANT le délai.
+ */
+async function send<T>(
+  path: string,
+  init: ApiInit,
+  accept: string,
+  timeoutMs: number,
+  read: (response: Response) => Promise<T>,
+): Promise<T> {
   const { auth, body, ...rest } = init;
   const headers = new Headers(rest.headers);
-  headers.set('Accept', 'application/json');
+  headers.set('Accept', accept);
   if (body !== undefined) headers.set('Content-Type', 'application/json');
   if (auth !== false && accessToken) headers.set('Authorization', `Bearer ${accessToken}`);
 
   const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
-  let response: Response;
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
   try {
-    response = await fetch(`${API_URL}${path}`, {
-      ...rest,
-      headers,
-      body: body === undefined ? undefined : JSON.stringify(body),
-      signal: controller.signal,
-    });
-  } catch {
-    throw new ApiError(0, 'Serveur injoignable');
+    let response: Response;
+    try {
+      response = await fetch(`${API_URL}${path}`, {
+        ...rest,
+        headers,
+        body: body === undefined ? undefined : JSON.stringify(body),
+        signal: controller.signal,
+      });
+    } catch {
+      throw new ApiError(0, 'Serveur injoignable');
+    }
+
+    noteServerDate(response.headers.get('Date')); // horloge du serveur (compte à rebours, L5-13)
+    if (!response.ok) {
+      const data: unknown = await response.json().catch(() => undefined);
+      throw new ApiError(
+        response.status,
+        (data as { message?: string } | undefined)?.message ?? 'Erreur du serveur',
+        data,
+      );
+    }
+    try {
+      return await read(response);
+    } catch {
+      throw new ApiError(0, 'Serveur injoignable'); // corps coupé en route ou délai dépassé
+    }
   } finally {
     clearTimeout(timer);
   }
-
-  noteServerDate(response.headers.get('Date')); // horloge du serveur (compte à rebours, L5-13)
-  const data: unknown = await response.json().catch(() => undefined); // 204 : pas de corps
-  if (!response.ok) {
-    throw new ApiError(
-      response.status,
-      (data as { message?: string } | undefined)?.message ?? 'Erreur du serveur',
-      data,
-    );
-  }
-  return data as T;
 }

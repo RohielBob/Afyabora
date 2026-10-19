@@ -7,6 +7,7 @@ Onglets du dossier, graphiques, chronologie, résumé IA.
 ## Tickets
 
 - **L5-12** — Portail : dossier patient (glycémie, chronologie, traitements, nutrition, activité, résumé IA)
+- **L6-04** — Portail : téléchargement du rapport si autorisé (fait)
 
 ## Fait (L5-12)
 
@@ -35,9 +36,25 @@ Onglets du dossier, graphiques, chronologie, résumé IA.
   les 30 s (arrêt par le patient). Données jamais gardées après avoir quitté la page (`gcTime: 0`).
 - Textes : `fr.record` (`src/i18n/fr.ts`). Tests : `__tests__/view.test.tsx`.
 
+## Fait (L6-04)
+
+- Onglet **« Rapport PDF »** (`tabs/ReportTab.tsx`, adresse `?onglet=rapport`) : **seulement si le patient a
+  coché « Rapport PDF »** (`REPORT_DOWNLOAD`, `tabsFor`). Période 14 / 30 / 90 jours (30 au départ, liste de
+  `@glyka/shared`), bouton « Télécharger le PDF », ce que contient le rapport.
+- Dit **avant** le clic : chaque téléchargement est inscrit dans le journal du patient (qui voit « Rapport
+  téléchargé ») ; le rapport indique qu'il a été généré à la demande du médecin, avec l'accord du patient ;
+  jamais les notes personnelles.
+- Logique (`report.ts`) : `GET /doctor/sessions/:id/report?period=…` (le serveur revérifie l'accès et la
+  catégorie, et journalise) ; réponse qui n'est pas un PDF refusée ; nom `afyabora-rapport-AAAA-MM-JJ-30j.pdf`
+  (jamais le nom du patient) ; le fichier est proposé au navigateur puis **l'adresse temporaire est libérée**
+  (rien n'est gardé dans la page).
+- Fin d'accès pendant le téléchargement : même réaction que les autres onglets (dossier effacé, page « Accès
+  expiré »). Autres erreurs expliquées : 429 (trop de rapports), catégorie retirée, réseau, serveur.
+- Client HTTP : `apiFile()` (`lib/api-client.ts`), mêmes règles que `api()`, délai de 60 s qui couvre aussi
+  la réception. Tests : `__tests__/report.test.tsx`.
+
 ## À venir
 
-- L6-04 : onglet « Rapport PDF » (si `REPORT_DOWNLOAD` est partagé).
 - Contrat 0.4.2 (fait) : la chronologie montre la **durée** d'un évènement (« Marche · 40 min »), le **lot**
   d'une mesure importée (« Import · lot 3F2A1C ») et le **texte libre** d'un évènement (dose déclarée d'un
   traitement…) en italique sous la ligne, **seulement si le patient partage ses notes personnelles**.

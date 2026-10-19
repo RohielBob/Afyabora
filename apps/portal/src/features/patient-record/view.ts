@@ -25,6 +25,7 @@ export const RECORD_TABS = [
   'meals',
   'activity',
   'summary',
+  'report',
 ] as const;
 export type RecordTab = (typeof RECORD_TABS)[number];
 
@@ -37,6 +38,7 @@ const TAB_NEEDS: Record<RecordTab, readonly ShareCategory[] | null> = {
   meals: ['MEALS'],
   activity: ['ACTIVITY'],
   summary: ['AI_SUMMARY'],
+  report: ['REPORT_DOWNLOAD'], // L6-04 : seulement si le patient a coché « Rapport PDF »
 };
 
 /** Onglets d'un partage : un onglet dont la catégorie n'est pas partagée n'est PAS affiché (CDC F8). */

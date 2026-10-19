@@ -11,6 +11,8 @@
 //    mémoire et la page « Accès expiré » le remplace (`/expired?motif=…`, sans retour possible vers le
 //    dossier). Le résumé est relu toutes les 30 s pour voir un arrêt par le patient sans attendre un clic.
 //    Le serveur reste la seule autorité : il refuse chaque requête après la fin.
+//  - Onglet « Rapport PDF » (L6-04) : seulement si le patient a coché « Rapport PDF » ; chaque
+//    téléchargement est revérifié et inscrit au journal du patient par le serveur.
 //  - Les données ne sont jamais gardées en cache après avoir quitté la page (gcTime 0) ni stockées.
 //  - Chaque lecture est enregistrée côté serveur dans le journal du patient (une ligne par moment de
 //    lecture, pas par requête : module `doctor` de l'API).
@@ -24,6 +26,7 @@ import { RecordHeader } from '@/features/patient-record/RecordHeader';
 import { RecordTabs, TabPanel } from '@/features/patient-record/RecordTabs';
 import { GlucoseTab } from '@/features/patient-record/tabs/GlucoseTab';
 import { OverviewTab } from '@/features/patient-record/tabs/OverviewTab';
+import { ReportTab } from '@/features/patient-record/tabs/ReportTab';
 import { SummaryTab } from '@/features/patient-record/tabs/SummaryTab';
 import { TimelineTab } from '@/features/patient-record/tabs/TimelineTab';
 import { AccessBanner } from '@/features/sessions/AccessBanner';
@@ -55,6 +58,7 @@ const TAB_PARAM: Record<RecordTab, string> = {
   meals: 'nutrition',
   activity: 'activite',
   summary: 'analyses',
+  report: 'rapport',
 };
 const tabFromParam = (value: string | null) =>
   (Object.entries(TAB_PARAM).find(([, param]) => param === value)?.[0] ?? null) as string | null;
@@ -239,6 +243,8 @@ export default function PatientRecordRoute() {
             ) : null}
 
             {tab === 'summary' ? <SummaryTab insights={summary.data.insights ?? []} /> : null}
+
+            {tab === 'report' ? <ReportTab sessionId={sessionId} onEnded={end} /> : null}
           </TabPanel>
         </>
       ) : null}
