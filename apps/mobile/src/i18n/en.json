@@ -228,10 +228,66 @@
     "notificationsHint": "Reminders, alerts, quiet hours",
     "security": "Security",
     "securityHint": "Biometric or passcode unlock",
+    "account": "My data and account",
+    "accountHint": "Export my data, delete my account",
     "about": "About",
     "aboutHint": "Version, disclaimer, privacy",
     "design": "Style board",
     "designHint": "Visible in development: colours, text, components"
+  },
+  "account": {
+    "title": "My data and account",
+    "intro": "Get a copy of your data at any time, or delete your account and everything in it.",
+    "export": {
+      "title": "Export my data",
+      "body": "A file (JSON format) with your profile, all your readings and events, notes included. You can keep it or give it to another service.",
+      "privacy": "This file contains your health data unencrypted: keep it somewhere safe and only share it with people you trust.",
+      "pendingFirst_one": "{{count}} entry not yet sent will be sent first, so that it is in the file.",
+      "pendingFirst_other": "{{count}} entries not yet sent will be sent first, so that they are in the file.",
+      "button": "Export my data",
+      "again": "Export again",
+      "shareAgain": "Share this file again",
+      "shareTitle": "My Afyabora data",
+      "phase": {
+        "syncing": "Sending your latest entries…",
+        "downloading": "Preparing the file…",
+        "sharing": "Opening sharing…"
+      },
+      "done": "File ready: {{name}}",
+      "unsent_one": "{{count}} entry could not be sent: it is not in this file. Try again when the connection is better.",
+      "unsent_other": "{{count}} entries could not be sent: they are not in this file. Try again when the connection is better.",
+      "problem": {
+        "offline": "No connection: exporting needs the Internet.",
+        "tooMany": "Too many exports in a short time. Try again in a minute.",
+        "noProfile": "Complete your profile first: there is nothing to export yet.",
+        "cannotShare": "The file is ready, but sharing is not available on this device.",
+        "error": "The export failed. Try again in a moment."
+      }
+    },
+    "delete": {
+      "title": "Delete my account",
+      "body": "Your account and all your data will be erased from our servers and from this phone:",
+      "what": {
+        "data": "your profile, all your readings and events, notes included;",
+        "shares": "your shares: doctors lose access to your record immediately;",
+        "emergency": "your emergency card: its QR code will no longer open;",
+        "phone": "the data saved on this phone."
+      },
+      "irreversible": "This is permanent: nothing can be recovered. Export your data first if you want to keep it.",
+      "start": "Delete my account…",
+      "password": "Password",
+      "passwordHint": "To confirm it is really you.",
+      "understand": "I understand that my account and all my data will be permanently deleted.",
+      "confirm": "Delete permanently",
+      "problem": {
+        "password": "Incorrect password. Nothing was deleted.",
+        "tooMany": "Too many attempts. Wait a minute before trying again. Nothing was deleted.",
+        "offline": "No connection: deleting needs the Internet. Nothing was deleted.",
+        "error": "The deletion failed. Nothing was deleted: try again in a moment."
+      },
+      "doneTitle": "Account deleted",
+      "done": "Your account and all your data have been erased. Thank you for using Afyabora."
+    }
   },
   "appearance": {
     "overline": "Settings",
@@ -433,8 +489,6 @@
       "disabled": "Lock disabled.",
       "tipsTitle": "Good to know",
       "tips": "Your code is never stored in plain text. After 5 errors, you must wait before trying again. Forgot your code? You can sign out and sign in again with your password.",
-      "soonTitle": "Coming soon",
-      "soon": "Export your data and delete your account (ticket L1-14).",
       "storage": {
         "title": "Health data on this phone",
         "loading": "Checking…",

@@ -4,6 +4,7 @@ export { authErrorMessage, type ErrorMessage } from './errors';
 export { extractToken } from './link-token';
 export { pendingRegistration } from './pending-registration';
 export {
+  deleteAccount,
   initSession,
   markProfileCompleted,
   refreshSession,

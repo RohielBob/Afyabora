@@ -28,6 +28,7 @@ const PRIVATE_SCREENS = [
   'settings/units-thresholds',
   'settings/notifications',
   'settings/security',
+  'settings/account',
   'settings/about',
   'measurement/[id]',
   'import/index',

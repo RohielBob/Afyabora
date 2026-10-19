@@ -1,8 +1,10 @@
 // Ticket L1-07 : session mobile. Le serveur est simulé (fetch) et le coffre sécurisé est en mémoire :
 // on vérifie chaque scénario sans téléphone ni réseau.
 import { api } from '@/lib/api-client';
+import { ApiError } from '@/lib/api-client';
 import {
   __resetSessionForTests,
+  deleteAccount,
   getSession,
   initSession,
   refreshSession,
@@ -45,6 +47,9 @@ jest.mock('@/db/reset', () => ({
 // Rapport PDF rangé sur le téléphone (L6-03) : effacé à la déconnexion.
 const mockClearReportFiles = jest.fn();
 jest.mock('@/features/report', () => ({ clearReportFiles: () => mockClearReportFiles() }));
+// Export JSON de mes données (L1-14) : effacé à la déconnexion et à la suppression du compte.
+const mockClearExportFiles = jest.fn();
+jest.mock('@/features/account', () => ({ clearExportFiles: () => mockClearExportFiles() }));
 // QR d'urgence (L6-06) : jeton et image effacés à la déconnexion.
 const mockClearStoredQr = jest.fn(async () => undefined);
 const mockClearQrImages = jest.fn();
@@ -108,6 +113,7 @@ beforeEach(() => {
   mockWipeLocalData.mockClear();
   mockClaimLocalData.mockClear();
   mockClearReportFiles.mockClear();
+  mockClearExportFiles.mockClear();
   mockClearStoredQr.mockClear();
   mockClearQrImages.mockClear();
   steps.length = 0;
@@ -273,6 +279,7 @@ describe('déconnexion (signOut)', () => {
     expect(logoutBody).toEqual({ refreshToken: 'refresh-1' });
     expect(mockWipeLocalData).toHaveBeenCalledTimes(1);
     expect(mockClearReportFiles).toHaveBeenCalledTimes(1); // L6-03 : plus de rapport PDF sur le téléphone
+    expect(mockClearExportFiles).toHaveBeenCalledTimes(1); // L1-14 : plus d'export JSON
     expect(mockClearStoredQr).toHaveBeenCalledTimes(1); // L6-06 : plus de jeton du QR d'urgence…
     expect(mockClearQrImages).toHaveBeenCalledTimes(1); // … ni d'image du QR
     // Dernier envoi tant que la session est valide, moteur arrêté, et SEULEMENT ENSUITE base effacée.
@@ -308,5 +315,69 @@ describe('déconnexion (signOut)', () => {
     }
     expect(steps.slice(-2)).toEqual(['stopSync', 'wipe']);
     expect(getSession().status).toBe('signedOut');
+  });
+});
+
+describe('suppression du compte (deleteAccount, L1-14)', () => {
+  it('DELETE /me avec le mot de passe, puis tout est effacé sur le téléphone ; session « supprimée »', async () => {
+    await signIn(login('PATIENT'));
+    let request: { method?: string; body: unknown; auth: string | null } | undefined;
+    server = (path, init) => {
+      if (path === '/me') {
+        request = {
+          method: init.method,
+          body: JSON.parse(String(init.body)),
+          auth: authHeader(init),
+        };
+        return json(204);
+      }
+      return json(500);
+    };
+
+    await deleteAccount('mon-mot-de-passe');
+
+    expect(request).toEqual({
+      method: 'DELETE',
+      body: { password: 'mon-mot-de-passe' },
+      auth: 'Bearer acces-1',
+    });
+    // Moteur arrêté AVANT la suppression (aucun envoi ne doit voir le 401 d'après), pas de dernier envoi,
+    // base effacée ensuite.
+    expect(steps.slice(-2)).toEqual(['stopSync', 'wipe']);
+    expect(steps).not.toContain('syncNow');
+    expect(calls).not.toContain('/auth/logout'); // le compte n'existe plus : rien à révoquer
+    expect(mockClearReportFiles).toHaveBeenCalledTimes(1);
+    expect(mockClearExportFiles).toHaveBeenCalledTimes(1);
+    expect(mockClearStoredQr).toHaveBeenCalledTimes(1);
+    expect(mockClearQrImages).toHaveBeenCalledTimes(1);
+    expect(mockVault.size).toBe(0);
+    expect(getSession()).toEqual({ status: 'signedOut', reason: 'deleted' });
+  });
+
+  it('mot de passe refusé : erreur INVALID_PASSWORD, RIEN n’est effacé, la synchronisation reprend', async () => {
+    await signIn(login('PATIENT'));
+    server = (path) =>
+      path === '/me'
+        ? json(403, { message: 'Mot de passe incorrect', code: 'INVALID_PASSWORD' })
+        : json(500);
+
+    const failure = await deleteAccount('faux').catch((error: unknown) => error);
+
+    expect(failure).toBeInstanceOf(ApiError);
+    expect((failure as ApiError).code).toBe('INVALID_PASSWORD');
+    expect(mockWipeLocalData).not.toHaveBeenCalled();
+    expect(mockClearExportFiles).not.toHaveBeenCalled();
+    expect(mockVault.get('refresh')).toBe('refresh-1');
+    expect(steps.slice(-2)).toEqual(['stopSync', 'requestSync']);
+    expect(getSession()).toEqual({ status: 'signedIn', user: patient });
+  });
+
+  it('hors-ligne : rien n’est effacé, la session reste ouverte', async () => {
+    await signIn(login('PATIENT'));
+    server = () => 'offline';
+
+    await expect(deleteAccount('mon-mot-de-passe')).rejects.toMatchObject({ status: 0 });
+    expect(mockWipeLocalData).not.toHaveBeenCalled();
+    expect(getSession().status).toBe('signedIn');
   });
 });

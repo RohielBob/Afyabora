@@ -49,6 +49,12 @@ export default function SettingsScreen() {
           onPress={() => router.push('/settings/security')}
         />
         <ListRow
+          icon={ico('person-circle-outline')}
+          title={t('settings.account')}
+          subtitle={t('settings.accountHint')}
+          onPress={() => router.push('/settings/account')}
+        />
+        <ListRow
           icon={ico('information-circle-outline')}
           title={t('settings.about')}
           subtitle={t('settings.aboutHint')}

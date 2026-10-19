@@ -10,6 +10,7 @@
 import type { AuthTokens, DoctorVerificationStatus, UserRole } from '@glyka/shared';
 import { useSyncExternalStore } from 'react';
 import { claimLocalData, wipeLocalData } from '@/db/reset';
+import { clearExportFiles } from '@/features/account';
 import { clearQrImages, clearStoredQr } from '@/features/emergency';
 import { clearReportFiles } from '@/features/report';
 import { requestSync, stopSync, syncNow } from '@/features/sync';
@@ -33,7 +34,7 @@ export interface SessionUser {
 
 export type SessionState =
   | { status: 'loading' }
-  | { status: 'signedOut'; reason?: 'expired' | 'signedOut' }
+  | { status: 'signedOut'; reason?: 'expired' | 'signedOut' | 'deleted' }
   | { status: 'signedIn'; user: SessionUser };
 
 export type LoginDestination = 'onboarding' | 'home' | 'notPatient';
@@ -172,14 +173,41 @@ export async function signOut(): Promise<void> {
       // Hors-ligne ou session déjà expirée : on se déconnecte quand même sur le téléphone.
     }
   }
-  await wipeLocalData();
-  clearReportFiles(); // L6-03 : le dernier rapport PDF rangé sur le téléphone ne reste pas après le départ
-  clearQrImages(); // L6-06 : ni l'image du QR d'urgence…
-  await clearStoredQr().catch(() => undefined); // … ni son jeton (le QR imprimé, lui, marche toujours)
+  await clearLocalTraces();
   await endSession('signedOut');
 }
 
-async function endSession(reason: 'expired' | 'signedOut') {
+/**
+ * Supprimer mon compte (L1-14) : le mot de passe est redemandé par le serveur, qui efface TOUT (profil,
+ * mesures, événements, partages : un médecin perd l'accès tout de suite, carte d'urgence…). Ensuite, le
+ * téléphone efface ses données et ferme la session (« Votre compte a été supprimé » sur l'accueil).
+ * Mot de passe faux, trop d'essais ou pas de réseau : l'ApiError remonte et RIEN n'est supprimé.
+ */
+export async function deleteAccount(password: string): Promise<void> {
+  // Plus aucun envoi pendant la suppression : un envoi juste après recevrait 401 et fermerait la session
+  // comme « expirée » au lieu de « supprimée ».
+  await stopSync();
+  try {
+    await api<void>('/me', { method: 'DELETE', body: { password } });
+  } catch (error) {
+    requestSync(); // rien n'a été supprimé : la synchronisation reprend
+    throw error;
+  }
+  // Pas de « dernier envoi » comme à la déconnexion : le compte n'existe plus, tout part à la poubelle.
+  await clearLocalTraces();
+  await endSession('deleted');
+}
+
+/** Efface tout ce que le compte a laissé sur le téléphone (déconnexion, suppression du compte). */
+async function clearLocalTraces() {
+  await wipeLocalData();
+  clearReportFiles(); // L6-03 : le dernier rapport PDF rangé sur le téléphone ne reste pas après le départ
+  clearExportFiles(); // L1-14 : ni le dernier export JSON (données de santé en clair)
+  clearQrImages(); // L6-06 : ni l'image du QR d'urgence…
+  await clearStoredQr().catch(() => undefined); // … ni son jeton (le QR imprimé, lui, marche toujours)
+}
+
+async function endSession(reason: 'expired' | 'signedOut' | 'deleted') {
   await clearAll();
   setState({ status: 'signedOut', reason });
 }
