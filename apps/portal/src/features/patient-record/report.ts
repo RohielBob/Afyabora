@@ -3,11 +3,12 @@
 // revérifie à CHAQUE téléchargement que l'accès est ouvert et que le patient a coché « Rapport PDF », et
 // inscrit le téléchargement dans le journal du patient.
 //  - période 14 / 30 / 90 jours (liste de @glyka/shared, comme la validation du serveur) ;
-//  - nom du fichier : même format que le serveur, sans le nom du patient (le navigateur ne laisse pas
-//    lire l'en-tête Content-Disposition d'une autre adresse) ;
+//  - nom du fichier : même format que le serveur, avec le code court du partage (choix de l'équipe : le
+//    médecin distingue ses patients) et jamais le nom du patient (le navigateur ne laisse pas lire
+//    l'en-tête Content-Disposition d'une autre adresse : le nom est calculé ici) ;
 //  - le fichier n'est gardé nulle part : l'adresse temporaire du navigateur est libérée juste après ;
 //  - fin d'accès pendant le téléchargement : même réaction que le reste du dossier (recordProblem).
-import { REPORT_PERIOD_DAYS } from '@glyka/shared';
+import { REPORT_PERIOD_DAYS, shortCode } from '@glyka/shared';
 import { apiFile, ApiError } from '@/lib/api-client';
 import { recordProblem, type EndReason } from './view';
 
@@ -22,10 +23,13 @@ export function reportPath(sessionId: string, days: ReportPeriod): string {
 
 const pad = (n: number) => String(n).padStart(2, '0');
 
-/** `afyabora-rapport-2026-10-19-30j.pdf` : date du jour (ordinateur du médecin), jamais le nom du patient. */
-export function reportFilename(days: ReportPeriod, now: Date): string {
+/**
+ * `afyabora-rapport-2026-10-19-30j-7EA972.pdf` : date du jour (ordinateur du médecin), période et code
+ * court du partage ; jamais le nom du patient. Même nom que celui proposé par le serveur.
+ */
+export function reportFilename(sessionId: string, days: ReportPeriod, now: Date): string {
   const date = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
-  return `afyabora-rapport-${date}-${days}j.pdf`;
+  return `afyabora-rapport-${date}-${days}j-${shortCode(sessionId)}.pdf`;
 }
 
 /** Un PDF commence toujours par « %PDF- » : sinon la réponse n'est pas un rapport. */
@@ -76,7 +80,7 @@ export async function downloadReport(
   }
   if (!isPdf(bytes)) return { ok: false, problem: { kind: 'server' } };
   const at = deps.now();
-  const filename = reportFilename(days, at);
+  const filename = reportFilename(sessionId, days, at);
   deps.save(bytes, filename);
   return { ok: true, filename, at };
 }

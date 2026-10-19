@@ -1,12 +1,35 @@
 // Onglets du dossier (L5-12) : seuls les onglets des catégories partagées existent (tabsFor). Accessibles
 // au clavier comme des onglets natifs : flèches gauche/droite, Début, Fin ; un seul onglet dans l'ordre de
 // tabulation (le choisi), puis son contenu.
-import { useRef, type KeyboardEvent, type ReactNode } from 'react';
+// Sur un écran étroit, la barre défile horizontalement : l'onglet choisi est toujours ramené dans la partie
+// visible (ouverture du dossier sur `?onglet=rapport`, flèches du clavier…), sans faire défiler la page.
+import { useEffect, useRef, type KeyboardEvent, type ReactNode } from 'react';
 import { fr } from '@/i18n/fr';
 import type { RecordTab } from './view';
 
 export const tabId = (tab: RecordTab) => `record-tab-${tab}`;
 export const panelId = (tab: RecordTab) => `record-panel-${tab}`;
+
+/** Marge laissée de chaque côté de l'onglet ramené dans la partie visible (on devine l'onglet voisin). */
+export const TAB_SCROLL_MARGIN = 24;
+
+/**
+ * Défilement horizontal de la barre pour que l'onglet [left, left + width] (positions dans la barre) soit
+ * visible ; `null` s'il l'est déjà (rien ne bouge).
+ */
+export function scrollToShow(
+  scrollLeft: number,
+  visibleWidth: number,
+  left: number,
+  width: number,
+  margin = TAB_SCROLL_MARGIN,
+): number | null {
+  if (left - margin < scrollLeft) return Math.max(0, left - margin);
+  if (left + width + margin > scrollLeft + visibleWidth) {
+    return left + width + margin - visibleWidth;
+  }
+  return null;
+}
 
 export function RecordTabs({
   tabs,
@@ -18,6 +41,22 @@ export function RecordTabs({
   onSelect: (tab: RecordTab) => void;
 }) {
   const refs = useRef(new Map<RecordTab, HTMLButtonElement>());
+  const listRef = useRef<HTMLDivElement>(null);
+
+  // Onglet choisi hors de la partie visible de la barre : la barre (seule) défile jusqu'à lui.
+  useEffect(() => {
+    const list = listRef.current;
+    const button = refs.current.get(current);
+    if (!list || !button) return;
+    const left = button.getBoundingClientRect().left - list.getBoundingClientRect().left;
+    const target = scrollToShow(
+      list.scrollLeft,
+      list.clientWidth,
+      list.scrollLeft + left,
+      button.offsetWidth,
+    );
+    if (target !== null) list.scrollLeft = target;
+  }, [current, tabs]);
 
   const move = (event: KeyboardEvent, index: number) => {
     const target =
@@ -39,6 +78,7 @@ export function RecordTabs({
 
   return (
     <div
+      ref={listRef}
       role="tablist"
       aria-label={fr.record.tabsA11y}
       className="-mx-4 flex gap-1 overflow-x-auto overflow-y-hidden border-b border-line px-4 sm:mx-0 sm:px-0"

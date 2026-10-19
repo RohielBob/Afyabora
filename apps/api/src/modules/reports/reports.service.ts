@@ -8,6 +8,7 @@
 //  - Aucune donnée de santé dans les journaux du serveur.
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { analysisWindow, DEFAULT_TIME_ZONE, resolveTimeZone } from '@glyka/analytics';
+import { shortCode } from '@glyka/shared';
 import { PrismaService } from '../../prisma/prisma.service';
 import { buildReport, type ReportAuthor, type ReportDays, type ReportInput } from './report-data';
 import { renderReportPdf } from './report-document';
@@ -122,4 +123,13 @@ export class ReportsService {
 export function reportFilename(now: number, days: number, offsetMinutes: number): string {
   const day = new Date(now + offsetMinutes * 60_000).toISOString().slice(0, 10);
   return `afyabora-rapport-${day}-${days}j.pdf`;
+}
+
+/**
+ * Rapport téléchargé par un médecin (L6-04, choix de l'équipe) : le code court du partage est ajouté
+ * (« afyabora-rapport-2026-10-19-30j-7EA972.pdf ») pour distinguer les rapports de plusieurs patients le
+ * même jour, toujours sans leur nom. Même règle que le portail (`shortCode` de @glyka/shared).
+ */
+export function withShareCode(filename: string, sessionId: string): string {
+  return filename.replace(/\.pdf$/, `-${shortCode(sessionId)}.pdf`);
 }

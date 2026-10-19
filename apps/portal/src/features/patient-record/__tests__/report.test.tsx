@@ -38,11 +38,11 @@ describe('période, adresse et nom du fichier', () => {
     expect(reportPath('a/b', 14)).toBe('/doctor/sessions/a%2Fb/report?period=14');
   });
 
-  it('nom : même format que le serveur, date à deux chiffres, jamais le nom du patient', () => {
-    expect(reportFilename(30, NOW)).toBe('afyabora-rapport-2026-10-19-30j.pdf');
-    expect(reportFilename(14, new Date(2026, 0, 5, 23, 59))).toBe(
-      'afyabora-rapport-2026-01-05-14j.pdf',
-    );
+  it('nom : même format que le serveur, date à deux chiffres, code du partage, jamais le nom', () => {
+    expect(reportFilename(SESSION, 30, NOW)).toBe('afyabora-rapport-2026-10-19-30j-3F2A1C.pdf');
+    expect(
+      reportFilename('7ea97249-f951-4671-add5-710f4c6df047', 14, new Date(2026, 0, 5, 23, 59)),
+    ).toBe('afyabora-rapport-2026-01-05-14j-7EA972.pdf');
   });
 
   it('un PDF commence par « %PDF- »', () => {
@@ -87,9 +87,13 @@ describe('téléchargement', () => {
   it('cas nominal : rapport de ce partage et de cette période, proposé au navigateur', async () => {
     const { deps, saved, paths } = setup();
     const outcome = await downloadReport(SESSION, 90, deps);
-    expect(outcome).toEqual({ ok: true, filename: 'afyabora-rapport-2026-10-19-90j.pdf', at: NOW });
+    expect(outcome).toEqual({
+      ok: true,
+      filename: 'afyabora-rapport-2026-10-19-90j-3F2A1C.pdf',
+      at: NOW,
+    });
     expect(paths).toEqual([`/doctor/sessions/${SESSION}/report?period=90`]);
-    expect(saved).toEqual([{ bytes: PDF, filename: 'afyabora-rapport-2026-10-19-90j.pdf' }]);
+    expect(saved).toEqual([{ bytes: PDF, filename: 'afyabora-rapport-2026-10-19-90j-3F2A1C.pdf' }]);
   });
 
   it('refus du serveur : rien n’est proposé au navigateur', async () => {

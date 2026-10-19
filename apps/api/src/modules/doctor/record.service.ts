@@ -46,7 +46,7 @@ import {
   CREATE_TRANSACTION,
   SESSION_NOT_FOUND_MESSAGE,
 } from '../sharing/sharing.service';
-import { ReportsService, type ConsultationReport } from '../reports/reports.service';
+import { ReportsService, withShareCode, type ConsultationReport } from '../reports/reports.service';
 import type { ReportDays } from '../reports/report-data';
 import { recordView } from './record-view';
 import { eventEntry, measurementEntry, mergeTimeline } from './timeline';
@@ -296,11 +296,13 @@ export class DoctorRecordService {
       select: { firstName: true, lastName: true },
     });
     const name = doctor ? `${doctor.firstName} ${doctor.lastName}`.trim() : '';
-    return this.reports.consultation(
+    const report = await this.reports.consultation(
       access.patientId,
       days,
       name ? { kind: 'DOCTOR', name } : { kind: 'PATIENT' },
     );
+    // Code court du partage dans le nom (L6-04) : le médecin distingue les rapports de ses patients.
+    return { ...report, filename: withShareCode(report.filename, sessionId) };
   }
 
   // ------------------------------------------------------------------ contrôle d'accès

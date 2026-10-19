@@ -14,7 +14,8 @@ Onglets du dossier, graphiques, chronologie, résumé IA.
 - Page `routes/patient-record.tsx` (`/patients/:sessionId`), en **lecture seule** :
   - en-tête (`RecordHeader.tsx`) : prénom, type de diabète, année du diagnostic, état de l'accès et heure de
     fin **du serveur**, ce qui est partagé, rappel « outil d'aide, pas un avis médical » ;
-  - **onglets** (`RecordTabs.tsx`, clavier : flèches, Début, Fin) : **seulement ceux des catégories
+  - **onglets** (`RecordTabs.tsx`, clavier : flèches, Début, Fin ; sur écran étroit, la barre défile
+    seule jusqu'à l'onglet choisi, `scrollToShow`) : **seulement ceux des catégories
     partagées** (`tabsFor`, `view.ts`) ; l'onglet est gardé dans l'adresse (`?onglet=glycemie`) ;
   - **Vue d'ensemble** (`tabs/OverviewTab.tsx`) : qualité (score, couverture, régularité, fraîcheur), chiffres
     des 30 jours (moyenne, écart-type, CV, répartition plage / au-dessus / en dessous), seuils du patient ;
@@ -45,8 +46,8 @@ Onglets du dossier, graphiques, chronologie, résumé IA.
   téléchargé ») ; le rapport indique qu'il a été généré à la demande du médecin, avec l'accord du patient ;
   jamais les notes personnelles.
 - Logique (`report.ts`) : `GET /doctor/sessions/:id/report?period=…` (le serveur revérifie l'accès et la
-  catégorie, et journalise) ; réponse qui n'est pas un PDF refusée ; nom `afyabora-rapport-AAAA-MM-JJ-30j.pdf`
-  (jamais le nom du patient) ; le fichier est proposé au navigateur puis **l'adresse temporaire est libérée**
+  catégorie, et journalise) ; réponse qui n'est pas un PDF refusée ; nom `afyabora-rapport-AAAA-MM-JJ-30j-7EA972.pdf`
+  (code court du partage, `shortCode` de `@glyka/shared`, comme le serveur ; jamais le nom du patient) ; le fichier est proposé au navigateur puis **l'adresse temporaire est libérée**
   (rien n'est gardé dans la page).
 - Fin d'accès pendant le téléchargement : même réaction que les autres onglets (dossier effacé, page « Accès
   expiré »). Autres erreurs expliquées : 429 (trop de rapports), catégorie retirée, réseau, serveur.

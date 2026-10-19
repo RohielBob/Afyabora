@@ -7,6 +7,7 @@ import { describe, expect, it } from 'vitest';
 import { GlucoseStateBadge } from '@/components/ui';
 import { ApiError } from '@/lib/api-client';
 import { collect, MAX_PAGES } from '../api';
+import { scrollToShow } from '../RecordTabs';
 import { OverviewTab } from '../tabs/OverviewTab';
 import { SummaryTab } from '../tabs/SummaryTab';
 import { TimelineTab } from '../tabs/TimelineTab';
@@ -73,6 +74,24 @@ const item = (over: Partial<TimelineItem>): TimelineItem => ({
   durationMinutes: null,
   importBatchId: null,
   ...over,
+});
+
+describe('barre d’onglets sur écran étroit', () => {
+  // Barre de 300 px de large, déjà défilée de 100 px : on voit les positions 100 à 400.
+  it('onglet déjà visible (marge comprise) : rien ne bouge', () => {
+    expect(scrollToShow(100, 300, 150, 80)).toBeNull();
+    expect(scrollToShow(100, 300, 124, 252)).toBeNull(); // pile dans les marges
+  });
+
+  it('onglet caché à droite : la barre avance juste assez (marge de 24 px)', () => {
+    expect(scrollToShow(0, 300, 380, 100)).toBe(380 + 100 + 24 - 300);
+    expect(scrollToShow(100, 300, 124, 253)).toBe(101);
+  });
+
+  it('onglet caché à gauche : la barre recule jusqu’à lui, jamais sous 0', () => {
+    expect(scrollToShow(200, 300, 150, 80)).toBe(126);
+    expect(scrollToShow(200, 300, 10, 80)).toBe(0);
+  });
 });
 
 describe('onglets', () => {
