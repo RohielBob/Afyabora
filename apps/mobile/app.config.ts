@@ -17,6 +17,10 @@ const config: ExpoConfig = {
     package: 'com.glyka.app',
     adaptiveIcon: { foregroundImage: './assets/adaptive-icon.png', backgroundColor: '#FFFFFF' },
     permissions: ['USE_BIOMETRIC', 'POST_NOTIFICATIONS', 'SCHEDULE_EXACT_ALARM'],
+    // L8-02 : pas de sauvegarde Android automatique (Google Drive) des données de l'application. Les données
+    // de santé ne quittent pas le téléphone ainsi, et une base restaurée sans sa clé (restée dans le Keystore
+    // de l'ancien téléphone) serait de toute façon illisible. Les données sont sur le serveur (synchronisation).
+    allowBackup: false,
   },
   ios: { bundleIdentifier: 'com.glyka.app', supportsTablet: false },
   web: { favicon: './assets/favicon.png' },
@@ -24,8 +28,9 @@ const config: ExpoConfig = {
     'expo-router',
     'expo-secure-store',
     'expo-localization',
-    // TODO(L8-02) : valider le chiffrement de la base locale (SQLCipher) puis passer useSQLCipher à true.
-    ['expo-sqlite', { useSQLCipher: false }],
+    // L8-02 : base locale chiffrée par SQLCipher (clé aléatoire dans SecureStore, voir src/db/encryption.ts).
+    // Demande un APK (EAS) : Expo Go n'a pas SQLCipher (la base y reste en clair, en développement seulement).
+    ['expo-sqlite', { useSQLCipher: true }],
     ['expo-notifications', { color: '#E4002B' }], // couleur d'accent des notifications Android (ADR-0008)
     ['expo-local-authentication', { faceIDPermission: 'Afyabora protège vos données de santé.' }],
   ],

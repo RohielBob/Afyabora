@@ -44,7 +44,7 @@ quand les DEUX protections redondantes sont retirées ensemble).
 - [ ] Notes personnelles chiffrées (AES-256-GCM)
 - [ ] Entrées validées côté serveur avec les schémas Zod partagés
 - [ ] Aucune donnée de santé dans les logs, les messages d'erreur, les URL
-- [ ] Base locale mobile : chiffrement évalué (SQLCipher) et décision notée dans l'ADR-0004
+- [x] Base locale mobile : chiffrée par SQLCipher (L8-02), décision notée dans l'ADR-0004
 - [ ] **Données de démo uniquement fictives**
 
 ## Notifications et IA

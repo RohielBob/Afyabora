@@ -434,7 +434,21 @@
       "tipsTitle": "Bon à savoir",
       "tips": "Votre code n'est jamais enregistré en clair. Après 5 erreurs, il faut patienter avant de réessayer. Code oublié ? Vous pourrez vous déconnecter puis vous reconnecter avec votre mot de passe.",
       "soonTitle": "Bientôt",
-      "soon": "Exporter vos données et supprimer votre compte (ticket L1-14)."
+      "soon": "Exporter vos données et supprimer votre compte (ticket L1-14).",
+      "storage": {
+        "title": "Données de santé sur ce téléphone",
+        "loading": "Vérification…",
+        "encrypted": "Chiffrées",
+        "encryptedHint": "Base locale chiffrée (AES-256, SQLCipher). La clé est gardée dans le coffre sécurisé du téléphone.",
+        "unencrypted": "Non chiffrées",
+        "unencryptedHint": "Mode développement (Expo Go) : le chiffrement n’est actif que dans l’application installée (APK).",
+        "web": "Aperçu web",
+        "webHint": "Rien n’est enregistré sur cet appareil : les données restent en mémoire le temps de la visite.",
+        "error": "Indisponibles",
+        "errorHint": "La base locale n’a pas pu être ouverte. Fermez puis rouvrez l’application.",
+        "migrated": "Vos données déjà enregistrées sur ce téléphone ont été chiffrées.",
+        "reset": "La base de ce téléphone était illisible : elle a été recréée. Vos données sont rechargées depuis le serveur ; seules les saisies jamais synchronisées ont pu être perdues."
+      }
     }
   },
   "legal": {
