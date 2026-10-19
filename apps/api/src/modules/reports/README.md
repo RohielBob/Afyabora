@@ -1,6 +1,6 @@
 # Module `reports`
 
-**Lot : L6 · Fonctionnalité : F9 · Tickets : L6-01 (fait), L6-02**
+**Lot : L6 · Fonctionnalité : F9 · Tickets : L6-01 (fait), L6-02 (fait)**
 
 Rapport PDF « Préparer ma consultation ».
 
@@ -40,6 +40,23 @@ Rapport PDF « Préparer ma consultation ».
 - Tests : `test/report-data.test.ts`, `test/report-pdf.test.ts` (données fictives :
   `test/support/report-fixture.ts`). Pour regarder les PDF produits : définir `REPORT_SAMPLE_DIR` (un
   dossier) avant de lancer ces tests.
+
+## Fait (L6-02) : génération et téléchargement
+
+- **Patient** : `GET /reports/consultation?period=14|30|90` (30 par défaut) ⇒ le PDF (`application/pdf`),
+  en pièce jointe `afyabora-rapport-AAAA-MM-JJ-30j.pdf` (date du jour à l'heure du patient ; **jamais son
+  nom** dans le nom du fichier), `Cache-Control: no-store`. Période invalide : 400 ; médecin : 403 (rôle) ;
+  profil pas créé : 404.
+- **Médecin** : `GET /doctor/sessions/:id/report?period=…` (module `doctor`), seulement si le patient a coché
+  « Rapport PDF » (`REPORT_DOWNLOAD`) ; mêmes contrôles que le dossier (médecin approuvé, accès ouvert, sa
+  session) ; **chaque téléchargement écrit une ligne `REPORT_DOWNLOADED`** dans le journal du patient (jamais
+  regroupée), sous verrou, AVANT la génération. Le rapport est celui du patient de la session, avec « à la
+  demande du Dr Prénom Nom, avec l'accord du patient ».
+- `ReportsService` lit le profil et les mesures non supprimées de la fenêtre d'analyse (exactement ce que lit
+  l'écran « Analyse »), puis appelle le modèle de L6-01.
+- 10 rapports par minute au plus (génération coûteuse).
+- Tests : `test/reports-routes.test.ts` (vraie base) ; la suite de sécurité du partage
+  (`test/sharing-security.test.ts`) contrôle aussi `/report` (fin d'accès, autre médecin, catégories).
 
 ## Tests obligatoires
 

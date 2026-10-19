@@ -1,6 +1,6 @@
 # Module `doctor`
 
-**Lot : L5 · Fonctionnalité : F8 · Tickets : L5-03, L5-11, L5-12 (rapport : L6-04)**
+**Lot : L5 · Fonctionnalité : F8 · Tickets : L5-03, L5-11, L5-12 (rapport PDF : L6-02 ; bouton du portail : L6-04)**
 
 Lecture des dossiers partagés pour le portail médecin (lecture seule, filtrée par catégories).
 
@@ -8,7 +8,7 @@ Lecture des dossiers partagés pour le portail médecin (lecture seule, filtrée
 
 - GET /doctor/sessions : sessions de partage du médecin (actives et expirées)
 - GET /doctor/sessions/:id/summary · /measurements · /timeline (L5-12, **faits**)
-- GET /doctor/sessions/:id/report (rapport PDF, L6-04)
+- GET /doctor/sessions/:id/report (rapport PDF, L6-02, **fait**)
 
 ## Règles de gestion
 
@@ -66,6 +66,18 @@ inchangé. Service : `record.service.ts` ; chronologie : `timeline.ts` ; journal
   n'écrivent qu'une ligne, et un arrêt par le patient au même instant passe avant ou après (lecture refusée,
   rien journalisé). Une lecture refusée n'écrit rien.
 - Tests : `test/doctor-record.test.ts` (vraie base), `test/doctor-timeline.test.ts` (sans base).
+
+## `GET /doctor/sessions/:id/report` (L6-02, **fait**)
+
+- Rapport PDF « Préparer ma consultation » du patient, **seulement si « Rapport PDF » (`REPORT_DOWNLOAD`) est
+  coché** (sinon 403 `CATEGORY_NOT_SHARED`, rien n'est généré). Mêmes contrôles que les autres routes du
+  dossier (`open()` dans `record.service.ts`).
+- **Chaque téléchargement** écrit une ligne `REPORT_DOWNLOADED` (jamais regroupée, contrairement aux
+  consultations) sous verrou, avant la génération (`record-view.ts`). Le patient la voit dans « Qui a consulté
+  mes données » (« Rapport téléchargé »).
+- Le patient a choisi de remettre CE document : il est complet (mêmes chiffres que son propre rapport), sans
+  note personnelle (le rapport n'en contient jamais), signé « à la demande du Dr Prénom Nom ».
+- Période `?period=14|30|90` (30 par défaut). Tests : `test/reports-routes.test.ts`.
 
 ## Tests obligatoires
 

@@ -28,7 +28,7 @@ quand les DEUX protections redondantes sont retirées ensemble).
 - [x] Un jeton de plus de 60 s est refusé
 - [x] Deux scans simultanés : un seul réussit (10 médecins en même temps, une seule ligne de journal)
 - [x] Après expiration : 403 sur toutes les routes médecin (liste lue dans le CONTRAT : une route ajoutée plus
-      tard est contrôlée automatiquement ; `/report` le sera avec L6-04)
+      tard est contrôlée automatiquement ; `/report`, le rapport PDF, l'est depuis L6-02)
 - [x] Après révocation : accès coupé en moins de 5 s (immédiat : la requête suivante est refusée)
 - [x] Une catégorie décochée n'est jamais renvoyée (notes personnelles comprises) : marqueurs uniques semés dans
       chaque catégorie, aucun ne sort par aucune route quand sa catégorie est décochée
