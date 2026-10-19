@@ -537,6 +537,62 @@ export const fr = {
       },
     },
   },
+  emergency: {
+    overline: 'Carte d’urgence',
+    confirmTitle: 'Carte d’urgence d’un patient',
+    confirmText:
+      'Cette carte contient les informations médicales que le patient a choisi de rendre accessibles en cas d’urgence.',
+    confirmWho: 'Réservée aux professionnels de santé et aux secouristes.',
+    confirm: 'Je suis un professionnel de santé ou un secouriste',
+    logged: 'L’ouverture est enregistrée et le patient en est averti.',
+    lifeThreat: 'En cas de danger vital, appelez d’abord les secours.',
+    loading: 'Ouverture de la carte…',
+    fields: {
+      fullName: 'Nom',
+      diabetesType: 'Diabète',
+      declaredTreatment: 'Traitement déclaré',
+      allergies: 'Allergies',
+      bloodGroup: 'Groupe sanguin',
+      lastKnownGlucoseMgDl: 'Dernière glycémie connue',
+      emergencyContactName: 'Contact d’urgence',
+      emergencyContactPhone: 'Téléphone du contact',
+    },
+    noName: 'Patient',
+    call: 'Appeler',
+    callA11y: 'Appeler le contact d’urgence au {{phone}}',
+    empty: 'Le patient n’a renseigné aucune information sur cette carte.',
+    updated: 'Informations déclarées par le patient, mises à jour le {{date}} à {{time}}.',
+    glucoseHint: 'Valeur notée par le patient à cette date : elle peut avoir changé depuis.',
+    disclaimer:
+      'Afyabora est un outil d’aide au suivi, pas un dispositif médical : vérifiez toujours l’état du patient.',
+    invalidLink: {
+      title: 'Lien incomplet',
+      text: 'Cette adresse ne correspond à aucune carte d’urgence. Scannez à nouveau le QR du patient.',
+    },
+    problem: {
+      unavailable: {
+        title: 'Carte indisponible',
+        text: 'Cette carte d’urgence n’est pas accessible : le patient l’a peut-être désactivée ou a remplacé son QR.',
+      },
+      tooMany: {
+        title: 'Trop d’ouvertures',
+        text: 'Attendez une minute, puis réessayez.',
+      },
+      busy: {
+        title: 'Service momentanément occupé',
+        text: 'Réessayez dans quelques secondes.',
+      },
+      network: {
+        title: 'Pas de connexion',
+        text: 'Vérifiez la connexion Internet du téléphone, puis réessayez.',
+      },
+      error: {
+        title: 'La carte n’a pas pu être ouverte',
+        text: 'Réessayez dans un instant.',
+      },
+    },
+    retry: 'Réessayer',
+  },
   notFound: {
     title: 'Page introuvable',
     text: 'Cette adresse ne correspond à aucune page du portail.',

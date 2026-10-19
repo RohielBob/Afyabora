@@ -8,7 +8,9 @@ Notifications serveur (push via Expo) et préférences. Les rappels et alertes l
 
 - POST /devices : enregistre le jeton push de l'appareil
 - GET/PUT /notifications/preferences
-- (interne) NotificationsService.enqueue(userId, category, payload)
+- (interne) `NotificationsService.enqueue(userId, notification, client?)` : met une notification dans la file
+  (`NotificationOutbox`, PENDING), dans la transaction de l'évènement si `client` est fourni. **Fait (L6-05)**,
+  utilisé par l'ouverture de la carte d'urgence ; l'envoi de la file reste à faire (L8-14).
 
 ## Règles de gestion
 

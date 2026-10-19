@@ -1,6 +1,7 @@
 // Routes du portail et qui peut les ouvrir (L1-11) :
 //  - sans compte      : connexion, inscription, mot de passe oublié (déjà connecté ⇒ sa page d'accueil) ;
 //  - liens des emails : vérification d'adresse et nouveau mot de passe, ouverts à tous (patients compris) ;
+//  - carte d'urgence (`/e/<jeton>`, L6-05) : ouverte à TOUS, sans compte (QR scanné par un secouriste) ;
 //  - médecin connecté : « compte en attente » ;
 //  - médecin APPROUVÉ : patients, scan, dossier (pages des lots L5/L6, encore provisoires).
 // La vraie protection reste le serveur : rôle et statut vérifiés à chaque requête.
@@ -15,6 +16,7 @@ import {
   destinationFor,
   useSession,
 } from '@/features/auth';
+import EmergencyRoute from './routes/emergency';
 import ExpiredRoute from './routes/expired';
 import ForgotPasswordRoute from './routes/forgot-password';
 import LoginRoute from './routes/login';
@@ -68,6 +70,9 @@ export const router = createBrowserRouter([
   // Liens reçus par email (patients et médecins)
   { path: '/verify-email', element: <VerifyEmailRoute /> },
   { path: '/reset-password', element: <ResetPasswordRoute /> },
+
+  // Carte d'urgence : page publique (le jeton quitte l'adresse aussitôt lu : « /e » sans jeton)
+  { path: '/e/:token?', element: <EmergencyRoute /> },
 
   // Médecin connecté, compte pas encore approuvé
   {

@@ -67,6 +67,9 @@ import {
   timelineListSchema,
   doctorSessionSchema,
   doctorSummarySchema,
+  emergencyCardPublicSchema,
+  emergencyCardResponseSchema,
+  emergencyQrResponseSchema,
 } from '@glyka/shared';
 
 // Le contrat est un document JSON arbitraire : `any` est volontaire ici (permis dans les tests).
@@ -489,6 +492,31 @@ describe('contrat OpenAPI : réponses du portail médecin identiques aux schéma
       expect(schemas.TimelineItem.properties[field].nullable).toBe(true);
     }
     expect(schemas.TimelineItem.properties.details.description).toContain('PERSONAL_NOTES');
+  });
+});
+
+describe('contrat OpenAPI : réponses de la carte d’urgence identiques aux schémas Zod (L6-05)', () => {
+  // Nom du schéma OpenAPI -> schéma Zod avec lequel l'application et le portail liront la réponse.
+  const responses: [string, Json][] = [
+    ['EmergencyCardResponse', emergencyCardResponseSchema],
+    ['EmergencyQrResponse', emergencyQrResponseSchema],
+    ['EmergencyCardPublic', emergencyCardPublicSchema],
+  ];
+
+  it.each(responses)('%s : mêmes champs, mêmes champs obligatoires', (name: string, zod: Json) => {
+    const shape = shapeOf(zod);
+    const { properties, required } = documentedFields(schemas[name]);
+    expect(properties).toEqual(Object.keys(shape).sort());
+    const requiredByZod = Object.keys(shape)
+      .filter((key) => !shape[key].isOptional())
+      .sort();
+    expect(required).toEqual(requiredByZod);
+  });
+
+  it('EmergencyQrResponse : exemple accepté', () => {
+    expect(emergencyQrResponseSchema.safeParse(schemas.EmergencyQrResponse.example).success).toBe(
+      true,
+    );
   });
 });
 
