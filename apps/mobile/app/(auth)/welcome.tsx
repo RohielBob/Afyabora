@@ -6,7 +6,8 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { LogoMark, Wordmark } from '@/components/brand';
-import { Button, Card, RangeBadge, Screen, Text } from '@/components/ui';
+import { Button, Card, InlineAlert, RangeBadge, Screen, Text } from '@/components/ui';
+import { useSession } from '@/features/auth';
 import { MedicalDisclaimer } from '@/features/legal';
 import { enterFromBelow, spacing, useReducedMotion, useTheme } from '@/theme';
 
@@ -14,10 +15,20 @@ export default function WelcomeScreen() {
   const { t } = useTranslation();
   const { colors } = useTheme();
   const reduced = useReducedMotion();
+  const session = useSession();
+  // L1-14 : arrivée ici juste après « Supprimer mon compte » : on confirme que tout a été effacé.
+  const deleted = session.status === 'signedOut' && session.reason === 'deleted';
 
   return (
     <Screen>
       <View style={{ flexGrow: 1, justifyContent: 'space-between', gap: spacing.xl }}>
+        {deleted ? (
+          <InlineAlert
+            tone="success"
+            title={t('account.delete.doneTitle')}
+            message={t('account.delete.done')}
+          />
+        ) : null}
         <Animated.View entering={enterFromBelow(0, reduced)} style={{ alignItems: 'center' }}>
           <LogoMark size={96} />
           <View style={{ marginTop: spacing.md }}>

@@ -237,15 +237,6 @@ export default function SecurityScreen() {
           {t('security.settings.tips')}
         </Text>
       </Card>
-
-      <Card variant="outlined" index={3}>
-        <Text variant="overline" tone="primary">
-          {t('security.settings.soonTitle')}
-        </Text>
-        <Text variant="bodySmall" tone="muted">
-          {t('security.settings.soon')}
-        </Text>
-      </Card>
     </Screen>
   );
 }

@@ -228,10 +228,66 @@
     "notificationsHint": "Rappels, alertes, heures calmes",
     "security": "Sécurité",
     "securityHint": "Déverrouillage biométrique ou code",
+    "account": "Mes données et mon compte",
+    "accountHint": "Exporter mes données, supprimer mon compte",
     "about": "À propos",
     "aboutHint": "Version, avertissement, confidentialité",
     "design": "Planche de style",
     "designHint": "Visible en développement : couleurs, textes, composants"
+  },
+  "account": {
+    "title": "Mes données et mon compte",
+    "intro": "Récupérez une copie de vos données à tout moment, ou supprimez votre compte et tout ce qu’il contient.",
+    "export": {
+      "title": "Exporter mes données",
+      "body": "Un fichier (format JSON) avec votre profil, toutes vos mesures et vos événements, notes comprises. Vous pouvez le garder ou le transmettre à un autre service.",
+      "privacy": "Ce fichier contient vos données de santé en clair : gardez-le en lieu sûr et ne le partagez qu’avec des personnes de confiance.",
+      "pendingFirst_one": "{{count}} saisie pas encore envoyée partira d’abord, pour figurer dans le fichier.",
+      "pendingFirst_other": "{{count}} saisies pas encore envoyées partiront d’abord, pour figurer dans le fichier.",
+      "button": "Exporter mes données",
+      "again": "Exporter à nouveau",
+      "shareAgain": "Partager à nouveau ce fichier",
+      "shareTitle": "Mes données Afyabora",
+      "phase": {
+        "syncing": "Envoi de vos dernières saisies…",
+        "downloading": "Préparation du fichier…",
+        "sharing": "Ouverture du partage…"
+      },
+      "done": "Fichier prêt : {{name}}",
+      "unsent_one": "{{count}} saisie n’a pas pu être envoyée : elle n’est pas dans ce fichier. Réessayez quand la connexion sera meilleure.",
+      "unsent_other": "{{count}} saisies n’ont pas pu être envoyées : elles ne sont pas dans ce fichier. Réessayez quand la connexion sera meilleure.",
+      "problem": {
+        "offline": "Pas de connexion : l’export a besoin d’Internet.",
+        "tooMany": "Trop d’exports en peu de temps. Réessayez dans une minute.",
+        "noProfile": "Complétez d’abord votre profil : il n’y a encore rien à exporter.",
+        "cannotShare": "Le fichier est prêt, mais le partage n’est pas disponible sur cet appareil.",
+        "error": "L’export n’a pas abouti. Réessayez dans un instant."
+      }
+    },
+    "delete": {
+      "title": "Supprimer mon compte",
+      "body": "Votre compte et toutes vos données seront effacés de nos serveurs et de ce téléphone :",
+      "what": {
+        "data": "votre profil, toutes vos mesures et vos événements, notes comprises ;",
+        "shares": "vos partages : les médecins perdent l’accès à votre dossier immédiatement ;",
+        "emergency": "votre carte d’urgence : son QR code ne s’ouvrira plus ;",
+        "phone": "les données enregistrées sur ce téléphone."
+      },
+      "irreversible": "C’est définitif : rien ne pourra être récupéré. Exportez vos données avant si vous souhaitez les garder.",
+      "start": "Supprimer mon compte…",
+      "password": "Mot de passe",
+      "passwordHint": "Pour confirmer que c’est bien vous.",
+      "understand": "Je comprends que mon compte et toutes mes données seront supprimés définitivement.",
+      "confirm": "Supprimer définitivement",
+      "problem": {
+        "password": "Mot de passe incorrect. Rien n’a été supprimé.",
+        "tooMany": "Trop d’essais. Patientez une minute avant de réessayer. Rien n’a été supprimé.",
+        "offline": "Pas de connexion : la suppression a besoin d’Internet. Rien n’a été supprimé.",
+        "error": "La suppression n’a pas abouti. Rien n’a été supprimé : réessayez dans un instant."
+      },
+      "doneTitle": "Compte supprimé",
+      "done": "Votre compte et toutes vos données ont été effacés. Merci d’avoir utilisé Afyabora."
+    }
   },
   "appearance": {
     "overline": "Paramètres",
@@ -433,8 +489,6 @@
       "disabled": "Verrouillage désactivé.",
       "tipsTitle": "Bon à savoir",
       "tips": "Votre code n'est jamais enregistré en clair. Après 5 erreurs, il faut patienter avant de réessayer. Code oublié ? Vous pourrez vous déconnecter puis vous reconnecter avec votre mot de passe.",
-      "soonTitle": "Bientôt",
-      "soon": "Exporter vos données et supprimer votre compte (ticket L1-14).",
       "storage": {
         "title": "Données de santé sur ce téléphone",
         "loading": "Vérification…",
