@@ -37,6 +37,8 @@ Trois niveaux :
 
 Réglages → Apparence : **Clair** (défaut) / **Sombre** / **Automatique** × **Rubis** (défaut) / Framboise / Marine / Graphite. Le choix est enregistré sur le téléphone (stockage séparé des données de santé). Les 8 combinaisons passent le contrôle AA automatique.
 
+Portail médecin : mêmes choix, dans le menu **« Apparence »** de l'en-tête (toutes les pages). Le choix est gardé dans le navigateur (`localStorage`, clé `glyka.portal.appearance`, aucune donnée patient) ; la variante `dark:` de Tailwind suit le thème choisi (`data-theme` sur `<html>`).
+
 ## 4. Typographie
 
 Police **Plus Jakarta Sans** (chargée au démarrage). Composant `<Text variant="…" tone="…">`.
