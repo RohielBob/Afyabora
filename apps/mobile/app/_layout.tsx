@@ -100,6 +100,8 @@ function RootNavigator() {
 
         {/* Textes légaux (L1-10) : lisibles avec ou sans compte (avant l'inscription comme après). */}
         <Stack.Screen name="legal/privacy" />
+        {/* Langue : modifiable aussi AVANT de créer un compte (bouton sur l'accueil). */}
+        <Stack.Screen name="settings/language" />
         <Stack.Screen name="legal/disclaimer" />
 
         {/* Planche de style : visible sans compte en développement uniquement. */}

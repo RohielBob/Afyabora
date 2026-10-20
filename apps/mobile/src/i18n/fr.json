@@ -25,6 +25,7 @@
   "sync": {
     "pending_one": "{{count}} mesure en attente de synchronisation",
     "pending_other": "{{count}} mesures en attente de synchronisation",
+    "pending_many": "{{count}} mesures en attente de synchronisation",
     "offline": "Hors ligne — vos données sont enregistrées sur ce téléphone",
     "upToDate": "Tout est à jour",
     "refreshing": "Synchronisation…",
@@ -37,12 +38,15 @@
       "problem": "Synchronisation impossible pour le moment",
       "session": "Session expirée : reconnectez-vous pour synchroniser",
       "rejected_one": "{{count}} modification à vérifier",
-      "rejected_other": "{{count}} modifications à vérifier"
+      "rejected_other": "{{count}} modifications à vérifier",
+      "rejected_many": "{{count}} modifications à vérifier"
     },
     "measurements_one": "{{count}} mesure",
     "measurements_other": "{{count}} mesures",
+    "measurements_many": "{{count}} mesures",
     "events_one": "{{count}} événement",
     "events_other": "{{count}} événements",
+    "events_many": "{{count}} événements",
     "pendingBoth": "{{measurements}} et {{events}}",
     "pendingLine": "{{what}} en attente de synchronisation",
     "lastToday": "Dernière synchronisation à {{time}}",
@@ -54,6 +58,7 @@
     "retry": "Réessayer",
     "rejected_one": "{{count}} modification refusée par le serveur",
     "rejected_other": "{{count}} modifications refusées par le serveur",
+    "rejected_many": "{{count}} modifications refusées par le serveur",
     "open": "Voir l’état de la synchronisation",
     "screen": {
       "overline": "Hors-ligne",
@@ -73,6 +78,7 @@
       "reason": "Raison : {{reason}}",
       "attempts_one": "Refusée {{count}} fois",
       "attempts_other": "Refusée {{count}} fois",
+      "attempts_many": "Refusée {{count}} fois",
       "retry": "Réessayer",
       "discard": "Abandonner",
       "discardTitle": "Abandonner cette modification ?",
@@ -204,6 +210,7 @@
     "signOutConfirmText": "Vos données restent enregistrées sur votre compte. Elles seront retirées de ce téléphone et vous pourrez vous reconnecter à tout moment.",
     "signOutUnsynced_one": "Attention : {{count}} modification n'a pas encore été envoyée au serveur. Elle sera perdue si vous vous déconnectez maintenant. Reconnectez-vous d'abord à internet si possible.",
     "signOutUnsynced_other": "Attention : {{count}} modifications n'ont pas encore été envoyées au serveur. Elles seront perdues si vous vous déconnectez maintenant. Reconnectez-vous d'abord à internet si possible.",
+    "signOutUnsynced_many": "Attention : {{count}} modifications n'ont pas encore été envoyées au serveur. Elles seront perdues si vous vous déconnectez maintenant. Reconnectez-vous d'abord à internet si possible.",
     "import": "Importer un historique",
     "importHint": "Fichier CSV ou Excel d’un carnet ou d’un lecteur",
     "sync": "Synchronisation",
@@ -222,6 +229,8 @@
     "title": "Paramètres",
     "appearance": "Apparence",
     "appearanceHint": "Thème clair ou sombre, couleur d'accent",
+    "language": "Langue",
+    "languageHint": "Langue de l’application",
     "units": "Unités et seuils",
     "unitsHint": "Unité préférée, plage cible, seuils d'alerte",
     "unitsScreen": {
@@ -257,6 +266,7 @@
       "privacy": "Ce fichier contient vos données de santé en clair : gardez-le en lieu sûr et ne le partagez qu’avec des personnes de confiance.",
       "pendingFirst_one": "{{count}} saisie pas encore envoyée partira d’abord, pour figurer dans le fichier.",
       "pendingFirst_other": "{{count}} saisies pas encore envoyées partiront d’abord, pour figurer dans le fichier.",
+      "pendingFirst_many": "{{count}} saisies pas encore envoyées partiront d’abord, pour figurer dans le fichier.",
       "button": "Exporter mes données",
       "again": "Exporter à nouveau",
       "shareAgain": "Partager à nouveau ce fichier",
@@ -269,6 +279,7 @@
       "done": "Fichier prêt : {{name}}",
       "unsent_one": "{{count}} saisie n’a pas pu être envoyée : elle n’est pas dans ce fichier. Réessayez quand la connexion sera meilleure.",
       "unsent_other": "{{count}} saisies n’ont pas pu être envoyées : elles ne sont pas dans ce fichier. Réessayez quand la connexion sera meilleure.",
+      "unsent_many": "{{count}} saisies n’ont pas pu être envoyées : elles ne sont pas dans ce fichier. Réessayez quand la connexion sera meilleure.",
       "problem": {
         "offline": "Pas de connexion : l’export a besoin d’Internet.",
         "tooMany": "Trop d’exports en peu de temps. Réessayez dans une minute.",
@@ -318,6 +329,15 @@
     "preview": "Aperçu",
     "previewOverline": "Dernière mesure · exemple",
     "previewButton": "Ajouter une mesure"
+  },
+  "language": {
+    "title": "Langue",
+    "intro": "Choisissez la langue de l’application. Vos données ne changent pas.",
+    "system": "Langue du téléphone",
+    "systemHint": "Actuellement : {{name}}",
+    "inReview": "Traduction en relecture",
+    "inReviewNote": "Les langues « traduction en relecture » n’ont pas encore été relues par une personne qui parle la langue. En cas de doute sur un message de santé, demandez à votre équipe soignante.",
+    "serverNote": "Certains contenus restent en français pour l’instant : les réponses et fiches de l’assistant, le rapport PDF et les emails."
   },
   "onboarding": {
     "progress": "Étape {{current}} sur {{total}}",
@@ -710,10 +730,13 @@
         "justNow": "À l'instant",
         "minutes_one": "Il y a {{count}} min",
         "minutes_other": "Il y a {{count}} min",
+        "minutes_many": "Il y a {{count}} min",
         "hours_one": "Il y a {{count}} h",
         "hours_other": "Il y a {{count}} h",
+        "hours_many": "Il y a {{count}} h",
         "days_one": "Il y a {{count}} jour",
-        "days_other": "Il y a {{count}} jours"
+        "days_other": "Il y a {{count}} jours",
+        "days_many": "Il y a {{count}} jours"
       },
       "a11y": "Dernière mesure : {{value}}, {{state}}. {{context}}, {{when}}.",
       "add": "Nouvelle mesure"
@@ -729,13 +752,16 @@
       "periodLabel": "Période du graphique",
       "period_one": "{{count}} j",
       "period_other": "{{count}} j",
+      "period_many": "{{count}} j",
       "summary_one": "{{count}} mesure sur {{days}} jours",
       "summary_other": "{{count}} mesures sur {{days}} jours",
+      "summary_many": "{{count}} mesures sur {{days}} jours",
       "hint": "Touchez la courbe pour voir le détail d’une mesure.",
       "empty": "Aucune mesure sur ces {{days}} jours.",
       "target": "Plage cible : {{min}} – {{max}}",
       "a11y_one": "Graphique de la glycémie sur {{days}} jours : {{count}} mesure.",
       "a11y_other": "Graphique de la glycémie sur {{days}} jours : {{count}} mesures.",
+      "a11y_many": "Graphique de la glycémie sur {{days}} jours : {{count}} mesures.",
       "a11yHint": "Balayez vers le haut ou le bas pour passer d’une mesure à l’autre.",
       "a11yPoint": "{{value}}, {{state}}. {{detail}}"
     },
@@ -743,9 +769,11 @@
       "title": "Statistiques",
       "count_one": "{{count}} mesure · {{days}} j",
       "count_other": "{{count}} mesures · {{days}} j",
+      "count_many": "{{count}} mesures · {{days}} j",
       "insufficientTitle": "Données insuffisantes",
       "insufficient_one": "Il faut au moins {{min}} mesures sur ces {{days}} jours pour des chiffres fiables. Vous en avez {{count}}.",
       "insufficient_other": "Il faut au moins {{min}} mesures sur ces {{days}} jours pour des chiffres fiables. Vous en avez {{count}}.",
+      "insufficient_many": "Il faut au moins {{min}} mesures sur ces {{days}} jours pour des chiffres fiables. Vous en avez {{count}}.",
       "shareA11y": "Répartition des mesures : {{below}} % en dessous, {{inRange}} % dans la plage, {{above}} % au-dessus.",
       "mean": "Moyenne",
       "sd": "Écart-type",
@@ -755,6 +783,7 @@
       "meanChange": "Moyenne : {{value}}",
       "points_one": "{{sign}}{{count}} point",
       "points_other": "{{sign}}{{count}} points",
+      "points_many": "{{sign}}{{count}} points",
       "stable": "stable",
       "direction": {
         "up": "en hausse",
@@ -776,8 +805,10 @@
         "coverage": "Mesures sur {{covered}} jours seulement sur {{days}} : plus de jours mesurés rendent l’analyse plus fiable.",
         "freshness_one": "Dernière mesure il y a {{count}} jour : les chiffres reflètent moins la situation actuelle.",
         "freshness_other": "Dernière mesure il y a {{count}} jours : les chiffres reflètent moins la situation actuelle.",
+        "freshness_many": "Dernière mesure il y a {{count}} jours : les chiffres reflètent moins la situation actuelle.",
         "density_one": "{{perDay}} mesure par jour mesuré en moyenne : la cible est de {{target}} pour une image plus complète.",
-        "density_other": "{{perDay}} mesures par jour mesuré en moyenne : la cible est de {{target}} pour une image plus complète."
+        "density_other": "{{perDay}} mesures par jour mesuré en moyenne : la cible est de {{target}} pour une image plus complète.",
+        "density_many": "{{perDay}} mesures par jour mesuré en moyenne : la cible est de {{target}} pour une image plus complète."
       },
       "coverage": "Jours mesurés",
       "density": "Mesures par jour",
@@ -805,6 +836,7 @@
     },
     "duration_one": "{{type}} · {{count}} min",
     "duration_other": "{{type}} · {{count}} min",
+    "duration_many": "{{type}} · {{count}} min",
     "declared": "Déclaré par vous",
     "pending": "Pas encore envoyée",
     "source": {
@@ -816,6 +848,7 @@
     },
     "count_one": "{{count}} élément",
     "count_other": "{{count}} éléments",
+    "count_many": "{{count}} éléments",
     "more": "Voir les {{days}} jours précédents",
     "end": "Rien de plus ancien sur ce téléphone.",
     "empty": {
@@ -879,6 +912,7 @@
     "durationOther": "Autre durée (minutes)",
     "minutes_one": "{{count}} min",
     "minutes_other": "{{count}} min",
+    "minutes_many": "{{count}} min",
     "details": {
       "MEAL": "Détails (facultatif)",
       "ACTIVITY": "Détails (facultatif)",
@@ -919,22 +953,26 @@
       "inRange": "dans la plage cible",
       "count_one": "{{count}} mesure",
       "count_other": "{{count}} mesures",
+      "count_many": "{{count}} mesures",
       "quality": "Qualité des données : {{score}}/100 · {{level}}",
       "a11y": "Sur les {{days}} derniers jours : {{percent}} % des mesures dans la plage cible, {{readings}}. Qualité des données : {{score}} sur 100, {{level}}."
     },
     "headline": {
       "calm": "Rien de particulier à signaler sur cette période.",
       "watch_one": "{{count}} observation à regarder de plus près.",
-      "watch_other": "{{count}} observations à regarder de plus près."
+      "watch_other": "{{count}} observations à regarder de plus près.",
+      "watch_many": "{{count}} observations à regarder de plus près."
     },
     "insufficient": {
       "title": "Pas encore assez de mesures",
       "body_one": "{{count}} mesure sur ces {{days}} jours : il en faut au moins 10 pour une analyse fiable.",
       "body_other": "{{count}} mesures sur ces {{days}} jours : il en faut au moins 10 pour une analyse fiable.",
+      "body_many": "{{count}} mesures sur ces {{days}} jours : il en faut au moins 10 pour une analyse fiable.",
       "action": "Noter une mesure"
     },
     "observations_one": "{{count}} observation",
     "observations_other": "{{count}} observations",
+    "observations_many": "{{count}} observations",
     "severity": {
       "INFO": "Information",
       "ATTENTION": "À surveiller",
@@ -972,9 +1010,11 @@
     "evidence": {
       "show_one": "Voir la mesure concernée",
       "show_other": "Voir les {{count}} mesures concernées",
+      "show_many": "Voir les {{count}} mesures concernées",
       "hide": "Masquer les mesures",
       "more_one": "Afficher {{count}} autre mesure",
       "more_other": "Afficher les {{count}} autres mesures",
+      "more_many": "Afficher les {{count}} autres mesures",
       "openHint": "Ouvre le détail de cette mesure.",
       "a11y": "{{when}} : {{value}}, {{state}}. {{context}}."
     },
@@ -1032,6 +1072,7 @@
       "hba1c": "C'est quoi l'HbA1c ?",
       "hypo": "Que faire en cas d'hypoglycémie ?"
     },
+    "frenchOnly": "Pour l’instant, l’assistant comprend et répond seulement en français.",
     "kinds": {
       "measurements": "D'après vos mesures",
       "sheet": "D'après une fiche",
@@ -1042,6 +1083,7 @@
     "source": {
       "title_one": "Fiche citée",
       "title_other": "Fiches citées",
+      "title_many": "Fiches citées",
       "validated": "Relue par un médecin",
       "draft": "Fiche non encore relue",
       "openHint": "Ouvre la fiche complète"
@@ -1107,6 +1149,7 @@
       "yesterday": "Hier, {{time}}",
       "messages_one": "{{count}} message",
       "messages_other": "{{count}} messages",
+      "messages_many": "{{count}} messages",
       "noPreview": "Conversation sans question",
       "openHint": "Ouvre la conversation",
       "remove": "Effacer cette conversation",
@@ -1134,6 +1177,7 @@
       "reminder": "Cette fiche donne des repères généraux. Pour une décision qui vous concerne, parlez-en à votre professionnel de santé.",
       "sources_one": "Source",
       "sources_other": "Sources",
+      "sources_many": "Sources",
       "sourceHint": "Ouvre la source dans le navigateur",
       "version": "Version {{version}}"
     }
@@ -1237,6 +1281,7 @@
       "title": "Rapport d’importation",
       "analyzed_one": "{{count}} ligne analysée",
       "analyzed_other": "{{count}} lignes analysées",
+      "analyzed_many": "{{count}} lignes analysées",
       "label": {
         "valid": "Valides",
         "duplicates": "Doublons",
@@ -1284,10 +1329,12 @@
       },
       "more_one": "Voir {{count}} ligne de plus",
       "more_other": "Voir {{count}} lignes de plus",
+      "more_many": "Voir {{count}} lignes de plus",
       "fixCorrections": "Complétez les corrections signalées avant d’importer.",
       "rowsRefused": "Certaines décisions ont été refusées : voyez les lignes signalées.",
       "import_one": "Importer {{count}} mesure",
       "import_other": "Importer {{count}} mesures",
+      "import_many": "Importer {{count}} mesures",
       "nothingToImport": "Rien à importer",
       "defaults": "Sans décision, les doublons, les lignes à vérifier et les erreurs sont ignorés.",
       "undoable": "Rien n’est importé avant ce bouton, et vous pourrez annuler l’import ensuite."
@@ -1295,22 +1342,27 @@
     "done": {
       "title_one": "{{count}} mesure importée",
       "title_other": "{{count}} mesures importées",
+      "title_many": "{{count}} mesures importées",
       "skipped_zero": "Aucune ligne ignorée.",
       "skipped_one": "{{count}} ligne ignorée.",
       "skipped_other": "{{count}} lignes ignorées.",
+      "skipped_many": "{{count}} lignes ignorées.",
       "sync": "Les mesures sont enregistrées sur votre compte. Elles arrivent dans l’historique de ce téléphone dans quelques secondes (synchronisation automatique).",
       "finish": "Terminer",
       "revert": "Annuler cet import",
       "revertConfirmTitle": "Annuler cet import ?",
       "revertConfirmText_one": "La mesure importée sera retirée de votre compte.",
       "revertConfirmText_other": "Les {{count}} mesures importées seront retirées de votre compte.",
+      "revertConfirmText_many": "Les {{count}} mesures importées seront retirées de votre compte.",
       "revertedTitle": "Import annulé",
       "revertedText_zero": "Aucune mesure n’était à retirer.",
       "revertedText_one": "{{count}} mesure retirée de votre compte.",
       "revertedText_other": "{{count}} mesures retirées de votre compte.",
+      "revertedText_many": "{{count}} mesures retirées de votre compte.",
       "keep": "Garder l’import",
       "revertYes_one": "Retirer la mesure",
-      "revertYes_other": "Retirer les {{count}} mesures"
+      "revertYes_other": "Retirer les {{count}} mesures",
+      "revertYes_many": "Retirer les {{count}} mesures"
     },
     "issue": {
       "restart": "Recommencer",
@@ -1345,7 +1397,8 @@
     "few": {
       "title": "Peu de mesures sur cette période",
       "text_one": "{{count}} mesure sur ces {{days}} jours. Le rapport sera créé quand même et le signalera.",
-      "text_other": "{{count}} mesures sur ces {{days}} jours. Le rapport sera créé quand même et le signalera."
+      "text_other": "{{count}} mesures sur ces {{days}} jours. Le rapport sera créé quand même et le signalera.",
+      "text_many": "{{count}} mesures sur ces {{days}} jours. Le rapport sera créé quand même et le signalera."
     },
     "contents": {
       "title": "Ce que contient le rapport",
@@ -1377,6 +1430,7 @@
     },
     "pending_one": "{{count}} mesure n'est pas encore envoyée : elle partira avant la création du rapport.",
     "pending_other": "{{count}} mesures ne sont pas encore envoyées : elles partiront avant la création du rapport.",
+    "pending_many": "{{count}} mesures ne sont pas encore envoyées : elles partiront avant la création du rapport.",
     "create": "Créer et partager le PDF",
     "phase": {
       "syncing": "Envoi de vos dernières mesures…",
@@ -1394,8 +1448,10 @@
     "unsent": {
       "title_one": "{{count}} mesure n'est pas dans le rapport",
       "title_other": "{{count}} mesures ne sont pas dans le rapport",
+      "title_many": "{{count}} mesures ne sont pas dans le rapport",
       "text_one": "Elle n'a pas encore pu être envoyée. Elle reste sur votre téléphone et partira dès que possible ; créez un nouveau rapport ensuite.",
-      "text_other": "Elles n'ont pas encore pu être envoyées. Elles restent sur votre téléphone et partiront dès que possible ; créez un nouveau rapport ensuite."
+      "text_other": "Elles n'ont pas encore pu être envoyées. Elles restent sur votre téléphone et partiront dès que possible ; créez un nouveau rapport ensuite.",
+      "text_many": "Elles n'ont pas encore pu être envoyées. Elles restent sur votre téléphone et partiront dès que possible ; créez un nouveau rapport ensuite."
     },
     "problem": {
       "offline": {
@@ -1578,6 +1634,7 @@
       "what": "Ce que le médecin pourra voir",
       "count_one": "{{count}} sur {{total}}",
       "count_other": "{{count}} sur {{total}}",
+      "count_many": "{{count}} sur {{total}}",
       "noneSelected": "Cochez au moins une catégorie pour créer le QR.",
       "howLong": "Pendant combien de temps",
       "durationLabel": "Durée de l'accès",
@@ -1665,8 +1722,10 @@
       "renewing": "Nouveau QR…",
       "next_one": "Nouveau QR dans {{count}} s",
       "next_other": "Nouveau QR dans {{count}} s",
+      "next_many": "Nouveau QR dans {{count}} s",
       "nextA11y_one": "Nouveau QR dans {{count}} seconde",
       "nextA11y_other": "Nouveau QR dans {{count}} secondes",
+      "nextA11y_many": "Nouveau QR dans {{count}} secondes",
       "shared": "Partagé",
       "duration": "Durée de l'accès",
       "durationValue": "{{duration}}, à partir du scan",
@@ -1736,6 +1795,7 @@
       "loading": "Chargement du journal",
       "count_one": "{{count}} accès",
       "count_other": "{{count}} accès",
+      "count_many": "{{count}} accès",
       "today": "Aujourd'hui à {{time}}",
       "onDate": "Le {{date}} à {{time}}",
       "lasted": "accès de {{duration}}",
@@ -1748,6 +1808,7 @@
       },
       "views_one": "{{count}} consultation",
       "views_other": "{{count}} consultations",
+      "views_many": "{{count}} consultations",
       "report": "Rapport téléchargé",
       "emergency": {
         "title": "Accès d'urgence",

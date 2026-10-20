@@ -1,6 +1,9 @@
 // Conversation vide (L9-09) : Afyabora se présente (ce qu'il sait faire, et ce qu'il ne fera jamais), puis
 // propose 4 questions, une par source de réponse (mesures de la semaine, du soir, une fiche, une conduite à
 // tenir). Un appui pose la question.
+// Langues : l'assistant (serveur) ne comprend que le français pour l'instant. Les questions proposées sont donc
+// TOUJOURS en français (une question traduite ne serait pas comprise), et un bandeau le dit dans les autres
+// langues.
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
@@ -17,7 +20,9 @@ export function Welcome({
   onAsk: (question: string) => void;
   disabled: boolean;
 }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const french = i18n.getFixedT('fr');
+  const notFrench = !i18n.language.startsWith('fr');
   const { colors, mode } = useTheme();
   const reduced = useReducedMotion();
   return (
@@ -75,9 +80,14 @@ export function Welcome({
         <Text variant="overline" tone="muted">
           {t('assistant.welcome.try')}
         </Text>
+        {notFrench ? (
+          <Text variant="bodySmall" tone="muted">
+            {t('assistant.frenchOnly')}
+          </Text>
+        ) : null}
         <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm }}>
           {SUGGESTIONS.map((key, i) => {
-            const question = t(`assistant.suggestions.${key}`);
+            const question = french(`assistant.suggestions.${key}`);
             return (
               <Animated.View key={key} entering={enterFromBelow(i + 2, reduced)}>
                 <PressableScale

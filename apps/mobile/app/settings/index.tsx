@@ -3,11 +3,13 @@ import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 import { Card, ListRow, Screen, Text } from '@/components/ui';
+import { languageInfo, useLanguagePreference, type LanguageCode } from '@/i18n';
 import { ACCENT_LABELS, useAppearance, useTheme } from '@/theme';
 
 export default function SettingsScreen() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { colors } = useTheme();
+  const languagePreference = useLanguagePreference();
   const { preference, accent } = useAppearance();
   const ico = (name: keyof typeof Ionicons.glyphMap) => (
     <Ionicons name={name} size={20} color={colors.primaryText} />
@@ -29,6 +31,17 @@ export default function SettingsScreen() {
           subtitle={t('settings.appearanceHint')}
           value={`${t(`appearance.${preference}`)} · ${ACCENT_LABELS[accent]}`}
           onPress={() => router.push('/settings/appearance')}
+        />
+        <ListRow
+          icon={ico('language-outline')}
+          title={t('settings.language')}
+          subtitle={t('settings.languageHint')}
+          value={
+            languagePreference === 'system'
+              ? t('language.system')
+              : languageInfo(i18n.language as LanguageCode).nativeName
+          }
+          onPress={() => router.push('/settings/language')}
         />
         <ListRow
           icon={ico('speedometer-outline')}

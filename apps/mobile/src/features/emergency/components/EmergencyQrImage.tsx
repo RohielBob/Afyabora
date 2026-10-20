@@ -11,9 +11,12 @@ import { forwardRef, useImperativeHandle, useRef } from 'react';
 import { Platform, View } from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
 import Svg, { G, Rect, Text as SvgText, TSpan } from 'react-native-svg';
+import { CHAR_WIDTH, fitFontSize } from '../image-text';
 
 /** Taille de l'image dessinée (3:4, se lit en fond d'écran comme sur papier). */
 export const IMAGE_WIDTH = 360;
+/** Largeur utile d'une ligne de texte (marges de 24 px de chaque côté). */
+const TEXT_WIDTH = IMAGE_WIDTH - 48;
 export const IMAGE_HEIGHT = 480;
 /** Taille du PNG exporté (×3 : net à l'impression et sur un grand écran). */
 export const EXPORT_SCALE = 3;
@@ -99,7 +102,7 @@ export const EmergencyQrImage = forwardRef<
           textAnchor="middle"
           fontFamily={font(fontFiles.extrabold)}
           fontWeight="800"
-          fontSize={24}
+          fontSize={fitFontSize(title, 24, TEXT_WIDTH, CHAR_WIDTH.upperExtraBold, 1.5)}
           letterSpacing={1.5}
           fill={brand.red}
         >
@@ -111,7 +114,7 @@ export const EmergencyQrImage = forwardRef<
           textAnchor="middle"
           fontFamily={font(fontFiles.bold)}
           fontWeight="700"
-          fontSize={17}
+          fontSize={fitFontSize(instruction, 17, TEXT_WIDTH, CHAR_WIDTH.bold)}
           fill={ink[900]}
         >
           {instruction}
@@ -122,7 +125,7 @@ export const EmergencyQrImage = forwardRef<
           textAnchor="middle"
           fontFamily={font(fontFiles.medium)}
           fontWeight="500"
-          fontSize={13}
+          fontSize={fitFontSize(audience, 13, TEXT_WIDTH, CHAR_WIDTH.medium)}
           fill={ink[600]}
         >
           {audience}
