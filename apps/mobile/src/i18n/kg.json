@@ -1,0 +1,1834 @@
+{
+  "app": {
+    "name": "Afyabora",
+    "tagline": "Landa. Keba. Bakisa."
+  },
+  "common": {
+    "save": "Bumba",
+    "cancel": "Bika",
+    "next": "Landa",
+    "back": "Vutuka",
+    "retry": "Meka diaka"
+  },
+  "disclaimer": "Afyabora kele kisadi ya kusadisa nge na kulanda maladi na nge. Yo ke baka ve kisika ya ndongisila ya munganga.",
+  "glucose": {
+    "unusualConfirm": "Ntalu yai kele ya kuyituka. Yo kele kieleka?",
+    "state": {
+      "VERY_LOW": "Na nsi mingi",
+      "LOW": "Na nsi",
+      "IN_RANGE": "Na kati ya ndilu",
+      "HIGH": "Na zulu",
+      "VERY_HIGH": "Na zulu mingi"
+    },
+    "stateA11y": "Mutindu: {{label}}"
+  },
+  "sync": {
+    "pending_one": "Mesire {{count}} ke vingila kutindama",
+    "pending_other": "Mesire {{count}} ke vingila kutindama",
+    "pending_many": "Mesire {{count}} ke vingila kutindama",
+    "offline": "Internet kele ve — mambu na nge me bumbama na telefone yai",
+    "upToDate": "Mambu yonso kele ya mpa",
+    "refreshing": "Kutinda…",
+    "pullToRefresh": "Benda na nsi sambu na kutinda",
+    "status": {
+      "upToDate": "Mambu yonso kele ya mpa",
+      "pending": "Ke vingila kutindama",
+      "syncing": "Kutinda ke salama…",
+      "offline": "Internet kele ve: mambu na nge me bumbama na telefone yai",
+      "problem": "Kutinda ke lenda salama ve sesepi",
+      "session": "Ntangu ya kukota me mana: kota diaka sambu na kutinda",
+      "rejected_one": "Nsobolo {{count}} ya kutala",
+      "rejected_other": "Nsobolo {{count}} ya kutala",
+      "rejected_many": "Nsobolo {{count}} ya kutala"
+    },
+    "measurements_one": "mesire {{count}}",
+    "measurements_other": "mesire {{count}}",
+    "measurements_many": "mesire {{count}}",
+    "events_one": "dyambu {{count}}",
+    "events_other": "mambu {{count}}",
+    "events_many": "mambu {{count}}",
+    "pendingBoth": "{{measurements}} na {{events}}",
+    "pendingLine": "{{what}} ke vingila kutindama",
+    "lastToday": "Kutinda ya nsuka na ngunga {{time}}",
+    "lastOn": "Kutinda ya nsuka na {{date}} na ngunga {{time}}",
+    "never": "Ntete ve kutindama na telefone yai",
+    "nextRetry": "Kumeka diaka na ngunga {{time}}",
+    "nextRetrySoon": "Kumeka diaka na nima ya basegonda fioti",
+    "autoSend": "Yo ta tindama yo mosi ntangu yo ta lenda",
+    "retry": "Meka diaka",
+    "rejected_one": "Nsobolo {{count}} me ndimama ve na serveur",
+    "rejected_other": "Nsobolo {{count}} me ndimama ve na serveur",
+    "rejected_many": "Nsobolo {{count}} me ndimama ve na serveur",
+    "open": "Tala mutindu kutinda kele",
+    "screen": {
+      "overline": "Kukonda internet",
+      "title": "Kutinda",
+      "intro": "Mambu nge ke sonika ke bumbamaka ntete na telefone yai, na nima yo ke tindamaka na compte na nge ntangu yo ke lenda, ata na nima ya kukatuka ya internet.",
+      "syncNow": "Tinda sesepi",
+      "pendingTitle": "Ke vingila kutindama",
+      "pendingNone": "Kima mosi ve ke vingila",
+      "lastTitle": "Kutinda ya nsuka",
+      "rejectedTitle": "Nsobolo yina me ndimama ve",
+      "rejectedIntro": "Serveur me ndima ve nsobolo yai. Yo ke bikala na telefone yai tii nge ta baka lukanu.",
+      "measurementSave": "Mesire ya {{value}}, {{date}}",
+      "measurementDelete": "Kukatula mesire ya {{value}}, {{date}}",
+      "eventSave": "{{type}} «{{label}}», {{date}}",
+      "eventDelete": "Kukatula: {{type}} «{{label}}», {{date}}",
+      "gone": "Dyambu yai kele diaka ve na telefone yai",
+      "reason": "Kikuma: {{reason}}",
+      "attempts_one": "Me ndimama ve mbala {{count}}",
+      "attempts_other": "Me ndimama ve mbala {{count}}",
+      "attempts_many": "Me ndimama ve mbala {{count}}",
+      "retry": "Meka diaka",
+      "discard": "Bika yo",
+      "discardTitle": "Kubika nsobolo yai?",
+      "discardText": "Yo ta katuka na telefone yai. Yina me bumbama na compte na nge, kana yo kele, ta vutuka na kutinda ya ke landa.",
+      "discardConfirm": "Bika nsobolo",
+      "keep": "Bumba",
+      "noRejected": "Nsobolo mosi ve me ndimama ve",
+      "lastToday": "Bubu na ngunga {{time}}",
+      "lastOn": "Na {{date}} na ngunga {{time}}",
+      "lastNever": "Ntete ve na telefone yai"
+    }
+  },
+  "safety": {
+    "extreme": "Landa malongi ya bantu ya nzo ya munganga na nge. Kana nge ke wa mbote ve, lomba lusadisu nswalu."
+  },
+  "errors": {
+    "network": "Beto ke lenda kutana ve na serveur. Tala internet na nge mpi meka diaka.",
+    "server": "Kisalu kele na mpasi. Meka diaka na nima ya ntangu fioti.",
+    "tooManyRequests": "Nge me meka mbala mingi. Vingila minuti mosi na ntwala ya kumeka diaka.",
+    "invalidData": "Mambu ya nkaka kele mbote ve. Tala diaka formulaire.",
+    "unexpected": "Kifu mosi me basika. Meka diaka."
+  },
+  "welcome": {
+    "lastMeasurement": "Mesire ya nsuka",
+    "demoTag": "Mbandu ya luvunu",
+    "demoA11y": "Mbandu ya mesire ya nsuka: 1,12 gramme na litre, na kati ya ndilu",
+    "offlineSaved": "Me bumbama ata internet kele ve",
+    "onThisPhone": "✓ Na telefone yai",
+    "title": "Disolo ya sukadi ya menga na nge, ntangu yonso ti nge.",
+    "description": "Bumba mesire na nge, bakisa mutindu nge ke kwenda mpi pona nani ta mona inki, mpi sambu na ntangu ikwa.",
+    "createAccount": "Sala compte",
+    "signIn": "Kota"
+  },
+  "auth": {
+    "fields": {
+      "email": "Adresse email",
+      "emailPlaceholder": "zina@mbandu.com",
+      "password": "Mot de passe",
+      "newPassword": "Mot de passe ya mpa",
+      "link": "Lien to code yina nge me baka na email",
+      "linkPlaceholder": "Tula awa lien ya email"
+    },
+    "password": {
+      "rulesTitle": "Bansiku ya mot de passe",
+      "ruleLength": "Ata bisono {{count}}",
+      "ruleOk": "me lungana",
+      "ruleTodo": "fwete lungana",
+      "hint": "Mpova mosi ya pete ya kuyibuka kele ya ngolo kuluta mpova mosi ya mpasi."
+    },
+    "validation": {
+      "email": "Sonika adresse email ya mbote.",
+      "passwordLength": "Mot de passe fwete vanda ti ata bisono 12.",
+      "passwordRequired": "Sonika mot de passe na nge.",
+      "consent": "Ndimisa na nge kele mfunu sambu na kusala compte.",
+      "link": "Lien yai ke zabanaka ve. Kanga lien ya mvimba ya email.",
+      "disclaimer": "Ndima nde nge me bakisa lukebisu sambu na kulanda."
+    },
+    "errors": {
+      "invalidCredentials": "Adresse email to mot de passe kele mbote ve.",
+      "emailNotVerified": "Adresse email na nge ntete ve kundimama.",
+      "locked": "Nge me meka mbala mingi: sambu na lutaninu, compte na nge me kangama sambu na minuti {{minutes}}.",
+      "verifyLinkInvalid": "Lien yai ya kundimisa kele mbote ve, me sadilama to ntangu na yo me luta. Lomba email ya mpa.",
+      "resetLinkInvalid": "Lien yai kele mbote ve, me sadilama to ntangu na yo me luta (ngunga 1). Lomba diaka.",
+      "notPatient": "Compte yai kele ya musadi ya nzo ya munganga. Kota na portail ya Afyabora."
+    },
+    "signUp": {
+      "title": "Sala compte",
+      "subtitle": "Basegonda fioti sambu na kuyantika kulanda sukadi na nge.",
+      "consent": "Mono ke ndima nde Afyabora bumba mpi sadila mambu ya maladi na mono sambu na kulanda mono, mutindu bo me tendula na bansiku ya kubumba kinsweki.",
+      "consentA11y": "Ndimisa sambu na kusadila mambu ya maladi na mono",
+      "submit": "Sala compte na mono",
+      "haveAccount": "Nge kele dezia ti compte?",
+      "signIn": "Kota",
+      "consentLink": "Tanga bansiku ya kubumba kinsweki",
+      "disclaimer": "Mono me bakisa nde Afyabora kele kisadi ya kusadisa na kulanda: yo ke zabisaka maladi ve, yo ke pesaka dose ya nkisi ve mpi yo ke baka ve kisika ya ndongisila ya munganga.",
+      "disclaimerA11y": "Mono ke bakisa nde application ke baka ve kisika ya ndongisila ya munganga",
+      "disclaimerLink": "Tanga lukebisu"
+    },
+    "verify": {
+      "title": "Tala email na nge",
+      "subtitle": "Beto me tindila nge lien ya kundimisa na {{email}}. Yo ke sala sambu na ngunga 24.",
+      "subtitleNoEmail": "Kangula email ya kundimisa yina beto me tindila nge. Lien ke sala sambu na ngunga 24.",
+      "steps": "Kangula email «Afyabora : confirmez votre adresse email» mpi finda lien. Nge me baka yo ve? Tala na ba spam.",
+      "pasteTitle": "Lien ke kanguka ve na application?",
+      "pasteHelp": "Kanga lien ya email mpi tula yo awa na nsi.",
+      "submit": "Ndimisa adresse na mono",
+      "resend": "Tinda email diaka",
+      "resendIn": "Tinda email diaka na nima ya {{seconds}} s",
+      "resent": "Email ya mpa me tindama. Lien ya ntama ke sala diaka ve.",
+      "resendUnavailable": "Sambu na kubaka email ya mpa, sonika diaka zina na adresse ya kaka yina.",
+      "successTitle": "Adresse me ndimama",
+      "successMessage": "Compte na nge me kanguka. Nge lenda kukota sesepi.",
+      "goToSignIn": "Kota"
+    },
+    "signIn": {
+      "title": "Nge me vutuka mbote",
+      "subtitle": "Kota sambu na kumona diaka kulanda na nge.",
+      "forgot": "Nge me vila mot de passe?",
+      "submit": "Kota",
+      "noAccount": "Nge kele ntete ve ti compte?",
+      "signUp": "Sala compte",
+      "verifyAction": "Ndimisa adresse na mono",
+      "success": "Nge me kota mbote",
+      "expired": "Ntangu ya kukota me mana. Kota diaka sambu na kulanda.",
+      "signedOut": "Nge me basika."
+    },
+    "forgot": {
+      "title": "Nge me vila mot de passe",
+      "subtitle": "Sonika adresse na nge: kana compte kele, nge ta baka lien sambu na kupona mot de passe ya mpa.",
+      "submit": "Baka lien",
+      "sentTitle": "Email me tindama",
+      "sentMessage": "Kana compte kele sambu na {{email}}, lien yina ke sala sambu na ngunga 1 me tindama.",
+      "resetTitle": "Pona mot de passe ya mpa",
+      "resetHelp": "Tula lien yina nge me baka na email, na nima pona mot de passe na nge ya mpa.",
+      "resetSubmit": "Bumba mot de passe ya mpa",
+      "successTitle": "Mot de passe me sobana",
+      "successMessage": "Sambu na lutaninu na nge, ba session na nge ya nkaka me kangama. Kota ti mot de passe na nge ya mpa.",
+      "changeEmail": "Sadila adresse ya nkaka"
+    }
+  },
+  "profile": {
+    "title": "Profil",
+    "todoTitle": "Na ntwala: profil na nge ya maladi",
+    "todoText": "Zina, mutindu ya diabète, ndilu ya mbote mpi bandilu, muntu ya kubinga kana mpasi.",
+    "settings": "Mambu ya kubongisa",
+    "settingsHint": "Mutindu yo ke monana, ba unité, ba notification, lutaninu",
+    "signOut": "Basika",
+    "signOutConfirmTitle": "Kubasika na telefone yai?",
+    "signOutConfirmText": "Mambu na nge ke bikala na compte na nge. Yo ta katuka na telefone yai mpi nge lenda kota diaka ntangu yonso.",
+    "signOutUnsynced_one": "Keba: nsobolo {{count}} ntete ve kutindama na serveur. Yo ta vila kana nge basika sesepi. Kana nge lenda, kota ntete na internet.",
+    "signOutUnsynced_other": "Keba: nsobolo {{count}} ntete ve kutindama na serveur. Yo ta vila kana nge basika sesepi. Kana nge lenda, kota ntete na internet.",
+    "signOutUnsynced_many": "Keba: nsobolo {{count}} ntete ve kutindama na serveur. Yo ta vila kana nge basika sesepi. Kana nge lenda, kota ntete na internet.",
+    "import": "Kotisa disolo ya ntama",
+    "importHint": "Fichier CSV to Excel ya kaye to ya masini",
+    "sync": "Kutinda",
+    "syncHint": "Mutindu, yina ke vingila, nsobolo yina me ndimama ve"
+  },
+  "tabs": {
+    "home": "Luyantiku",
+    "timeline": "Disolo",
+    "insights": "Kutala",
+    "share": "Kabula",
+    "profile": "Profil",
+    "add": "Yika"
+  },
+  "settings": {
+    "overline": "Mambu ya kubongisa",
+    "title": "Mambu ya kubongisa",
+    "appearance": "Mutindu yo ke monana",
+    "appearanceHint": "Ya pwelele to ya ndombe, langi",
+    "language": "Ndinga",
+    "languageHint": "Ndinga ya application",
+    "units": "Ba unité mpi bandilu",
+    "unitsHint": "Unité yina nge ke zola, ndilu ya mbote, bandilu ya lukebisu",
+    "unitsScreen": {
+      "intro": "Unité ya kumonisa, ndilu ya mbote mpi bandilu ya lukebisu. Ya kupona ti munganga na nge: Afyabora ke pesaka ve ndongisila ya nkisi.",
+      "saved": "Me bumbama. Mesire na nge ke monana sesepi na {{unit}}.",
+      "discard": "Bika nsobolo",
+      "storedNote": "Mesire yina nge bumbaka ntama ke sobaka ve: kaka mutindu yo ke monana ke landaka unité yina nge me pona.",
+      "problem": {
+        "offline": "Internet kele ve: kubongisa yai fwete vanda ti internet. Meka diaka ntangu internet ta vutuka.",
+        "noProfile": "Manisa ntete profil na nge: mambu yai kele kitini na yo.",
+        "invalid": "Serveur me ndima ve bantalu yai. Tala molongo: na nsi mingi < ndilu ya mbote < na zulu mingi.",
+        "profile": "Profil na nge kele ti dyambu mosi ya kukonda kumana: manisa yo na ntwala ya kusoba mambu yai.",
+        "error": "Kubongisa me bumbama ve. Meka diaka na nima ya ntangu fioti."
+      }
+    },
+    "notifications": "Ba notification",
+    "notificationsHint": "Bambukusu, bantendula, bangunga ya kimia",
+    "security": "Lutaninu",
+    "securityHint": "Kukangula ti mulembo to code",
+    "account": "Mambu na mono mpi compte na mono",
+    "accountHint": "Basisa mambu na mono, katula compte na mono",
+    "about": "Sambu na application",
+    "aboutHint": "Version, lukebisu, kinsweki",
+    "design": "Planche ya style",
+    "designHint": "Ke monanaka kaka na développement: balangi, bisono, bitini"
+  },
+  "account": {
+    "title": "Mambu na mono mpi compte na mono",
+    "intro": "Baka kopi ya mambu na nge ntangu yonso, to katula compte na nge mpi yonso yina kele na kati.",
+    "export": {
+      "title": "Basisa mambu na mono",
+      "body": "Fichier (JSON) ya ke vanda ti profil na nge, mesire na nge yonso mpi mambu na nge, ti ba note. Nge lenda kubumba yo to kupesa yo na kisalu ya nkaka.",
+      "privacy": "Fichier yai kele ti mambu ya maladi na nge ya pwelele: bumba yo mbote mpi kabula yo kaka ti bantu yina nge ke tudila ntima.",
+      "pendingFirst_one": "Dyambu {{count}} yina ntete ve kutindama ta tindama ntete, sambu yo vanda na fichier.",
+      "pendingFirst_other": "Mambu {{count}} yina ntete ve kutindama ta tindama ntete, sambu yo vanda na fichier.",
+      "pendingFirst_many": "Mambu {{count}} yina ntete ve kutindama ta tindama ntete, sambu yo vanda na fichier.",
+      "button": "Basisa mambu na mono",
+      "again": "Basisa diaka",
+      "shareAgain": "Kabula fichier yai diaka",
+      "shareTitle": "Mambu na mono ya Afyabora",
+      "phase": {
+        "syncing": "Kutinda mambu na nge ya nsuka…",
+        "downloading": "Kubongisa fichier…",
+        "sharing": "Kukangula kukabula…"
+      },
+      "done": "Fichier me lunga: {{name}}",
+      "unsent_one": "Dyambu {{count}} me tindama ve: yo kele ve na fichier yai. Meka diaka ntangu internet ta vanda mbote.",
+      "unsent_other": "Mambu {{count}} me tindama ve: yo kele ve na fichier yai. Meka diaka ntangu internet ta vanda mbote.",
+      "unsent_many": "Mambu {{count}} me tindama ve: yo kele ve na fichier yai. Meka diaka ntangu internet ta vanda mbote.",
+      "problem": {
+        "offline": "Internet kele ve: kubasisa fwete vanda ti internet.",
+        "tooMany": "Nge me basisa mbala mingi na ntangu fioti. Meka diaka na nima ya minuti mosi.",
+        "noProfile": "Manisa ntete profil na nge: kima ya kubasisa kele ntete ve.",
+        "cannotShare": "Fichier me lunga, kansi kukabula kele ve na kisadi yai.",
+        "error": "Kubasisa me mana mbote ve. Meka diaka na nima ya ntangu fioti."
+      }
+    },
+    "delete": {
+      "title": "Katula compte na mono",
+      "body": "Compte na nge mpi mambu na nge yonso ta katuka na ba serveur na beto mpi na telefone yai:",
+      "what": {
+        "data": "profil na nge, mesire na nge yonso mpi mambu na nge, ti ba note;",
+        "shares": "mambu nge kabulaka: bamunganga ta konda nzila ya kutala dossier na nge nswalu;",
+        "emergency": "carte na nge ya mpasi: QR na yo ta kanguka diaka ve;",
+        "phone": "mambu yina me bumbama na telefone yai."
+      },
+      "irreversible": "Yo kele ya mvula na mvula: kima mosi ve ta vutuka. Basisa mambu na nge ntete kana nge ke zola kubumba yo.",
+      "start": "Katula compte na mono…",
+      "password": "Mot de passe",
+      "passwordHint": "Sambu na kundimisa nde yo kele nge.",
+      "understand": "Mono ke bakisa nde compte na mono mpi mambu na mono yonso ta katuka mvula na mvula.",
+      "confirm": "Katula mvula na mvula",
+      "problem": {
+        "password": "Mot de passe kele mbote ve. Kima mosi ve me katuka.",
+        "tooMany": "Nge me meka mbala mingi. Vingila minuti mosi na ntwala ya kumeka diaka. Kima mosi ve me katuka.",
+        "offline": "Internet kele ve: kukatula fwete vanda ti internet. Kima mosi ve me katuka.",
+        "error": "Kukatula me mana mbote ve. Kima mosi ve me katuka: meka diaka na nima ya ntangu fioti."
+      },
+      "doneTitle": "Compte me katuka",
+      "done": "Compte na nge mpi mambu na nge yonso me katuka. Matondo sambu nge sadilaka Afyabora."
+    }
+  },
+  "appearance": {
+    "overline": "Mambu ya kubongisa",
+    "title": "Mutindu yo ke monana",
+    "intro": "Pona mutindu Afyabora ke monana. Bisono ta tangama ntangu yonso mbote.",
+    "theme": "Thème",
+    "themeA11y": "Thème ya application",
+    "light": "Pwelele",
+    "dark": "Ndombe",
+    "system": "Yo mosi",
+    "systemHint": "Yo ke landa kubongisa ya telefone (sesepi: {{mode}}).",
+    "systemLight": "pwelele",
+    "systemDark": "ndombe",
+    "accent": "Langi",
+    "preview": "Kumona ntete",
+    "previewOverline": "Mesire ya nsuka · mbandu",
+    "previewButton": "Yika mesire"
+  },
+  "language": {
+    "title": "Ndinga",
+    "intro": "Pona ndinga ya application. Mambu na nge ke sobaka ve.",
+    "system": "Ndinga ya telefone",
+    "systemHint": "Sesepi: {{name}}",
+    "inReview": "Ndinga ke talwa diaka",
+    "inReviewNote": "Bandinga yina kele ti «ndinga ke talwa diaka» ntete ve kutalwa na muntu yina ke tuba ndinga yango. Kana nsangu mosi ya maladi kele pwelele ve, yufula bantu ya nzo ya munganga na nge.",
+    "serverNote": "Mambu ya nkaka ke bikala ntete na français: bamvutu mpi bafiche ya musadisi, rapport PDF mpi ba email."
+  },
+  "onboarding": {
+    "progress": "Kitini {{current}} na {{total}}",
+    "next": "Landa",
+    "review": "Tala mambu na mono",
+    "privacy": "Mambu na nge kele ya kinsweki: kaka nge ke pona nani lenda kumona yo.",
+    "identity": {
+      "title": "Nge kele nani?",
+      "intro": "Mambu yai ke sadisa munganga na nge na kuzaba nge mpi na kubakisa mesire na nge.",
+      "firstName": "Zina ya ntete",
+      "lastName": "Zina ya dikanda",
+      "birthDate": "Kilumbu ya kubutuka",
+      "birthDatePlaceholder": "KL/NG/MVU",
+      "sex": "Bakala to nkento",
+      "sexF": "Nkento",
+      "sexM": "Bakala",
+      "sexOther": "Ya nkaka"
+    },
+    "diabetes": {
+      "title": "Diabète na nge",
+      "intro": "Mutindu ya diabète ke sadisa na kutanga kulanda na nge. Kana nge ke zaba mbote ve, pona «Ya nkaka»: nge lenda kusoba yo na nima.",
+      "type": "Mutindu ya diabète",
+      "type1": "Mutindu 1",
+      "type2": "Mutindu 2",
+      "gestational": "Ya divumu",
+      "other": "Ya nkaka",
+      "year": "Mvula yina bo monaka yo",
+      "yearHint": "Yo kele ya ngolo ve. Ata kana nge ke zaba kaka pene-pene."
+    },
+    "thresholds": {
+      "title": "Unité mpi bandilu",
+      "intro": "Pona unité ya masini na nge mpi tala ndilu na nge ya mbote.",
+      "unit": "Unité ya mesire",
+      "doctorNote": "Bantalu ya bilumbu yonso me pesama ntete: ya kupona ti munganga na nge. Afyabora ke pesaka ve ndongisila ya nkisi.",
+      "veryLowMgDl": "Na nsi mingi kana na nsi ya",
+      "targetMinMgDl": "Ndilu ya mbote: luyantiku",
+      "targetMaxMgDl": "Ndilu ya mbote: nsuka",
+      "veryHighMgDl": "Na zulu mingi kana na zulu ya",
+      "reset": "Vutukila bantalu ya ntete",
+      "reviewed": "Bandilu yai me ponama ti munganga na mono.",
+      "barCaption": "Na nsi mingi · na nsi · ndilu ya mbote · na zulu · na zulu mingi",
+      "barA11y": "Ndilu ya mbote katuka {{min}} tii {{max}} milligrammes na décilitre",
+      "rangeTitle": "Ndilu ya mbote",
+      "alertTitle": "Bandilu ya lukebisu",
+      "rangeHint": "Bantalu yina kele na kati ya bantalu yai zole kele «na kati ya ndilu».",
+      "alertHint": "Na nsi ya «na nsi mingi» to na zulu ya «na zulu mingi», Afyabora ta keba nge.",
+      "short": {
+        "targetMinMgDl": "Katuka",
+        "targetMaxMgDl": "Tii",
+        "veryLowMgDl": "Na nsi mingi",
+        "veryHighMgDl": "Na zulu mingi"
+      }
+    },
+    "contacts": {
+      "title": "Bantu na nge ya kubinga",
+      "intro": "Yo kele ya ngolo ve, kansi yo lenda sadisa kana mpasi. Nge lenda kusoba yo na nima.",
+      "relativeTitle": "Muntu ya dikanda ya kuzabisa",
+      "relativeHint": "Yandi ta vanda na carte na nge ya mpasi kana nge kangula yo.",
+      "name": "Zina",
+      "phone": "Telefone",
+      "relation": "Kinduku (ya ngolo ve)",
+      "relationPlaceholder": "Nkento, mwana bakala, nduku…",
+      "doctorTitle": "Munganga na nge",
+      "doctorHint": "Munganga yina ke landa diabète na nge.",
+      "doctorName": "Zina ya munganga",
+      "doctorNamePlaceholder": "Dr …",
+      "emergencyTitle": "Kana mpasi ya nswalu",
+      "emergencyHint": "Numero ya kubinga lusadisu kuna nge ke zinga. Afyabora ke zabaka yo ve: lomba yo na nzo ya munganga na nge.",
+      "country": "Insi",
+      "countries": {
+        "CD": "RD Congo",
+        "CG": "Congo",
+        "RW": "Rwanda",
+        "BI": "Burundi",
+        "UG": "Uganda",
+        "AO": "Angola",
+        "FR": "France",
+        "BE": "Belgique",
+        "OTHER": "Insi ya nkaka"
+      },
+      "otherCountry": "Code ya insi (bisono 2)",
+      "otherCountryHint": "Mbandu KE sambu na Kenya, CM sambu na Cameroun.",
+      "clearCountry": "Kusonika insi ve",
+      "emergencyNumber": "Numero ya mpasi ya nswalu",
+      "emergencyNumberHint": "Lusadisu, ambulance to lopitalu ya pene-pene.",
+      "emergencyNumberPlaceholder": "Mbandu 112"
+    },
+    "summary": {
+      "overline": "Kitini ya nsuka",
+      "title": "Yonso kele mbote?",
+      "intro": "Tala mambu na nge na ntwala ya kubumba yo.",
+      "edit": "Soba",
+      "name": "Zina",
+      "target": "Ndilu ya mbote",
+      "none": "Me sonikama ve",
+      "save": "Bumba profil na mono"
+    },
+    "done": {
+      "title": "Mbote, {{name}}!",
+      "message": "Profil na nge me lunga. Nge lenda kubumba mesire na nge ya ntete.",
+      "action": "Zaba Afyabora"
+    },
+    "errors": {
+      "firstName": "Sonika zina na nge ya ntete.",
+      "lastName": "Sonika zina na nge ya dikanda.",
+      "birthDate": "Kilumbu kele mbote ve: sadila KL/NG/MVU (kilumbu ya ke kwisa ve).",
+      "sex": "Pona mosi.",
+      "diabetesType": "Pona mutindu ya diabète.",
+      "diagnosisYear": "Mvula na kati ya 1950 mpi bubu, na nima ya kubutuka na nge.",
+      "preferredUnit": "Pona unité.",
+      "thresholds": {
+        "veryLowMgDl": "Ntalu kele mbote ve: yo fwete vanda na nsi ya luyantiku ya ndilu ya mbote.",
+        "targetMinMgDl": "Ntalu kele mbote ve to kele na nganda ya bandilu (20 tii 600 mg/dL).",
+        "targetMaxMgDl": "Ntalu kele mbote ve: nsuka ya ndilu fwete vanda na zulu ya luyantiku.",
+        "veryHighMgDl": "Ntalu kele mbote ve: yo fwete vanda na zulu ya nsuka ya ndilu ya mbote."
+      },
+      "emergencyContact": {
+        "name": "Sonika zina ya muntu na nge ya dikanda.",
+        "phone": "Sonika numero ya telefone (ata bisono 6).",
+        "relation": "Bisono me luta."
+      },
+      "doctorContact": {
+        "name": "Sonika zina ya munganga na nge.",
+        "phone": "Sonika numero ya telefone (ata bisono 6)."
+      },
+      "country": "Pona insi to sonika code na yo ya bisono 2 (mbandu KE).",
+      "emergencyNumber": "Sonika numero ya bantalu kaka (« + » me ndimama na luyantiku)."
+    }
+  },
+  "security": {
+    "pad": {
+      "progress": "Ntalu {{count}} me sonikama na {{total}}",
+      "delete": "Katula"
+    },
+    "lock": {
+      "title": "Afyabora me kangama",
+      "prompt": "Sonika code na nge sambu na kulanda.",
+      "wrong": "Code kele mbote ve. Meka diaka.",
+      "wait": "Nge me meka mbala mingi. Meka diaka na nima ya {{seconds}} s.",
+      "bioPrompt": "Kangula Afyabora",
+      "useCode": "Sadila code na mono",
+      "useFace": "Kangula ti mpala",
+      "useFinger": "Kangula ti mulembo",
+      "forgot": "Nge me vila code?",
+      "forgotTitle": "Basika sambu na kubongisa diaka",
+      "forgotText": "Nge ta kota diaka ti email mpi mot de passe na nge. Mambu yina ntete ve kutindama ta vila na telefone yai.",
+      "forgotConfirm": "Basika"
+    },
+    "settings": {
+      "title": "Lutaninu",
+      "intro": "Taninaka nzila ya kukota na mambu ya maladi na nge na telefone yai.",
+      "lockLabel": "Kanga application",
+      "lockHint": "Code (mpi mulembo kana nge ke zola) ta lombama ntangu nge ke kangula.",
+      "bioFinger": "Kangula ti mulembo",
+      "bioFace": "Kangula ti mpala",
+      "bioHint": "Code na nge lenda sadilama ntangu yonso.",
+      "bioUnavailable": "Mulembo to mpala kele ve na telefone yai: code ta lombama.",
+      "timeoutLabel": "Kanga diaka na nima ya",
+      "timeout": {
+        "immediate": "Nswalu",
+        "1min": "1 min",
+        "5min": "5 min"
+      },
+      "change": "Soba code",
+      "lengthTitle": "Pona code na nge",
+      "lengthLabel": "Nda ya code",
+      "four": "Bantalu 4",
+      "fourHint": "Ya nswalu na kusonika",
+      "six": "Bantalu 6",
+      "sixHint": "Ya mpasi na kuzaba",
+      "createTitle": "Sonika code ya mpa",
+      "confirmTitle": "Sonika yo diaka",
+      "verifyTitle": "Sonika code na nge ya sesepi",
+      "mismatch": "Bacode zole ke fwanana ve. Yantika diaka.",
+      "problem": {
+        "length": "Code fwete vanda ti bantalu 4 tii 6.",
+        "digits": "Code kele kaka ti bantalu.",
+        "tooSimple": "Code kele ya pete mingi (mbandu 1234, 0000). Pona ya nkaka."
+      },
+      "enabled": "Kukanga me kanguka.",
+      "changed": "Code me sobana.",
+      "disabled": "Kukanga me kangama.",
+      "tipsTitle": "Mbote na kuzaba",
+      "tips": "Code na nge ke bumbamaka ve ya pwelele. Na nima ya bifu 5, nge fwete vingila na ntwala ya kumeka diaka. Nge me vila code? Nge lenda basika mpi kota diaka ti mot de passe na nge.",
+      "storage": {
+        "title": "Mambu ya maladi na telefone yai",
+        "loading": "Kutala…",
+        "encrypted": "Me bumbama na kinsweki",
+        "encryptedHint": "Base locale me bumbama na kinsweki (AES-256, SQLCipher). Nsapi me bumbama na kisika ya lutaninu ya telefone.",
+        "unencrypted": "Me bumbama ve na kinsweki",
+        "unencryptedHint": "Mode ya développement (Expo Go): kinsweki ke salaka kaka na application yina me tulama (APK).",
+        "web": "Kumona na web",
+        "webHint": "Kima mosi ve ke bumbama na kisadi yai: mambu ke bikala na mémoire kaka ntangu nge kele.",
+        "error": "Kele ve",
+        "errorHint": "Base locale me kanguka ve. Kanga mpi kangula application diaka.",
+        "migrated": "Mambu yina bumbamaka ntama na telefone yai me bumbama sesepi na kinsweki.",
+        "reset": "Base ya telefone yai vandaka ve ya kutanga: yo me salama diaka. Mambu na nge ke vutuka katuka na serveur; kaka mambu yina tindamaka ve lenda vila."
+      }
+    }
+  },
+  "legal": {
+    "updated": "Version {{version}} · me bongisama na {{date}}",
+    "date": "10 ngonda ya kumi 2026",
+    "close": "Kanga",
+    "emergencyTitle": "Kana mpasi ya nswalu",
+    "emergency": "Kana nge ke wa mbote ve, to sukadi na menga kele na nsi mingi to na zulu mingi ti bidimbu, vingila ve application: binga lusadisu to kwenda na nzo ya munganga ya pene-pene.",
+    "disclaimer": {
+      "overline": "Lukebisu",
+      "title": "Kisadi ya kusadisa, ndongisila ya munganga ve",
+      "short": "Afyabora ke sadisa nge na kulanda sukadi na nge. Yo ke zabisaka maladi ve mpi yo ke baka ve kisika ya ndongisila ya munganga.",
+      "more": "Zaba mingi",
+      "moreA11y": "Tanga lukebisu ya mvimba",
+      "intro": "Afyabora kele kisadi ya kusadisa na kulanda diabète. Na ntwala ya kusadila yo, yo kele mfunu na kuzaba inki yo ke salaka, mingi-mingi inki yo ke salaka ve.",
+      "does": {
+        "title": "Inki Afyabora ke salaka",
+        "body": "Yo ke bumbaka mesire na nge, ata internet kele ve. Yo ke salaka bantalu ya pete katuka na mambu na nge mosi (moyenne, ntangu na kati ya ndilu na nge ya mbote, mbala sukadi matilaka to kulumukaka). Yo ke sadisa nge na kubongisa kukutana ti munganga mpi na kukabula disolo na nge ti munganga yina nge me pona."
+      },
+      "doesNot": {
+        "title": "Inki yo ke salaka ve",
+        "body": "Yo ke zabisaka ve maladi. Yo ke pesaka ve dose ya insuline to nkisi mosi. Yo ke tubaka ve kikuma ya sukadi ya zulu to ya nsi: mambu yo ke monisa kele kaka banzila ya kutubila ti munganga."
+      },
+      "quality": {
+        "title": "Bamvutu yina ke landa mambu nge ke sonika",
+        "body": "Bantalu kele kieleka kaka kana mesire kele kieleka: ntalu yina me sonikama mbi to bilumbu yina nge me meka ve ke sobaka bamvutu. Application ke zabisaka nge ntangu mambu kele fioti sambu na kubaka lukanu."
+      },
+      "treatment": {
+        "title": "Nkisi na nge",
+        "body": "Kusoba ve nkisi na nge kaka na kutala application. Tubila yo ntete ti munganga to bantu ya nzo ya munganga na nge."
+      },
+      "alerts": {
+        "title": "Bambukusu mpi bantendula",
+        "body": "Bambukusu mpi bantendula lenda kwisa ve (telefone me fwa, batterie me mana, ba notification me kangama). Yo ke baka ve kisika ya lukebisu na nge mpi ya bantu na nge."
+      }
+    },
+    "privacy": {
+      "overline": "Kinsweki",
+      "title": "Bansiku ya kubumba kinsweki",
+      "intro": "Mambu ya maladi na nge kele ya nge. Lukaya yai ke tendula na mutindu ya pete inki beto ke bumbaka, sambu na inki, wapi, mpi nani lenda kumona yo.",
+      "prototype": "Afyabora kele sesepi prototype yina me salama na nzo-nkanda. Bansiku yai ta talwa diaka ti bamfumu na ntwala ya kupesa yo na bantu yonso.",
+      "data": {
+        "title": "Mambu yina ke bumbamaka",
+        "body": "Compte na nge: adresse email mpi mot de passe (yo ke bumbamaka ve ya pwelele). Profil na nge: zina, kilumbu ya kubutuka, bakala to nkento, mutindu ya diabète, mvula yina bo monaka yo, unité mpi bandilu yina nge me pona. Kana nge ke zola: muntu ya dikanda ya kuzabisa mpi munganga na nge. Kulanda na nge: mesire ya sukadi, mambu (madia, kisalu ya nitu, nkisi…) mpi ba note."
+      },
+      "purpose": {
+        "title": "Sambu na inki",
+        "body": "Kaka sambu na kulanda na nge: kumonisa disolo na nge, kusala bantalu na nge mpi kubongisa kukutana ti munganga. Piblisite ve. Mambu na nge ke tekamaka ve mpi ke pesamaka ve na mbongo."
+      },
+      "storage": {
+        "title": "Wapi yo ke bumbamaka",
+        "body": "Ntete na telefone na nge, sambu yo sala ata internet kele ve, na nima na serveur na beto ntangu internet kele. Kutinda mambu ke salama na kinsweki, ba note na nge me bumbama na kinsweki na serveur, mpi nge lenda kukanga application ti code to mulembo. Ntangu nge ke basika, mambu ke katuka na telefone."
+      },
+      "sharing": {
+        "title": "Kukabula ti munganga",
+        "body": "Kima mosi ve ke kabulamaka kana nge salaka yo ve. Nge ke salaka QR code, yina ke sala ntangu fioti mpi mbala mosi kaka; kaka munganga yina me kota mpi me ndimama lenda kutanga yo. Nge ke pona inki yandi ta mona mpi sambu na ntangu ikwa, nge lenda kubika kukabula ntangu yonso, mpi kutala yonso ke monana na zulunalo na nge."
+      },
+      "emergency": {
+        "title": "Carte ya mpasi",
+        "body": "Kana nge kangula yo, carte ya mpasi lenda tangama ata kukonda compte: yai kele lukanu na yo, sambu na bantu ya lusadisu. Yo kele kaka ti mambu yina nge me pona, disolo na nge ve. Mbala yonso yo me kanguka, bo ke zabisa nge, mpi nge lenda kukanga to kusoba yo ntangu yonso."
+      },
+      "analysis": {
+        "title": "Kutala",
+        "body": "Bantalu mpi mambu yina ke monana ke salamaka na application na bansiku yina ke sobaka ve mpi yina lenda talwa, kaka katuka na mambu na nge. Kana kilumbu mosi masini ta bongisa bisono, yo ta baka kaka bantalu ya nkufi, zina na nge ve mpi adresse na nge ve."
+      },
+      "retention": {
+        "title": "Sambu na ntangu ikwa",
+        "body": "Mambu na nge ke bumbamaka ntangu yonso compte na nge kele. Kukatula compte ke katulaka mambu na nge na ba serveur na beto."
+      },
+      "rights": {
+        "title": "Banswa na nge",
+        "body": "Nge lenda kubaka kopi ya mambu na nge, kubongisa yo mpi kukatula compte na nge. Ndimisa yina nge pesaka ntangu ya kusala compte lenda katuka kana nge katula compte na nge. Nge kele ve na kiyeka ya kukabula mambu na nge ti munganga."
+      }
+    },
+    "about": {
+      "overline": "Mambu ya kubongisa",
+      "title": "Sambu na application",
+      "version": "Version {{version}}",
+      "legalTitle": "Mambu ya nsiku",
+      "privacyHint": "Inki beto ke bumbaka mpi nani lenda kumona yo",
+      "disclaimerHint": "Inki application ke salaka, mpi inki yo ke salaka ve",
+      "credits": "Projet PBL 5 · MEO. Me salama sambu na bantu yina kele ti diabète."
+    }
+  },
+  "measurement": {
+    "overline": "Kusonika",
+    "title": "Mesire ya mpa",
+    "close": "Kanga kukonda kubumba",
+    "valueLabel": "Sukadi na menga",
+    "valueA11y": "Ntalu ya sukadi na menga, na {{unit}}",
+    "equals": "disongidila {{values}}",
+    "unitLabel": "Unité",
+    "when": {
+      "label": "Ntangu nki?",
+      "now": "Ntangu yai",
+      "minus30": "−30 min",
+      "minus60": "−1 h",
+      "custom": "Ya nkaka",
+      "today": "Bubu yai",
+      "yesterday": "Mazono",
+      "dayBefore": "Kilumbu ya ntwala ya mazono",
+      "time": "Ntangu ya mesire",
+      "hourMinus": "Ngunga mosi na ntwala",
+      "hourPlus": "Ngunga mosi na nima",
+      "minuteMinus": "Baminute tanu na ntwala",
+      "minutePlus": "Baminute tanu na nima",
+      "summary": "{{day}}, {{time}}"
+    },
+    "context": {
+      "label": "Ntangu ya mesire",
+      "FASTING": "Kukonda kudia",
+      "BEFORE_MEAL": "Na ntwala ya madia",
+      "AFTER_MEAL": "Na nima ya madia",
+      "BEDTIME": "Ntangu ya kulala",
+      "NIGHT": "Na mpimpa",
+      "OTHER": "Ya nkaka"
+    },
+    "noteLabel": "Note (kana nge ke zola)",
+    "notePlaceholder": "Mbandu: na nima ya kutambula, madia ya mpimpa ya ntama…",
+    "noteHint": "Nge mosi ke mona yo; yo ke kabulamaka kaka kana nge me pona.",
+    "save": "Bumba",
+    "problem": {
+      "empty": "Sonika ntalu yina nge me mesura.",
+      "invalid": "Ntalu ke tangama ve: sadila kaka bantalu.",
+      "zero": "Ntalu fwete luta zero.",
+      "decimals": "Bantalu mingi na nima ya virgule sambu na unité yai: tala mbote yina nge me sonika.",
+      "unusual": "Ntalu ya kuyituka: tala ntalu mpi unité yina nge me pona.",
+      "future": "Ntangu yai kele na kilumbu ya kesalama ntete ve.",
+      "context": "Pona ntangu ya mesire."
+    },
+    "duplicateTitle": "Nge me bumba yo dezia?",
+    "duplicate": "Mesire mosi ya ntalu ya mutindu mosi kele dezia na ntangu yai.",
+    "duplicateConfirm": "Bumba ata mpidina",
+    "error": "Mesire me bumbama ve na telefone yai. Meka diaka.",
+    "saved": {
+      "title": "Mesire me bumbama",
+      "detail": "{{value}} · {{context}} · {{when}}",
+      "local": "Yo me bumbama na telefone yai, yo ta tindama ntangu internet ta vanda.",
+      "another": "Yika mesire ya nkaka",
+      "done": "Me mana",
+      "confirmedUnusual": "Ntalu ya kuyituka yina nge mosi me ndima."
+    },
+    "addA11y": "Yika mesire ya sukadi na menga",
+    "unusual": {
+      "question": "{{value}}: yo kele kieleka?",
+      "explain": "Ntalu yai kele ya kuyituka: kisadi ya kumesura sukadi ke monisaka mingi-mingi na kati ya {{min}} ti {{max}}.",
+      "unitHint": "Kifu ya unité? Bika ntalu, soba unité:",
+      "switchUnit": "Yo vandaka na {{unit}}",
+      "confirm": "Ee, yo kele kieleka",
+      "fix": "Bongisa ntalu"
+    },
+    "safety": {
+      "title": {
+        "VERY_LOW": "Ntalu na nsi mingi",
+        "VERY_HIGH": "Ntalu na zulu mingi"
+      },
+      "message": "Landa bandongisila ya bantu ya nzo ya munganga na nge. Kana nge ke wa mbote ve, lomba lusadisu nswalu."
+    },
+    "edit": {
+      "overline": "Mesire",
+      "title": "Bongisa mesire",
+      "close": "Kanga kukonda kubumba",
+      "savedAt": "{{day}} na {{time}}",
+      "whenLabel": "Kilumbu mpi ntangu",
+      "day": "Kilumbu ya mesire",
+      "previousDay": "Kilumbu ya ntwala",
+      "nextDay": "Kilumbu ya ke landa",
+      "save": "Bumba bansoba",
+      "saveError": "Nsoba me bumbama ve na telefone yai. Meka diaka.",
+      "delete": "Katula mesire yai",
+      "deleteTitle": "Katula mesire yai?",
+      "deleteText": "Yo ta katuka na disolo na nge mpi na bantalu na nge, na telefone yai mpi na nima na serveur.",
+      "deleteConfirm": "Katula",
+      "deleteError": "Mesire me katuka ve na telefone yai. Meka diaka.",
+      "cancel": "Bika",
+      "missingTitle": "Mesire me monana ve",
+      "missingText": "Ziku yo me katuka dezia.",
+      "back": "Vutuka"
+    }
+  },
+  "dashboard": {
+    "greeting": {
+      "morning": "Mbote",
+      "evening": "Mbote ya nkokila"
+    },
+    "latest": {
+      "title": "Mesire ya nsuka",
+      "today": "Bubu yai",
+      "yesterday": "Mazono",
+      "when": "{{day}}, {{time}}",
+      "age": {
+        "justNow": "Ntangu yai kaka",
+        "minutes_one": "Me luta {{count}} min",
+        "minutes_other": "Me luta {{count}} min",
+        "minutes_many": "Me luta {{count}} min",
+        "hours_one": "Me luta {{count}} h",
+        "hours_other": "Me luta {{count}} h",
+        "hours_many": "Me luta {{count}} h",
+        "days_one": "Me luta kilumbu {{count}}",
+        "days_other": "Me luta bilumbu {{count}}",
+        "days_many": "Me luta bilumbu {{count}}"
+      },
+      "a11y": "Mesire ya nsuka: {{value}}, {{state}}. {{context}}, {{when}}.",
+      "add": "Mesire ya mpa"
+    },
+    "empty": {
+      "title": "Mesire mosi ve sesepi",
+      "text": "Sonika sukadi na nge ya ntete: yo ke bikala na telefone yai, ata internet kele ve.",
+      "action": "Sonika mesire na mono ya ntete"
+    },
+    "error": "Mesire na nge me tangama ve na telefone yai.",
+    "chart": {
+      "title": "Nkulumukunu",
+      "periodLabel": "Ntangu ya graphique",
+      "period_one": "{{count}} kl",
+      "period_other": "{{count}} kl",
+      "period_many": "{{count}} kl",
+      "summary_one": "Mesire {{count}} na bilumbu {{days}}",
+      "summary_other": "Mesire {{count}} na bilumbu {{days}}",
+      "summary_many": "Mesire {{count}} na bilumbu {{days}}",
+      "hint": "Simba nzila ya graphique sambu na kumona mambu ya mesire mosi.",
+      "empty": "Mesire mosi ve na bilumbu yai {{days}}.",
+      "target": "Ndilu ya mbote: {{min}} – {{max}}",
+      "a11y_one": "Graphique ya sukadi na menga na bilumbu {{days}}: mesire {{count}}.",
+      "a11y_other": "Graphique ya sukadi na menga na bilumbu {{days}}: mesire {{count}}.",
+      "a11y_many": "Graphique ya sukadi na menga na bilumbu {{days}}: mesire {{count}}.",
+      "a11yHint": "Nata mulembo na zulu to na nsi sambu na kukwenda na mesire ya nkaka.",
+      "a11yPoint": "{{value}}, {{state}}. {{detail}}"
+    },
+    "stats": {
+      "title": "Bantalu",
+      "count_one": "Mesire {{count}} · {{days}} kl",
+      "count_other": "Mesire {{count}} · {{days}} kl",
+      "count_many": "Mesire {{count}} · {{days}} kl",
+      "insufficientTitle": "Mambu me lunga ve",
+      "insufficient_one": "Yo ke lomba mesire {{min}} na nsi-nsi na bilumbu yai {{days}} sambu na bantalu ya kieleka. Nge kele ti {{count}}.",
+      "insufficient_other": "Yo ke lomba mesire {{min}} na nsi-nsi na bilumbu yai {{days}} sambu na bantalu ya kieleka. Nge kele ti {{count}}.",
+      "insufficient_many": "Yo ke lomba mesire {{min}} na nsi-nsi na bilumbu yai {{days}} sambu na bantalu ya kieleka. Nge kele ti {{count}}.",
+      "shareA11y": "Kukabula ya mesire: {{below}} % na nsi, {{inRange}} % na kati ya ndilu, {{above}} % na zulu.",
+      "mean": "Moyenne",
+      "sd": "Écart-type",
+      "cv": "Nsoba",
+      "compareTitle": "Kana beto fwanisa ti bilumbu {{days}} ya ntwala",
+      "tirChange": "Ntangu na kati ya ndilu: {{value}}",
+      "meanChange": "Moyenne: {{value}}",
+      "points_one": "{{sign}}{{count}} point",
+      "points_other": "{{sign}}{{count}} points",
+      "points_many": "{{sign}}{{count}} points",
+      "stable": "ke sobana ve",
+      "direction": {
+        "up": "ke mata",
+        "down": "ke kulumuka",
+        "flat": "ke sobana ve"
+      },
+      "noPrevious": "Mesire me lunga ve na bilumbu {{days}} ya ntwala sambu na kufwanisa."
+    },
+    "quality": {
+      "title": "Mbote ya mambu",
+      "level": {
+        "GOOD": "Mbote",
+        "PARTIAL": "Ndambu",
+        "INSUFFICIENT": "Me lunga ve"
+      },
+      "reason": {
+        "empty": "Mesire mosi ve na bilumbu yai {{days}}: kima ve ya kutala sesepi.",
+        "good": "Mesire ya ntangu yonso: bilumbu {{covered}} ti mesire na bilumbu {{days}}, {{perDay}} na kilumbu na moyenne.",
+        "coverage": "Mesire kaka na bilumbu {{covered}} na bilumbu {{days}}: bilumbu mingi ti mesire ke salaka nde kutala vanda ya kieleka mingi.",
+        "freshness_one": "Mesire ya nsuka me luta kilumbu {{count}}: bantalu ke monisa mingi ve mambu ya bubu yai.",
+        "freshness_other": "Mesire ya nsuka me luta bilumbu {{count}}: bantalu ke monisa mingi ve mambu ya bubu yai.",
+        "freshness_many": "Mesire ya nsuka me luta bilumbu {{count}}: bantalu ke monisa mingi ve mambu ya bubu yai.",
+        "density_one": "Mesire {{perDay}} na kilumbu ti mesire na moyenne: lukanu kele {{target}} sambu na kumona mambu mbote.",
+        "density_other": "Mesire {{perDay}} na kilumbu ti mesire na moyenne: lukanu kele {{target}} sambu na kumona mambu mbote.",
+        "density_many": "Mesire {{perDay}} na kilumbu ti mesire na moyenne: lukanu kele {{target}} sambu na kumona mambu mbote."
+      },
+      "coverage": "Bilumbu ti mesire",
+      "density": "Mesire na kilumbu",
+      "freshness": "Ntangu ya mesire ya nsuka",
+      "formula": "Score = 50 % bilumbu ti mesire + 30 % mesire na kilumbu + 20 % ntangu ya mesire ya nsuka.",
+      "a11y": "Mbote ya mambu: {{score}} na 100, {{level}}. {{sentence}}"
+    }
+  },
+  "timeline": {
+    "overline": "Nlandu ya ntangu",
+    "title": "Disolo",
+    "filtersLabel": "Pona inki ya kumona na disolo",
+    "filter": {
+      "all": "Yonso",
+      "glucose": "Sukadi na menga",
+      "MEAL": "Madia",
+      "ACTIVITY": "Kisalu ya nitu",
+      "TREATMENT": "Bankisi",
+      "alerts": "Bambukusu"
+    },
+    "type": {
+      "MEAL": "Madia",
+      "ACTIVITY": "Kisalu ya nitu",
+      "TREATMENT": "Nkisi"
+    },
+    "duration_one": "{{type}} · {{count}} min",
+    "duration_other": "{{type}} · {{count}} min",
+    "duration_many": "{{type}} · {{count}} min",
+    "declared": "Nge mosi me sonika yo",
+    "pending": "Me tindama ntete ve",
+    "source": {
+      "MANUAL": "Kusonika",
+      "IMPORT": "Import",
+      "DEVICE": "Kisadi",
+      "importBatch": "Import · kibuka {{batch}}",
+      "a11y": "Kisika yo me katuka: {{label}}"
+    },
+    "count_one": "Kima {{count}}",
+    "count_other": "Bima {{count}}",
+    "count_many": "Bima {{count}}",
+    "more": "Mona bilumbu {{days}} ya ntwala",
+    "end": "Kima ya ntama mingi ve na telefone yai.",
+    "empty": {
+      "title": "Disolo na nge kele mpamba",
+      "text": "Mesire na nge, madia, kisalu ya nitu mpi bankisi ta monana awa, kilumbu na kilumbu.",
+      "action": "Sonika mesire",
+      "import": "Kotisa fichier"
+    },
+    "emptyFilter": {
+      "title": "Kima ve ya kumonisa",
+      "text": "Kima mosi ve ya « {{filter}} » na bilumbu {{days}} ya nsuka."
+    },
+    "error": "Disolo me tangama ve na telefone yai.",
+    "a11y": {
+      "measurement": "{{time}}, sukadi na menga {{value}}, {{state}}, {{context}}",
+      "event": "{{time}}, {{label}}, {{meta}}"
+    },
+    "addEvent": "Yika",
+    "openHint": "Ke kangula mambu ya mvimba sambu na kubongisa to kukatula"
+  },
+  "event": {
+    "overline": "Kuyika nswalu",
+    "title": "Diambu ya mpa",
+    "close": "Kanga kukonda kubumba",
+    "typeLabel": "Mutindu",
+    "type": {
+      "MEAL": "Madia",
+      "ACTIVITY": "Kisalu ya nitu",
+      "TREATMENT": "Nkisi"
+    },
+    "typeHint": {
+      "MEAL": "Inki nge me dia, mpi ntangu nki",
+      "ACTIVITY": "Kisalu mosi ya nitu mpi ntangu yina yo me baka",
+      "TREATMENT": "Nkisi mosi yina nge me baka, mutindu nge ke tuba yo"
+    },
+    "chooseFirst": "Pona ntete mutindu ya diambu.",
+    "label": {
+      "MEAL": "Madia",
+      "ACTIVITY": "Kisalu ya nitu",
+      "TREATMENT": "Zina ya nkisi"
+    },
+    "placeholder": {
+      "MEAL": "Mbandu: madia ya midi, loso ti madesu",
+      "ACTIVITY": "Mbandu: kutambula",
+      "TREATMENT": "Mbandu: insuline ya malembe, metformine"
+    },
+    "suggestionsLabel": "Bandongisila",
+    "suggestion": {
+      "breakfast": "Madia ya nsuka",
+      "lunch": "Madia ya midi",
+      "dinner": "Madia ya nkokila",
+      "snack": "Madia ya fioti",
+      "walk": "Kutambula",
+      "run": "Kuzama",
+      "bike": "Velo",
+      "football": "Football",
+      "dance": "Makinu",
+      "housework": "Bisalu ya nzo"
+    },
+    "durationLabel": "Ntangu",
+    "durationOther": "Ntangu ya nkaka (baminute)",
+    "minutes_one": "{{count}} min",
+    "minutes_other": "{{count}} min",
+    "minutes_many": "{{count}} min",
+    "details": {
+      "MEAL": "Mambu ya nkaka (kana nge ke zola)",
+      "ACTIVITY": "Mambu ya nkaka (kana nge ke zola)",
+      "TREATMENT": "Note (kana nge ke zola)"
+    },
+    "detailsPlaceholder": {
+      "MEAL": "Mbandu: ndambu ya nene kuluta mbala yonso",
+      "ACTIVITY": "Mbandu: na nzunga ya quartier",
+      "TREATMENT": "Mbandu: bonso mbala yonso na nkokila"
+    },
+    "detailsHint": "Nge mosi ke mona yo; yo ke kabulamaka kaka kana nge me pona.",
+    "treatmentTitle": "Nge mosi me sonika yo",
+    "treatmentInfo": "Afyabora ke bumbaka yina nge ke sonika, kukonda kutanga to kupesa ndongisila ya dose. Landa bandongisila ya bantu ya nzo ya munganga na nge.",
+    "save": "Bumba",
+    "error": "Diambu me bumbama ve na telefone yai. Meka diaka.",
+    "problem": {
+      "type": "Pona mutindu ya diambu.",
+      "label": "Sonika zina.",
+      "labelTooLong": "Bisono {{max}} na zulu-zulu.",
+      "duration": "Ntangu na baminute, katuka 1 tii 1440.",
+      "future": "Ntangu yai kele na kilumbu ya kesalama ntete ve."
+    },
+    "saved": {
+      "title": "Diambu me bumbama",
+      "local": "Yo me bumbama na telefone yai, yo ta tindama ntangu internet ta vanda.",
+      "another": "Yika diambu ya nkaka",
+      "done": "Me mana"
+    }
+  },
+  "insights": {
+    "title": "Kutala",
+    "subtitle": "Inki mesire na nge ke monisa. Me tangama na telefone yai, ata internet kele ve.",
+    "periodLabel": "Ntangu yina me talama",
+    "error": "Mesire yina me bumbama na telefone yai ke tangama ve.",
+    "summary": {
+      "title": "Bilumbu {{days}} ya nsuka",
+      "range": "Katuka {{from}} tii {{to}}",
+      "inRange": "na kati ya ndilu ya mbote",
+      "count_one": "Mesire {{count}}",
+      "count_other": "Mesire {{count}}",
+      "count_many": "Mesire {{count}}",
+      "quality": "Mbote ya mambu: {{score}}/100 · {{level}}",
+      "a11y": "Na bilumbu {{days}} ya nsuka: {{percent}} % ya mesire na kati ya ndilu ya mbote, {{readings}}. Mbote ya mambu: {{score}} na 100, {{level}}."
+    },
+    "headline": {
+      "calm": "Diambu mosi ve ya kuyituka na ntangu yai.",
+      "watch_one": "Diambu {{count}} ya kutala mbote.",
+      "watch_other": "Mambu {{count}} ya kutala mbote.",
+      "watch_many": "Mambu {{count}} ya kutala mbote."
+    },
+    "insufficient": {
+      "title": "Mesire me lunga ntete ve",
+      "body_one": "Mesire {{count}} na bilumbu yai {{days}}: yo ke lomba 10 na nsi-nsi sambu na kutala ya kieleka.",
+      "body_other": "Mesire {{count}} na bilumbu yai {{days}}: yo ke lomba 10 na nsi-nsi sambu na kutala ya kieleka.",
+      "body_many": "Mesire {{count}} na bilumbu yai {{days}}: yo ke lomba 10 na nsi-nsi sambu na kutala ya kieleka.",
+      "action": "Sonika mesire"
+    },
+    "observations_one": "Diambu {{count}}",
+    "observations_other": "Mambu {{count}}",
+    "observations_many": "Mambu {{count}}",
+    "severity": {
+      "INFO": "Nsangu",
+      "ATTENTION": "Ya kukengila",
+      "ALERT": "Lukebisu"
+    },
+    "type": {
+      "TREND": "Nzila ya bantalu",
+      "TIME_OF_DAY_PATTERN": "Ntangu ya kilumbu",
+      "ANOMALY": "Ntalu ya kuyituka",
+      "HIGH_STREAK": "Bantalu ya zulu ya kulandana",
+      "REPEATED_HYPO": "Bantalu ya nsi mbala mingi",
+      "MISSING_DATA": "Bilumbu kukonda mesire",
+      "PERIOD_COMPARISON": "Kufwanisa"
+    },
+    "slot": {
+      "MORNING": "suka",
+      "NOON": "midi",
+      "EVENING": "nkokila",
+      "NIGHT": "mpimpa"
+    },
+    "sentence": {
+      "REPEATED_HYPO": "Mono ke mona mesire {{count}} na nsi ya ndilu ya nsi na bilumbu {{days}} ya nsuka.",
+      "HIGH_STREAK": "Mono ke mona mesire {{length}} ya kulandana na zulu ya ndilu ya zulu.",
+      "ANOMALY": "Mesire {{count}} ke swaswana mingi ti disolo na nge ya bilumbu yai.",
+      "TIME_OF_DAY_PATTERN": "Bantalu ya zulu ke monanaka mingi na ntangu ya « {{slot}} » ({{slotAbovePct}} % na kisika ya {{globalAbovePct}} % na mutindu ya yonso).",
+      "MISSING_DATA": "Bilumbu {{daysWithoutData}} na {{daysInPeriod}} kele ti mesire ve: bantalu ya nkaka lenda vanda ya mvimba ve.",
+      "PERIOD_COMPARISON": "Ntangu na kati ya ndilu: {{timeInRangePct}} % (ntangu ya ntwala: {{previousTimeInRangePct}} %).",
+      "TREND": "Nzila ya bantalu yina me monana na ntangu yai."
+    },
+    "threshold": {
+      "below": "Ndilu me lutama: na nsi ya {{value}}",
+      "above": "Ndilu me lutama: na zulu ya {{value}}"
+    },
+    "alertReminder": "Tubila yo ti munganga na nge.",
+    "evidence": {
+      "show_one": "Mona mesire yina ke tadila yo",
+      "show_other": "Mona mesire {{count}} yina ke tadila yo",
+      "show_many": "Mona mesire {{count}} yina ke tadila yo",
+      "hide": "Bumba mesire",
+      "more_one": "Monisa mesire {{count}} ya nkaka",
+      "more_other": "Monisa mesire {{count}} ya nkaka",
+      "more_many": "Monisa mesire {{count}} ya nkaka",
+      "openHint": "Ke kangula mambu ya mvimba ya mesire yai.",
+      "a11y": "{{when}}: {{value}}, {{state}}. {{context}}."
+    },
+    "cardA11y": "{{severity}}. {{title}}. {{sentence}}",
+    "summaryText": {
+      "title": "Na bufioti",
+      "note": "Nkufi yina me salama katuka na mesire na nge. Yo kele ve ndongisila ya munganga.",
+      "insufficient": "Mesire me lunga ntete ve na bilumbu {{days}} ya nsuka sambu na kutala ya kieleka (yo ke lomba 10 na nsi-nsi).",
+      "counts": "Na bilumbu {{days}} ya nsuka, mesire {{measures}} me talama (mbote ya mambu: {{level}}, {{score}}/100).",
+      "level": {
+        "GOOD": "mbote",
+        "PARTIAL": "ndambu",
+        "INSUFFICIENT": "me lunga ve"
+      },
+      "split": "Yo vandaka na kati ya ndilu {{inRange}} % ya ntangu, na zulu {{above}} % mpi na nsi {{below}} %.",
+      "previous": "Na ntangu ya ntwala, ntangu na kati ya ndilu vandaka {{previous}} %.",
+      "points": "Mambu ya kutala ti munganga na nge: {{list}}.",
+      "none": "Diambu mosi ve ya kuyituka me monana na ntangu yai.",
+      "missing": "Bilumbu {{missing}} na {{days}} kukonda mesire: bantalu ya nkaka lenda vanda ya mvimba ve.",
+      "point": {
+        "REPEATED_HYPO": "bantalu ya nsi mbala mingi",
+        "HIGH_STREAK": "bantalu ya zulu ya kulandana",
+        "ANOMALY": "bantalu ya kuyituka",
+        "TIME_OF_DAY_PATTERN": "bantalu ya zulu mingi {{slots}}"
+      },
+      "slot": {
+        "MORNING": "na suka",
+        "NOON": "na midi",
+        "EVENING": "na nkokila",
+        "NIGHT": "na mpimpa"
+      },
+      "and": "mpi"
+    },
+    "rewritten": "Bisono me bongisama na IA, bantalu me talama"
+  },
+  "assistant": {
+    "title": "Afyabora",
+    "subtitle": "Nsadisi na nge ya kulanda",
+    "entry": {
+      "title": "Ngyufulu mosi na yina me tala mesire na nge?",
+      "body": "Yufula Afyabora, nsadisi na nge: yandi ke vutulaka katuka na mesire na nge mpi na bafiche yina munganga me tala."
+    },
+    "welcome": {
+      "title": "Mbote, mono kele Afyabora",
+      "body": "Yufula mono bangyufulu na yina me tala sukadi na nge to diabète.",
+      "measures": "Mono ke tendulaka mesire na nge ti bantalu ya mutindu mosi ti lukaya ya Kutala.",
+      "sheets": "Sambu na bangyufulu ya bantu yonso, mono ke sadilaka bafiche yina munganga me tala, mpi mono ke monisaka yo.",
+      "never": "Mono ke pesaka ve dose, mono ke zabisaka ve maladi mpi mono ke pesaka ve ndongisila ya nkisi: sambu na yina, munganga na nge kele muntu ya mbote.",
+      "try": "Meka",
+      "suggestionHint": "Ke yufula Afyabora ngyufulu yai"
+    },
+    "suggestions": {
+      "week": "Comment s'est passée ma semaine ?",
+      "evening": "Mes glycémies du soir sont-elles hautes ?",
+      "hba1c": "C'est quoi l'HbA1c ?",
+      "hypo": "Que faire en cas d'hypoglycémie ?"
+    },
+    "frenchOnly": "Sesepi, nsadisi ke bakisaka mpi ke vutulaka kaka na français. Yo yina bangyufulu yina kele awa na nsi kele na français.",
+    "kinds": {
+      "measurements": "Katuka na mesire na nge",
+      "sheet": "Katuka na fiche mosi",
+      "emergency": "Mpasi ya nswalu",
+      "refusal": "Yo kele ve kisalu na mono",
+      "outOfScope": "Mvutu ya kieleka kele ve"
+    },
+    "source": {
+      "title_one": "Fiche yina me monisama",
+      "title_other": "Bafiche yina me monisama",
+      "title_many": "Bafiche yina me monisama",
+      "validated": "Munganga me tala yo",
+      "draft": "Munganga me tala ntete ve fiche yai",
+      "openHint": "Ke kangula fiche ya mvimba"
+    },
+    "rephrased": "Me sonikama na IA ya telefone, na nima me talama",
+    "pending": {
+      "title": "Afyabora ke bongisa mvutu…",
+      "hint": "Yo lenda baka tii baminute 2.",
+      "late": "Mvutu ke nata ntangu fioti: yo ta monana kaka ntangu yo ta vanda ya kubongama."
+    },
+    "outgoing": {
+      "sending": "Kutinda…",
+      "offline": "Me tindama ve: internet kele ve. Nsadisi ke vingilaka internet.",
+      "quota": "Me tindama ve: bangyufulu 20 na ngunga mosi na zulu-zulu. Meka diaka na nima ya {{minutes}} min.",
+      "conflict": "Me tindama ve: meka diaka.",
+      "unknown": "Me tindama ve: kisalu ke vutula ve. Meka diaka.",
+      "discard": "Katula"
+    },
+    "composer": {
+      "label": "Ngyufulu na nge",
+      "placeholder": "Sonika ngyufulu na nge…",
+      "hint": "Bisono 2 tii 500. Kusonika ve zina na nge to mambu yina ke zabisa nge.",
+      "send": "Tinda ngyufulu",
+      "counter": "{{count}} / {{max}}",
+      "tooLong": "Yo me luta nda: bisono {{max}} na zulu-zulu."
+    },
+    "emergency": {
+      "button": "Mpasi ya nswalu",
+      "buttonHint": "Ke monisa banimero ya kubinga kana mpasi ya nswalu",
+      "title": "Kana mpasi ya nswalu",
+      "body": "Kana nge ke wa mbote ve, kubikala ve nge mosi: binga lusadisu nswalu, to lomba muntu mosi na kubinga.",
+      "noNumber": "Nimero ya mpasi ya nswalu me bumbama ve: binga lusadisu ya insi na nge. Nge lenda bumba nimero na nge ya mpasi ya nswalu na profil na nge.",
+      "callNumber": "Binga {{phone}}",
+      "call_relative": "Binga {{name}}",
+      "call_doctor": "Binga {{name}} (munganga)",
+      "callHint": "Ke kangula kubinga na telefone"
+    },
+    "load": {
+      "loading": "Kukangula masolo",
+      "offlineTitle": "Internet kele ve",
+      "offline": "Masolo na nge me bumbama na serveur, na kinsweki: yo ke lomba internet sambu na kumonisa yo.",
+      "error": "Masolo me kanguka ve.",
+      "notFound": "Masolo yai kele diaka ve: ziku yo me katuka.",
+      "newConversation": "Masolo ya mpa"
+    },
+    "a11y": {
+      "question": "Ngyufulu na nge: {{text}}",
+      "answerReady": "Afyabora me vutula."
+    },
+    "home": {
+      "subtitle": "Nsadisi na nge ya kulanda: mesire na nge mpi bafiche yina munganga me tala.",
+      "new": "Masolo ya mpa",
+      "sheets": "Bafiche ya nzayilu",
+      "sheetsHint": "Hypoglycémie, HbA1c, madia…"
+    },
+    "list": {
+      "title": "Masolo na nge",
+      "loading": "Kukangula masolo na nge",
+      "offline": "Masolo na nge me bumbama na serveur, na kinsweki: yo ke lomba internet sambu na kumonisa yo.",
+      "error": "Masolo na nge me kanguka ve.",
+      "empty": "Masolo mosi ve sesepi. Yufula Afyabora ngyufulu na nge ya ntete.",
+      "today": "Bubu yai, {{time}}",
+      "yesterday": "Mazono, {{time}}",
+      "messages_one": "Nsangu {{count}}",
+      "messages_other": "Bansangu {{count}}",
+      "messages_many": "Bansangu {{count}}",
+      "noPreview": "Masolo kukonda ngyufulu",
+      "openHint": "Ke kangula masolo",
+      "remove": "Katula masolo yai",
+      "removeTitle": "Katula masolo yai?",
+      "removeText": "Bangyufulu mpi bamvutu ta katuka sambu na ntangu yonso.",
+      "removeConfirm": "Katula",
+      "removeAll": "Katula masolo na mono yonso",
+      "removeAllTitle": "Katula masolo na nge yonso?",
+      "removeAllText": "Bangyufulu na nge yonso mpi bamvutu yonso ta katuka sambu na ntangu yonso.",
+      "removeAllConfirm": "Katula yonso",
+      "removeOffline": "Kima mosi ve me katuka: internet kele ve. Meka diaka ntangu internet ta vanda.",
+      "removeError": "Kima mosi ve me katuka: kisalu ke vutula ve. Meka diaka.",
+      "more": "Mona mingi",
+      "privacy": "Masolo na nge me bumbama na kinsweki mpi ke bikala tii nge ta katula yo. Munganga na nge ke monaka yo ata fioti ve."
+    },
+    "sheets": {
+      "title": "Bafiche ya nzayilu",
+      "intro": "Afyabora ke sadilaka bafiche yai sambu na kuvutula na bangyufulu ya bantu yonso. Konso fiche ke monisa bisika ya kieleka yina yo me baka mambu.",
+      "offline": "Bafiche kele na serveur: yo ke lomba internet sambu na kumonisa yo.",
+      "error": "Bafiche me kanguka ve.",
+      "empty": "Fiche mosi ve kele sesepi.",
+      "notFound": "Fiche yai kele ve.",
+      "overline": "Fiche ya nzayilu",
+      "reviewedOn": "Munganga me tala yo na {{date}}",
+      "reminder": "Fiche yai ke pesa bandongisila ya yonso. Sambu na lukanu yina ke tala nge, tubila yo ti munganga na nge.",
+      "sources_one": "Kisika ya nsangu",
+      "sources_other": "Bisika ya nsangu",
+      "sources_many": "Bisika ya nsangu",
+      "sourceHint": "Ke kangula kisika ya nsangu na navigateur",
+      "version": "Version {{version}}"
+    }
+  },
+  "import": {
+    "overline": "Kotisa",
+    "title": "Kotisa disolo",
+    "intro": "Baka mesire ya kaye to ya kisadi ya nkaka, katuka na fichier CSV to Excel. Nge ta mona rapport na ntwala ya kukotisa kima mosi.",
+    "close": "Kanga kukonda kukotisa",
+    "step": {
+      "file": "Fichier",
+      "unit": "Unité ya bantalu"
+    },
+    "file": {
+      "choose": "Pona fichier",
+      "chooseHint": "CSV to Excel (.xlsx) · 5 Mo mpi milongo 5 000 na zulu-zulu",
+      "change": "Soba fichier",
+      "kind": {
+        "csv": "Fichier CSV",
+        "xlsx": "Classeur Excel"
+      }
+    },
+    "size": {
+      "bytes": "{{amount}} o",
+      "kb": "{{amount}} Ko",
+      "mb": "{{amount}} Mo"
+    },
+    "fileProblem": {
+      "empty": "Fichier yai kele mpamba.",
+      "tooLarge": "Fichier yai me luta 5 Mo. Bika kaka mesire ya mfunu, to kabula yo na bafichier mingi.",
+      "oldExcel": "Mutindu ya ntama ya Excel (.xls): kangula yo na Excel, na nima bumba yo na .xlsx to na CSV.",
+      "unsupported": "Mutindu yai ya fichier ke ndimamaka ve. Pona fichier .csv to .xlsx."
+    },
+    "unit": {
+      "hint": "Ke sadilama sambu na milongo yina ke monisa ve unité na yo.",
+      "example": "mbandu {{value}}"
+    },
+    "analyse": "Tala fichier",
+    "privacy": "Kaka mambu ya fichier ke tindamaka sambu na kutala. Kima mosi ve ke kotaka kukonda ndimisa na nge, mpi nge ta lenda kubika yonso na nima.",
+    "network": "Internet ke lombama: kutala ke salamaka na serveur.",
+    "problem": {
+      "offline": {
+        "title": "Internet kele ve",
+        "text": "Kutala ke salamaka na serveur. Tala internet na nge, na nima meka diaka."
+      },
+      "tooLarge": {
+        "title": "Fichier me luta nene",
+        "text": "5 Mo mpi milongo 5 000 na zulu-zulu. Kabula fichier, na nima meka diaka."
+      },
+      "unreadable": {
+        "title": "Fichier ke tangama ve"
+      },
+      "tooMany": {
+        "title": "Kutala mingi mbala mosi",
+        "text": "Vingila minute mosi, na nima meka diaka."
+      },
+      "rejected": {
+        "title": "Kutala ke lenda salama ve"
+      },
+      "error": {
+        "title": "Kutala ke lenda salama ve",
+        "text": "Kifu mosi me salama. Meka diaka na nima ya ntangu fioti."
+      }
+    },
+    "stepLabel": "Dibaku {{number}}: {{title}}",
+    "mapping": {
+      "title": "Bankoti ikwa?",
+      "intro": "Beto me zaba ve bankoti yonso ya « {{name}} ». Monisa wapi kilumbu mpi sukadi na menga kele: yina ya nkaka kele kana nge ke zola.",
+      "back": "Vutuka na kupona fichier",
+      "analyse": "Tala ti bankoti yai",
+      "required": "Ya mfunu",
+      "optional": "Kana nge ke zola",
+      "none": "Ata mosi ve",
+      "usedFor": "me sadilama dezia sambu na {{role}}",
+      "missing": "Pona diaka: {{roles}}.",
+      "and": " mpi ",
+      "role": {
+        "date": "Kilumbu",
+        "time": "Ntangu",
+        "value": "Sukadi na menga",
+        "unit": "Unité",
+        "context": "Ntangu ya mesire"
+      },
+      "hint": {
+        "date": "Kilumbu ya konso mesire, ti ntangu to kukonda yo.",
+        "time": "Kana ntangu kele na nkoti ya yandi mosi.",
+        "value": "Ntalu yina me mesurama (mbandu 1,10 to 110).",
+        "unit": "Kana konso mulongo ke monisa unité na yo. Kana ve: {{unit}}, yina me ponama sambu na fichier.",
+        "context": "Kukonda kudia, na ntwala to na nima ya madia…"
+      },
+      "changed": {
+        "title": "Bankoti ya kutala",
+        "text": "Fichier kele ve ti bankoti yonso yina me ponama. Tala yina nge me pona, na nima tala diaka fichier."
+      },
+      "lost": {
+        "title": "Fichier mosi ve na kisalu",
+        "text": "Pona diaka fichier ya kukotisa: yo ke bumbamaka ve ntangu application ke kangama."
+      }
+    },
+    "report": {
+      "title": "Rapport ya kukotisa",
+      "analyzed_one": "Mulongo {{count}} me talama",
+      "analyzed_other": "Milongo {{count}} me talama",
+      "analyzed_many": "Milongo {{count}} me talama",
+      "label": {
+        "valid": "Ya mbote",
+        "duplicates": "Ya zole",
+        "inconsistent": "Ya kutala",
+        "errors": "Bifu"
+      },
+      "tile": {
+        "valid": "{{count}} ya mbote",
+        "duplicates": "{{count}} ya zole",
+        "inconsistent": "{{count}} ya kutala",
+        "errors": "{{count}} bifu"
+      },
+      "allValid": "Milongo yonso kele ya mbote: kima ve ya kutala.",
+      "group": {
+        "INCONSISTENT": {
+          "title": "Ya kutala ({{count}})",
+          "text": "Ntalu ya kuyituka to unité ya nkaka: bongisa yo, ndima yo mutindu yo kele, to bika mulongo."
+        },
+        "DUPLICATE": {
+          "title": "Ya zole ({{count}})",
+          "text": "Kilumbu mosi, ntangu mosi, ntalu mosi ti mesire yina kele dezia: yo ke bikama, kaka kana nge me ndima yo."
+        },
+        "ERROR": {
+          "title": "Bifu ({{count}})",
+          "text": "Mulongo ke tangama ve: bongisa ntalu, to bika mulongo."
+        }
+      },
+      "acceptAll": "Ndima yonso",
+      "ignoreAll": "Bika yonso",
+      "line": "Mulongo {{line}}",
+      "empty": "(mpamba)",
+      "decisionFor": "Lukanu sambu na mulongo {{line}}",
+      "action": {
+        "IGNORE": "Bika",
+        "ACCEPT": "Ndima",
+        "CORRECT": "Bongisa"
+      },
+      "correctedValue": "Ntalu ya mbote",
+      "correctedHint": "Ntalu na {{unit}} (soba unité kana yo kele mfunu).",
+      "correctedUnit": "Unité ya ntalu ya mbote",
+      "problem": {
+        "missing": "Sonika ntalu ya mbote.",
+        "invalid": "Ntalu ke tangama ve: ntalu mosi, mbandu 1,10.",
+        "outOfRange": "Ntalu me basika na bandilu ya kieleka (20 tii 600 mg/dL): tala unité."
+      },
+      "more_one": "Mona mulongo {{count}} ya nkaka",
+      "more_other": "Mona milongo {{count}} ya nkaka",
+      "more_many": "Mona milongo {{count}} ya nkaka",
+      "fixCorrections": "Manisa bansoba yina me monisama na ntwala ya kukotisa.",
+      "rowsRefused": "Balukanu ya nkaka me ndimama ve: tala milongo yina me monisama.",
+      "import_one": "Kotisa mesire {{count}}",
+      "import_other": "Kotisa mesire {{count}}",
+      "import_many": "Kotisa mesire {{count}}",
+      "nothingToImport": "Kima ve ya kukotisa",
+      "defaults": "Kana lukanu kele ve, ya zole, milongo ya kutala mpi bifu ke bikama.",
+      "undoable": "Kima mosi ve ke kotaka na ntwala ya buton yai, mpi nge ta lenda kubika kukotisa na nima."
+    },
+    "done": {
+      "title_one": "Mesire {{count}} me kota",
+      "title_other": "Mesire {{count}} me kota",
+      "title_many": "Mesire {{count}} me kota",
+      "skipped_zero": "Mulongo mosi ve me bikama.",
+      "skipped_one": "Mulongo {{count}} me bikama.",
+      "skipped_other": "Milongo {{count}} me bikama.",
+      "skipped_many": "Milongo {{count}} me bikama.",
+      "sync": "Mesire me bumbama na compte na nge. Yo ta kwisa na disolo ya telefone yai na nima ya basegonde fioti (kuwakanisa ya yo mosi).",
+      "finish": "Manisa",
+      "revert": "Bika kukotisa yai",
+      "revertConfirmTitle": "Bika kukotisa yai?",
+      "revertConfirmText_one": "Mesire yina me kota ta katuka na compte na nge.",
+      "revertConfirmText_other": "Mesire {{count}} yina me kota ta katuka na compte na nge.",
+      "revertConfirmText_many": "Mesire {{count}} yina me kota ta katuka na compte na nge.",
+      "revertedTitle": "Kukotisa me bikama",
+      "revertedText_zero": "Mesire mosi ve vandaka ya kukatula.",
+      "revertedText_one": "Mesire {{count}} me katuka na compte na nge.",
+      "revertedText_other": "Mesire {{count}} me katuka na compte na nge.",
+      "revertedText_many": "Mesire {{count}} me katuka na compte na nge.",
+      "keep": "Bika kukotisa",
+      "revertYes_one": "Katula mesire",
+      "revertYes_other": "Katula mesire {{count}}",
+      "revertYes_many": "Katula mesire {{count}}"
+    },
+    "issue": {
+      "restart": "Yantika diaka",
+      "offline": {
+        "title": "Internet kele ve",
+        "text": "Kima mosi ve me kota. Tala internet na nge, na nima meka diaka."
+      },
+      "done": {
+        "title": "Me salama dezia",
+        "text": "Fichier yai me kota dezia to me bikama (ziku katuka na kisadi ya nkaka)."
+      },
+      "expired": {
+        "title": "Kutala me luta ntama",
+        "text": "Rapport me luta bangunga 24: tala diaka fichier."
+      },
+      "notFound": {
+        "title": "Kutala me monana ve",
+        "text": "Tala diaka fichier."
+      },
+      "error": {
+        "title": "Kukotisa ke lenda salama ve",
+        "text": "Kifu mosi me salama. Meka diaka na nima ya ntangu fioti."
+      }
+    }
+  },
+  "report": {
+    "overline": "Rapport PDF",
+    "title": "Bongisa kukutana ti munganga",
+    "intro": "Rapport ya pwelele ya mesire na nge, sambu na kupesa munganga na nge: na WhatsApp, na email, na papela to na kumonisa yo na telefone na nge.",
+    "close": "Kanga",
+    "period": "Ntangu ya rapport",
+    "few": {
+      "title": "Mesire fioti na ntangu yai",
+      "text_one": "Mesire {{count}} na bilumbu yai {{days}}. Rapport ta salama ata mpidina mpi yo ta zabisa yo.",
+      "text_other": "Mesire {{count}} na bilumbu yai {{days}}. Rapport ta salama ata mpidina mpi yo ta zabisa yo.",
+      "text_many": "Mesire {{count}} na bilumbu yai {{days}}. Rapport ta salama ata mpidina mpi yo ta zabisa yo."
+    },
+    "contents": {
+      "title": "Inki kele na rapport",
+      "identity": {
+        "title": "Nge mpi kulanda na nge",
+        "text": "Zina ya ntete, zina ya dikanda, mutindu ya diabète, mvula yina bo monaka yo mpi bandilu na nge ya mbote."
+      },
+      "quality": {
+        "title": "Mesire mpi mbote ya mambu",
+        "text": "Ntalu ya mesire, moyenne, nsoba, bilumbu kukonda mesire."
+      },
+      "ranges": {
+        "title": "Ntangu na kati ya ndilu ya mbote",
+        "text": "Ndambu ya mesire na nsi, na kati ya ndilu mpi na zulu."
+      },
+      "episodes": {
+        "title": "Bantangu mpi bantalu ya kuyituka",
+        "text": "Bantangu yina sukadi vandaka na nsi to na zulu ya bandilu na nge, ti bilumbu."
+      },
+      "points": {
+        "title": "Mambu ya kutala ti munganga na nge",
+        "text": "Mambu yina kutala me monisa, na bangogo ya pete."
+      },
+      "chart": {
+        "title": "Graphique mpi mambu ya mvimba",
+        "text": "Mesire yonso ya ntangu yai, na unité na nge, ti bilumbu kukonda mesire."
+      },
+      "private": "Ba note na nge mosi ke vandaka ve na rapport ata fioti. Fichier ke basikaka na telefone kaka kana nge me kabula yo."
+    },
+    "pending_one": "Mesire {{count}} me tindama ntete ve: yo ta tindama na ntwala ya kusala rapport.",
+    "pending_other": "Mesire {{count}} me tindama ntete ve: yo ta tindama na ntwala ya kusala rapport.",
+    "pending_many": "Mesire {{count}} me tindama ntete ve: yo ta tindama na ntwala ya kusala rapport.",
+    "create": "Sala mpi kabula PDF",
+    "phase": {
+      "syncing": "Kutinda mesire na nge ya nsuka…",
+      "creating": "Kusala rapport…",
+      "sharing": "Kukangula kukabula…"
+    },
+    "network": "Rapport ke salamaka na serveur: internet ke lombama.",
+    "shareTitle": "Kabula rapport",
+    "shareAgain": "Kabula diaka",
+    "createAgain": "Sala rapport ya mpa",
+    "done": {
+      "title": "Rapport me bongama",
+      "text": "{{filename}}. Nge lenda kabula yo diaka, mbandu mpi na email."
+    },
+    "unsent": {
+      "title_one": "Mesire {{count}} kele ve na rapport",
+      "title_other": "Mesire {{count}} kele ve na rapport",
+      "title_many": "Mesire {{count}} kele ve na rapport",
+      "text_one": "Yo me tindama ntete ve. Yo ke bikala na telefone na nge mpi yo ta tindama nswalu; na nima sala rapport ya mpa.",
+      "text_other": "Yo me tindama ntete ve. Yo ke bikala na telefone na nge mpi yo ta tindama nswalu; na nima sala rapport ya mpa.",
+      "text_many": "Yo me tindama ntete ve. Yo ke bikala na telefone na nge mpi yo ta tindama nswalu; na nima sala rapport ya mpa."
+    },
+    "problem": {
+      "offline": {
+        "title": "Internet kele ve",
+        "text": "Rapport ke salamaka na serveur. Kangula internet diaka, na nima meka diaka."
+      },
+      "tooMany": {
+        "title": "Barapport mingi mbala mosi",
+        "text": "Vingila minute mosi na ntwala ya kusala ya nkaka."
+      },
+      "noProfile": {
+        "title": "Profil ya maladi ya kumanisa",
+        "text": "Rapport ke lomba profil na nge ya maladi (mutindu ya diabète, bandilu ya mbote)."
+      },
+      "cannotShare": {
+        "title": "Kukabula kele ve",
+        "text": "Kisadi yai ke pesa ve nzila ya kukabula fichier."
+      },
+      "error": {
+        "title": "Rapport me salama ve",
+        "text": "Kifu mosi me salama. Meka diaka na nima ya ntangu fioti."
+      }
+    },
+    "doctor": {
+      "title": "Munganga na nge lenda mpi kukulumusa yo",
+      "text": "Pona « Rapport PDF » ntangu nge ke kabula disolo na nge na QR."
+    },
+    "entry": {
+      "title": "Bongisa kukutana ti munganga",
+      "body": "Rapport PDF ya mesire na nge, sambu na kupesa munganga na nge."
+    }
+  },
+  "emergency": {
+    "editCard": "Bongisa carte na mono",
+    "overline": "Kabula",
+    "title": "Carte ya mpasi",
+    "close": "Kanga",
+    "intro": "Fiche mosi sambu na bantu ya lusadisu, ya kukabuka ti kukabula na munganga na nge. QR na yo ke basisamaka na papela to ke tulamaka na fond d'écran: muntu yina ke scanner yo ke mona kaka yina nge me pona.",
+    "status": {
+      "on": "Carte ke sala",
+      "off": "Carte me kangama",
+      "onText": "QR ke sala: yo ke monisa carte na nge na muntu yina ke scanner yo.",
+      "offText": "QR ke monisa kima ve, ata na papela. Kangula carte sambu yo sala.",
+      "toggle": "Carte ke sala",
+      "emptyHint": "Fulusa ntete carte na nge (« Bongisa carte na mono »)."
+    },
+    "qr": {
+      "hint": "Basisa yo na papela to tula yo na fond d'écran. Yo kele ve ti zina na nge to mambu ya maladi.",
+      "export": "Bumba bonso image",
+      "shareTitle": "Image ya carte na mono ya mpasi",
+      "exportProblem": {
+        "title": "Image me bumbama ve",
+        "text": "Meka diaka na nima ya ntangu fioti."
+      },
+      "regenerate": "Sala QR ya mpa",
+      "confirm": {
+        "title": "Soba QR na nge?",
+        "text": "QR ya ntama ta bika kusala nswalu, ata kopi yina me basisama na papela to yina kele na fond d'écran.",
+        "yes": "Ee, sala QR ya mpa",
+        "no": "Bika"
+      },
+      "elsewhere": {
+        "title": "QR na nge kele ve na telefone yai",
+        "text": "Yo salamaka na telefone ya nkaka to na ntwala ya kutula diaka application. Sala ya mpa awa: ya ntama ta bika kusala.",
+        "action": "Sala QR ya mpa"
+      }
+    },
+    "image": {
+      "title": "CARTE YA MPASI",
+      "instruction": "Kana mpasi ya nswalu, scanner QR yai",
+      "audience": "Bamunganga mpi bantu ya lusadisu",
+      "a11y": "Image ya QR ya carte na nge ya mpasi, ya kubasisa na papela to ya kutula na fond d'écran."
+    },
+    "preview": {
+      "title": "Inki muntu ya lusadisu ta mona",
+      "empty": "Carte na nge kele mpamba: yika kaka yina nge ke zola kumonisa bantu ya lusadisu.",
+      "updated": "Me bongisama na {{date}}."
+    },
+    "field": {
+      "fullName": "Zina",
+      "diabetesType": "Diabète",
+      "declaredTreatment": "Nkisi yina nge me sonika",
+      "allergies": "Allergies",
+      "bloodGroup": "Groupe ya menga",
+      "lastKnownGlucoseMgDl": "Sukadi ya nsuka yina me zabana",
+      "emergencyContactName": "Muntu ya kubinga kana mpasi",
+      "emergencyContactPhone": "Telefone ya muntu yina"
+    },
+    "edit": {
+      "title": "Bongisa carte na mono",
+      "cancel": "Kanga kukonda kubumba",
+      "intro": "Konso nsangu kele kana nge ke zola: fulusa kaka yina nge ke zola kumonisa bantu ya lusadisu.",
+      "profile": {
+        "title": "Baka profil na mono",
+        "text": "Zina na nge, mutindu ya diabète mpi muntu ya kubinga kana mpasi, sambu na bisika yina kele ntete mpamba.",
+        "action": "Baka profil na mono",
+        "applied": "Mambu ya profil me yikama. Tala yo na ntwala ya kubumba.",
+        "nothing": "Kima ve ya kuyika: bisika yai me fuluka dezia.",
+        "failed": "Profil me tangama ve (internet?)."
+      },
+      "hint": {
+        "diabetesType": "Mbandu: Type 1, Type 2.",
+        "declaredTreatment": "Inki nge ke bakaka, na bangogo na nge. Mbandu: insuline ya malembe na nkokila.",
+        "allergies": "Mbandu: pénicilline. Bika mpamba kana kele ve.",
+        "glucose": "Kaka ntalu yai ke monana: disolo na nge ve ata fioti.",
+        "phone": "Ti nimero ya insi, mbandu +243 81 000 0000."
+      },
+      "noBloodGroup": "Me sonikama ve",
+      "useLatest": "Sadila mesire na mono ya nsuka ({{value}}, na {{date}})",
+      "privacy": "Mambu yai ke monanaka kaka kana carte na nge ke sala mpi muntu me scanner QR na nge. Mbala yonso yo me kanguka, bo ke zabisa nge.",
+      "fixErrors": "Bongisa bisika yina me monisama na ntwala ya kubumba.",
+      "save": "Bumba carte na mono",
+      "error": {
+        "tooLong": "Yo me luta nda: bisono {{max}} na zulu-zulu.",
+        "glucoseInvalid": "Sonika ntalu, mbandu 1,32.",
+        "glucoseRange": "Ntalu me basika na bandilu (20 tii 600 mg/dL).",
+        "phoneInvalid": "Sonika nimero ya bantalu kaka (« + » me ndimama na luyantiku)."
+      }
+    },
+    "log": {
+      "title": "Nani me kangula carte na mono",
+      "text": "Mbala yonso yo me kanguka, yo ke sonikamaka na « Nani me tala mambu na mono » mpi bo ke zabisa nge."
+    },
+    "problem": {
+      "offline": {
+        "title": "Internet kele ve",
+        "text": "Carte ke bongisamaka na internet. Kangula internet diaka, na nima meka diaka."
+      },
+      "noProfile": {
+        "title": "Profil ya maladi ya kumanisa",
+        "text": "Carte na nge ya mpasi ke lomba profil na nge ya maladi."
+      },
+      "tooMany": {
+        "title": "Bandombe mingi",
+        "text": "Vingila minute mosi na ntwala ya kumeka diaka."
+      },
+      "invalid": {
+        "title": "Nsangu me ndimama ve",
+        "text": "Nsangu mosi ya carte kele ya mbote ve. Tala yo."
+      },
+      "error": {
+        "title": "Kifu mosi me salama",
+        "text": "Meka diaka na nima ya ntangu fioti."
+      }
+    }
+  },
+  "share": {
+    "home": {
+      "overline": "Kukabula ya lutaninu",
+      "title": "Kabula ti munganga",
+      "intro": "Munganga na nge ke scanner QR na écran na nge mpi ke tala, na ntangu fioti, kaka yina nge me pona.",
+      "promise": {
+        "noData": {
+          "title": "Mambu ve na QR",
+          "text": "QR kele kaka ti code ya kinsweki yina ke sobana konso minute mpi ke sala mbala mosi kaka."
+        },
+        "limited": {
+          "title": "Nzila ya ndilu",
+          "text": "Nge ke pona inki ya kukabula mpi sambu na ntangu ikwa. Kaka munganga yina me ndimama lenda scanner."
+        },
+        "control": {
+          "title": "Nge ke bikala mfumu",
+          "text": "Nge lenda kanga nzila ntangu yonso, mpi kumona nani me tala mambu na nge."
+        }
+      },
+      "start": "Kabula disolo na mono",
+      "network": "Kukabula ke lomba internet.",
+      "log": "Nani me tala mambu na mono",
+      "logHint": "Bamunganga yina bakaka nzila, mpi ntangu nki",
+      "emergency": "Carte ya mpasi",
+      "report": "Bongisa kukutana ti munganga",
+      "reportHint": "Rapport PDF ya mesire na nge ya kupesa munganga",
+      "emergencyHint": "Mambu ya mfunu sambu na bantu ya lusadisu"
+    },
+    "new": {
+      "overline": "Kabula disolo na mono",
+      "title": "Inki nge ke zola kukabula?",
+      "close": "Kanga kukonda kukabula",
+      "intro": "Munganga ta mona kaka yina nge me pona. Kima mosi ve ke kabulamaka kana yandi me scanner ntete ve QR.",
+      "what": "Inki munganga ta lenda kumona",
+      "count_one": "{{count}} na {{total}}",
+      "count_other": "{{count}} na {{total}}",
+      "count_many": "{{count}} na {{total}}",
+      "noneSelected": "Pona na nsi-nsi mutindu mosi sambu na kusala QR.",
+      "howLong": "Sambu na ntangu ikwa",
+      "durationLabel": "Ntangu ya nzila",
+      "startsAtScan": "Ntangu ke yantika ntangu munganga ke scanner QR. Nge ta lenda kanga yo na ntwala.",
+      "generate": "Sala QR",
+      "qrNote": "QR kele ve ti mambu ya maladi. Yo ke sobana konso basegonde 60 mpi ke sala mbala mosi kaka."
+    },
+    "category": {
+      "GLUCOSE_HISTORY": {
+        "label": "Disolo ya sukadi",
+        "text": "Mesire na nge, bantangu na yo mpi bandilu na nge ya mbote"
+      },
+      "TREATMENTS": {
+        "label": "Bankisi yina nge me sonika",
+        "text": "Bankisi mpi bantangu ya kubaka yo yina nge me sonika"
+      },
+      "MEALS": {
+        "label": "Madia",
+        "text": "Madia yina nge me sonika"
+      },
+      "ACTIVITY": {
+        "label": "Kisalu ya nitu",
+        "text": "Bisalu ya nitu yina nge me sonika"
+      },
+      "AI_SUMMARY": {
+        "label": "Nkufi ya kutala",
+        "text": "Bantalu ya mfunu mpi mambu yina Afyabora me tanga"
+      },
+      "REPORT_DOWNLOAD": {
+        "label": "Kukulumusa rapport",
+        "text": "Munganga ta lenda bumba rapport PDF"
+      },
+      "PERSONAL_NOTES": {
+        "label": "Ba note na nge mosi",
+        "text": "Bisono yina nge me sonika na ba note na nge",
+        "note": "Ba note na nge lenda vanda ti mambu ya kinsweki mingi."
+      }
+    },
+    "duration": {
+      "MIN_5": {
+        "label": "5 min",
+        "hint": "Kutala nswalu"
+      },
+      "MIN_30": {
+        "label": "30 min",
+        "hint": "Kukutana ya nkufi"
+      },
+      "HOUR_1": {
+        "label": "1 h",
+        "hint": "Kukutana ya nda"
+      },
+      "CONSULTATION": {
+        "label": "Kukutana",
+        "hint": "2 h na zulu-zulu"
+      }
+    },
+    "problem": {
+      "offline": {
+        "title": "Internet kele ve",
+        "text": "Kukabula ke lomba internet: serveur ke sala mpi ke tala QR. Mambu na nge ke bikala na telefone yai."
+      },
+      "tooMany": {
+        "title": "BaQR mingi me salama",
+        "text": "Vingila minute mosi na ntwala ya kusala ya mpa."
+      },
+      "busy": {
+        "title": "Kisalu kele ve sesepi",
+        "text": "Bantu mingi ke kabula sesepi. Meka diaka na nima ya ntangu fioti."
+      },
+      "rejected": {
+        "title": "Kukabula ke lenda salama ve sesepi"
+      },
+      "error": {
+        "title": "QR me salama ve",
+        "text": "Kifu mosi me salama. Meka diaka na nima ya ntangu fioti."
+      }
+    },
+    "qr": {
+      "overline": "Kabula disolo na mono",
+      "title": "Monisa munganga na nge QR yai",
+      "scannedTitle": "Kukabula na nge",
+      "intro": "Munganga na nge ke scanner yo katuka na portail na yandi ya Afyabora. QR ke sobana yo mosi, bika écran yai ya kukanguka.",
+      "qrA11y": "QR ya kukabula, sambu munganga na nge scanner yo",
+      "expired": "QR yai ke sala diaka ve",
+      "renewing": "QR ya mpa…",
+      "next_one": "QR ya mpa na {{count}} s",
+      "next_other": "QR ya mpa na {{count}} s",
+      "next_many": "QR ya mpa na {{count}} s",
+      "nextA11y_one": "QR ya mpa na segonde {{count}}",
+      "nextA11y_other": "QR ya mpa na basegonde {{count}}",
+      "nextA11y_many": "QR ya mpa na basegonde {{count}}",
+      "shared": "Me kabulama",
+      "duration": "Ntangu ya nzila",
+      "durationValue": "{{duration}}, katuka ntangu ya kuscanner",
+      "stop": "Kanga kukabula",
+      "close": "Kanga",
+      "doctorNote": "Kaka munganga yina me ndimama lenda scanner QR yai. Yo kele ve ti mambu ya maladi mpi ke sala mbala mosi kaka.",
+      "problem": {
+        "offline": {
+          "title": "Internet me katuka",
+          "text": "QR lenda sobana ve kukonda internet. Yo ta meka diaka yo mosi."
+        },
+        "busy": {
+          "title": "Bantu mingi ke sadila kisalu",
+          "text": "QR ya mpa ke kwisa na nima ya ntangu fioti. Yo ta meka diaka yo mosi."
+        },
+        "error": {
+          "title": "QR me sobana ve",
+          "text": "Yo ta meka diaka yo mosi na nima ya ntangu fioti."
+        }
+      },
+      "scanned": {
+        "title": "QR na nge me scannama",
+        "byDoctor": "{{name}} ke tala dossier na nge",
+        "until": "Nzila tii {{time}}.",
+        "end": "Kanga nzila",
+        "endFailed": "Nzila me kangama ve. Tala internet na nge mpi meka diaka."
+      },
+      "ended": {
+        "title": "Nzila me kangama",
+        "text": "Munganga kele diaka ve ti nzila ya mambu na nge. Nge lenda sala QR ya mpa ntangu yonso."
+      },
+      "none": {
+        "title": "QR mosi ve na kisalu",
+        "text": "Sala QR sambu na kukabula disolo na nge ti munganga.",
+        "action": "Sala QR"
+      },
+      "backup": {
+        "show": "Munganga kele ve ti camera? Monisa code ya lusadisu",
+        "label": "Code ya lusadisu",
+        "a11y": "Code ya lusadisu, ya kusonika diaka to ya kutula na portail ya munganga",
+        "hint": "Munganga ke sonika yo na portail na yandi, na « Scanner un QR ». Bonso QR, yo ke sobana konso minute mpi ke sala mbala mosi kaka.",
+        "hide": "Bumba code"
+      }
+    },
+    "live": {
+      "expiresIn": "Ke mana na",
+      "remainingA11y": "Ntangu yina me bikala: {{minutes}} min {{seconds}} s",
+      "offline": "Internet me katuka: ntangu ke landa, mambu ta talama ntangu internet ta vutuka.",
+      "confirm": "Kanga nzila ya {{name}} sesepi? Yandi ta mona diaka ve mambu na nge.",
+      "confirmNoName": "Kanga nzila ya munganga sesepi? Yandi ta mona diaka ve mambu na nge.",
+      "confirmYes": "Ee, kanga nzila",
+      "confirmNo": "Bika",
+      "checking": "QR me scannama sesepi. Kutala…",
+      "newQr": "Sala QR ya mpa",
+      "ended": {
+        "expired": "Nzila ya {{name}} me suka.",
+        "expiredNoName": "Nzila me suka.",
+        "revoked": "Nge me kanga nzila ya {{name}}.",
+        "revokedNoName": "Kukabula me kangama."
+      }
+    },
+    "log": {
+      "overline": "Kaye ya kukota",
+      "title": "Nani me tala mambu na mono",
+      "close": "Kanga",
+      "intro": "Konso mbala bo me kota na dossier na nge ke sonikamaka awa. Muntu mosi ve lenda soba kaye yai.",
+      "loading": "Kukangula kaye",
+      "count_one": "Kukota {{count}}",
+      "count_other": "Kukota {{count}}",
+      "count_many": "Kukota {{count}}",
+      "today": "Bubu yai na {{time}}",
+      "onDate": "Na {{date}} na {{time}}",
+      "lasted": "nzila ya {{duration}}",
+      "doctor": "Dr {{name}}",
+      "unknownDoctor": "Munganga",
+      "end": {
+        "expired": "Me suka",
+        "revoked": "Nge me kanga yo",
+        "ongoing": "Ke landa"
+      },
+      "views_one": "Kutala {{count}}",
+      "views_other": "Kutala {{count}}",
+      "views_many": "Kutala {{count}}",
+      "report": "Rapport me kulumuka",
+      "emergency": {
+        "title": "Kukota ya mpasi",
+        "text": "Carte na nge ya mpasi me kanguka, kukonda compte."
+      },
+      "empty": {
+        "title": "Muntu mosi ve me tala ntete mambu na nge",
+        "text": "Ntangu munganga ke scanner QR na nge, kukota na yandi ke monana awa: nani, ntangu nki mpi sambu na ntangu ikwa."
+      },
+      "more": "Mona kukota ya ntama",
+      "problem": {
+        "offline": {
+          "title": "Internet kele ve",
+          "text": "Kaye me bumbama na serveur: kangula internet diaka sambu na kutala yo."
+        },
+        "error": {
+          "title": "Kaye me kanguka ve",
+          "text": "Meka diaka na nima ya ntangu fioti."
+        }
+      }
+    }
+  }
+}

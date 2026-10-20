@@ -8,6 +8,7 @@ import Animated from 'react-native-reanimated';
 import { Button, Card, InlineAlert, PressableScale, Text } from '@/components/ui';
 import { enterFromBelow, radii, spacing, touchTarget, useReducedMotion, useTheme } from '@/theme';
 import { reviewOf, whenLabel, type SheetBlock, type Span } from '../library';
+import { formatLocale } from '@/i18n';
 
 /** « ‹ Retour » en haut d'un écran (ou vers `fallback` si l'écran a été ouvert directement). */
 export function BackLink({ fallback }: { fallback: '/assistant' | '/(tabs)/insights' }) {
@@ -40,13 +41,13 @@ export function useWhen() {
   const { t, i18n } = useTranslation();
   return (iso: string) => {
     const when = whenLabel(iso, new Date());
-    const time = when.date.toLocaleTimeString(i18n.language, {
+    const time = when.date.toLocaleTimeString(formatLocale(i18n.language), {
       hour: '2-digit',
       minute: '2-digit',
     });
     if (when.kind === 'today') return t('assistant.list.today', { time });
     if (when.kind === 'yesterday') return t('assistant.list.yesterday', { time });
-    return when.date.toLocaleDateString(i18n.language, {
+    return when.date.toLocaleDateString(formatLocale(i18n.language), {
       day: 'numeric',
       month: 'short',
       year: 'numeric',
@@ -187,7 +188,7 @@ export function ReviewBadge({
   const label = validated
     ? review.reviewedOn
       ? t('assistant.sheets.reviewedOn', {
-          date: review.reviewedOn.toLocaleDateString(i18n.language, {
+          date: review.reviewedOn.toLocaleDateString(formatLocale(i18n.language), {
             day: 'numeric',
             month: 'long',
             year: 'numeric',

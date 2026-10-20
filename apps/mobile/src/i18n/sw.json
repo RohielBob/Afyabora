@@ -1,0 +1,1834 @@
+{
+  "app": {
+    "name": "Afyabora",
+    "tagline": "Fuatilia. Dhibiti. Elewa."
+  },
+  "common": {
+    "save": "Hifadhi",
+    "cancel": "Ghairi",
+    "next": "Endelea",
+    "back": "Rudi",
+    "retry": "Jaribu tena"
+  },
+  "disclaimer": "Afyabora ni chombo cha kusaidia ufuatiliaji. Hakichukui nafasi ya ushauri wa mtaalamu wa afya.",
+  "glucose": {
+    "unusualConfirm": "Thamani hii si ya kawaida. Je, ni sahihi?",
+    "state": {
+      "VERY_LOW": "Chini sana",
+      "LOW": "Chini",
+      "IN_RANGE": "Ndani ya kiwango",
+      "HIGH": "Juu",
+      "VERY_HIGH": "Juu sana"
+    },
+    "stateA11y": "Hali: {{label}}"
+  },
+  "sync": {
+    "pending_one": "Kipimo {{count}} kinasubiri kusawazishwa",
+    "pending_other": "Vipimo {{count}} vinasubiri kusawazishwa",
+    "pending_many": "Vipimo {{count}} vinasubiri kusawazishwa",
+    "offline": "Hakuna mtandao — data yako imehifadhiwa kwenye simu hii",
+    "upToDate": "Kila kitu kiko sawa",
+    "refreshing": "Inasawazisha…",
+    "pullToRefresh": "Vuta chini ili kusawazisha",
+    "status": {
+      "upToDate": "Kila kitu kiko sawa",
+      "pending": "Inasubiri kutumwa",
+      "syncing": "Usawazishaji unaendelea…",
+      "offline": "Hakuna mtandao: data yako imehifadhiwa kwenye simu hii",
+      "problem": "Haiwezekani kusawazisha kwa sasa",
+      "session": "Muda wa kuingia umeisha: ingia tena ili kusawazisha",
+      "rejected_one": "Badiliko {{count}} la kukagua",
+      "rejected_other": "Mabadiliko {{count}} ya kukagua",
+      "rejected_many": "Mabadiliko {{count}} ya kukagua"
+    },
+    "measurements_one": "kipimo {{count}}",
+    "measurements_other": "vipimo {{count}}",
+    "measurements_many": "vipimo {{count}}",
+    "events_one": "tukio {{count}}",
+    "events_other": "matukio {{count}}",
+    "events_many": "matukio {{count}}",
+    "pendingBoth": "{{measurements}} na {{events}}",
+    "pendingLine": "{{what}} vinasubiri kusawazishwa",
+    "lastToday": "Usawazishaji wa mwisho saa {{time}}",
+    "lastOn": "Usawazishaji wa mwisho tarehe {{date}} saa {{time}}",
+    "never": "Bado haijasawazishwa kwenye simu hii",
+    "nextRetry": "Jaribio jipya la kiotomatiki saa {{time}}",
+    "nextRetrySoon": "Jaribio jipya la kiotomatiki baada ya sekunde chache",
+    "autoSend": "Itatumwa kiotomatiki mara itakapowezekana",
+    "retry": "Jaribu tena",
+    "rejected_one": "Badiliko {{count}} limekataliwa na seva",
+    "rejected_other": "Mabadiliko {{count}} yamekataliwa na seva",
+    "rejected_many": "Mabadiliko {{count}} yamekataliwa na seva",
+    "open": "Tazama hali ya usawazishaji",
+    "screen": {
+      "overline": "Bila mtandao",
+      "title": "Usawazishaji",
+      "intro": "Unachoingiza huhifadhiwa kwanza kwenye simu hii, kisha hutumwa kwenye akaunti yako mara inapowezekana, hata baada ya mtandao kukatika.",
+      "syncNow": "Sawazisha sasa",
+      "pendingTitle": "Inasubiri kutumwa",
+      "pendingNone": "Hakuna kinachosubiri",
+      "lastTitle": "Usawazishaji wa mwisho",
+      "rejectedTitle": "Mabadiliko yaliyokataliwa",
+      "rejectedIntro": "Seva imekataa mabadiliko haya. Yanabaki kwenye simu hii hadi utakapoamua.",
+      "measurementSave": "Kipimo cha {{value}}, {{date}}",
+      "measurementDelete": "Kufuta kipimo cha {{value}}, {{date}}",
+      "eventSave": "{{type}} «{{label}}», {{date}}",
+      "eventDelete": "Kufuta: {{type}} «{{label}}», {{date}}",
+      "gone": "Data ambayo haipo tena kwenye simu hii",
+      "reason": "Sababu: {{reason}}",
+      "attempts_one": "Imekataliwa mara {{count}}",
+      "attempts_other": "Imekataliwa mara {{count}}",
+      "attempts_many": "Imekataliwa mara {{count}}",
+      "retry": "Jaribu tena",
+      "discard": "Achana nalo",
+      "discardTitle": "Achana na badiliko hili?",
+      "discardText": "Litaondolewa kwenye simu hii. Toleo lililohifadhiwa kwenye akaunti yako, kama lipo, litarudi kwenye usawazishaji ujao.",
+      "discardConfirm": "Achana na badiliko",
+      "keep": "Bakiza",
+      "noRejected": "Hakuna badiliko lililokataliwa",
+      "lastToday": "Leo saa {{time}}",
+      "lastOn": "Tarehe {{date}} saa {{time}}",
+      "lastNever": "Bado kwenye simu hii"
+    }
+  },
+  "safety": {
+    "extreme": "Fuata maelekezo ya timu yako ya afya. Ukijisikia vibaya, omba msaada mara moja."
+  },
+  "errors": {
+    "network": "Imeshindwa kufikia seva. Angalia muunganisho wako wa intaneti kisha ujaribu tena.",
+    "server": "Huduma ina tatizo. Jaribu tena baada ya muda mfupi.",
+    "tooManyRequests": "Majaribio mengi mno. Subiri dakika moja kabla ya kujaribu tena.",
+    "invalidData": "Baadhi ya taarifa si sahihi. Kagua fomu.",
+    "unexpected": "Hitilafu isiyotarajiwa imetokea. Jaribu tena."
+  },
+  "welcome": {
+    "lastMeasurement": "Kipimo cha mwisho",
+    "demoTag": "Mfano wa kubuni",
+    "demoA11y": "Mfano wa kipimo cha mwisho: gramu 1,12 kwa lita, ndani ya kiwango",
+    "offlineSaved": "Kimehifadhiwa hata bila mtandao",
+    "onThisPhone": "✓ Kwenye simu hii",
+    "title": "Historia ya sukari yako ya damu, iko nawe kila wakati.",
+    "description": "Hifadhi vipimo vyako, elewa mwenendo wako na uchague nani aone nini, na kwa muda gani.",
+    "createAccount": "Fungua akaunti",
+    "signIn": "Ingia"
+  },
+  "auth": {
+    "fields": {
+      "email": "Barua pepe",
+      "emailPlaceholder": "jina@mfano.com",
+      "password": "Nenosiri",
+      "newPassword": "Nenosiri jipya",
+      "link": "Kiungo au msimbo uliopokea kwa barua pepe",
+      "linkPlaceholder": "Bandika hapa kiungo cha barua pepe"
+    },
+    "password": {
+      "rulesTitle": "Masharti ya nenosiri",
+      "ruleLength": "Angalau herufi {{count}}",
+      "ruleOk": "limetimizwa",
+      "ruleTodo": "bado halijatimizwa",
+      "hint": "Sentensi rahisi kukumbuka ni salama zaidi kuliko neno gumu."
+    },
+    "validation": {
+      "email": "Andika barua pepe sahihi.",
+      "passwordLength": "Nenosiri lazima liwe na angalau herufi 12.",
+      "passwordRequired": "Andika nenosiri lako.",
+      "consent": "Idhini yako inahitajika ili kufungua akaunti.",
+      "link": "Kiungo hiki hakitambuliki. Nakili kiungo kamili cha barua pepe.",
+      "disclaimer": "Thibitisha kwamba umeelewa onyo ili kuendelea."
+    },
+    "errors": {
+      "invalidCredentials": "Barua pepe au nenosiri si sahihi.",
+      "emailNotVerified": "Barua pepe yako bado haijathibitishwa.",
+      "locked": "Majaribio mengi mno: kwa usalama, akaunti yako imefungwa kwa dakika {{minutes}}.",
+      "verifyLinkInvalid": "Kiungo hiki cha uthibitisho si halali, kimeshatumika au muda wake umeisha. Omba barua pepe mpya.",
+      "resetLinkInvalid": "Kiungo hiki si halali, kimeshatumika au muda wake umeisha (saa 1). Omba upya.",
+      "notPatient": "Akaunti hii ni ya mtaalamu wa afya. Ingia kwenye tovuti ya Afyabora."
+    },
+    "signUp": {
+      "title": "Fungua akaunti",
+      "subtitle": "Sekunde chache tu kuanza kufuatilia sukari yako ya damu.",
+      "consent": "Ninakubali Afyabora ihifadhi na kuchakata data yangu ya afya kwa ajili ya ufuatiliaji wangu, kama ilivyoelezwa katika sera ya faragha.",
+      "consentA11y": "Idhini ya kuchakata data yangu ya afya",
+      "submit": "Fungua akaunti yangu",
+      "haveAccount": "Tayari una akaunti?",
+      "signIn": "Ingia",
+      "consentLink": "Soma sera ya faragha",
+      "disclaimer": "Nimeelewa kwamba Afyabora ni chombo cha kusaidia ufuatiliaji: haitoi utambuzi wa ugonjwa, haitoi dozi ya dawa na haichukui nafasi ya ushauri wa mtaalamu wa afya.",
+      "disclaimerA11y": "Ninaelewa kwamba programu haichukui nafasi ya ushauri wa kitabibu",
+      "disclaimerLink": "Soma onyo"
+    },
+    "verify": {
+      "title": "Angalia barua pepe yako",
+      "subtitle": "Tumetuma kiungo cha uthibitisho kwa {{email}}. Kinatumika kwa saa 24.",
+      "subtitleNoEmail": "Fungua barua pepe ya uthibitisho tuliyokutumia. Kiungo kinatumika kwa saa 24.",
+      "steps": "Fungua barua pepe «Afyabora : confirmez votre adresse email» na ubonyeze kiungo. Hukuipata? Angalia kwenye barua taka.",
+      "pasteTitle": "Kiungo hakifunguki kwenye programu?",
+      "pasteHelp": "Nakili kiungo cha barua pepe kisha ukibandike hapa chini.",
+      "submit": "Thibitisha barua pepe yangu",
+      "resend": "Tuma barua pepe tena",
+      "resendIn": "Tuma barua pepe tena baada ya sekunde {{seconds}}",
+      "resent": "Barua pepe mpya imetumwa. Kiungo cha zamani hakifanyi kazi tena.",
+      "resendUnavailable": "Ili kupokea barua pepe mpya, jisajili tena kwa barua pepe ile ile.",
+      "successTitle": "Barua pepe imethibitishwa",
+      "successMessage": "Akaunti yako imewashwa. Sasa unaweza kuingia.",
+      "goToSignIn": "Ingia"
+    },
+    "signIn": {
+      "title": "Karibu tena",
+      "subtitle": "Ingia ili kuona ufuatiliaji wako.",
+      "forgot": "Umesahau nenosiri?",
+      "submit": "Ingia",
+      "noAccount": "Bado huna akaunti?",
+      "signUp": "Fungua akaunti",
+      "verifyAction": "Thibitisha barua pepe yangu",
+      "success": "Umeingia",
+      "expired": "Muda wa kuingia umeisha. Ingia tena ili kuendelea.",
+      "signedOut": "Umetoka."
+    },
+    "forgot": {
+      "title": "Umesahau nenosiri",
+      "subtitle": "Andika barua pepe yako: ikiwa akaunti ipo, utapokea kiungo cha kuchagua nenosiri jipya.",
+      "submit": "Pokea kiungo",
+      "sentTitle": "Barua pepe imetumwa",
+      "sentMessage": "Ikiwa akaunti ipo kwa {{email}}, kiungo kinachotumika kwa saa 1 kimetumwa.",
+      "resetTitle": "Chagua nenosiri jipya",
+      "resetHelp": "Bandika kiungo ulichopokea kwa barua pepe, kisha uchague nenosiri lako jipya.",
+      "resetSubmit": "Hifadhi nenosiri jipya",
+      "successTitle": "Nenosiri limebadilishwa",
+      "successMessage": "Kwa usalama wako, vipindi vyako vingine vimefungwa. Ingia kwa nenosiri lako jipya.",
+      "changeEmail": "Tumia barua pepe nyingine"
+    }
+  },
+  "profile": {
+    "title": "Wasifu",
+    "todoTitle": "Inakuja: wasifu wako wa kiafya",
+    "todoText": "Utambulisho, aina ya kisukari, kiwango lengwa na mipaka, mtu wa kuwasiliana naye wakati wa dharura.",
+    "settings": "Mipangilio",
+    "settingsHint": "Mwonekano, vipimo, arifa, usalama",
+    "signOut": "Toka",
+    "signOutConfirmTitle": "Toka kwenye simu hii?",
+    "signOutConfirmText": "Data yako inabaki kwenye akaunti yako. Itaondolewa kwenye simu hii na unaweza kuingia tena wakati wowote.",
+    "signOutUnsynced_one": "Tahadhari: badiliko {{count}} bado halijatumwa kwenye seva. Litapotea ukitoka sasa. Ikiwezekana, unganisha intaneti kwanza.",
+    "signOutUnsynced_other": "Tahadhari: mabadiliko {{count}} bado hayajatumwa kwenye seva. Yatapotea ukitoka sasa. Ikiwezekana, unganisha intaneti kwanza.",
+    "signOutUnsynced_many": "Tahadhari: mabadiliko {{count}} bado hayajatumwa kwenye seva. Yatapotea ukitoka sasa. Ikiwezekana, unganisha intaneti kwanza.",
+    "import": "Ingiza historia",
+    "importHint": "Faili ya CSV au Excel kutoka daftari au mashine ya kupimia",
+    "sync": "Usawazishaji",
+    "syncHint": "Hali, vinavyosubiri, mabadiliko yaliyokataliwa"
+  },
+  "tabs": {
+    "home": "Mwanzo",
+    "timeline": "Historia",
+    "insights": "Uchambuzi",
+    "share": "Shiriki",
+    "profile": "Wasifu",
+    "add": "Ongeza"
+  },
+  "settings": {
+    "overline": "Mipangilio",
+    "title": "Mipangilio",
+    "appearance": "Mwonekano",
+    "appearanceHint": "Mandhari angavu au meusi, rangi ya msisitizo",
+    "language": "Lugha",
+    "languageHint": "Lugha ya programu",
+    "units": "Vipimo na mipaka",
+    "unitsHint": "Kipimo unachopendelea, kiwango lengwa, mipaka ya tahadhari",
+    "unitsScreen": {
+      "intro": "Kipimo cha kuonyesha, kiwango lengwa na mipaka ya tahadhari. Iamuliwe pamoja na daktari wako: Afyabora haitoi kamwe ushauri wa matibabu.",
+      "saved": "Imehifadhiwa. Vipimo vyako sasa vinaonyeshwa kwa {{unit}}.",
+      "discard": "Ghairi mabadiliko",
+      "storedNote": "Vipimo ulivyokwisha kuhifadhi havibadiliki: ni namna vinavyoonyeshwa tu inayofuata kipimo ulichochagua.",
+      "problem": {
+        "offline": "Hakuna mtandao: mpangilio huu unahitaji intaneti. Jaribu tena mtandao ukirudi.",
+        "noProfile": "Kamilisha wasifu wako kwanza: mipangilio hii ni sehemu yake.",
+        "invalid": "Seva imekataa thamani hizi. Angalia mpangilio: chini sana < kiwango lengwa < juu sana.",
+        "profile": "Wasifu wako una taarifa isiyokamilika: ukamilishe kabla ya kubadilisha mipangilio hii.",
+        "error": "Mpangilio haukuweza kuhifadhiwa. Jaribu tena baada ya muda mfupi."
+      }
+    },
+    "notifications": "Arifa",
+    "notificationsHint": "Vikumbusho, tahadhari, saa za utulivu",
+    "security": "Usalama",
+    "securityHint": "Kufungua kwa alama ya kidole au msimbo",
+    "account": "Data yangu na akaunti yangu",
+    "accountHint": "Hamisha data yangu, futa akaunti yangu",
+    "about": "Kuhusu",
+    "aboutHint": "Toleo, onyo, faragha",
+    "design": "Ukurasa wa mtindo",
+    "designHint": "Inaonekana wakati wa uundaji: rangi, maandishi, vipengele"
+  },
+  "account": {
+    "title": "Data yangu na akaunti yangu",
+    "intro": "Pata nakala ya data yako wakati wowote, au futa akaunti yako na kila kilichomo.",
+    "export": {
+      "title": "Hamisha data yangu",
+      "body": "Faili (muundo wa JSON) yenye wasifu wako, vipimo vyako vyote na matukio yako, pamoja na maelezo. Unaweza kuihifadhi au kuituma kwa huduma nyingine.",
+      "privacy": "Faili hii ina data yako ya afya bila usimbaji fiche: ihifadhi mahali salama na uishiriki tu na watu unaowaamini.",
+      "pendingFirst_one": "Ingizo {{count}} ambalo bado halijatumwa litatumwa kwanza, ili liwemo kwenye faili.",
+      "pendingFirst_other": "Maingizo {{count}} ambayo bado hayajatumwa yatatumwa kwanza, ili yawemo kwenye faili.",
+      "pendingFirst_many": "Maingizo {{count}} ambayo bado hayajatumwa yatatumwa kwanza, ili yawemo kwenye faili.",
+      "button": "Hamisha data yangu",
+      "again": "Hamisha tena",
+      "shareAgain": "Shiriki faili hii tena",
+      "shareTitle": "Data yangu ya Afyabora",
+      "phase": {
+        "syncing": "Inatuma maingizo yako ya mwisho…",
+        "downloading": "Inaandaa faili…",
+        "sharing": "Inafungua kushiriki…"
+      },
+      "done": "Faili iko tayari: {{name}}",
+      "unsent_one": "Ingizo {{count}} halikuweza kutumwa: halimo kwenye faili hii. Jaribu tena muunganisho ukiwa bora.",
+      "unsent_other": "Maingizo {{count}} hayakuweza kutumwa: hayamo kwenye faili hii. Jaribu tena muunganisho ukiwa bora.",
+      "unsent_many": "Maingizo {{count}} hayakuweza kutumwa: hayamo kwenye faili hii. Jaribu tena muunganisho ukiwa bora.",
+      "problem": {
+        "offline": "Hakuna mtandao: kuhamisha kunahitaji intaneti.",
+        "tooMany": "Umehamisha mara nyingi kwa muda mfupi. Jaribu tena baada ya dakika moja.",
+        "noProfile": "Kamilisha wasifu wako kwanza: bado hakuna cha kuhamisha.",
+        "cannotShare": "Faili iko tayari, lakini kushiriki hakupatikani kwenye kifaa hiki.",
+        "error": "Kuhamisha hakukukamilika. Jaribu tena baada ya muda mfupi."
+      }
+    },
+    "delete": {
+      "title": "Futa akaunti yangu",
+      "body": "Akaunti yako na data yako yote zitafutwa kwenye seva zetu na kwenye simu hii:",
+      "what": {
+        "data": "wasifu wako, vipimo vyako vyote na matukio yako, pamoja na maelezo;",
+        "shares": "ushirikishaji wako: madaktari watapoteza ufikiaji wa faili lako mara moja;",
+        "emergency": "kadi yako ya dharura: msimbo wake wa QR hautafunguka tena;",
+        "phone": "data iliyohifadhiwa kwenye simu hii."
+      },
+      "irreversible": "Ni jambo la kudumu: hakuna kitakachoweza kurejeshwa. Hamisha data yako kwanza ikiwa unataka kuibakiza.",
+      "start": "Futa akaunti yangu…",
+      "password": "Nenosiri",
+      "passwordHint": "Kuthibitisha kwamba ni wewe.",
+      "understand": "Ninaelewa kwamba akaunti yangu na data yangu yote zitafutwa kabisa.",
+      "confirm": "Futa kabisa",
+      "problem": {
+        "password": "Nenosiri si sahihi. Hakuna kilichofutwa.",
+        "tooMany": "Majaribio mengi mno. Subiri dakika moja kabla ya kujaribu tena. Hakuna kilichofutwa.",
+        "offline": "Hakuna mtandao: kufuta kunahitaji intaneti. Hakuna kilichofutwa.",
+        "error": "Kufuta hakukukamilika. Hakuna kilichofutwa: jaribu tena baada ya muda mfupi."
+      },
+      "doneTitle": "Akaunti imefutwa",
+      "done": "Akaunti yako na data yako yote zimefutwa. Asante kwa kutumia Afyabora."
+    }
+  },
+  "appearance": {
+    "overline": "Mipangilio",
+    "title": "Mwonekano",
+    "intro": "Chagua mwonekano wa Afyabora. Maandishi yanasomeka vizuri kila wakati.",
+    "theme": "Mandhari",
+    "themeA11y": "Mandhari ya programu",
+    "light": "Angavu",
+    "dark": "Meusi",
+    "system": "Kiotomatiki",
+    "systemHint": "Inafuata mpangilio wa simu (kwa sasa: {{mode}}).",
+    "systemLight": "angavu",
+    "systemDark": "meusi",
+    "accent": "Rangi ya msisitizo",
+    "preview": "Hakiki",
+    "previewOverline": "Kipimo cha mwisho · mfano",
+    "previewButton": "Ongeza kipimo"
+  },
+  "language": {
+    "title": "Lugha",
+    "intro": "Chagua lugha ya programu. Data yako haibadiliki.",
+    "system": "Lugha ya simu",
+    "systemHint": "Kwa sasa: {{name}}",
+    "inReview": "Tafsiri inakaguliwa",
+    "inReviewNote": "Lugha zilizo na alama «tafsiri inakaguliwa» bado hazijakaguliwa na mtu anayezungumza lugha hiyo. Ikiwa ujumbe wa afya haueleweki, uliza timu yako ya afya.",
+    "serverNote": "Kwa sasa baadhi ya maudhui yanabaki kwa Kifaransa: majibu na karatasi za msaidizi, ripoti ya PDF na barua pepe."
+  },
+  "onboarding": {
+    "progress": "Hatua {{current}} kati ya {{total}}",
+    "next": "Endelea",
+    "review": "Kagua taarifa zangu",
+    "privacy": "Taarifa zako ni za faragha: ni wewe peke yako unayechagua nani azione.",
+    "identity": {
+      "title": "Wewe ni nani?",
+      "intro": "Taarifa hizi zinamsaidia daktari wako kukutambua na kuelewa vipimo vyako.",
+      "firstName": "Jina la kwanza",
+      "lastName": "Jina la ukoo",
+      "birthDate": "Tarehe ya kuzaliwa",
+      "birthDatePlaceholder": "SS/MM/MMMM",
+      "sex": "Jinsia",
+      "sexF": "Mwanamke",
+      "sexM": "Mwanamume",
+      "sexOther": "Nyingine"
+    },
+    "diabetes": {
+      "title": "Kisukari chako",
+      "intro": "Aina ya kisukari husaidia kuelewa ufuatiliaji wako. Ukiwa na shaka, chagua «Nyingine»: unaweza kuibadilisha baadaye.",
+      "type": "Aina ya kisukari",
+      "type1": "Aina ya 1",
+      "type2": "Aina ya 2",
+      "gestational": "Cha ujauzito",
+      "other": "Nyingine",
+      "year": "Mwaka wa kugunduliwa",
+      "yearHint": "Si lazima. Makadirio yanatosha."
+    },
+    "thresholds": {
+      "title": "Kipimo na mipaka",
+      "intro": "Chagua kipimo cha mashine yako ya kupimia na ukague kiwango chako lengwa.",
+      "unit": "Kipimo",
+      "doctorNote": "Thamani za kawaida zimewekwa mwanzoni: ziamuliwe pamoja na daktari wako. Afyabora haitoi kamwe ushauri wa matibabu.",
+      "veryLowMgDl": "Chini sana chini ya",
+      "targetMinMgDl": "Kiwango lengwa: mwanzo",
+      "targetMaxMgDl": "Kiwango lengwa: mwisho",
+      "veryHighMgDl": "Juu sana juu ya",
+      "reset": "Rudisha thamani za mwanzo",
+      "reviewed": "Mipaka hii imewekwa pamoja na daktari wangu.",
+      "barCaption": "Chini sana · chini · kiwango lengwa · juu · juu sana",
+      "barA11y": "Kiwango lengwa kuanzia {{min}} hadi {{max}} miligramu kwa desilita",
+      "rangeTitle": "Kiwango lengwa",
+      "alertTitle": "Mipaka ya tahadhari",
+      "rangeHint": "Thamani kati ya namba hizi mbili ziko «ndani ya kiwango».",
+      "alertHint": "Chini ya «chini sana» au juu ya «juu sana», Afyabora itakutahadharisha.",
+      "short": {
+        "targetMinMgDl": "Kuanzia",
+        "targetMaxMgDl": "Hadi",
+        "veryLowMgDl": "Chini sana",
+        "veryHighMgDl": "Juu sana"
+      }
+    },
+    "contacts": {
+      "title": "Watu wako wa mawasiliano",
+      "intro": "Si lazima, lakini ni muhimu ikihitajika. Unaweza kuwabadilisha baadaye.",
+      "relativeTitle": "Ndugu wa kujulishwa",
+      "relativeHint": "Ataonekana kwenye kadi yako ya dharura ukiiwasha.",
+      "name": "Jina",
+      "phone": "Simu",
+      "relation": "Uhusiano (si lazima)",
+      "relationPlaceholder": "Mke, mwana, rafiki…",
+      "doctorTitle": "Daktari wako",
+      "doctorHint": "Daktari anayefuatilia kisukari chako.",
+      "doctorName": "Jina la daktari",
+      "doctorNamePlaceholder": "Dkt. …",
+      "emergencyTitle": "Wakati wa dharura",
+      "emergencyHint": "Namba ya kupiga kuomba msaada mahali unapoishi. Afyabora haiikisii: ithibitishe kwenye kituo chako cha afya.",
+      "country": "Nchi",
+      "countries": {
+        "CD": "DR Kongo",
+        "CG": "Kongo",
+        "RW": "Rwanda",
+        "BI": "Burundi",
+        "UG": "Uganda",
+        "AO": "Angola",
+        "FR": "Ufaransa",
+        "BE": "Ubelgiji",
+        "OTHER": "Nchi nyingine"
+      },
+      "otherCountry": "Msimbo wa nchi (herufi 2)",
+      "otherCountryHint": "Kwa mfano KE kwa Kenya, CM kwa Kamerun.",
+      "clearCountry": "Usionyeshe nchi",
+      "emergencyNumber": "Namba ya dharura",
+      "emergencyNumberHint": "Huduma za dharura, gari la wagonjwa au hospitali iliyo karibu.",
+      "emergencyNumberPlaceholder": "Mf. 112"
+    },
+    "summary": {
+      "overline": "Hatua ya mwisho",
+      "title": "Kila kitu ni sahihi?",
+      "intro": "Kagua taarifa zako kabla ya kuzihifadhi.",
+      "edit": "Badilisha",
+      "name": "Jina",
+      "target": "Kiwango lengwa",
+      "none": "Haijajazwa",
+      "save": "Hifadhi wasifu wangu"
+    },
+    "done": {
+      "title": "Karibu, {{name}}!",
+      "message": "Wasifu wako uko tayari. Unaweza kuhifadhi kipimo chako cha kwanza.",
+      "action": "Gundua Afyabora"
+    },
+    "errors": {
+      "firstName": "Andika jina lako la kwanza.",
+      "lastName": "Andika jina lako la ukoo.",
+      "birthDate": "Tarehe si sahihi: tumia muundo SS/MM/MMMM (si tarehe ya baadaye).",
+      "sex": "Chagua moja.",
+      "diabetesType": "Chagua aina ya kisukari.",
+      "diagnosisYear": "Mwaka kati ya 1950 na leo, baada ya kuzaliwa kwako.",
+      "preferredUnit": "Chagua kipimo.",
+      "thresholds": {
+        "veryLowMgDl": "Thamani si sahihi: lazima iwe chini ya mwanzo wa kiwango lengwa.",
+        "targetMinMgDl": "Thamani si sahihi au iko nje ya mipaka (20 hadi 600 mg/dL).",
+        "targetMaxMgDl": "Thamani si sahihi: mwisho wa kiwango lazima uwe juu ya mwanzo.",
+        "veryHighMgDl": "Thamani si sahihi: lazima iwe juu ya mwisho wa kiwango lengwa."
+      },
+      "emergencyContact": {
+        "name": "Andika jina la ndugu yako.",
+        "phone": "Andika namba ya simu (angalau herufi 6).",
+        "relation": "Maandishi ni marefu mno."
+      },
+      "doctorContact": {
+        "name": "Andika jina la daktari wako.",
+        "phone": "Andika namba ya simu (angalau herufi 6)."
+      },
+      "country": "Chagua nchi au andika msimbo wake wa herufi 2 (mf. KE).",
+      "emergencyNumber": "Andika namba yenye tarakimu (« + » inaruhusiwa mwanzoni)."
+    }
+  },
+  "security": {
+    "pad": {
+      "progress": "Tarakimu {{count}} zimeingizwa kati ya {{total}}",
+      "delete": "Futa"
+    },
+    "lock": {
+      "title": "Afyabora imefungwa",
+      "prompt": "Andika msimbo wako ili kuendelea.",
+      "wrong": "Msimbo si sahihi. Jaribu tena.",
+      "wait": "Majaribio mengi mno. Jaribu tena baada ya sekunde {{seconds}}.",
+      "bioPrompt": "Fungua Afyabora",
+      "useCode": "Tumia msimbo wangu",
+      "useFace": "Fungua kwa uso",
+      "useFinger": "Fungua kwa alama ya kidole",
+      "forgot": "Umesahau msimbo?",
+      "forgotTitle": "Toka ili kuweka upya",
+      "forgotText": "Utahitaji kuingia tena kwa barua pepe na nenosiri lako. Data ambayo bado haijatumwa itapotea kwenye simu hii.",
+      "forgotConfirm": "Toka"
+    },
+    "settings": {
+      "title": "Usalama",
+      "intro": "Linda ufikiaji wa data yako ya afya kwenye simu hii.",
+      "lockLabel": "Funga programu",
+      "lockHint": "Msimbo (na alama ya kidole ukipenda) utaombwa unapofungua.",
+      "bioFinger": "Fungua kwa alama ya kidole",
+      "bioFace": "Fungua kwa uso",
+      "bioHint": "Msimbo wako unaweza kutumika kila wakati.",
+      "bioUnavailable": "Alama ya kidole au uso havipatikani kwenye simu hii: msimbo utaombwa.",
+      "timeoutLabel": "Funga tena baada ya",
+      "timeout": {
+        "immediate": "Mara moja",
+        "1min": "Dak. 1",
+        "5min": "Dak. 5"
+      },
+      "change": "Badilisha msimbo",
+      "lengthTitle": "Chagua msimbo wako",
+      "lengthLabel": "Urefu wa msimbo",
+      "four": "Tarakimu 4",
+      "fourHint": "Haraka kuandika",
+      "six": "Tarakimu 6",
+      "sixHint": "Vigumu zaidi kukisia",
+      "createTitle": "Andika msimbo mpya",
+      "confirmTitle": "Uandike tena",
+      "verifyTitle": "Andika msimbo wako wa sasa",
+      "mismatch": "Misimbo miwili haifanani. Anza upya.",
+      "problem": {
+        "length": "Msimbo lazima uwe na tarakimu 4 hadi 6.",
+        "digits": "Msimbo una tarakimu tu.",
+        "tooSimple": "Msimbo ni rahisi mno kukisia (mf. 1234, 0000). Chagua mwingine."
+      },
+      "enabled": "Kufunga kumewashwa.",
+      "changed": "Msimbo umebadilishwa.",
+      "disabled": "Kufunga kumezimwa.",
+      "tipsTitle": "Vizuri kujua",
+      "tips": "Msimbo wako haihifadhiwi kamwe bila usimbaji fiche. Baada ya makosa 5, lazima usubiri kabla ya kujaribu tena. Umesahau msimbo? Unaweza kutoka kisha kuingia tena kwa nenosiri lako.",
+      "storage": {
+        "title": "Data ya afya kwenye simu hii",
+        "loading": "Inakagua…",
+        "encrypted": "Imesimbwa",
+        "encryptedHint": "Hifadhidata ya ndani imesimbwa (AES-256, SQLCipher). Ufunguo umehifadhiwa kwenye hifadhi salama ya simu.",
+        "unencrypted": "Haijasimbwa",
+        "unencryptedHint": "Hali ya uundaji (Expo Go): usimbaji unafanya kazi tu kwenye programu iliyosakinishwa (APK).",
+        "web": "Hakiki ya wavuti",
+        "webHint": "Hakuna kinachohifadhiwa kwenye kifaa hiki: data inabaki kwenye kumbukumbu wakati wa ziara tu.",
+        "error": "Haipatikani",
+        "errorHint": "Hifadhidata ya ndani haikuweza kufunguliwa. Funga kisha ufungue programu tena.",
+        "migrated": "Data iliyokuwa tayari kwenye simu hii imesimbwa.",
+        "reset": "Hifadhidata ya simu hii haikusomeka: imeundwa upya. Data yako inarejeshwa kutoka kwenye seva; ni maingizo ambayo hayakuwahi kusawazishwa tu ndiyo yanaweza kuwa yamepotea."
+      }
+    }
+  },
+  "legal": {
+    "updated": "Toleo {{version}} · limesasishwa {{date}}",
+    "date": "10 Oktoba 2026",
+    "close": "Funga",
+    "emergencyTitle": "Wakati wa dharura",
+    "emergency": "Ukijisikia vibaya, au sukari yako ya damu ikiwa chini sana au juu sana pamoja na dalili, usisubiri programu: piga simu kwa huduma za dharura au nenda kwenye kituo cha afya kilicho karibu.",
+    "disclaimer": {
+      "overline": "Onyo",
+      "title": "Chombo cha kusaidia, si ushauri wa kitabibu",
+      "short": "Afyabora inakusaidia kufuatilia sukari yako ya damu. Haitoi utambuzi wa ugonjwa na haichukui nafasi ya ushauri wa mtaalamu wa afya.",
+      "more": "Jua zaidi",
+      "moreA11y": "Soma onyo kamili",
+      "intro": "Afyabora ni chombo cha kusaidia ufuatiliaji wa kisukari. Kabla ya kuitumia, ni muhimu kujua inachofanya, na hasa isichofanya.",
+      "does": {
+        "title": "Afyabora inafanya nini",
+        "body": "Inahifadhi vipimo vyako, hata bila mtandao. Inakokotoa takwimu rahisi kutoka kwenye data yako mwenyewe (wastani, muda ndani ya kiwango chako lengwa, vipindi vya juu au chini). Inakusaidia kujiandaa kwa miadi yako na kushiriki historia yako na daktari unayemchagua."
+      },
+      "doesNot": {
+        "title": "Isichofanya",
+        "body": "Haitoi utambuzi wowote wa ugonjwa. Haipendekezi dozi yoyote ya insulini wala dawa yoyote. Haisemi kamwe chanzo cha sukari kuwa juu au chini: inachoona ni dalili za kujadili na mtaalamu."
+      },
+      "quality": {
+        "title": "Matokeo yanategemea unachoingiza",
+        "body": "Mahesabu ni sahihi tu ikiwa vipimo ni sahihi: thamani iliyonakiliwa vibaya au siku bila vipimo hubadilisha matokeo. Programu inakuambia wakati data ni chache mno kufikia hitimisho."
+      },
+      "treatment": {
+        "title": "Matibabu yako",
+        "body": "Usibadilishe kamwe matibabu yako kwa kutegemea programu peke yake. Zungumza kwanza na daktari wako au timu yako ya afya."
+      },
+      "alerts": {
+        "title": "Vikumbusho na tahadhari",
+        "body": "Vikumbusho na tahadhari huenda visifike (simu imezimwa, betri imeisha, arifa zimezimwa). Havichukui nafasi ya umakini wako wala wa wapendwa wako."
+      }
+    },
+    "privacy": {
+      "overline": "Faragha",
+      "title": "Sera ya faragha",
+      "intro": "Data yako ya afya ni mali yako. Ukurasa huu unaeleza kwa urahisi tunachohifadhi, kwa nini, wapi, na nani anaweza kukiona.",
+      "prototype": "Afyabora kwa sasa ni mfano ulioundwa katika mazingira ya mafunzo. Sera hii itakaguliwa na wasimamizi kabla ya kutolewa kwa umma.",
+      "data": {
+        "title": "Data inayohifadhiwa",
+        "body": "Akaunti yako: barua pepe na nenosiri (halihifadhiwi kamwe bila usimbaji). Wasifu wako: jina, tarehe ya kuzaliwa, jinsia, aina ya kisukari, mwaka wa kugunduliwa, kipimo na mipaka uliyochagua. Ukipenda: ndugu wa kujulishwa na daktari wako. Ufuatiliaji wako: vipimo vya sukari ya damu, matukio (milo, shughuli, matibabu…) na maelezo."
+      },
+      "purpose": {
+        "title": "Kwa nini",
+        "body": "Kwa ufuatiliaji wako tu: kuonyesha historia yako, kukokotoa takwimu zako na kuandaa miadi yako. Hakuna matangazo. Data yako haiuzwi wala haikodishwi kamwe."
+      },
+      "storage": {
+        "title": "Inahifadhiwa wapi",
+        "body": "Kwanza kwenye simu yako, ili ifanye kazi bila mtandao, kisha kwenye seva yetu mara muunganisho unapopatikana. Mawasiliano yamesimbwa, maelezo yako binafsi yamesimbwa kwenye seva, na unaweza kufunga programu kwa msimbo au alama ya kidole. Unapotoka, data inafutwa kwenye simu."
+      },
+      "sharing": {
+        "title": "Kushiriki na daktari",
+        "body": "Hakuna kinachoshirikiwa bila wewe kufanya hivyo. Unaunda msimbo wa QR, unaotumika kwa muda mfupi na mara moja tu; ni daktari aliyeingia na kuthibitishwa tu anayeweza kuuchanganua. Unachagua anachoona na kwa muda gani, unaweza kusimamisha ushirikishaji wakati wowote, na kila utazamaji unaonekana kwenye kumbukumbu yako ya ufikiaji."
+      },
+      "emergency": {
+        "title": "Kadi ya dharura",
+        "body": "Ukiiwasha, kadi ya dharura inaweza kusomwa bila akaunti: ndilo lengo lake, kwa ajili ya waokoaji. Ina taarifa ulizochagua tu, kamwe si historia yako. Unaarifiwa kila inapofunguliwa, na unaweza kuizima au kuifanya upya wakati wowote."
+      },
+      "analysis": {
+        "title": "Uchambuzi",
+        "body": "Takwimu na mambo yanayoonekana hukokotolewa na programu kwa kanuni zisizobadilika na zinazoweza kuthibitishwa, kutoka kwenye data yako tu. Ikiwa siku moja uboreshaji wa maandishi kiotomatiki utawashwa, utapokea takwimu za muhtasari tu, bila jina lako wala mawasiliano yako."
+      },
+      "retention": {
+        "title": "Kwa muda gani",
+        "body": "Data yako inahifadhiwa maadamu akaunti yako ipo. Kufuta akaunti kunafuta data yako kwenye seva zetu."
+      },
+      "rights": {
+        "title": "Haki zako",
+        "body": "Unaweza kupata nakala ya data yako, kuirekebisha na kufuta akaunti yako. Idhini uliyotoa wakati wa kujisajili inaweza kuondolewa kwa kufuta akaunti yako. Hulazimishwi kamwe kushiriki data yako na daktari."
+      }
+    },
+    "about": {
+      "overline": "Mipangilio",
+      "title": "Kuhusu",
+      "version": "Toleo {{version}}",
+      "legalTitle": "Taarifa za kisheria",
+      "privacyHint": "Tunachohifadhi na nani anaweza kukiona",
+      "disclaimerHint": "Programu inachofanya, na isichofanya",
+      "credits": "Mradi wa PBL 5 · MEO. Umeundwa kwa ajili ya watu wanaoishi na kisukari."
+    }
+  },
+  "measurement": {
+    "overline": "Kuingiza",
+    "title": "Kipimo kipya",
+    "close": "Funga bila kuhifadhi",
+    "valueLabel": "Sukari ya damu",
+    "valueA11y": "Thamani ya sukari ya damu, kwa {{unit}}",
+    "equals": "yaani {{values}}",
+    "unitLabel": "Kipimo",
+    "when": {
+      "label": "Lini?",
+      "now": "Sasa",
+      "minus30": "−dak. 30",
+      "minus60": "−saa 1",
+      "custom": "Nyingine",
+      "today": "Leo",
+      "yesterday": "Jana",
+      "dayBefore": "Juzi",
+      "time": "Saa ya kipimo",
+      "hourMinus": "Saa moja mapema",
+      "hourPlus": "Saa moja baadaye",
+      "minuteMinus": "Dakika tano mapema",
+      "minutePlus": "Dakika tano baadaye",
+      "summary": "{{day}}, {{time}}"
+    },
+    "context": {
+      "label": "Muktadha",
+      "FASTING": "Kabla ya kula chochote",
+      "BEFORE_MEAL": "Kabla ya mlo",
+      "AFTER_MEAL": "Baada ya mlo",
+      "BEDTIME": "Wakati wa kulala",
+      "NIGHT": "Usiku",
+      "OTHER": "Nyingine"
+    },
+    "noteLabel": "Maelezo (si lazima)",
+    "notePlaceholder": "Mf. baada ya kutembea, mlo wa usiku sana…",
+    "noteHint": "Yanaonekana kwako; yanashirikiwa tu ukichagua.",
+    "save": "Hifadhi",
+    "problem": {
+      "empty": "Andika thamani uliyopima.",
+      "invalid": "Thamani haisomeki: tumia tarakimu tu.",
+      "zero": "Thamani lazima iwe zaidi ya sifuri.",
+      "decimals": "Desimali nyingi mno kwa kipimo hiki: kagua ulichoandika.",
+      "unusual": "Thamani isiyo ya kawaida: kagua thamani na kipimo ulichochagua.",
+      "future": "Saa hii iko katika siku zijazo.",
+      "context": "Chagua muktadha wa kipimo."
+    },
+    "duplicateTitle": "Tayari kimehifadhiwa?",
+    "duplicate": "Kipimo chenye thamani hiyo hiyo tayari kipo saa hii.",
+    "duplicateConfirm": "Hifadhi hata hivyo",
+    "error": "Kipimo hakikuweza kuhifadhiwa kwenye simu hii. Jaribu tena.",
+    "saved": {
+      "title": "Kipimo kimehifadhiwa",
+      "detail": "{{value}} · {{context}} · {{when}}",
+      "local": "Kimehifadhiwa kwenye simu hii, kitatumwa mara muunganisho utakaporuhusu.",
+      "another": "Ongeza kipimo kingine",
+      "done": "Imekamilika",
+      "confirmedUnusual": "Thamani isiyo ya kawaida imethibitishwa na wewe."
+    },
+    "addA11y": "Ongeza kipimo cha sukari ya damu",
+    "unusual": {
+      "question": "{{value}}: je, ni sahihi?",
+      "explain": "Thamani hii si ya kawaida: mashine ya kupimia sukari kwa kawaida huonyesha kati ya {{min}} na {{max}}.",
+      "unitHint": "Kosa la kipimo? Bakiza namba, badilisha kipimo:",
+      "switchUnit": "Ilikuwa kwa {{unit}}",
+      "confirm": "Ndiyo, ni sahihi",
+      "fix": "Rekebisha thamani"
+    },
+    "safety": {
+      "title": {
+        "VERY_LOW": "Thamani iko chini sana",
+        "VERY_HIGH": "Thamani iko juu sana"
+      },
+      "message": "Fuata maelekezo ya timu yako ya afya. Ukijisikia vibaya, omba msaada mara moja."
+    },
+    "edit": {
+      "overline": "Kipimo",
+      "title": "Badilisha kipimo",
+      "close": "Funga bila kuhifadhi",
+      "savedAt": "{{day}} saa {{time}}",
+      "whenLabel": "Tarehe na saa",
+      "day": "Siku ya kipimo",
+      "previousDay": "Siku iliyotangulia",
+      "nextDay": "Siku inayofuata",
+      "save": "Hifadhi mabadiliko",
+      "saveError": "Badiliko halikuweza kuhifadhiwa kwenye simu hii. Jaribu tena.",
+      "delete": "Futa kipimo hiki",
+      "deleteTitle": "Futa kipimo hiki?",
+      "deleteText": "Kitaondoka kwenye historia yako na uchambuzi wako, kwenye simu hii kisha kwenye seva.",
+      "deleteConfirm": "Futa",
+      "deleteError": "Kipimo hakikuweza kufutwa kwenye simu hii. Jaribu tena.",
+      "cancel": "Ghairi",
+      "missingTitle": "Kipimo hakijapatikana",
+      "missingText": "Huenda tayari kimefutwa.",
+      "back": "Rudi"
+    }
+  },
+  "dashboard": {
+    "greeting": {
+      "morning": "Habari za asubuhi",
+      "evening": "Habari za jioni"
+    },
+    "latest": {
+      "title": "Kipimo cha mwisho",
+      "today": "Leo",
+      "yesterday": "Jana",
+      "when": "{{day}}, {{time}}",
+      "age": {
+        "justNow": "Sasa hivi",
+        "minutes_one": "Dakika {{count}} zilizopita",
+        "minutes_other": "Dakika {{count}} zilizopita",
+        "minutes_many": "Dakika {{count}} zilizopita",
+        "hours_one": "Saa {{count}} iliyopita",
+        "hours_other": "Saa {{count}} zilizopita",
+        "hours_many": "Saa {{count}} zilizopita",
+        "days_one": "Siku {{count}} iliyopita",
+        "days_other": "Siku {{count}} zilizopita",
+        "days_many": "Siku {{count}} zilizopita"
+      },
+      "a11y": "Kipimo cha mwisho: {{value}}, {{state}}. {{context}}, {{when}}.",
+      "add": "Kipimo kipya"
+    },
+    "empty": {
+      "title": "Bado hakuna vipimo",
+      "text": "Andika kipimo chako cha kwanza cha sukari: kinabaki kwenye simu hii, hata bila mtandao.",
+      "action": "Andika kipimo changu cha kwanza"
+    },
+    "error": "Vipimo vyako havikuweza kusomwa kwenye simu hii.",
+    "chart": {
+      "title": "Mwenendo",
+      "periodLabel": "Kipindi cha grafu",
+      "period_one": "Siku {{count}}",
+      "period_other": "Siku {{count}}",
+      "period_many": "Siku {{count}}",
+      "summary_one": "Kipimo {{count}} katika siku {{days}}",
+      "summary_other": "Vipimo {{count}} katika siku {{days}}",
+      "summary_many": "Vipimo {{count}} katika siku {{days}}",
+      "hint": "Gusa mstari ili kuona maelezo ya kipimo.",
+      "empty": "Hakuna kipimo katika siku hizi {{days}}.",
+      "target": "Kiwango lengwa: {{min}} – {{max}}",
+      "a11y_one": "Grafu ya sukari ya damu katika siku {{days}}: kipimo {{count}}.",
+      "a11y_other": "Grafu ya sukari ya damu katika siku {{days}}: vipimo {{count}}.",
+      "a11y_many": "Grafu ya sukari ya damu katika siku {{days}}: vipimo {{count}}.",
+      "a11yHint": "Telezesha juu au chini ili kwenda kipimo kimoja hadi kingine.",
+      "a11yPoint": "{{value}}, {{state}}. {{detail}}"
+    },
+    "stats": {
+      "title": "Takwimu",
+      "count_one": "Kipimo {{count}} · siku {{days}}",
+      "count_other": "Vipimo {{count}} · siku {{days}}",
+      "count_many": "Vipimo {{count}} · siku {{days}}",
+      "insufficientTitle": "Data haitoshi",
+      "insufficient_one": "Vinahitajika angalau vipimo {{min}} katika siku hizi {{days}} ili kupata takwimu za kuaminika. Una {{count}}.",
+      "insufficient_other": "Vinahitajika angalau vipimo {{min}} katika siku hizi {{days}} ili kupata takwimu za kuaminika. Una {{count}}.",
+      "insufficient_many": "Vinahitajika angalau vipimo {{min}} katika siku hizi {{days}} ili kupata takwimu za kuaminika. Una {{count}}.",
+      "shareA11y": "Mgawanyo wa vipimo: {{below}} % chini, {{inRange}} % ndani ya kiwango, {{above}} % juu.",
+      "mean": "Wastani",
+      "sd": "Mkengeuko sanifu",
+      "cv": "Mabadiliko",
+      "compareTitle": "Ukilinganisha na siku {{days}} zilizopita",
+      "tirChange": "Muda ndani ya lengo: {{value}}",
+      "meanChange": "Wastani: {{value}}",
+      "points_one": "{{sign}}{{count}} pointi",
+      "points_other": "{{sign}}{{count}} pointi",
+      "points_many": "{{sign}}{{count}} pointi",
+      "stable": "thabiti",
+      "direction": {
+        "up": "inapanda",
+        "down": "inashuka",
+        "flat": "thabiti"
+      },
+      "noPrevious": "Hakuna vipimo vya kutosha katika siku {{days}} zilizopita ili kulinganisha."
+    },
+    "quality": {
+      "title": "Ubora wa data",
+      "level": {
+        "GOOD": "Mzuri",
+        "PARTIAL": "Wa sehemu",
+        "INSUFFICIENT": "Hautoshi"
+      },
+      "reason": {
+        "empty": "Hakuna kipimo katika siku hizi {{days}}: hakuna cha kutathmini kwa sasa.",
+        "good": "Vipimo vya mara kwa mara: siku {{covered}} kati ya {{days}} zimepimwa, {{perDay}} kwa siku kwa wastani.",
+        "coverage": "Vipimo katika siku {{covered}} tu kati ya {{days}}: kupima siku nyingi zaidi hufanya uchambuzi uaminike zaidi.",
+        "freshness_one": "Kipimo cha mwisho ni cha siku {{count}} iliyopita: takwimu zinaonyesha hali ya sasa kwa kiasi kidogo.",
+        "freshness_other": "Kipimo cha mwisho ni cha siku {{count}} zilizopita: takwimu zinaonyesha hali ya sasa kwa kiasi kidogo.",
+        "freshness_many": "Kipimo cha mwisho ni cha siku {{count}} zilizopita: takwimu zinaonyesha hali ya sasa kwa kiasi kidogo.",
+        "density_one": "Kipimo {{perDay}} kwa siku iliyopimwa kwa wastani: lengo ni {{target}} ili kupata picha kamili zaidi.",
+        "density_other": "Vipimo {{perDay}} kwa siku iliyopimwa kwa wastani: lengo ni {{target}} ili kupata picha kamili zaidi.",
+        "density_many": "Vipimo {{perDay}} kwa siku iliyopimwa kwa wastani: lengo ni {{target}} ili kupata picha kamili zaidi."
+      },
+      "coverage": "Siku zilizopimwa",
+      "density": "Vipimo kwa siku",
+      "freshness": "Upya",
+      "formula": "Alama = 50 % siku zilizopimwa + 30 % vipimo kwa siku + 20 % upya.",
+      "a11y": "Ubora wa data: {{score}} kati ya 100, {{level}}. {{sentence}}"
+    }
+  },
+  "timeline": {
+    "overline": "Mfuatano wa matukio",
+    "title": "Historia",
+    "filtersLabel": "Chuja mfuatano wa matukio",
+    "filter": {
+      "all": "Zote",
+      "glucose": "Sukari ya damu",
+      "MEAL": "Milo",
+      "ACTIVITY": "Shughuli",
+      "TREATMENT": "Matibabu",
+      "alerts": "Tahadhari"
+    },
+    "type": {
+      "MEAL": "Mlo",
+      "ACTIVITY": "Shughuli",
+      "TREATMENT": "Matibabu"
+    },
+    "duration_one": "{{type}} · dak. {{count}}",
+    "duration_other": "{{type}} · dak. {{count}}",
+    "duration_many": "{{type}} · dak. {{count}}",
+    "declared": "Imeelezwa na wewe",
+    "pending": "Bado haijatumwa",
+    "source": {
+      "MANUAL": "Imeingizwa",
+      "IMPORT": "Imeletwa",
+      "DEVICE": "Kifaa",
+      "importBatch": "Imeletwa · kundi {{batch}}",
+      "a11y": "Chanzo: {{label}}"
+    },
+    "count_one": "Kipengele {{count}}",
+    "count_other": "Vipengele {{count}}",
+    "count_many": "Vipengele {{count}}",
+    "more": "Tazama siku {{days}} zilizopita",
+    "end": "Hakuna kitu cha zamani zaidi kwenye simu hii.",
+    "empty": {
+      "title": "Historia yako ni tupu",
+      "text": "Vipimo vyako, milo, shughuli na matibabu vitaonekana hapa, siku kwa siku.",
+      "action": "Andika kipimo",
+      "import": "Leta faili"
+    },
+    "emptyFilter": {
+      "title": "Hakuna cha kuonyesha",
+      "text": "Hakuna kipengele cha «{{filter}}» katika siku {{days}} zilizopita."
+    },
+    "error": "Historia haikuweza kusomwa kwenye simu hii.",
+    "a11y": {
+      "measurement": "{{time}}, sukari ya damu {{value}}, {{state}}, {{context}}",
+      "event": "{{time}}, {{label}}, {{meta}}"
+    },
+    "addEvent": "Ongeza",
+    "openHint": "Hufungua maelezo ili kubadilisha au kufuta"
+  },
+  "event": {
+    "overline": "Kuongeza haraka",
+    "title": "Tukio jipya",
+    "close": "Funga bila kuhifadhi",
+    "typeLabel": "Aina",
+    "type": {
+      "MEAL": "Mlo",
+      "ACTIVITY": "Shughuli",
+      "TREATMENT": "Matibabu"
+    },
+    "typeHint": {
+      "MEAL": "Ulichokula, na lini",
+      "ACTIVITY": "Shughuli ya mwili na muda wake",
+      "TREATMENT": "Dawa uliyotumia, kama unavyoeleza"
+    },
+    "chooseFirst": "Chagua kwanza aina ya tukio.",
+    "label": {
+      "MEAL": "Mlo",
+      "ACTIVITY": "Shughuli",
+      "TREATMENT": "Jina la dawa"
+    },
+    "placeholder": {
+      "MEAL": "Mf. chakula cha mchana, wali na maharagwe",
+      "ACTIVITY": "Mf. kutembea",
+      "TREATMENT": "Mf. insulini ya muda mrefu, metformin"
+    },
+    "suggestionsLabel": "Mapendekezo",
+    "suggestion": {
+      "breakfast": "Kifungua kinywa",
+      "lunch": "Chakula cha mchana",
+      "dinner": "Chakula cha jioni",
+      "snack": "Kitafunio",
+      "walk": "Kutembea",
+      "run": "Kukimbia",
+      "bike": "Baiskeli",
+      "football": "Mpira wa miguu",
+      "dance": "Kucheza dansi",
+      "housework": "Kazi za nyumbani"
+    },
+    "durationLabel": "Muda",
+    "durationOther": "Muda mwingine (dakika)",
+    "minutes_one": "Dak. {{count}}",
+    "minutes_other": "Dak. {{count}}",
+    "minutes_many": "Dak. {{count}}",
+    "details": {
+      "MEAL": "Maelezo (si lazima)",
+      "ACTIVITY": "Maelezo (si lazima)",
+      "TREATMENT": "Maelezo (si lazima)"
+    },
+    "detailsPlaceholder": {
+      "MEAL": "Mf. sehemu kubwa kuliko kawaida",
+      "ACTIVITY": "Mf. kuzunguka mtaa",
+      "TREATMENT": "Mf. kama kawaida jioni"
+    },
+    "detailsHint": "Yanaonekana kwako; yanashirikiwa tu ukichagua.",
+    "treatmentTitle": "Imeelezwa na wewe",
+    "treatmentInfo": "Afyabora huhifadhi unachoeleza, bila kukokotoa wala kushauri dozi. Fuata maelekezo ya timu yako ya afya.",
+    "save": "Hifadhi",
+    "error": "Tukio halikuweza kuhifadhiwa kwenye simu hii. Jaribu tena.",
+    "problem": {
+      "type": "Chagua aina ya tukio.",
+      "label": "Andika jina.",
+      "labelTooLong": "Herufi {{max}} kwa kiwango cha juu.",
+      "duration": "Muda kwa dakika, kuanzia 1 hadi 1440.",
+      "future": "Saa hii iko katika siku zijazo."
+    },
+    "saved": {
+      "title": "Tukio limehifadhiwa",
+      "local": "Limehifadhiwa kwenye simu hii, litatumwa mara muunganisho utakaporuhusu.",
+      "another": "Ongeza tukio jingine",
+      "done": "Imekamilika"
+    }
+  },
+  "insights": {
+    "title": "Uchambuzi",
+    "subtitle": "Kile vipimo vyako vinaonyesha. Kimekokotolewa kwenye simu hii, hata bila mtandao.",
+    "periodLabel": "Kipindi kinachochambuliwa",
+    "error": "Imeshindwa kusoma vipimo vilivyohifadhiwa kwenye simu hii.",
+    "summary": {
+      "title": "Siku {{days}} zilizopita",
+      "range": "Kuanzia {{from}} hadi {{to}}",
+      "inRange": "ndani ya kiwango lengwa",
+      "count_one": "Kipimo {{count}}",
+      "count_other": "Vipimo {{count}}",
+      "count_many": "Vipimo {{count}}",
+      "quality": "Ubora wa data: {{score}}/100 · {{level}}",
+      "a11y": "Katika siku {{days}} zilizopita: {{percent}} % ya vipimo ndani ya kiwango lengwa, {{readings}}. Ubora wa data: {{score}} kati ya 100, {{level}}."
+    },
+    "headline": {
+      "calm": "Hakuna jambo maalum la kuripoti katika kipindi hiki.",
+      "watch_one": "Jambo {{count}} la kuangalia kwa makini zaidi.",
+      "watch_other": "Mambo {{count}} ya kuangalia kwa makini zaidi.",
+      "watch_many": "Mambo {{count}} ya kuangalia kwa makini zaidi."
+    },
+    "insufficient": {
+      "title": "Bado hakuna vipimo vya kutosha",
+      "body_one": "Kipimo {{count}} katika siku hizi {{days}}: vinahitajika angalau 10 kwa uchambuzi wa kuaminika.",
+      "body_other": "Vipimo {{count}} katika siku hizi {{days}}: vinahitajika angalau 10 kwa uchambuzi wa kuaminika.",
+      "body_many": "Vipimo {{count}} katika siku hizi {{days}}: vinahitajika angalau 10 kwa uchambuzi wa kuaminika.",
+      "action": "Andika kipimo"
+    },
+    "observations_one": "Jambo {{count}} lililoonekana",
+    "observations_other": "Mambo {{count}} yaliyoonekana",
+    "observations_many": "Mambo {{count}} yaliyoonekana",
+    "severity": {
+      "INFO": "Taarifa",
+      "ATTENTION": "La kufuatilia",
+      "ALERT": "Tahadhari"
+    },
+    "type": {
+      "TREND": "Mwenendo",
+      "TIME_OF_DAY_PATTERN": "Wakati wa siku",
+      "ANOMALY": "Thamani isiyo ya kawaida",
+      "HIGH_STREAK": "Mfululizo wa thamani za juu",
+      "REPEATED_HYPO": "Thamani za chini zinazojirudia",
+      "MISSING_DATA": "Siku bila vipimo",
+      "PERIOD_COMPARISON": "Ulinganisho"
+    },
+    "slot": {
+      "MORNING": "asubuhi",
+      "NOON": "mchana",
+      "EVENING": "jioni",
+      "NIGHT": "usiku"
+    },
+    "sentence": {
+      "REPEATED_HYPO": "Ninaona vipimo {{count}} chini ya mpaka wa chini katika siku {{days}} zilizopita.",
+      "HIGH_STREAK": "Ninaona mfululizo wa vipimo {{length}} vinavyofuatana juu ya mpaka wa juu.",
+      "ANOMALY": "Kipimo/vipimo {{count}} vinatofautiana sana na historia yako ya hivi karibuni.",
+      "TIME_OF_DAY_PATTERN": "Thamani za juu ni za mara nyingi zaidi wakati wa «{{slot}}» ({{slotAbovePct}} % dhidi ya {{globalAbovePct}} % kwa jumla).",
+      "MISSING_DATA": "Siku {{daysWithoutData}} kati ya {{daysInPeriod}} hazina kipimo chochote: baadhi ya uchambuzi huenda haujakamilika.",
+      "PERIOD_COMPARISON": "Muda ndani ya lengo: {{timeInRangePct}} % (kipindi kilichopita: {{previousTimeInRangePct}} %).",
+      "TREND": "Mwenendo ulioonekana katika kipindi hiki."
+    },
+    "threshold": {
+      "below": "Mpaka umevukwa: chini ya {{value}}",
+      "above": "Mpaka umevukwa: juu ya {{value}}"
+    },
+    "alertReminder": "Zungumza na mtaalamu wako wa afya kuhusu hili.",
+    "evidence": {
+      "show_one": "Tazama kipimo husika",
+      "show_other": "Tazama vipimo {{count}} husika",
+      "show_many": "Tazama vipimo {{count}} husika",
+      "hide": "Ficha vipimo",
+      "more_one": "Onyesha kipimo {{count}} kingine",
+      "more_other": "Onyesha vipimo {{count}} vingine",
+      "more_many": "Onyesha vipimo {{count}} vingine",
+      "openHint": "Hufungua maelezo ya kipimo hiki.",
+      "a11y": "{{when}}: {{value}}, {{state}}. {{context}}."
+    },
+    "cardA11y": "{{severity}}. {{title}}. {{sentence}}",
+    "summaryText": {
+      "title": "Kwa ufupi",
+      "note": "Muhtasari umetokana na vipimo vyako. Si ushauri wa kitabibu.",
+      "insufficient": "Bado hakuna vipimo vya kutosha katika siku {{days}} zilizopita kwa uchambuzi wa kuaminika (vinahitajika angalau 10).",
+      "counts": "Katika siku {{days}} zilizopita, vipimo {{measures}} vimechambuliwa (ubora wa data: {{level}}, {{score}}/100).",
+      "level": {
+        "GOOD": "mzuri",
+        "PARTIAL": "wa sehemu",
+        "INSUFFICIENT": "hautoshi"
+      },
+      "split": "Vilikuwa ndani ya lengo {{inRange}} % ya muda, juu {{above}} % na chini {{below}} %.",
+      "previous": "Katika kipindi kilichopita, muda ndani ya lengo ulikuwa {{previous}} %.",
+      "points": "Mambo ya kujadili na mtaalamu wako wa afya: {{list}}.",
+      "none": "Hakuna jambo maalum lililoonekana katika kipindi hiki.",
+      "missing": "Siku {{missing}} kati ya {{days}} bila vipimo: baadhi ya uchambuzi huenda haujakamilika.",
+      "point": {
+        "REPEATED_HYPO": "thamani za chini zinazojirudia",
+        "HIGH_STREAK": "mfululizo wa thamani za juu",
+        "ANOMALY": "thamani zisizo za kawaida",
+        "TIME_OF_DAY_PATTERN": "thamani za juu za mara nyingi zaidi {{slots}}"
+      },
+      "slot": {
+        "MORNING": "asubuhi",
+        "NOON": "mchana",
+        "EVENING": "jioni",
+        "NIGHT": "usiku"
+      },
+      "and": "na"
+    },
+    "rewritten": "Maneno yamependekezwa na AI, takwimu zimethibitishwa"
+  },
+  "assistant": {
+    "title": "Afyabora",
+    "subtitle": "Msaidizi wako wa ufuatiliaji",
+    "entry": {
+      "title": "Una swali kuhusu vipimo vyako?",
+      "body": "Uliza Afyabora, msaidizi wako: anajibu kutokana na vipimo vyako na karatasi zilizokaguliwa na daktari."
+    },
+    "welcome": {
+      "title": "Habari, mimi ni Afyabora",
+      "body": "Niulize maswali yako kuhusu sukari yako ya damu au kuhusu kisukari.",
+      "measures": "Ninaeleza vipimo vyako kwa mahesabu yale yale ya skrini ya Uchambuzi.",
+      "sheets": "Kwa maswali ya jumla, ninategemea karatasi zilizokaguliwa na daktari, na ninazitaja.",
+      "never": "Sitoi kamwe dozi, utambuzi wa ugonjwa wala ushauri wa matibabu: kwa hayo, mtaalamu wako wa afya ndiye mtu sahihi.",
+      "try": "Jaribu",
+      "suggestionHint": "Inamuuliza Afyabora swali hili"
+    },
+    "suggestions": {
+      "week": "Comment s'est passée ma semaine ?",
+      "evening": "Mes glycémies du soir sont-elles hautes ?",
+      "hba1c": "C'est quoi l'HbA1c ?",
+      "hypo": "Que faire en cas d'hypoglycémie ?"
+    },
+    "frenchOnly": "Kwa sasa, msaidizi anaelewa na kujibu kwa Kifaransa tu. Kwa sababu hiyo, maswali yaliyo hapa chini yako kwa Kifaransa.",
+    "kinds": {
+      "measurements": "Kutokana na vipimo vyako",
+      "sheet": "Kutokana na karatasi",
+      "emergency": "Dharura",
+      "refusal": "Nje ya jukumu langu",
+      "outOfScope": "Hakuna jibu la uhakika"
+    },
+    "source": {
+      "title_one": "Karatasi iliyotajwa",
+      "title_other": "Karatasi zilizotajwa",
+      "title_many": "Karatasi zilizotajwa",
+      "validated": "Imekaguliwa na daktari",
+      "draft": "Karatasi bado haijakaguliwa",
+      "openHint": "Hufungua karatasi kamili"
+    },
+    "rephrased": "Imeandikwa na AI ya ndani, kisha imethibitishwa",
+    "pending": {
+      "title": "Afyabora anaandaa jibu…",
+      "hint": "Inaweza kuchukua hadi dakika 2.",
+      "late": "Jibu linachelewa kidogo: litaonekana mara litakapokuwa tayari."
+    },
+    "outgoing": {
+      "sending": "Inatuma…",
+      "offline": "Haijatumwa: hakuna mtandao. Msaidizi anahitaji intaneti.",
+      "quota": "Haijatumwa: maswali 20 kwa saa kwa kiwango cha juu. Jaribu tena baada ya dakika {{minutes}}.",
+      "conflict": "Haijatumwa: jaribu tena.",
+      "unknown": "Haijatumwa: huduma haijibu. Jaribu tena.",
+      "discard": "Ondoa"
+    },
+    "composer": {
+      "label": "Swali lako",
+      "placeholder": "Andika swali lako…",
+      "hint": "Herufi 2 hadi 500. Usiandike taarifa zinazokutambulisha.",
+      "send": "Tuma swali",
+      "counter": "{{count}} / {{max}}",
+      "tooLong": "Ni refu mno: herufi {{max}} kwa kiwango cha juu."
+    },
+    "emergency": {
+      "button": "Dharura",
+      "buttonHint": "Huonyesha namba za kupiga wakati wa dharura",
+      "title": "Wakati wa dharura",
+      "body": "Ukijisikia vibaya, usibaki peke yako: piga simu kwa huduma za dharura mara moja, au mwombe mtu afanye hivyo.",
+      "noNumber": "Hakuna namba ya dharura iliyohifadhiwa: piga simu kwa huduma za dharura za nchi yako. Unaweza kuhifadhi namba yako ya dharura kwenye wasifu wako.",
+      "callNumber": "Piga {{phone}}",
+      "call_relative": "Mpigie {{name}}",
+      "call_doctor": "Mpigie {{name}} (daktari)",
+      "callHint": "Hufungua simu"
+    },
+    "load": {
+      "loading": "Inapakia mazungumzo",
+      "offlineTitle": "Hakuna mtandao",
+      "offline": "Mazungumzo yako yamehifadhiwa kwenye seva yakiwa yamesimbwa: intaneti inahitajika ili kuyaonyesha.",
+      "error": "Mazungumzo hayakuweza kupakiwa.",
+      "notFound": "Mazungumzo haya hayapo tena: huenda yamefutwa.",
+      "newConversation": "Mazungumzo mapya"
+    },
+    "a11y": {
+      "question": "Swali lako: {{text}}",
+      "answerReady": "Afyabora amejibu."
+    },
+    "home": {
+      "subtitle": "Msaidizi wako wa ufuatiliaji: vipimo vyako na karatasi zilizokaguliwa na daktari.",
+      "new": "Mazungumzo mapya",
+      "sheets": "Karatasi za maarifa",
+      "sheetsHint": "Sukari ya chini, HbA1c, lishe…"
+    },
+    "list": {
+      "title": "Mazungumzo yako",
+      "loading": "Inapakia mazungumzo yako",
+      "offline": "Mazungumzo yako yamehifadhiwa kwenye seva yakiwa yamesimbwa: intaneti inahitajika ili kuyaonyesha.",
+      "error": "Mazungumzo yako hayakuweza kupakiwa.",
+      "empty": "Bado hakuna mazungumzo. Muulize Afyabora swali lako la kwanza.",
+      "today": "Leo, {{time}}",
+      "yesterday": "Jana, {{time}}",
+      "messages_one": "Ujumbe {{count}}",
+      "messages_other": "Jumbe {{count}}",
+      "messages_many": "Jumbe {{count}}",
+      "noPreview": "Mazungumzo bila swali",
+      "openHint": "Hufungua mazungumzo",
+      "remove": "Futa mazungumzo haya",
+      "removeTitle": "Futa mazungumzo haya?",
+      "removeText": "Maswali na majibu yatafutwa kabisa.",
+      "removeConfirm": "Futa",
+      "removeAll": "Futa mazungumzo yangu yote",
+      "removeAllTitle": "Futa mazungumzo yako yote?",
+      "removeAllText": "Maswali yako yote na majibu yote yatafutwa kabisa.",
+      "removeAllConfirm": "Futa yote",
+      "removeOffline": "Hakuna kilichofutwa: hakuna mtandao. Jaribu tena ukiwa mtandaoni.",
+      "removeError": "Hakuna kilichofutwa: huduma haijibu. Jaribu tena.",
+      "more": "Tazama zaidi",
+      "privacy": "Mazungumzo yako yamesimbwa na yanahifadhiwa hadi utakapoyafuta. Daktari wako hana ufikiaji wake kamwe."
+    },
+    "sheets": {
+      "title": "Karatasi za maarifa",
+      "intro": "Afyabora inategemea karatasi hizi kujibu maswali ya jumla. Kila moja inataja vyanzo vyake rasmi.",
+      "offline": "Karatasi ziko kwenye seva: intaneti inahitajika ili kuzionyesha.",
+      "error": "Karatasi hazikuweza kupakiwa.",
+      "empty": "Kwa sasa hakuna karatasi inayopatikana.",
+      "notFound": "Karatasi hii haipatikani.",
+      "overline": "Karatasi ya maarifa",
+      "reviewedOn": "Imekaguliwa na daktari tarehe {{date}}",
+      "reminder": "Karatasi hii inatoa miongozo ya jumla. Kwa uamuzi unaokuhusu, zungumza na mtaalamu wako wa afya.",
+      "sources_one": "Chanzo",
+      "sources_other": "Vyanzo",
+      "sources_many": "Vyanzo",
+      "sourceHint": "Hufungua chanzo kwenye kivinjari",
+      "version": "Toleo {{version}}"
+    }
+  },
+  "import": {
+    "overline": "Leta",
+    "title": "Leta historia",
+    "intro": "Leta vipimo kutoka daftari au mashine nyingine ya kupimia, kwa faili ya CSV au Excel. Utaona ripoti kabla ya chochote kuletwa.",
+    "close": "Funga bila kuleta",
+    "step": {
+      "file": "Faili",
+      "unit": "Kipimo cha thamani"
+    },
+    "file": {
+      "choose": "Chagua faili",
+      "chooseHint": "CSV au Excel (.xlsx) · MB 5 na mistari 5000 kwa kiwango cha juu",
+      "change": "Badilisha faili",
+      "kind": {
+        "csv": "Faili ya CSV",
+        "xlsx": "Kitabu cha Excel"
+      }
+    },
+    "size": {
+      "bytes": "{{amount}} B",
+      "kb": "{{amount}} KB",
+      "mb": "{{amount}} MB"
+    },
+    "fileProblem": {
+      "empty": "Faili hii ni tupu.",
+      "tooLarge": "Faili hii inazidi MB 5. Bakiza vipimo muhimu tu, au igawanye katika faili kadhaa.",
+      "oldExcel": "Muundo wa zamani wa Excel (.xls): ifungue kwenye Excel, kisha uihifadhi kama .xlsx au CSV.",
+      "unsupported": "Aina hii ya faili haitumiki. Chagua faili ya .csv au .xlsx."
+    },
+    "unit": {
+      "hint": "Hutumika kwa mistari isiyotaja kipimo chake.",
+      "example": "mf. {{value}}"
+    },
+    "analyse": "Chambua faili",
+    "privacy": "Ni maudhui ya faili tu yanayotumwa kwa uchambuzi. Hakuna kinacholetwa bila idhini yako, na unaweza kubatilisha kila kitu baadaye.",
+    "network": "Muunganisho wa intaneti unahitajika: uchambuzi unafanyika kwenye seva.",
+    "problem": {
+      "offline": {
+        "title": "Hakuna mtandao",
+        "text": "Uchambuzi unafanyika kwenye seva. Angalia muunganisho wako, kisha ujaribu tena."
+      },
+      "tooLarge": {
+        "title": "Faili ni kubwa mno",
+        "text": "MB 5 na mistari 5000 kwa kiwango cha juu. Gawanya faili, kisha ujaribu tena."
+      },
+      "unreadable": {
+        "title": "Faili haisomeki"
+      },
+      "tooMany": {
+        "title": "Uchambuzi mwingi mfululizo",
+        "text": "Subiri dakika moja, kisha ujaribu tena."
+      },
+      "rejected": {
+        "title": "Uchambuzi hauwezekani"
+      },
+      "error": {
+        "title": "Uchambuzi hauwezekani",
+        "text": "Hitilafu imetokea. Jaribu tena baada ya muda mfupi."
+      }
+    },
+    "stepLabel": "Hatua {{number}}: {{title}}",
+    "mapping": {
+      "title": "Safu zipi?",
+      "intro": "Hatukutambua safu zote za «{{name}}». Onyesha tarehe na sukari ya damu ziko wapi: vingine si lazima.",
+      "back": "Rudi kuchagua faili",
+      "analyse": "Chambua kwa safu hizi",
+      "required": "Lazima",
+      "optional": "Si lazima",
+      "none": "Hakuna",
+      "usedFor": "tayari imetumika kwa {{role}}",
+      "missing": "Bado chagua: {{roles}}.",
+      "and": " na ",
+      "role": {
+        "date": "Tarehe",
+        "time": "Saa",
+        "value": "Sukari ya damu",
+        "unit": "Kipimo",
+        "context": "Wakati wa kipimo"
+      },
+      "hint": {
+        "date": "Tarehe ya kila kipimo, ikiwa na saa au bila.",
+        "time": "Ikiwa saa iko kwenye safu tofauti.",
+        "value": "Namba iliyopimwa (mf. 1,10 au 110).",
+        "unit": "Ikiwa kila mstari unataja kipimo chake. Vinginevyo: {{unit}}, kilichochaguliwa kwa faili.",
+        "context": "Kabla ya kula chochote, kabla au baada ya mlo…"
+      },
+      "changed": {
+        "title": "Safu za kukagua",
+        "text": "Faili haina safu zote ulizochagua. Kagua uchaguzi wako, kisha uanzishe uchambuzi tena."
+      },
+      "lost": {
+        "title": "Hakuna faili inayoendelea",
+        "text": "Chagua tena faili ya kuleta: haihifadhiwi programu inapofungwa."
+      }
+    },
+    "report": {
+      "title": "Ripoti ya kuleta",
+      "analyzed_one": "Mstari {{count}} umechambuliwa",
+      "analyzed_other": "Mistari {{count}} imechambuliwa",
+      "analyzed_many": "Mistari {{count}} imechambuliwa",
+      "label": {
+        "valid": "Halali",
+        "duplicates": "Nakala",
+        "inconsistent": "Za kukagua",
+        "errors": "Makosa"
+      },
+      "tile": {
+        "valid": "{{count}} halali",
+        "duplicates": "{{count}} nakala",
+        "inconsistent": "{{count}} za kukagua",
+        "errors": "{{count}} makosa"
+      },
+      "allValid": "Mistari yote ni halali: hakuna cha kukagua.",
+      "group": {
+        "INCONSISTENT": {
+          "title": "Za kukagua ({{count}})",
+          "text": "Thamani isiyo ya kawaida au kipimo tofauti: irekebishe, ikubali kama ilivyo, au puuza mstari."
+        },
+        "DUPLICATE": {
+          "title": "Nakala ({{count}})",
+          "text": "Tarehe ile ile, saa ile ile, thamani ile ile kama kipimo kilichopo: zinapuuzwa, isipokuwa ukizikubali."
+        },
+        "ERROR": {
+          "title": "Makosa ({{count}})",
+          "text": "Mstari hausomeki: rekebisha thamani, au puuza mstari."
+        }
+      },
+      "acceptAll": "Kubali zote",
+      "ignoreAll": "Puuza zote",
+      "line": "Mstari {{line}}",
+      "empty": "(tupu)",
+      "decisionFor": "Uamuzi kwa mstari {{line}}",
+      "action": {
+        "IGNORE": "Puuza",
+        "ACCEPT": "Kubali",
+        "CORRECT": "Rekebisha"
+      },
+      "correctedValue": "Thamani sahihi",
+      "correctedHint": "Thamani kwa {{unit}} (badilisha kipimo ikihitajika).",
+      "correctedUnit": "Kipimo cha thamani sahihi",
+      "problem": {
+        "missing": "Andika thamani sahihi.",
+        "invalid": "Thamani haisomeki: namba, kwa mfano 1,10.",
+        "outOfRange": "Thamani nje ya mipaka inayowezekana (20 hadi 600 mg/dL): angalia kipimo."
+      },
+      "more_one": "Tazama mstari {{count}} zaidi",
+      "more_other": "Tazama mistari {{count}} zaidi",
+      "more_many": "Tazama mistari {{count}} zaidi",
+      "fixCorrections": "Kamilisha marekebisho yaliyoonyeshwa kabla ya kuleta.",
+      "rowsRefused": "Baadhi ya maamuzi yamekataliwa: tazama mistari iliyoonyeshwa.",
+      "import_one": "Leta kipimo {{count}}",
+      "import_other": "Leta vipimo {{count}}",
+      "import_many": "Leta vipimo {{count}}",
+      "nothingToImport": "Hakuna cha kuleta",
+      "defaults": "Bila uamuzi, nakala, mistari ya kukagua na makosa hupuuzwa.",
+      "undoable": "Hakuna kinacholetwa kabla ya kitufe hiki, na unaweza kubatilisha uletaji baadaye."
+    },
+    "done": {
+      "title_one": "Kipimo {{count}} kimeletwa",
+      "title_other": "Vipimo {{count}} vimeletwa",
+      "title_many": "Vipimo {{count}} vimeletwa",
+      "skipped_zero": "Hakuna mstari uliopuuzwa.",
+      "skipped_one": "Mstari {{count}} umepuuzwa.",
+      "skipped_other": "Mistari {{count}} imepuuzwa.",
+      "skipped_many": "Mistari {{count}} imepuuzwa.",
+      "sync": "Vipimo vimehifadhiwa kwenye akaunti yako. Vitafika kwenye historia ya simu hii baada ya sekunde chache (usawazishaji wa kiotomatiki).",
+      "finish": "Maliza",
+      "revert": "Batilisha uletaji huu",
+      "revertConfirmTitle": "Batilisha uletaji huu?",
+      "revertConfirmText_one": "Kipimo kilicholetwa kitaondolewa kwenye akaunti yako.",
+      "revertConfirmText_other": "Vipimo {{count}} vilivyoletwa vitaondolewa kwenye akaunti yako.",
+      "revertConfirmText_many": "Vipimo {{count}} vilivyoletwa vitaondolewa kwenye akaunti yako.",
+      "revertedTitle": "Uletaji umebatilishwa",
+      "revertedText_zero": "Hakukuwa na kipimo cha kuondoa.",
+      "revertedText_one": "Kipimo {{count}} kimeondolewa kwenye akaunti yako.",
+      "revertedText_other": "Vipimo {{count}} vimeondolewa kwenye akaunti yako.",
+      "revertedText_many": "Vipimo {{count}} vimeondolewa kwenye akaunti yako.",
+      "keep": "Bakiza uletaji",
+      "revertYes_one": "Ondoa kipimo",
+      "revertYes_other": "Ondoa vipimo {{count}}",
+      "revertYes_many": "Ondoa vipimo {{count}}"
+    },
+    "issue": {
+      "restart": "Anza upya",
+      "offline": {
+        "title": "Hakuna mtandao",
+        "text": "Hakuna kilicholetwa. Angalia muunganisho wako, kisha ujaribu tena."
+      },
+      "done": {
+        "title": "Tayari imefanyika",
+        "text": "Faili hii tayari imeletwa au imebatilishwa (huenda kutoka kifaa kingine)."
+      },
+      "expired": {
+        "title": "Uchambuzi ni wa zamani mno",
+        "text": "Ripoti ina zaidi ya saa 24: anzisha uchambuzi wa faili tena."
+      },
+      "notFound": {
+        "title": "Uchambuzi haujapatikana",
+        "text": "Anzisha uchambuzi wa faili tena."
+      },
+      "error": {
+        "title": "Kuleta hakuwezekani",
+        "text": "Hitilafu imetokea. Jaribu tena baada ya muda mfupi."
+      }
+    }
+  },
+  "report": {
+    "overline": "Ripoti ya PDF",
+    "title": "Jiandae kwa miadi yangu",
+    "intro": "Ripoti iliyo wazi ya vipimo vyako, ya kumpa daktari wako: kwa WhatsApp, kwa barua pepe, iliyochapishwa au ikionyeshwa kwenye simu yako.",
+    "close": "Funga",
+    "period": "Kipindi cha ripoti",
+    "few": {
+      "title": "Vipimo vichache katika kipindi hiki",
+      "text_one": "Kipimo {{count}} katika siku hizi {{days}}. Ripoti itaundwa hata hivyo na itaonyesha hivyo.",
+      "text_other": "Vipimo {{count}} katika siku hizi {{days}}. Ripoti itaundwa hata hivyo na itaonyesha hivyo.",
+      "text_many": "Vipimo {{count}} katika siku hizi {{days}}. Ripoti itaundwa hata hivyo na itaonyesha hivyo."
+    },
+    "contents": {
+      "title": "Kilichomo kwenye ripoti",
+      "identity": {
+        "title": "Wewe na ufuatiliaji wako",
+        "text": "Jina la kwanza, jina la ukoo, aina ya kisukari, mwaka wa kugunduliwa na viwango vyako lengwa."
+      },
+      "quality": {
+        "title": "Vipimo na ubora wa data",
+        "text": "Idadi ya vipimo, wastani, mabadiliko, siku bila vipimo."
+      },
+      "ranges": {
+        "title": "Muda ndani ya kiwango lengwa",
+        "text": "Sehemu ya vipimo chini, ndani ya kiwango na juu."
+      },
+      "episodes": {
+        "title": "Vipindi na thamani zisizo za kawaida",
+        "text": "Nyakati zilizokuwa chini au juu ya mipaka yako, pamoja na tarehe."
+      },
+      "points": {
+        "title": "Mambo ya kujadili na daktari wako",
+        "text": "Yaliyoonekana kwenye uchambuzi, kwa sentensi rahisi."
+      },
+      "chart": {
+        "title": "Grafu na maelezo",
+        "text": "Vipimo vyote vya kipindi hicho, kwa kipimo chako, pamoja na siku bila vipimo."
+      },
+      "private": "Maelezo yako binafsi hayamo kamwe kwenye ripoti. Faili inatoka kwenye simu tu ukiishiriki."
+    },
+    "pending_one": "Kipimo {{count}} bado hakijatumwa: kitatumwa kabla ya ripoti kuundwa.",
+    "pending_other": "Vipimo {{count}} bado havijatumwa: vitatumwa kabla ya ripoti kuundwa.",
+    "pending_many": "Vipimo {{count}} bado havijatumwa: vitatumwa kabla ya ripoti kuundwa.",
+    "create": "Unda na ushiriki PDF",
+    "phase": {
+      "syncing": "Inatuma vipimo vyako vya mwisho…",
+      "creating": "Inaunda ripoti…",
+      "sharing": "Inafungua kushiriki…"
+    },
+    "network": "Ripoti inaundwa na seva: muunganisho wa intaneti unahitajika.",
+    "shareTitle": "Shiriki ripoti",
+    "shareAgain": "Shiriki tena",
+    "createAgain": "Unda ripoti mpya",
+    "done": {
+      "title": "Ripoti iko tayari",
+      "text": "{{filename}}. Unaweza kuishiriki tena, kwa mfano pia kwa barua pepe."
+    },
+    "unsent": {
+      "title_one": "Kipimo {{count}} hakimo kwenye ripoti",
+      "title_other": "Vipimo {{count}} havimo kwenye ripoti",
+      "title_many": "Vipimo {{count}} havimo kwenye ripoti",
+      "text_one": "Bado hakijaweza kutumwa. Kinabaki kwenye simu yako na kitatumwa mara itakapowezekana; kisha unda ripoti mpya.",
+      "text_other": "Bado havijaweza kutumwa. Vinabaki kwenye simu yako na vitatumwa mara itakapowezekana; kisha unda ripoti mpya.",
+      "text_many": "Bado havijaweza kutumwa. Vinabaki kwenye simu yako na vitatumwa mara itakapowezekana; kisha unda ripoti mpya."
+    },
+    "problem": {
+      "offline": {
+        "title": "Hakuna mtandao",
+        "text": "Ripoti inaundwa na seva. Unganisha intaneti tena, kisha ujaribu tena."
+      },
+      "tooMany": {
+        "title": "Ripoti nyingi kwa mara moja",
+        "text": "Subiri dakika moja kabla ya kuunda nyingine."
+      },
+      "noProfile": {
+        "title": "Wasifu wa kiafya unahitaji kukamilishwa",
+        "text": "Ripoti inahitaji wasifu wako wa kiafya (aina ya kisukari, viwango lengwa)."
+      },
+      "cannotShare": {
+        "title": "Kushiriki hakupatikani",
+        "text": "Kifaa hiki hakiwezi kushiriki faili."
+      },
+      "error": {
+        "title": "Ripoti haikuweza kuundwa",
+        "text": "Hitilafu imetokea. Jaribu tena baada ya muda mfupi."
+      }
+    },
+    "doctor": {
+      "title": "Daktari wako pia anaweza kuipakua",
+      "text": "Weka alama kwenye «Ripoti ya PDF» unaposhiriki historia yako kwa QR."
+    },
+    "entry": {
+      "title": "Jiandae kwa miadi yangu",
+      "body": "Ripoti ya PDF ya vipimo vyako, ya kumpa daktari wako."
+    }
+  },
+  "emergency": {
+    "editCard": "Badilisha kadi yangu",
+    "overline": "Shiriki",
+    "title": "Kadi ya dharura",
+    "close": "Funga",
+    "intro": "Karatasi kwa ajili ya waokoaji, tofauti na kushiriki na daktari wako. Msimbo wake wa QR unachapishwa au unawekwa kama mandhari ya skrini: anayeuchanganua anaona tu ulichochagua.",
+    "status": {
+      "on": "Kadi imewashwa",
+      "off": "Kadi imezimwa",
+      "onText": "QR inafanya kazi: inaonyesha kadi yako kwa anayeichanganua.",
+      "offText": "QR haionyeshi chochote, hata ikiwa imechapishwa. Washa kadi ili ifanye kazi.",
+      "toggle": "Kadi imewashwa",
+      "emptyHint": "Jaza kadi yako kwanza («Badilisha kadi yangu»)."
+    },
+    "qr": {
+      "hint": "Ichapishe au iweke kama mandhari ya skrini. Haina jina lako wala data yoyote ya afya.",
+      "export": "Hifadhi kama picha",
+      "shareTitle": "Picha ya kadi yangu ya dharura",
+      "exportProblem": {
+        "title": "Picha haikuweza kuhifadhiwa",
+        "text": "Jaribu tena baada ya muda mfupi."
+      },
+      "regenerate": "Unda QR mpya",
+      "confirm": {
+        "title": "Badilisha QR yako?",
+        "text": "QR ya zamani itaacha kufanya kazi mara moja, pamoja na nakala zilizochapishwa au zilizo kwenye mandhari.",
+        "yes": "Ndiyo, unda QR mpya",
+        "no": "Ghairi"
+      },
+      "elsewhere": {
+        "title": "QR yako haipo kwenye simu hii",
+        "text": "Iliundwa kwenye simu nyingine au kabla ya kusakinisha programu upya. Unda mpya hapa: ya zamani itaacha kufanya kazi.",
+        "action": "Unda QR mpya"
+      }
+    },
+    "image": {
+      "title": "KADI YA DHARURA",
+      "instruction": "Wakati wa dharura, changanua QR hii",
+      "audience": "Wataalamu wa afya na waokoaji",
+      "a11y": "Picha ya QR ya kadi yako ya dharura, ya kuchapisha au kuweka kama mandhari ya skrini."
+    },
+    "preview": {
+      "title": "Kile mwokoaji ataona",
+      "empty": "Kadi yako ni tupu: ongeza tu unachotaka kuwaonyesha waokoaji.",
+      "updated": "Imesasishwa tarehe {{date}}."
+    },
+    "field": {
+      "fullName": "Jina",
+      "diabetesType": "Kisukari",
+      "declaredTreatment": "Matibabu yaliyoelezwa",
+      "allergies": "Mzio",
+      "bloodGroup": "Kundi la damu",
+      "lastKnownGlucoseMgDl": "Sukari ya damu ya mwisho inayojulikana",
+      "emergencyContactName": "Mtu wa dharura",
+      "emergencyContactPhone": "Simu ya mtu huyo"
+    },
+    "edit": {
+      "title": "Badilisha kadi yangu",
+      "cancel": "Funga bila kuhifadhi",
+      "intro": "Kila taarifa si lazima: jaza tu unachotaka kuwaonyesha waokoaji.",
+      "profile": {
+        "title": "Tumia wasifu wangu",
+        "text": "Jina lako, aina ya kisukari chako na mtu wako wa dharura, kwa sehemu ambazo bado ni tupu.",
+        "action": "Tumia wasifu wangu",
+        "applied": "Taarifa za wasifu zimeongezwa. Zikague kabla ya kuhifadhi.",
+        "nothing": "Hakuna cha kuongeza: sehemu hizi tayari zimejazwa.",
+        "failed": "Wasifu haukuweza kusomwa (muunganisho?)."
+      },
+      "hint": {
+        "diabetesType": "Mf. Aina ya 1, Aina ya 2.",
+        "declaredTreatment": "Unachotumia, kwa maneno yako. Mf. insulini ya muda mrefu jioni.",
+        "allergies": "Mf. Penisilini. Acha tupu ikiwa hakuna.",
+        "glucose": "Thamani hii tu ndiyo inaonyeshwa: kamwe si historia yako.",
+        "phone": "Pamoja na msimbo wa nchi, mf. +243 81 000 0000."
+      },
+      "noBloodGroup": "Haijaonyeshwa",
+      "useLatest": "Tumia kipimo changu cha mwisho ({{value}}, tarehe {{date}})",
+      "privacy": "Taarifa hizi zinaonekana tu ikiwa kadi yako imewashwa na mtu akachanganua QR yako. Unaarifiwa kila inapofunguliwa.",
+      "fixErrors": "Rekebisha sehemu zilizoonyeshwa kabla ya kuhifadhi.",
+      "save": "Hifadhi kadi yangu",
+      "error": {
+        "tooLong": "Ni refu mno: herufi {{max}} kwa kiwango cha juu.",
+        "glucoseInvalid": "Andika namba, mf. 1,32.",
+        "glucoseRange": "Thamani nje ya mipaka (20 hadi 600 mg/dL).",
+        "phoneInvalid": "Andika namba yenye tarakimu (« + » inaruhusiwa mwanzoni)."
+      }
+    },
+    "log": {
+      "title": "Nani amefungua kadi yangu",
+      "text": "Kila ufunguaji unaandikwa kwenye «Nani ameangalia data yangu» na unaarifiwa."
+    },
+    "problem": {
+      "offline": {
+        "title": "Hakuna mtandao",
+        "text": "Kadi inabadilishwa mtandaoni. Unganisha intaneti tena, kisha ujaribu tena."
+      },
+      "noProfile": {
+        "title": "Wasifu wa kiafya unahitaji kukamilishwa",
+        "text": "Kadi yako ya dharura inahitaji wasifu wako wa kiafya."
+      },
+      "tooMany": {
+        "title": "Maombi mengi mno",
+        "text": "Subiri dakika moja kabla ya kujaribu tena."
+      },
+      "invalid": {
+        "title": "Taarifa imekataliwa",
+        "text": "Taarifa moja ya kadi si halali. Ikague."
+      },
+      "error": {
+        "title": "Hitilafu imetokea",
+        "text": "Jaribu tena baada ya muda mfupi."
+      }
+    }
+  },
+  "share": {
+    "home": {
+      "overline": "Kushiriki kwa usalama",
+      "title": "Shiriki na daktari",
+      "intro": "Daktari wako anachanganua QR kwenye skrini yako na kuangalia, kwa muda mfupi, kile ulichochagua tu.",
+      "promise": {
+        "noData": {
+          "title": "Hakuna data ndani ya QR",
+          "text": "QR ina msimbo wa siri tu unaobadilika kila dakika na unatumika mara moja tu."
+        },
+        "limited": {
+          "title": "Ufikiaji wenye mipaka",
+          "text": "Unachagua cha kushiriki na kwa muda gani. Ni daktari aliyethibitishwa tu anayeweza kuichanganua."
+        },
+        "control": {
+          "title": "Wewe ndiye mwenye udhibiti",
+          "text": "Unaweza kusitisha ufikiaji wakati wowote, na kuona nani ameangalia data yako."
+        }
+      },
+      "start": "Shiriki historia yangu",
+      "network": "Kushiriki kunahitaji muunganisho wa intaneti.",
+      "log": "Nani ameangalia data yangu",
+      "logHint": "Madaktari waliopata ufikiaji, na lini",
+      "emergency": "Kadi ya dharura",
+      "report": "Jiandae kwa miadi yangu",
+      "reportHint": "Ripoti ya PDF ya vipimo vyako ya kumpa daktari",
+      "emergencyHint": "Taarifa muhimu kwa waokoaji"
+    },
+    "new": {
+      "overline": "Shiriki historia yangu",
+      "title": "Unataka kushiriki nini?",
+      "close": "Funga bila kushiriki",
+      "intro": "Daktari ataona tu ulichoweka alama. Hakuna kinachoshirikiwa hadi achanganue QR.",
+      "what": "Kile daktari ataweza kuona",
+      "count_one": "{{count}} kati ya {{total}}",
+      "count_other": "{{count}} kati ya {{total}}",
+      "count_many": "{{count}} kati ya {{total}}",
+      "noneSelected": "Weka alama angalau aina moja ili kuunda QR.",
+      "howLong": "Kwa muda gani",
+      "durationLabel": "Muda wa ufikiaji",
+      "startsAtScan": "Muda unaanza daktari anapochanganua QR. Unaweza kuusitisha mapema.",
+      "generate": "Unda QR",
+      "qrNote": "QR haina data yoyote ya kitabibu. Inabadilika kila sekunde 60 na inatumika mara moja tu."
+    },
+    "category": {
+      "GLUCOSE_HISTORY": {
+        "label": "Historia ya sukari ya damu",
+        "text": "Vipimo vyako, nyakati zake na viwango vyako lengwa"
+      },
+      "TREATMENTS": {
+        "label": "Matibabu yaliyoelezwa",
+        "text": "Dawa na dozi ulizoandika"
+      },
+      "MEALS": {
+        "label": "Milo",
+        "text": "Milo uliyoandika"
+      },
+      "ACTIVITY": {
+        "label": "Shughuli za mwili",
+        "text": "Shughuli ulizoandika"
+      },
+      "AI_SUMMARY": {
+        "label": "Muhtasari wa uchambuzi",
+        "text": "Takwimu muhimu na mambo yaliyoonekana yaliyokokotolewa na Afyabora"
+      },
+      "REPORT_DOWNLOAD": {
+        "label": "Kupakua ripoti",
+        "text": "Daktari ataweza kuhifadhi ripoti ya PDF"
+      },
+      "PERSONAL_NOTES": {
+        "label": "Maelezo binafsi",
+        "text": "Maandishi uliyoandika kwenye maelezo yako",
+        "note": "Maelezo yako yanaweza kuwa na taarifa za siri sana."
+      }
+    },
+    "duration": {
+      "MIN_5": {
+        "label": "Dak. 5",
+        "hint": "Mtazamo wa haraka"
+      },
+      "MIN_30": {
+        "label": "Dak. 30",
+        "hint": "Miadi fupi"
+      },
+      "HOUR_1": {
+        "label": "Saa 1",
+        "hint": "Miadi ndefu"
+      },
+      "CONSULTATION": {
+        "label": "Miadi",
+        "hint": "Saa 2 kwa kiwango cha juu"
+      }
+    },
+    "problem": {
+      "offline": {
+        "title": "Hakuna mtandao",
+        "text": "Kushiriki kunahitaji intaneti: seva inaunda na kuthibitisha QR. Data yako inabaki kwenye simu hii."
+      },
+      "tooMany": {
+        "title": "QR nyingi mno zimeundwa",
+        "text": "Subiri dakika moja kabla ya kuunda nyingine."
+      },
+      "busy": {
+        "title": "Huduma haipatikani kwa muda",
+        "text": "Kushiriki kuna watumiaji wengi. Jaribu tena baada ya muda mfupi."
+      },
+      "rejected": {
+        "title": "Kushiriki hakuwezekani kwa sasa"
+      },
+      "error": {
+        "title": "QR haikuweza kuundwa",
+        "text": "Hitilafu imetokea. Jaribu tena baada ya muda mfupi."
+      }
+    },
+    "qr": {
+      "overline": "Shiriki historia yangu",
+      "title": "Mwonyeshe daktari wako QR hii",
+      "scannedTitle": "Ushirikishaji wako",
+      "intro": "Daktari wako anaichanganua kwenye tovuti yake ya Afyabora. QR inabadilika yenyewe: acha skrini hii wazi.",
+      "qrA11y": "QR ya kushiriki, ichanganuliwe na daktari wako",
+      "expired": "QR hii haitumiki tena",
+      "renewing": "QR mpya…",
+      "next_one": "QR mpya baada ya sekunde {{count}}",
+      "next_other": "QR mpya baada ya sekunde {{count}}",
+      "next_many": "QR mpya baada ya sekunde {{count}}",
+      "nextA11y_one": "QR mpya baada ya sekunde {{count}}",
+      "nextA11y_other": "QR mpya baada ya sekunde {{count}}",
+      "nextA11y_many": "QR mpya baada ya sekunde {{count}}",
+      "shared": "Kinachoshirikiwa",
+      "duration": "Muda wa ufikiaji",
+      "durationValue": "{{duration}}, kuanzia uchanganuzi",
+      "stop": "Sitisha kushiriki",
+      "close": "Funga",
+      "doctorNote": "Ni daktari aliyethibitishwa tu anayeweza kuchanganua QR hii. Haina data yoyote ya kitabibu na inatumika mara moja tu.",
+      "problem": {
+        "offline": {
+          "title": "Muunganisho umepotea",
+          "text": "QR haiwezi kufanywa upya bila intaneti. Jaribio jipya la kiotomatiki."
+        },
+        "busy": {
+          "title": "Huduma ina watumiaji wengi",
+          "text": "QR mpya inakuja baada ya muda mfupi. Jaribio jipya la kiotomatiki."
+        },
+        "error": {
+          "title": "QR haikuweza kufanywa upya",
+          "text": "Jaribio jipya la kiotomatiki baada ya muda mfupi."
+        }
+      },
+      "scanned": {
+        "title": "QR yako imechanganuliwa",
+        "byDoctor": "{{name}} anaangalia faili lako",
+        "until": "Ufikiaji hadi saa {{time}}.",
+        "end": "Sitisha ufikiaji",
+        "endFailed": "Ufikiaji haukuweza kukatwa. Angalia muunganisho wako na ujaribu tena."
+      },
+      "ended": {
+        "title": "Ufikiaji umekwisha",
+        "text": "Daktari hana tena ufikiaji wa data yako. Unaweza kuunda QR mpya wakati wowote."
+      },
+      "none": {
+        "title": "Hakuna QR inayoendelea",
+        "text": "Unda QR ili kushiriki historia yako na daktari.",
+        "action": "Unda QR"
+      },
+      "backup": {
+        "show": "Daktari hana kamera? Onyesha msimbo wa akiba",
+        "label": "Msimbo wa akiba",
+        "a11y": "Msimbo wa akiba, wa kunakili au kubandika kwenye tovuti ya daktari",
+        "hint": "Daktari anauandika kwenye tovuti yake, sehemu ya «Scanner un QR». Kama QR, unabadilika kila dakika na unatumika mara moja tu.",
+        "hide": "Ficha msimbo"
+      }
+    },
+    "live": {
+      "expiresIn": "Inaisha baada ya",
+      "remainingA11y": "Ufikiaji uliobaki: dakika {{minutes}} sekunde {{seconds}}",
+      "offline": "Muunganisho umepotea: kipima muda kinaendelea, hali itakaguliwa mara mtandao utakaporudi.",
+      "confirm": "Sitisha ufikiaji wa {{name}} sasa? Hataweza tena kuona data yako.",
+      "confirmNoName": "Sitisha ufikiaji wa daktari sasa? Hataweza tena kuona data yako.",
+      "confirmYes": "Ndiyo, sitisha ufikiaji",
+      "confirmNo": "Ghairi",
+      "checking": "QR imechanganuliwa sasa hivi. Inakagua…",
+      "newQr": "Unda QR mpya",
+      "ended": {
+        "expired": "Ufikiaji wa {{name}} umefika mwisho.",
+        "expiredNoName": "Ufikiaji umefika mwisho.",
+        "revoked": "Umesitisha ufikiaji wa {{name}}.",
+        "revokedNoName": "Ushirikishaji umesitishwa."
+      }
+    },
+    "log": {
+      "overline": "Kumbukumbu ya ufikiaji",
+      "title": "Nani ameangalia data yangu",
+      "close": "Funga",
+      "intro": "Kila ufikiaji wa faili lako unaandikwa hapa. Hakuna anayeweza kubadilisha kumbukumbu hii.",
+      "loading": "Inapakia kumbukumbu",
+      "count_one": "Ufikiaji {{count}}",
+      "count_other": "Ufikiaji {{count}}",
+      "count_many": "Ufikiaji {{count}}",
+      "today": "Leo saa {{time}}",
+      "onDate": "Tarehe {{date}} saa {{time}}",
+      "lasted": "ufikiaji wa {{duration}}",
+      "doctor": "Dkt. {{name}}",
+      "unknownDoctor": "Daktari",
+      "end": {
+        "expired": "Umefika mwisho",
+        "revoked": "Umesitishwa na wewe",
+        "ongoing": "Unaendelea"
+      },
+      "views_one": "Utazamaji {{count}}",
+      "views_other": "Utazamaji {{count}}",
+      "views_many": "Utazamaji {{count}}",
+      "report": "Ripoti imepakuliwa",
+      "emergency": {
+        "title": "Ufikiaji wa dharura",
+        "text": "Kadi yako ya dharura imefunguliwa, bila akaunti."
+      },
+      "empty": {
+        "title": "Bado hakuna aliyeangalia data yako",
+        "text": "Daktari akichanganua QR yako, ufikiaji wake utaonekana hapa: nani, lini na kwa muda gani."
+      },
+      "more": "Tazama ufikiaji wa zamani zaidi",
+      "problem": {
+        "offline": {
+          "title": "Hakuna mtandao",
+          "text": "Kumbukumbu imehifadhiwa kwenye seva: unganisha intaneti tena ili kuiangalia."
+        },
+        "error": {
+          "title": "Kumbukumbu haikuweza kupakiwa",
+          "text": "Jaribu tena baada ya muda mfupi."
+        }
+      }
+    }
+  }
+}

@@ -6,13 +6,16 @@ import { View } from 'react-native';
 import { Button, PressableScale, Text } from '@/components/ui';
 import { radii, spacing, touchTarget, useTheme } from '@/theme';
 import { fileSize, type FileKind, type PickedFile } from '../start';
+import { formatLocale } from '@/i18n';
 
 /** « 12 Ko », « 1,2 Mo » dans la langue de l'appli. */
 export function useFileSizeLabel() {
   const { t, i18n } = useTranslation();
   return (bytes: number) => {
     const { amount, unit } = fileSize(bytes);
-    const formatted = amount.toLocaleString(i18n.language, { maximumFractionDigits: 1 });
+    const formatted = amount.toLocaleString(formatLocale(i18n.language), {
+      maximumFractionDigits: 1,
+    });
     return t(`import.size.${unit}`, { amount: formatted });
   };
 }

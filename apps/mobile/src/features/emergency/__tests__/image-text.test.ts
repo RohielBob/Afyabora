@@ -2,7 +2,11 @@
 import en from '@/i18n/en.json';
 import es from '@/i18n/es.json';
 import fr from '@/i18n/fr.json';
+import kg from '@/i18n/kg.json';
+import ln from '@/i18n/ln.json';
+import lua from '@/i18n/lua.json';
 import pt from '@/i18n/pt.json';
+import sw from '@/i18n/sw.json';
 import { CHAR_WIDTH, MIN_FONT_SIZE, fitFontSize } from '../image-text';
 
 const WIDTH = 312; // 360 px moins 24 px de marge de chaque côté
@@ -43,6 +47,10 @@ describe('fitFontSize', () => {
     ['en', en],
     ['es', es],
     ['pt', pt],
+    ['ln', ln],
+    ['sw', sw],
+    ['kg', kg],
+    ['lua', lua],
   ])('« %s » : titre, consigne et public tiennent dans l’image', (_code, dict) => {
     const { title, instruction, audience } = dict.emergency.image;
     const checks: [string, number, number, number][] = [

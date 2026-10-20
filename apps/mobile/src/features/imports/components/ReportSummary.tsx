@@ -7,6 +7,7 @@ import { View } from 'react-native';
 import type { ImportReport } from '@glyka/shared';
 import { Text } from '@/components/ui';
 import { radii, spacing, useTheme } from '@/theme';
+import { formatLocale } from '@/i18n';
 
 type Tone = 'success' | 'info' | 'warning' | 'danger';
 
@@ -58,7 +59,7 @@ export function ReportSummary({ report }: { report: ImportReport }) {
                 </Text>
               </View>
               <Text variant="title" style={count > 0 ? { color: fg } : undefined}>
-                {count.toLocaleString(i18n.language)}
+                {count.toLocaleString(formatLocale(i18n.language))}
               </Text>
             </View>
           );

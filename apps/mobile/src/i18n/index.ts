@@ -8,9 +8,13 @@ import { initReactI18next } from 'react-i18next';
 import en from './en.json';
 import es from './es.json';
 import fr from './fr.json';
+import kg from './kg.json';
 import { readLanguage, writeLanguage } from './language-storage';
 import { parsePreference, resolveLanguage, type LanguagePreference } from './languages';
+import ln from './ln.json';
+import lua from './lua.json';
 import pt from './pt.json';
+import sw from './sw.json';
 
 export * from './languages';
 
@@ -25,6 +29,10 @@ void i18n.use(initReactI18next).init({
     en: { translation: en },
     es: { translation: es },
     pt: { translation: pt },
+    ln: { translation: ln },
+    sw: { translation: sw },
+    kg: { translation: kg },
+    lua: { translation: lua },
   },
   lng: resolveLanguage(preference, deviceLanguages()),
   fallbackLng: 'fr',

@@ -9,6 +9,7 @@ import type { GlucoseUnit } from '@glyka/shared';
 import { Button, Card, Text } from '@/components/ui';
 import { spacing, useTheme } from '@/theme';
 import type { RejectedView } from '../rejected';
+import { formatLocale } from '@/i18n';
 
 export function RejectedChangeCard({
   view,
@@ -32,7 +33,7 @@ export function RejectedChangeCard({
   const [busy, setBusy] = useState<'retry' | 'discard' | null>(null);
 
   const date = view.at
-    ? new Date(view.at).toLocaleString(i18n.language, {
+    ? new Date(view.at).toLocaleString(formatLocale(i18n.language), {
         day: 'numeric',
         month: 'long',
         hour: '2-digit',

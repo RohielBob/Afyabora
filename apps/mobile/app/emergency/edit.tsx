@@ -42,6 +42,7 @@ import {
 import { localMeasurements, readUnit } from '@/features/measurements';
 import { profileApi } from '@/features/profile';
 import { radii, spacing, useTheme } from '@/theme';
+import { formatLocale } from '@/i18n';
 
 const NO_BLOOD_GROUP = 'none';
 const DIABETES_LABEL_KEYS: Record<DiabetesType, string> = {
@@ -131,7 +132,7 @@ export default function EmergencyEditScreen() {
       : undefined;
 
   const measuredDate = latest
-    ? new Date(latest.measuredAt).toLocaleDateString(i18n.language, {
+    ? new Date(latest.measuredAt).toLocaleDateString(formatLocale(i18n.language), {
         day: 'numeric',
         month: 'short',
       })

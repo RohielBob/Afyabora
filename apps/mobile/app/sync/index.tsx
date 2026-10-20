@@ -26,6 +26,7 @@ import {
   type RejectedChange,
 } from '@/features/sync';
 import { spacing, useTheme } from '@/theme';
+import { formatLocale } from '@/i18n';
 
 export default function SyncScreen() {
   const { t, i18n } = useTranslation();
@@ -96,10 +97,12 @@ export default function SyncScreen() {
             <Text variant="overline" tone="muted">
               {t('sync.screen.lastTitle')}
             </Text>
-            <Text>{lastSyncPhrase(t, state.lastSuccessAt, now, i18n.language, 'value')}</Text>
+            <Text>
+              {lastSyncPhrase(t, state.lastSuccessAt, now, formatLocale(i18n.language), 'value')}
+            </Text>
             {view.nextRetryAt ? (
               <Text variant="bodySmall" tone="muted">
-                {nextRetryPhrase(t, view.nextRetryAt, now, i18n.language)}
+                {nextRetryPhrase(t, view.nextRetryAt, now, formatLocale(i18n.language))}
               </Text>
             ) : null}
           </View>

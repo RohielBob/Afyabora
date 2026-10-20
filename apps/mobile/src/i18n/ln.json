@@ -1,0 +1,1834 @@
+{
+  "app": {
+    "name": "Afyabora",
+    "tagline": "Landá. Kéngelá. Sósolá."
+  },
+  "common": {
+    "save": "Bomba",
+    "cancel": "Tika",
+    "next": "Oyo elandí",
+    "back": "Zonga",
+    "retry": "Meká lisusu"
+  },
+  "disclaimer": "Afyabora ezali esaleli ya kosalisa yo olanda bokolono na yo. Ezwi esika ya toli ya mosali ya bokolono te.",
+  "glucose": {
+    "unusualConfirm": "Motuya oyo ezali ya kokamwa. Ezali solo?",
+    "state": {
+      "VERY_LOW": "Na nsé mpenza",
+      "LOW": "Na nsé",
+      "IN_RANGE": "Na kati ya ndelo",
+      "HIGH": "Likoló",
+      "VERY_HIGH": "Likoló mpenza"
+    },
+    "stateA11y": "Ezalela: {{label}}"
+  },
+  "sync": {
+    "pending_one": "Bomeki {{count}} ezali kozela kotindama",
+    "pending_other": "Bomeki {{count}} ezali kozela kotindama",
+    "pending_many": "Bomeki {{count}} ezali kozela kotindama",
+    "offline": "Internet ezali te — makambo na yo ebombami na telefone oyo",
+    "upToDate": "Nyonso ezali sika",
+    "refreshing": "Kotinda…",
+    "pullToRefresh": "Benda na nsé mpo na kotinda",
+    "status": {
+      "upToDate": "Nyonso ezali sika",
+      "pending": "Ezali kozela kotindama",
+      "syncing": "Kotinda ezali kosalema…",
+      "offline": "Internet ezali te: makambo na yo ebombami na telefone oyo",
+      "problem": "Kotinda ekoki kosalema sikoyo te",
+      "session": "Ntango ya kokota esili: kotá lisusu mpo na kotinda",
+      "rejected_one": "Mbongwana {{count}} ya kotala",
+      "rejected_other": "Mbongwana {{count}} ya kotala",
+      "rejected_many": "Mbongwana {{count}} ya kotala"
+    },
+    "measurements_one": "bomeki {{count}}",
+    "measurements_other": "bomeki {{count}}",
+    "measurements_many": "bomeki {{count}}",
+    "events_one": "likambo {{count}}",
+    "events_other": "makambo {{count}}",
+    "events_many": "makambo {{count}}",
+    "pendingBoth": "{{measurements}} mpe {{events}}",
+    "pendingLine": "{{what}} ezali kozela kotindama",
+    "lastToday": "Kotinda ya nsúka na ngonga {{time}}",
+    "lastOn": "Kotinda ya nsúka na {{date}} na ngonga {{time}}",
+    "never": "Naino etindamá na telefone oyo te",
+    "nextRetry": "Komeka lisusu na ngonga {{time}}",
+    "nextRetrySoon": "Komeka lisusu nsima ya mwa basekóndi",
+    "autoSend": "Ekotindama yango moko mbala moko ekoki",
+    "retry": "Meká lisusu",
+    "rejected_one": "Mbongwana {{count}} eboyami na serveur",
+    "rejected_other": "Mbongwana {{count}} eboyami na serveur",
+    "rejected_many": "Mbongwana {{count}} eboyami na serveur",
+    "open": "Talá ndenge kotinda ezali",
+    "screen": {
+      "overline": "Kozanga internet",
+      "title": "Kotinda",
+      "intro": "Makambo okomi ebombamaka liboso na telefone oyo, na nsima etindamaka na compte na yo mbala moko ekoki, ata nsima ya kokatana ya internet.",
+      "syncNow": "Tindá sikoyo",
+      "pendingTitle": "Ezali kozela kotindama",
+      "pendingNone": "Eloko moko te ezali kozela",
+      "lastTitle": "Kotinda ya nsúka",
+      "rejectedTitle": "Mbongwana oyo eboyami",
+      "rejectedIntro": "Servére eboyi mbongwana oyo. Etikali na telefone oyo kino okozwa mokano.",
+      "measurementSave": "Bomeki ya {{value}}, {{date}}",
+      "measurementDelete": "Kolongola bomeki ya {{value}}, {{date}}",
+      "eventSave": "{{type}} «{{label}}», {{date}}",
+      "eventDelete": "Kolongola: {{type}} «{{label}}», {{date}}",
+      "gone": "Likambo oyo ezali lisusu na telefone oyo te",
+      "reason": "Ntina: {{reason}}",
+      "attempts_one": "Eboyami mbala {{count}}",
+      "attempts_other": "Eboyami mbala {{count}}",
+      "attempts_many": "Eboyami mbala {{count}}",
+      "retry": "Meká lisusu",
+      "discard": "Tika yango",
+      "discardTitle": "Otiki mbongwana oyo?",
+      "discardText": "Ekolongwa na telefone oyo. Oyo ebombami na compte na yo, soki ezali, ekozonga na kotinda oyo ekoya.",
+      "discardConfirm": "Tika mbongwana",
+      "keep": "Bomba",
+      "noRejected": "Mbongwana moko te eboyami",
+      "lastToday": "Lelo na ngonga {{time}}",
+      "lastOn": "Na {{date}} na ngonga {{time}}",
+      "lastNever": "Naino na telefone oyo te"
+    }
+  },
+  "safety": {
+    "extreme": "Landá malako ya bato ya bokolono na yo. Soki omiyoki malamu te, séngá lisalisi mbala moko."
+  },
+  "errors": {
+    "network": "Tokoki kokutana na serveur te. Talá internet na yo mpe meká lisusu.",
+    "server": "Mosala ezali na mokakatano. Meká lisusu nsima ya mwa ntango.",
+    "tooManyRequests": "Omeki mbala ebele. Zelá miniti moko liboso ya komeka lisusu.",
+    "invalidData": "Makambo mosusu ezali malamu te. Talá lisusu formulaire.",
+    "unexpected": "Libunga moko ebimi. Meká lisusu."
+  },
+  "welcome": {
+    "lastMeasurement": "Bomeki ya nsúka",
+    "demoTag": "Ndakisa ya lokuta",
+    "demoA11y": "Ndakisa ya bomeki ya nsúka: 1,12 grammes na litre, na kati ya ndelo",
+    "offlineSaved": "Ebombami ata internet ezali te",
+    "onThisPhone": "✓ Na telefone oyo",
+    "title": "Lisolo ya sukali na makila na yo, ntango nyonso elongo na yo.",
+    "description": "Bombá bomeki na yo, sósolá ndenge ozali kokende mpe poná nani akomona nini, mpe mpo na ntango boni.",
+    "createAccount": "Fungolá compte",
+    "signIn": "Kotá"
+  },
+  "auth": {
+    "fields": {
+      "email": "Adresse email",
+      "emailPlaceholder": "nkombo@ndakisa.com",
+      "password": "Mot de passe",
+      "newPassword": "Mot de passe ya sika",
+      "link": "Lien to kode oyo ozwi na email",
+      "linkPlaceholder": "Tyá awa lien ya email"
+    },
+    "password": {
+      "rulesTitle": "Mibeko ya mot de passe",
+      "ruleLength": "Ata bilembo {{count}}",
+      "ruleOk": "esalemi",
+      "ruleTodo": "esengeli kosalema",
+      "hint": "Lolenge ya maloba oyo okoki kobosana te ezali na libateli koleka liloba moko ya mpasi."
+    },
+    "validation": {
+      "email": "Komá adresse email ya malamu.",
+      "passwordLength": "Mot de passe esengeli kozala na ata bilembo 12.",
+      "passwordRequired": "Komá mot de passe na yo.",
+      "consent": "Ndingisa na yo esengeli mpo na kofungola compte.",
+      "link": "Lien oyo eyebani te. Kanga lien mobimba ya email.",
+      "disclaimer": "Ndimá ete ososoli likebisi mpo na kokoba."
+    },
+    "errors": {
+      "invalidCredentials": "Adresse email to mot de passe ezali malamu te.",
+      "emailNotVerified": "Adresse email na yo naino endimami te.",
+      "locked": "Omeki mbala ebele: mpo na libateli, compte na yo ekangami mpo na miniti {{minutes}}.",
+      "verifyLinkInvalid": "Lien oyo ya kondimisa ezali malamu te, esalelami to eleki ntango. Séngá email ya sika.",
+      "resetLinkInvalid": "Lien oyo ezali malamu te, esalelami to eleki ntango (ngonga 1). Séngá lisusu.",
+      "notPatient": "Compte oyo ezali ya mosali ya bokolono. Kotá na portail ya Afyabora."
+    },
+    "signUp": {
+      "title": "Fungolá compte",
+      "subtitle": "Mwa basekóndi mpo na kobanda kolanda sukali na makila na yo.",
+      "consent": "Nandimi ete Afyabora ebomba mpe esalela makambo ya bokolono na ngai mpo na kolanda ngai, ndenge elimbolami na mibeko ya kobomba sekele.",
+      "consentA11y": "Ndingisa mpo na kosalela makambo ya bokolono na ngai",
+      "submit": "Fungolá compte na ngai",
+      "haveAccount": "Ozali na compte kala?",
+      "signIn": "Kotá",
+      "consentLink": "Tángá mibeko ya kobomba sekele",
+      "disclaimer": "Nasosoli ete Afyabora ezali esaleli ya kosalisa na bolandi: ezwaka bokono te, epesaka dozi ya nkisi te mpe ezwi esika ya toli ya mosali ya bokolono te.",
+      "disclaimerA11y": "Nasosoli ete application ezwi esika ya toli ya monganga te",
+      "disclaimerLink": "Tángá likebisi"
+    },
+    "verify": {
+      "title": "Talá email na yo",
+      "subtitle": "Totindeli yo lien ya kondimisa na {{email}}. Ezali malamu mpo na ngonga 24.",
+      "subtitleNoEmail": "Fungolá email ya kondimisa oyo totindeli yo. Lien ezali malamu mpo na ngonga 24.",
+      "steps": "Fungolá email «Afyabora : confirmez votre adresse email» mpe finá lien. Ozwi yango te? Talá na ba spam.",
+      "pasteTitle": "Lien efungwami na application te?",
+      "pasteHelp": "Kanga lien ya email mpe tyá yango awa na nsé.",
+      "submit": "Ndimisa adresse na ngai",
+      "resend": "Tindá email lisusu",
+      "resendIn": "Tindá email lisusu nsima ya {{seconds}} s",
+      "resent": "Email ya sika etindami. Lien ya kala esalaka lisusu te.",
+      "resendUnavailable": "Mpo na kozwa email ya sika, kotisá nkombo lisusu na adresse moko wana.",
+      "successTitle": "Adresse endimami",
+      "successMessage": "Compte na yo efungwami. Okoki sikoyo kokota.",
+      "goToSignIn": "Kotá"
+    },
+    "signIn": {
+      "title": "Boyei malamu lisusu",
+      "subtitle": "Kotá mpo na kozwa lisusu bolandi na yo.",
+      "forgot": "Obosani mot de passe?",
+      "submit": "Kotá",
+      "noAccount": "Ozali naino na compte te?",
+      "signUp": "Fungolá compte",
+      "verifyAction": "Ndimisa adresse na ngai",
+      "success": "Okoti malamu",
+      "expired": "Ntango ya kokota esili. Kotá lisusu mpo na kokoba.",
+      "signedOut": "Obimi."
+    },
+    "forgot": {
+      "title": "Obosani mot de passe",
+      "subtitle": "Komá adresse na yo: soki compte ezali, okozwa lien mpo na kopona mot de passe ya sika.",
+      "submit": "Zwá lien",
+      "sentTitle": "Email etindami",
+      "sentMessage": "Soki compte ezali mpo na {{email}}, lien oyo ezali malamu mpo na ngonga 1 etindami.",
+      "resetTitle": "Poná mot de passe ya sika",
+      "resetHelp": "Tyá lien oyo ozwi na email, na nsima poná mot de passe na yo ya sika.",
+      "resetSubmit": "Bomba mot de passe ya sika",
+      "successTitle": "Mot de passe ebongwani",
+      "successMessage": "Mpo na libateli na yo, ba session na yo mosusu ekangami. Kotá na mot de passe na yo ya sika.",
+      "changeEmail": "Salelá adresse mosusu"
+    }
+  },
+  "profile": {
+    "title": "Profil",
+    "todoTitle": "Mokolo moko: profil na yo ya bokolono",
+    "todoText": "Nkombo, lolenge ya diabète, ndelo ya malamu mpe bandelo, moto ya kobenga soki likama.",
+    "settings": "Mibongiseli",
+    "settingsHint": "Ndenge emonanaka, ba unité, ba notification, libateli",
+    "signOut": "Bimá",
+    "signOutConfirmTitle": "Obimi na telefone oyo?",
+    "signOutConfirmText": "Makambo na yo etikali na compte na yo. Ekolongwa na telefone oyo mpe okoki kokota lisusu ntango nyonso.",
+    "signOutUnsynced_one": "Keba: mbongwana {{count}} naino etindami na serveur te. Ekobunga soki obimi sikoyo. Soki okoki, kotá liboso na internet.",
+    "signOutUnsynced_other": "Keba: mbongwana {{count}} naino etindami na serveur te. Ekobunga soki obimi sikoyo. Soki okoki, kotá liboso na internet.",
+    "signOutUnsynced_many": "Keba: mbongwana {{count}} naino etindami na serveur te. Ekobunga soki obimi sikoyo. Soki okoki, kotá liboso na internet.",
+    "import": "Kotisa lisolo ya kala",
+    "importHint": "Fisyé CSV to Excel ya kaye to ya mashini",
+    "sync": "Kotinda",
+    "syncHint": "Ezalela, oyo ezali kozela, mbongwana oyo eboyami"
+  },
+  "tabs": {
+    "home": "Ebandeli",
+    "timeline": "Lisolo",
+    "insights": "Botali",
+    "share": "Kabolá",
+    "profile": "Profil",
+    "add": "Bakisa"
+  },
+  "settings": {
+    "overline": "Mibongiseli",
+    "title": "Mibongiseli",
+    "appearance": "Ndenge emonanaka",
+    "appearanceHint": "Mwinda to molili, langi ya libanda",
+    "language": "Lokóta",
+    "languageHint": "Lokóta ya application",
+    "units": "Ba unité mpe bandelo",
+    "unitsHint": "Unité oyo olingi, ndelo ya malamu, bandelo ya likebisi",
+    "unitsScreen": {
+      "intro": "Unité ya komonisa, ndelo ya malamu mpe bandelo ya likebisi. Ya kopona elongo na monganga na yo: Afyabora epesaka toli ya nkisi soko moke te.",
+      "saved": "Ebombami. Bomeki na yo ezali sikoyo komonana na {{unit}}.",
+      "discard": "Tika mbongwana",
+      "storedNote": "Bomeki oyo obombaki kala ebongwanaka te: kaka ndenge emonanaka nde elandaka unité oyo oponi.",
+      "problem": {
+        "offline": "Internet ezali te: mobongiseli oyo esengeli internet. Meká lisusu ntango internet ekozonga.",
+        "noProfile": "Silisá liboso profil na yo: mibongiseli oyo ezali eteni na yango.",
+        "invalid": "Servére eboyi mituya oyo. Talá molongo: na nsé mpenza < ndelo ya malamu < likoló mpenza.",
+        "profile": "Profil na yo ezali na likambo moko oyo esili te: silisá yango liboso ya kobongola mibongiseli oyo.",
+        "error": "Mobongiseli ebombami te. Meká lisusu nsima ya mwa ntango."
+      }
+    },
+    "notifications": "Ba notification",
+    "notificationsHint": "Bakundoli, bakebisi, ngonga ya kimya",
+    "security": "Libateli",
+    "securityHint": "Kofungola na mosapi to kode",
+    "account": "Makambo na ngai mpe compte na ngai",
+    "accountHint": "Bimisa makambo na ngai, longola compte na ngai",
+    "about": "Na ntina na application",
+    "aboutHint": "Version, likebisi, sekele",
+    "design": "Planche ya style",
+    "designHint": "Emonanaka kaka na développement: balangi, makomi, biteni"
+  },
+  "account": {
+    "title": "Makambo na ngai mpe compte na ngai",
+    "intro": "Zwá kopi ya makambo na yo ntango nyonso, to longola compte na yo mpe nyonso oyo ezali kati na yango.",
+    "export": {
+      "title": "Bimisa makambo na ngai",
+      "body": "Fisyé (JSON) oyo ezali na profil na yo, bomeki na yo nyonso mpe makambo na yo, elongo na ba note. Okoki kobomba yango to kopesa yango na mosala mosusu.",
+      "privacy": "Fisyé oyo ezali na makambo ya bokolono na yo polele: bomba yango malamu mpe kabolá yango kaka na bato oyo otyelaka motema.",
+      "pendingFirst_one": "Likambo {{count}} oyo naino etindami te ekotindama liboso, mpo ezala na fisyé.",
+      "pendingFirst_other": "Makambo {{count}} oyo naino etindami te ekotindama liboso, mpo ezala na fisyé.",
+      "pendingFirst_many": "Makambo {{count}} oyo naino etindami te ekotindama liboso, mpo ezala na fisyé.",
+      "button": "Bimisa makambo na ngai",
+      "again": "Bimisa lisusu",
+      "shareAgain": "Kabolá fisyé oyo lisusu",
+      "shareTitle": "Makambo na ngai ya Afyabora",
+      "phase": {
+        "syncing": "Kotinda makambo na yo ya nsúka…",
+        "downloading": "Kobongisa fisyé…",
+        "sharing": "Kofungola kokabola…"
+      },
+      "done": "Fisyé ezali prêt: {{name}}",
+      "unsent_one": "Likambo {{count}} ekoki kotindama te: ezali na fisyé oyo te. Meká lisusu ntango internet ekozala malamu.",
+      "unsent_other": "Makambo {{count}} ekoki kotindama te: ezali na fisyé oyo te. Meká lisusu ntango internet ekozala malamu.",
+      "unsent_many": "Makambo {{count}} ekoki kotindama te: ezali na fisyé oyo te. Meká lisusu ntango internet ekozala malamu.",
+      "problem": {
+        "offline": "Internet ezali te: kobimisa esengeli internet.",
+        "tooMany": "Obimisi mbala ebele na mwa ntango. Meká lisusu nsima ya miniti moko.",
+        "noProfile": "Silisá liboso profil na yo: naino eloko ya kobimisa ezali te.",
+        "cannotShare": "Fisyé ezali prêt, kasi kokabola ezali te na esaleli oyo.",
+        "error": "Kobimisa esilaki malamu te. Meká lisusu nsima ya mwa ntango."
+      }
+    },
+    "delete": {
+      "title": "Longola compte na ngai",
+      "body": "Compte na yo mpe makambo na yo nyonso ekolongolama na ba serveur na biso mpe na telefone oyo:",
+      "what": {
+        "data": "profil na yo, bomeki na yo nyonso mpe makambo na yo, elongo na ba note;",
+        "shares": "makambo okabolaki: ba monganga bakozanga nzela ya kotala dossier na yo mbala moko;",
+        "emergency": "karte na yo ya likama: QR na yango ekofungwama lisusu te;",
+        "phone": "makambo oyo ebombami na telefone oyo."
+      },
+      "irreversible": "Ezali ya libela: eloko moko te ekozonga. Bimisa makambo na yo liboso soki olingi kobomba yango.",
+      "start": "Longola compte na ngai…",
+      "password": "Mot de passe",
+      "passwordHint": "Mpo na kondimisa ete ezali yo mpenza.",
+      "understand": "Nasosoli ete compte na ngai mpe makambo na ngai nyonso ekolongolama mpo na libela.",
+      "confirm": "Longola mpo na libela",
+      "problem": {
+        "password": "Mot de passe ezali malamu te. Eloko moko te elongolami.",
+        "tooMany": "Omeki mbala ebele. Zelá miniti moko liboso ya komeka lisusu. Eloko moko te elongolami.",
+        "offline": "Internet ezali te: kolongola esengeli internet. Eloko moko te elongolami.",
+        "error": "Kolongola esilaki malamu te. Eloko moko te elongolami: meká lisusu nsima ya mwa ntango."
+      },
+      "doneTitle": "Compte elongolami",
+      "done": "Compte na yo mpe makambo na yo nyonso elongolami. Matóndi mpo osalelaki Afyabora."
+    }
+  },
+  "appearance": {
+    "overline": "Mibongiseli",
+    "title": "Ndenge emonanaka",
+    "intro": "Poná ndenge Afyabora emonanaka. Makomi ekotangama ntango nyonso malamu.",
+    "theme": "Thème",
+    "themeA11y": "Thème ya application",
+    "light": "Mwinda",
+    "dark": "Molili",
+    "system": "Yango moko",
+    "systemHint": "Elandi mobongiseli ya telefone (sikoyo: {{mode}}).",
+    "systemLight": "mwinda",
+    "systemDark": "molili",
+    "accent": "Langi ya libanda",
+    "preview": "Komona liboso",
+    "previewOverline": "Bomeki ya nsúka · ndakisa",
+    "previewButton": "Bakisa bomeki"
+  },
+  "language": {
+    "title": "Lokóta",
+    "intro": "Poná lokóta ya application. Makambo na yo ebongwanaka te.",
+    "system": "Lokóta ya telefone",
+    "systemHint": "Sikoyo: {{name}}",
+    "inReview": "Libongoli ezali kotalelama",
+    "inReviewNote": "Nkóta oyo ezali na «libongoli ezali kotalelama» naino etalelami na moto oyo aloba lokóta yango te. Soki sango moko ya bokolono ezali polele te, tuná bato ya bokolono na yo.",
+    "serverNote": "Makambo mosusu etikali naino na français: biyano mpe bafisi ya mosalisi, rapport PDF mpe ba email."
+  },
+  "onboarding": {
+    "progress": "Etape {{current}} na {{total}}",
+    "next": "Koba",
+    "review": "Talá makambo na ngai",
+    "privacy": "Makambo na yo ezali sekele: kaka yo nde oponaka nani akoki komona yango.",
+    "identity": {
+      "title": "Ozali nani?",
+      "intro": "Makambo oyo esalisaka monganga na yo ayeba yo mpe asosola bomeki na yo.",
+      "firstName": "Nkombo ya liboso",
+      "lastName": "Nkombo ya libota",
+      "birthDate": "Mokolo ya mbotama",
+      "birthDatePlaceholder": "MK/SZ/MBU",
+      "sex": "Mobali to mwasi",
+      "sexF": "Mwasi",
+      "sexM": "Mobali",
+      "sexOther": "Mosusu"
+    },
+    "diabetes": {
+      "title": "Diabète na yo",
+      "intro": "Lolenge ya diabète esalisaka kotánga bolandi na yo. Soki oyebi malamu te, poná «Mosusu»: okoki kobongola yango nsima.",
+      "type": "Lolenge ya diabète",
+      "type1": "Lolenge 1",
+      "type2": "Lolenge 2",
+      "gestational": "Ya zemi",
+      "other": "Mosusu",
+      "year": "Mobu oyo bamonaki yango",
+      "yearHint": "Ezali na makasi te. Ata soki oyebi kaka pene."
+    },
+    "thresholds": {
+      "title": "Unité mpe bandelo",
+      "intro": "Poná unité ya mashini na yo mpe talá ndelo na yo ya malamu.",
+      "unit": "Unité ya bomeki",
+      "doctorNote": "Mituya ya momesano epesami liboso: ya kopona elongo na monganga na yo. Afyabora epesaka toli ya nkisi soko moke te.",
+      "veryLowMgDl": "Na nsé mpenza soki na nsé ya",
+      "targetMinMgDl": "Ndelo ya malamu: ebandeli",
+      "targetMaxMgDl": "Ndelo ya malamu: nsúka",
+      "veryHighMgDl": "Likoló mpenza soki likoló ya",
+      "reset": "Zonga na mituya ya liboso",
+      "reviewed": "Bandelo oyo eponami elongo na monganga na ngai.",
+      "barCaption": "Na nsé mpenza · na nsé · ndelo ya malamu · likoló · likoló mpenza",
+      "barA11y": "Ndelo ya malamu kobanda {{min}} kino {{max}} miligrammes na desilitre",
+      "rangeTitle": "Ndelo ya malamu",
+      "alertTitle": "Bandelo ya likebisi",
+      "rangeHint": "Mituya oyo ezali kati ya mituya mibale oyo ezali «na kati ya ndelo».",
+      "alertHint": "Na nsé ya «na nsé mpenza» to likoló ya «likoló mpenza», Afyabora ekokebisa yo.",
+      "short": {
+        "targetMinMgDl": "Kobanda",
+        "targetMaxMgDl": "Kino",
+        "veryLowMgDl": "Na nsé mpenza",
+        "veryHighMgDl": "Likoló mpenza"
+      }
+    },
+    "contacts": {
+      "title": "Bato na yo ya kobenga",
+      "intro": "Ezali na makasi te, kasi ekoki kosalisa soki likama. Okoki kobongola yango nsima.",
+      "relativeTitle": "Moto ya libota ya koyebisa",
+      "relativeHint": "Akozala na karte na yo ya likama soki ofungoli yango.",
+      "name": "Nkombo",
+      "phone": "Telefone",
+      "relation": "Boyokani (ezali na makasi te)",
+      "relationPlaceholder": "Mwasi, mwana mobali, moninga…",
+      "doctorTitle": "Monganga na yo",
+      "doctorHint": "Monganga oyo azali kolanda diabète na yo.",
+      "doctorName": "Nkombo ya monganga",
+      "doctorNamePlaceholder": "Dr …",
+      "emergencyTitle": "Soki likama",
+      "emergencyHint": "Nimero ya kobenga lisalisi epai ozali kofanda. Afyabora eyebi yango te: séngá yango na centre de santé na yo.",
+      "country": "Mboka",
+      "countries": {
+        "CD": "RD Congo",
+        "CG": "Congo",
+        "RW": "Rwanda",
+        "BI": "Burundi",
+        "UG": "Uganda",
+        "AO": "Angola",
+        "FR": "France",
+        "BE": "Belgique",
+        "OTHER": "Mboka mosusu"
+      },
+      "otherCountry": "Kode ya mboka (bilembo 2)",
+      "otherCountryHint": "Ndakisa KE mpo na Kenya, CM mpo na Cameroun.",
+      "clearCountry": "Kokoma mboka te",
+      "emergencyNumber": "Nimero ya likama",
+      "emergencyNumberHint": "Lisalisi, ambulance to lopitalo ya pembeni.",
+      "emergencyNumberPlaceholder": "Ndakisa 112"
+    },
+    "summary": {
+      "overline": "Etape ya nsúka",
+      "title": "Nyonso ezali malamu?",
+      "intro": "Talá makambo na yo liboso ya kobomba yango.",
+      "edit": "Bongola",
+      "name": "Nkombo",
+      "target": "Ndelo ya malamu",
+      "none": "Ekomami te",
+      "save": "Bomba profil na ngai"
+    },
+    "done": {
+      "title": "Boyei malamu, {{name}}!",
+      "message": "Profil na yo ezali prêt. Okoki kobomba bomeki na yo ya liboso.",
+      "action": "Yeba Afyabora"
+    },
+    "errors": {
+      "firstName": "Komá nkombo na yo ya liboso.",
+      "lastName": "Komá nkombo na yo ya libota.",
+      "birthDate": "Mokolo ezali malamu te: salelá MK/SZ/MBU (mokolo oyo ekoya te).",
+      "sex": "Poná moko.",
+      "diabetesType": "Poná lolenge ya diabète.",
+      "diagnosisYear": "Mobu kati ya 1950 mpe lelo, nsima ya mbotama na yo.",
+      "preferredUnit": "Poná unité.",
+      "thresholds": {
+        "veryLowMgDl": "Motuya ezali malamu te: esengeli kozala na nsé ya ebandeli ya ndelo ya malamu.",
+        "targetMinMgDl": "Motuya ezali malamu te to ezali libanda ya ndelo (20 kino 600 mg/dL).",
+        "targetMaxMgDl": "Motuya ezali malamu te: nsúka ya ndelo esengeli kozala likoló ya ebandeli.",
+        "veryHighMgDl": "Motuya ezali malamu te: esengeli kozala likoló ya nsúka ya ndelo ya malamu."
+      },
+      "emergencyContact": {
+        "name": "Komá nkombo ya moto ya libota na yo.",
+        "phone": "Komá nimero ya telefone (ata bilembo 6).",
+        "relation": "Makomi milai mingi."
+      },
+      "doctorContact": {
+        "name": "Komá nkombo ya monganga na yo.",
+        "phone": "Komá nimero ya telefone (ata bilembo 6)."
+      },
+      "country": "Poná mboka to komá kode na yango ya bilembo 2 (ndakisa KE).",
+      "emergencyNumber": "Komá nimero ya mituya kaka (« + » endimami na ebandeli)."
+    }
+  },
+  "security": {
+    "pad": {
+      "progress": "Motuya {{count}} ekomami na {{total}}",
+      "delete": "Longola"
+    },
+    "lock": {
+      "title": "Afyabora ekangami",
+      "prompt": "Komá kode na yo mpo na kokoba.",
+      "wrong": "Kode ezali malamu te. Meká lisusu.",
+      "wait": "Omeki mbala ebele. Meká lisusu nsima ya {{seconds}} s.",
+      "bioPrompt": "Fungolá Afyabora",
+      "useCode": "Salelá kode na ngai",
+      "useFace": "Fungolá na elongi",
+      "useFinger": "Fungolá na elembo ya mosapi",
+      "forgot": "Obosani kode?",
+      "forgotTitle": "Bimá mpo na kobongisa lisusu",
+      "forgotText": "Okozala na mposa ya kokota lisusu na email mpe mot de passe na yo. Makambo oyo naino etindami te ekobunga na telefone oyo.",
+      "forgotConfirm": "Bimá"
+    },
+    "settings": {
+      "title": "Libateli",
+      "intro": "Batelá nzela ya kokota na makambo ya bokolono na yo na telefone oyo.",
+      "lockLabel": "Kanga application",
+      "lockHint": "Kode (mpe elembo ya mosapi soki olingi) ekosengama ntango ofungoli.",
+      "bioFinger": "Fungolá na elembo ya mosapi",
+      "bioFace": "Fungolá na elongi",
+      "bioHint": "Kode na yo ekoki ntango nyonso kosalelama.",
+      "bioUnavailable": "Elembo ya mosapi to elongi ezali te na telefone oyo: kode ekosengama.",
+      "timeoutLabel": "Kanga lisusu nsima ya",
+      "timeout": {
+        "immediate": "Mbala moko",
+        "1min": "1 min",
+        "5min": "5 min"
+      },
+      "change": "Bongola kode",
+      "lengthTitle": "Poná kode na yo",
+      "lengthLabel": "Bolai ya kode",
+      "four": "Mituya 4",
+      "fourHint": "Ekomamaka noki",
+      "six": "Mituya 6",
+      "sixHint": "Ezali mpasi koyeba",
+      "createTitle": "Komá kode ya sika",
+      "confirmTitle": "Komá yango lisusu",
+      "verifyTitle": "Komá kode na yo ya sikoyo",
+      "mismatch": "Kode mibale ekokani te. Banda lisusu.",
+      "problem": {
+        "length": "Kode esengeli kozala na mituya 4 kino 6.",
+        "digits": "Kode ezali kaka na mituya.",
+        "tooSimple": "Kode ezali petee mingi (ndakisa 1234, 0000). Poná mosusu."
+      },
+      "enabled": "Kokanga efungwami.",
+      "changed": "Kode ebongwani.",
+      "disabled": "Kokanga ekangami.",
+      "tipsTitle": "Malamu koyeba",
+      "tips": "Kode na yo ebombamaka polele soko moke te. Nsima ya mabunga 5, esengeli kozela liboso ya komeka lisusu. Obosani kode? Okoki kobima mpe kokota lisusu na mot de passe na yo.",
+      "storage": {
+        "title": "Makambo ya bokolono na telefone oyo",
+        "loading": "Kotala…",
+        "encrypted": "Ebombami na sekele",
+        "encryptedHint": "Base locale ebombami na sekele (AES-256, SQLCipher). Fungola ebombami na esika ya libateli ya telefone.",
+        "unencrypted": "Ebombami na sekele te",
+        "unencryptedHint": "Mode ya développement (Expo Go): sekele esalaka kaka na application oyo etyami (APK).",
+        "web": "Komona na web",
+        "webHint": "Eloko moko te ebombami na esaleli oyo: makambo etikalaka na mémoire kaka ntango ozali.",
+        "error": "Ezali te",
+        "errorHint": "Base locale efungwami te. Kanga mpe fungolá application lisusu.",
+        "migrated": "Makambo oyo ebombamaki kala na telefone oyo ebombami sikoyo na sekele.",
+        "reset": "Base ya telefone oyo ekokaki kotángama te: esalemi lisusu. Makambo na yo ezali kozonga uta na serveur; kaka makambo oyo etindamaki te ekoki kobunga."
+      }
+    }
+  },
+  "legal": {
+    "updated": "Version {{version}} · ebongisami na {{date}}",
+    "date": "10 sánzá ya zómi 2026",
+    "close": "Kanga",
+    "emergencyTitle": "Soki likama",
+    "emergency": "Soki omiyoki malamu te, to sukali na makila ezali na nsé mpenza to likoló mpenza elongo na bilembo, kozela application te: benga lisalisi to kende na centre de santé ya pembeni.",
+    "disclaimer": {
+      "overline": "Likebisi",
+      "title": "Esaleli ya kosalisa, toli ya monganga te",
+      "short": "Afyabora esalisaka yo olanda sukali na makila na yo. Ezwaka bokono te mpe ezwi esika ya toli ya mosali ya bokolono te.",
+      "more": "Yeba mingi",
+      "moreA11y": "Tángá likebisi mobimba",
+      "intro": "Afyabora ezali esaleli ya kosalisa na bolandi ya diabète. Liboso ya kosalela yango, ezali na ntina koyeba nini esalaka, mpe mingi mingi nini esalaka te.",
+      "does": {
+        "title": "Nini Afyabora esalaka",
+        "body": "Ebombaka bomeki na yo, ata internet ezali te. Esalaka mituya ya petee uta na makambo na yo moko (moyenne, ntango na kati ya ndelo na yo ya malamu, mbala sukali emataki to ekitaki). Esalisaka yo kobongisa kokutana na monganga mpe kokabola lisolo na yo na monganga oyo oponi."
+      },
+      "doesNot": {
+        "title": "Nini esalaka te",
+        "body": "Ezwaka bokono te. Epesaka dozi ya insuline to nkisi moko te. Elobaka te ntina oyo sukali emati to ekiti: makambo emonisaka ezali kaka banzela ya kosolola na mosali ya bokolono."
+      },
+      "quality": {
+        "title": "Biyano oyo etaleli makambo okomi",
+        "body": "Mituya ezali solo kaka soki bomeki ezali solo: motuya oyo ekomami mabe to mikolo oyo omeki te ebongolaka biyano. Application eyebisaka yo ntango makambo ezali moke mpo na kozwa likanisi."
+      },
+      "treatment": {
+        "title": "Nkisi na yo",
+        "body": "Kobongola nkisi na yo te kaka na kotala application. Solola liboso na monganga to bato ya bokolono na yo."
+      },
+      "alerts": {
+        "title": "Bakundoli mpe bakebisi",
+        "body": "Bakundoli mpe bakebisi ekoki koya te (telefone ekufi, batri esili, ba notification ekangami). Ezwi esika ya bokebi na yo mpe ya bato na yo te."
+      }
+    },
+    "privacy": {
+      "overline": "Sekele",
+      "title": "Mibeko ya kobomba sekele",
+      "intro": "Makambo ya bokolono na yo ezali ya yo. Lokasa oyo elimboli na petee nini tobombaka, mpo na nini, wapi, mpe nani akoki komona yango.",
+      "prototype": "Afyabora sikoyo ezali prototype oyo esalemi na kelasi. Mibeko oyo ekotalelama lisusu na bakambi liboso ya kopesa yango na bato nyonso.",
+      "data": {
+        "title": "Makambo oyo ebombamaka",
+        "body": "Compte na yo: adresse email mpe mot de passe (ebombamaka polele soko moke te). Profil na yo: nkombo, mokolo ya mbotama, mobali to mwasi, lolenge ya diabète, mobu oyo bamonaki yango, unité mpe bandelo oyo oponi. Soki olingi: moto ya libota ya koyebisa mpe monganga na yo. Bolandi na yo: bomeki ya sukali na makila, makambo (bilei, misala ya nzoto, nkisi…) mpe ba note."
+      },
+      "purpose": {
+        "title": "Mpo na nini",
+        "body": "Kaka mpo na bolandi na yo: komonisa lisolo na yo, kosala mituya na yo mpe kobongisa kokutana na monganga. Piblisite te. Makambo na yo etékamaka te mpe efutelamaka te."
+      },
+      "storage": {
+        "title": "Wapi ebombamaka",
+        "body": "Liboso na telefone na yo, mpo esala ata internet ezali te, na nsima na serveur na biso mbala moko internet ezali. Bosangani ebombami na sekele, ba note na yo ebombami na sekele na serveur, mpe okoki kokanga application na kode to elembo ya mosapi. Ntango obimi, makambo elongolamaka na telefone."
+      },
+      "sharing": {
+        "title": "Kokabola na monganga",
+        "body": "Eloko moko te ekabolamaka soki yo osali yango te. Yo nde osalaka QR code, oyo esalaka mwa ntango mpe mbala moko kaka; kaka monganga oyo akoti mpe andimami akoki kotánga yango. Yo nde oponaka nini akomona mpe mpo na ntango boni, okoki kotika kokabola ntango nyonso, mpe botali nyonso emonanaka na zulunalo na yo."
+      },
+      "emergency": {
+        "title": "Karte ya likama",
+        "body": "Soki ofungoli yango, karte ya likama ekoki kotángama ata na compte te: yango nde ntina na yango, mpo na bato ya lisalisi. Ezali kaka na makambo oyo yo oponi, lisolo na yo te. Mbala nyonso efungwami, oyebisamaka, mpe okoki kokanga to kobongola yango ntango nyonso."
+      },
+      "analysis": {
+        "title": "Botali",
+        "body": "Mituya mpe makambo emonisami esalemaka na application na mibeko oyo ebongwanaka te mpe ekoki kotalelama, kaka uta na makambo na yo. Soki mokolo moko mashini ekobongisaka maloba, ekozwa kaka mituya ya mokuse, nkombo na yo te mpe adresse na yo te."
+      },
+      "retention": {
+        "title": "Mpo na ntango boni",
+        "body": "Makambo na yo ebombamaka tango compte na yo ezali. Kolongola compte elongolaka makambo na yo na ba serveur na biso."
+      },
+      "rights": {
+        "title": "Makoki na yo",
+        "body": "Okoki kozwa kopi ya makambo na yo, kobongisa yango mpe kolongola compte na yo. Ndingisa oyo opesaki ntango ya kokotisa nkombo ekoki kolongwa soki olongoli compte na yo. Ozali na makasi te ya kokabola makambo na yo na monganga."
+      }
+    },
+    "about": {
+      "overline": "Mibongiseli",
+      "title": "Na ntina na application",
+      "version": "Version {{version}}",
+      "legalTitle": "Makambo ya mibeko",
+      "privacyHint": "Nini tobombaka mpe nani akoki komona yango",
+      "disclaimerHint": "Nini application esalaka, mpe nini esalaka te",
+      "credits": "Projet PBL 5 · MEO. Esalemi mpo na bato oyo bazali na diabète."
+    }
+  },
+  "measurement": {
+    "overline": "Kokoma",
+    "title": "Bomeki ya sika",
+    "close": "Kanga kozanga kobomba",
+    "valueLabel": "Sukali na makila",
+    "valueA11y": "Motuya ya sukali na makila, na {{unit}}",
+    "equals": "elingi koloba {{values}}",
+    "unitLabel": "Unité",
+    "when": {
+      "label": "Ntango nini?",
+      "now": "Sikoyo",
+      "minus30": "−30 min",
+      "minus60": "−1 h",
+      "custom": "Mosusu",
+      "today": "Lelo",
+      "yesterday": "Lobi eleki",
+      "dayBefore": "Lobi mosusu eleki",
+      "time": "Ngonga ya bomeki",
+      "hourMinus": "Ngonga moko liboso",
+      "hourPlus": "Ngonga moko nsima",
+      "minuteMinus": "Miniti mitano liboso",
+      "minutePlus": "Miniti mitano nsima",
+      "summary": "{{day}}, {{time}}"
+    },
+    "context": {
+      "label": "Ntango ya bomeki",
+      "FASTING": "Na libumu mpamba",
+      "BEFORE_MEAL": "Liboso ya kolya",
+      "AFTER_MEAL": "Nsima ya kolya",
+      "BEDTIME": "Ntango ya kolala",
+      "NIGHT": "Na butu",
+      "OTHER": "Mosusu"
+    },
+    "noteLabel": "Note (ezali na makasi te)",
+    "notePlaceholder": "Ndakisa: nsima ya kotambola, bilei ya butu mingi…",
+    "noteHint": "Emonanaka na yo; ekabolamaka kaka soki yo oponi.",
+    "save": "Bomba",
+    "problem": {
+      "empty": "Komá motuya oyo omeki.",
+      "invalid": "Motuya etángami te: salelá kaka mituya.",
+      "zero": "Motuya esengeli koleka zéro.",
+      "decimals": "Mituya mingi nsima ya virgule mpo na unité oyo: talá lisusu.",
+      "unusual": "Motuya ya kokamwa: talá motuya mpe unité oyo oponi.",
+      "future": "Ngonga oyo naino ekoki te.",
+      "context": "Poná ntango ya bomeki."
+    },
+    "duplicateTitle": "Ebombami kala?",
+    "duplicate": "Bomeki moko ya motuya moko ezali kala na ngonga oyo.",
+    "duplicateConfirm": "Bomba kaka",
+    "error": "Bomeki ebombami te na telefone oyo. Meká lisusu.",
+    "saved": {
+      "title": "Bomeki ebombami",
+      "detail": "{{value}} · {{context}} · {{when}}",
+      "local": "Ebombami na telefone oyo, ekotindama mbala moko internet ekozala.",
+      "another": "Bakisa bomeki mosusu",
+      "done": "Esili",
+      "confirmedUnusual": "Motuya ya kokamwa endimami na yo."
+    },
+    "addA11y": "Bakisa bomeki ya sukali na makila",
+    "unusual": {
+      "question": "{{value}}: ezali solo?",
+      "explain": "Motuya oyo ezali ya kokamwa: mashini ya komeka sukali emonisaka mingi kati ya {{min}} mpe {{max}}.",
+      "unitHint": "Libunga ya unité? Bomba motuya, bongola unité:",
+      "switchUnit": "Ezalaki na {{unit}}",
+      "confirm": "Ee, ezali solo",
+      "fix": "Bongisa motuya"
+    },
+    "safety": {
+      "title": {
+        "VERY_LOW": "Motuya na nsé mpenza",
+        "VERY_HIGH": "Motuya likoló mpenza"
+      },
+      "message": "Landá malako ya bato ya bokolono na yo. Soki omiyoki malamu te, séngá lisalisi mbala moko."
+    },
+    "edit": {
+      "overline": "Bomeki",
+      "title": "Bongola bomeki",
+      "close": "Kanga kozanga kobomba",
+      "savedAt": "{{day}} na ngonga {{time}}",
+      "whenLabel": "Mokolo mpe ngonga",
+      "day": "Mokolo ya bomeki",
+      "previousDay": "Mokolo eleki",
+      "nextDay": "Mokolo elandí",
+      "save": "Bomba mbongwana",
+      "saveError": "Mbongwana ebombami te na telefone oyo. Meká lisusu.",
+      "delete": "Longola bomeki oyo",
+      "deleteTitle": "Olongoli bomeki oyo?",
+      "deleteText": "Ekolongwa na lisolo na yo mpe na botali na yo, na telefone oyo na nsima na serveur.",
+      "deleteConfirm": "Longola",
+      "deleteError": "Bomeki elongolami te na telefone oyo. Meká lisusu.",
+      "cancel": "Tika",
+      "missingTitle": "Bomeki emonani te",
+      "missingText": "Mbele elongolamaki kala.",
+      "back": "Zonga"
+    }
+  },
+  "dashboard": {
+    "greeting": {
+      "morning": "Mbote",
+      "evening": "Mbote na mpokwa"
+    },
+    "latest": {
+      "title": "Bomeki ya nsúka",
+      "today": "Lelo",
+      "yesterday": "Lobi eleki",
+      "when": "{{day}}, {{time}}",
+      "age": {
+        "justNow": "Sikoyo kaka",
+        "minutes_one": "Miniti {{count}} eleki",
+        "minutes_other": "Miniti {{count}} eleki",
+        "minutes_many": "Miniti {{count}} eleki",
+        "hours_one": "Ngonga {{count}} eleki",
+        "hours_other": "Ngonga {{count}} eleki",
+        "hours_many": "Ngonga {{count}} eleki",
+        "days_one": "Mokolo {{count}} eleki",
+        "days_other": "Mikolo {{count}} eleki",
+        "days_many": "Mikolo {{count}} eleki"
+      },
+      "a11y": "Bomeki ya nsúka: {{value}}, {{state}}. {{context}}, {{when}}.",
+      "add": "Bomeki ya sika"
+    },
+    "empty": {
+      "title": "Naino bomeki ezali te",
+      "text": "Komá sukali na yo ya liboso: ekotikala na telefone oyo, ata internet ezali te.",
+      "action": "Komá bomeki na ngai ya liboso"
+    },
+    "error": "Bomeki na yo etángami te na telefone oyo.",
+    "chart": {
+      "title": "Ndenge ezali kokende",
+      "periodLabel": "Ntango ya grafiki",
+      "period_one": "{{count}} mok.",
+      "period_other": "{{count}} mik.",
+      "period_many": "{{count}} mik.",
+      "summary_one": "Bomeki {{count}} na mikolo {{days}}",
+      "summary_other": "Bomeki {{count}} na mikolo {{days}}",
+      "summary_many": "Bomeki {{count}} na mikolo {{days}}",
+      "hint": "Simbá molongo mpo na komona bomeki moko na bozindo.",
+      "empty": "Bomeki moko te na mikolo {{days}} oyo.",
+      "target": "Ndelo ya malamu: {{min}} – {{max}}",
+      "a11y_one": "Grafiki ya sukali na mikolo {{days}}: bomeki {{count}}.",
+      "a11y_other": "Grafiki ya sukali na mikolo {{days}}: bomeki {{count}}.",
+      "a11y_many": "Grafiki ya sukali na mikolo {{days}}: bomeki {{count}}.",
+      "a11yHint": "Benda likoló to na nsé mpo na kokende na bomeki mosusu.",
+      "a11yPoint": "{{value}}, {{state}}. {{detail}}"
+    },
+    "stats": {
+      "title": "Mituya",
+      "count_one": "Bomeki {{count}} · mik. {{days}}",
+      "count_other": "Bomeki {{count}} · mik. {{days}}",
+      "count_many": "Bomeki {{count}} · mik. {{days}}",
+      "insufficientTitle": "Makambo ekoki te",
+      "insufficient_one": "Esengeli ata bomeki {{min}} na mikolo {{days}} oyo mpo na kozwa mituya ya solo. Ozali na {{count}}.",
+      "insufficient_other": "Esengeli ata bomeki {{min}} na mikolo {{days}} oyo mpo na kozwa mituya ya solo. Ozali na {{count}}.",
+      "insufficient_many": "Esengeli ata bomeki {{min}} na mikolo {{days}} oyo mpo na kozwa mituya ya solo. Ozali na {{count}}.",
+      "shareA11y": "Bokaboli ya bomeki: {{below}} % na nsé, {{inRange}} % na kati ya ndelo, {{above}} % likoló.",
+      "mean": "Moyenne",
+      "sd": "Écart-type",
+      "cv": "Mbongwana",
+      "compareTitle": "Soki tokokanisi na mikolo {{days}} eleki",
+      "tirChange": "Ntango na kati ya ndelo: {{value}}",
+      "meanChange": "Moyenne: {{value}}",
+      "points_one": "{{sign}}{{count}} point",
+      "points_other": "{{sign}}{{count}} points",
+      "points_many": "{{sign}}{{count}} points",
+      "stable": "ebongwani te",
+      "direction": {
+        "up": "ezali komata",
+        "down": "ezali kokita",
+        "flat": "ebongwani te"
+      },
+      "noPrevious": "Bomeki ekoki te na mikolo {{days}} eleki mpo na kokokanisa."
+    },
+    "quality": {
+      "title": "Bolamu ya makambo",
+      "level": {
+        "GOOD": "Malamu",
+        "PARTIAL": "Ndambo",
+        "INSUFFICIENT": "Ekoki te"
+      },
+      "reason": {
+        "empty": "Bomeki moko te na mikolo {{days}} oyo: naino eloko ya kotala ezali te.",
+        "good": "Bomeki ya mbala na mbala: mikolo {{covered}} na {{days}} emekami, {{perDay}} na mokolo na moyenne.",
+        "coverage": "Bomeki kaka na mikolo {{covered}} na {{days}}: komeka mikolo mingi ekopesa botali ya solo koleka.",
+        "freshness_one": "Bomeki ya nsúka ezali ya mokolo {{count}} eleki: mituya elakisi malamu te ndenge ozali sikoyo.",
+        "freshness_other": "Bomeki ya nsúka ezali ya mikolo {{count}} eleki: mituya elakisi malamu te ndenge ozali sikoyo.",
+        "freshness_many": "Bomeki ya nsúka ezali ya mikolo {{count}} eleki: mituya elakisi malamu te ndenge ozali sikoyo.",
+        "density_one": "Bomeki {{perDay}} na mokolo oyo omeki na moyenne: likambo ya kolanda ezali {{target}} mpo na komona malamu.",
+        "density_other": "Bomeki {{perDay}} na mokolo oyo omeki na moyenne: likambo ya kolanda ezali {{target}} mpo na komona malamu.",
+        "density_many": "Bomeki {{perDay}} na mokolo oyo omeki na moyenne: likambo ya kolanda ezali {{target}} mpo na komona malamu."
+      },
+      "coverage": "Mikolo emekami",
+      "density": "Bomeki na mokolo",
+      "freshness": "Sika",
+      "formula": "Score = 50 % mikolo emekami + 30 % bomeki na mokolo + 20 % sika.",
+      "a11y": "Bolamu ya makambo: {{score}} na 100, {{level}}. {{sentence}}"
+    }
+  },
+  "timeline": {
+    "overline": "Molongo ya ntango",
+    "title": "Lisolo",
+    "filtersLabel": "Pongá molongo ya ntango",
+    "filter": {
+      "all": "Nyonso",
+      "glucose": "Sukali",
+      "MEAL": "Bilei",
+      "ACTIVITY": "Mosala ya nzoto",
+      "TREATMENT": "Nkisi",
+      "alerts": "Bakebisi"
+    },
+    "type": {
+      "MEAL": "Bilei",
+      "ACTIVITY": "Mosala ya nzoto",
+      "TREATMENT": "Nkisi"
+    },
+    "duration_one": "{{type}} · {{count}} min",
+    "duration_other": "{{type}} · {{count}} min",
+    "duration_many": "{{type}} · {{count}} min",
+    "declared": "Yo moko nde olobi",
+    "pending": "Naino etindami te",
+    "source": {
+      "MANUAL": "Ekomami na maboko",
+      "IMPORT": "Ekotisami",
+      "DEVICE": "Mashini",
+      "importBatch": "Ekotisami · eteni {{batch}}",
+      "a11y": "Euti na: {{label}}"
+    },
+    "count_one": "Eloko {{count}}",
+    "count_other": "Biloko {{count}}",
+    "count_many": "Biloko {{count}}",
+    "more": "Talá mikolo {{days}} eleki",
+    "end": "Eloko ya kala koleka ezali te na telefone oyo.",
+    "empty": {
+      "title": "Lisolo na yo ezali mpamba",
+      "text": "Bomeki na yo, bilei, misala ya nzoto mpe nkisi ekomonana awa, mokolo na mokolo.",
+      "action": "Komá bomeki",
+      "import": "Kotisa fisyé"
+    },
+    "emptyFilter": {
+      "title": "Eloko ya komonisa ezali te",
+      "text": "Eloko moko te ya «{{filter}}» na mikolo {{days}} eleki."
+    },
+    "error": "Lisolo etángami te na telefone oyo.",
+    "a11y": {
+      "measurement": "{{time}}, sukali {{value}}, {{state}}, {{context}}",
+      "event": "{{time}}, {{label}}, {{meta}}"
+    },
+    "addEvent": "Bakisa",
+    "openHint": "Efungolaka mpo na kobongola to kolongola"
+  },
+  "event": {
+    "overline": "Kobakisa noki",
+    "title": "Likambo ya sika",
+    "close": "Kanga kozanga kobomba",
+    "typeLabel": "Lolenge",
+    "type": {
+      "MEAL": "Bilei",
+      "ACTIVITY": "Mosala ya nzoto",
+      "TREATMENT": "Nkisi"
+    },
+    "typeHint": {
+      "MEAL": "Nini olyaki, mpe ntango nini",
+      "ACTIVITY": "Mosala ya nzoto mpe ntango na yango",
+      "TREATMENT": "Nkisi omelaki, ndenge yo moko olobi yango"
+    },
+    "chooseFirst": "Poná liboso lolenge ya likambo.",
+    "label": {
+      "MEAL": "Bilei",
+      "ACTIVITY": "Mosala ya nzoto",
+      "TREATMENT": "Nkombo ya nkisi"
+    },
+    "placeholder": {
+      "MEAL": "Ndakisa: bilei ya midi, loso na madesu",
+      "ACTIVITY": "Ndakisa: kotambola",
+      "TREATMENT": "Ndakisa: insuline ya malembe, metformine"
+    },
+    "suggestionsLabel": "Makanisi",
+    "suggestion": {
+      "breakfast": "Bilei ya ntongo",
+      "lunch": "Bilei ya midi",
+      "dinner": "Bilei ya mpokwa",
+      "snack": "Mwa eloko ya kolya",
+      "walk": "Kotambola",
+      "run": "Kopota mbangu",
+      "bike": "Velo",
+      "football": "Ndembo",
+      "dance": "Kobina",
+      "housework": "Misala ya ndako"
+    },
+    "durationLabel": "Ntango",
+    "durationOther": "Ntango mosusu (miniti)",
+    "minutes_one": "{{count}} min",
+    "minutes_other": "{{count}} min",
+    "minutes_many": "{{count}} min",
+    "details": {
+      "MEAL": "Makambo mosusu (ezali na makasi te)",
+      "ACTIVITY": "Makambo mosusu (ezali na makasi te)",
+      "TREATMENT": "Note (ezali na makasi te)"
+    },
+    "detailsPlaceholder": {
+      "MEAL": "Ndakisa: mingi koleka momesano",
+      "ACTIVITY": "Ndakisa: zingazinga ya quartier",
+      "TREATMENT": "Ndakisa: ndenge momesano na mpokwa"
+    },
+    "detailsHint": "Emonanaka na yo; ekabolamaka kaka soki yo oponi.",
+    "treatmentTitle": "Yo moko nde olobi",
+    "treatmentInfo": "Afyabora ebombaka oyo yo olobi, kozanga kosala calcul to kopesa toli ya dozi. Landá malako ya bato ya bokolono na yo.",
+    "save": "Bomba",
+    "error": "Likambo ebombami te na telefone oyo. Meká lisusu.",
+    "problem": {
+      "type": "Poná lolenge ya likambo.",
+      "label": "Komá nkombo.",
+      "labelTooLong": "Bilembo {{max}} koleka te.",
+      "duration": "Ntango na miniti, kobanda 1 kino 1440.",
+      "future": "Ngonga oyo naino ekoki te."
+    },
+    "saved": {
+      "title": "Likambo ebombami",
+      "local": "Ebombami na telefone oyo, ekotindama mbala moko internet ekozala.",
+      "another": "Bakisa likambo mosusu",
+      "done": "Esili"
+    }
+  },
+  "insights": {
+    "title": "Botali",
+    "subtitle": "Nini bomeki na yo emonisi. Esalemi na telefone oyo, ata internet ezali te.",
+    "periodLabel": "Ntango oyo etalelami",
+    "error": "Bomeki oyo ebombami na telefone oyo etángami te.",
+    "summary": {
+      "title": "Mikolo {{days}} ya nsúka",
+      "range": "Kobanda {{from}} kino {{to}}",
+      "inRange": "na kati ya ndelo ya malamu",
+      "count_one": "Bomeki {{count}}",
+      "count_other": "Bomeki {{count}}",
+      "count_many": "Bomeki {{count}}",
+      "quality": "Bolamu ya makambo: {{score}}/100 · {{level}}",
+      "a11y": "Na mikolo {{days}} ya nsúka: {{percent}} % ya bomeki na kati ya ndelo ya malamu, {{readings}}. Bolamu ya makambo: {{score}} na 100, {{level}}."
+    },
+    "headline": {
+      "calm": "Likambo moko ya ntina te na ntango oyo.",
+      "watch_one": "Likambo {{count}} ya kotala malamu.",
+      "watch_other": "Makambo {{count}} ya kotala malamu.",
+      "watch_many": "Makambo {{count}} ya kotala malamu."
+    },
+    "insufficient": {
+      "title": "Naino bomeki ekoki te",
+      "body_one": "Bomeki {{count}} na mikolo {{days}} oyo: esengeli ata 10 mpo na botali ya solo.",
+      "body_other": "Bomeki {{count}} na mikolo {{days}} oyo: esengeli ata 10 mpo na botali ya solo.",
+      "body_many": "Bomeki {{count}} na mikolo {{days}} oyo: esengeli ata 10 mpo na botali ya solo.",
+      "action": "Komá bomeki"
+    },
+    "observations_one": "Likambo {{count}} emonani",
+    "observations_other": "Makambo {{count}} emonani",
+    "observations_many": "Makambo {{count}} emonani",
+    "severity": {
+      "INFO": "Sango",
+      "ATTENTION": "Ya kolanda",
+      "ALERT": "Likebisi"
+    },
+    "type": {
+      "TREND": "Ndenge ezali kokende",
+      "TIME_OF_DAY_PATTERN": "Ntango ya mokolo",
+      "ANOMALY": "Motuya ya kokamwa",
+      "HIGH_STREAK": "Mituya likoló mbala na mbala",
+      "REPEATED_HYPO": "Mituya na nsé mbala na mbala",
+      "MISSING_DATA": "Mikolo kozanga bomeki",
+      "PERIOD_COMPARISON": "Kokokanisa"
+    },
+    "slot": {
+      "MORNING": "ntongo",
+      "NOON": "midi",
+      "EVENING": "mpokwa",
+      "NIGHT": "butu"
+    },
+    "sentence": {
+      "REPEATED_HYPO": "Namoni bomeki {{count}} na nsé ya ndelo ya nsé na mikolo {{days}} ya nsúka.",
+      "HIGH_STREAK": "Namoni bomeki {{length}} oyo elandani likoló ya ndelo ya likoló.",
+      "ANOMALY": "Bomeki {{count}} ekeseni mingi na lisolo na yo ya sika.",
+      "TIME_OF_DAY_PATTERN": "Mituya likoló ezalaka mingi na ntango ya «{{slot}}» ({{slotAbovePct}} % na esika ya {{globalAbovePct}} % na mikolo nyonso).",
+      "MISSING_DATA": "Mikolo {{daysWithoutData}} na {{daysInPeriod}} ezali na bomeki moko te: botali mosusu ekoki kozala ya ndambo.",
+      "PERIOD_COMPARISON": "Ntango na kati ya ndelo: {{timeInRangePct}} % (ntango eleki: {{previousTimeInRangePct}} %).",
+      "TREND": "Ndenge emonani na ntango oyo."
+    },
+    "threshold": {
+      "below": "Ndelo eleki: na nsé ya {{value}}",
+      "above": "Ndelo eleki: likoló ya {{value}}"
+    },
+    "alertReminder": "Solola yango na mosali na yo ya bokolono.",
+    "evidence": {
+      "show_one": "Talá bomeki oyo etali yango",
+      "show_other": "Talá bomeki {{count}} oyo etali yango",
+      "show_many": "Talá bomeki {{count}} oyo etali yango",
+      "hide": "Bomba bomeki",
+      "more_one": "Monisa bomeki {{count}} mosusu",
+      "more_other": "Monisa bomeki {{count}} mosusu",
+      "more_many": "Monisa bomeki {{count}} mosusu",
+      "openHint": "Efungolaka bomeki oyo.",
+      "a11y": "{{when}}: {{value}}, {{state}}. {{context}}."
+    },
+    "cardA11y": "{{severity}}. {{title}}. {{sentence}}",
+    "summaryText": {
+      "title": "Na mokuse",
+      "note": "Mokuse oyo esalemi uta na bomeki na yo. Ezali toli ya monganga te.",
+      "insufficient": "Naino bomeki ekoki te na mikolo {{days}} ya nsúka mpo na botali ya solo (esengeli ata 10).",
+      "counts": "Na mikolo {{days}} ya nsúka, bomeki {{measures}} etalelami (bolamu ya makambo: {{level}}, {{score}}/100).",
+      "level": {
+        "GOOD": "malamu",
+        "PARTIAL": "ndambo",
+        "INSUFFICIENT": "ekoki te"
+      },
+      "split": "Ezalaki na kati ya ndelo {{inRange}} % ya ntango, likoló {{above}} % mpe na nsé {{below}} %.",
+      "previous": "Na ntango eleki, ntango na kati ya ndelo ezalaki {{previous}} %.",
+      "points": "Makambo ya kotala elongo na mosali na yo ya bokolono: {{list}}.",
+      "none": "Likambo moko ya ntina emonani te na ntango oyo.",
+      "missing": "Mikolo {{missing}} na {{days}} kozanga bomeki: botali mosusu ekoki kozala ya ndambo.",
+      "point": {
+        "REPEATED_HYPO": "mituya na nsé mbala na mbala",
+        "HIGH_STREAK": "mituya likoló oyo elandani",
+        "ANOMALY": "mituya ya kokamwa",
+        "TIME_OF_DAY_PATTERN": "mituya likoló mingi {{slots}}"
+      },
+      "slot": {
+        "MORNING": "na ntongo",
+        "NOON": "na midi",
+        "EVENING": "na mpokwa",
+        "NIGHT": "na butu"
+      },
+      "and": "mpe"
+    },
+    "rewritten": "Maloba ebongisami na IA, mituya etalelami"
+  },
+  "assistant": {
+    "title": "Afyabora",
+    "subtitle": "Mosalisi na yo ya bolandi",
+    "entry": {
+      "title": "Motuna moko na ntina na bomeki na yo?",
+      "body": "Tuná Afyabora, mosalisi na yo: ayanolaka uta na bomeki na yo mpe na bafisi oyo monganga atalelaki."
+    },
+    "welcome": {
+      "title": "Mbote, nazali Afyabora",
+      "body": "Tuná ngai mituna na ntina na sukali na yo to na diabète.",
+      "measures": "Nalimbolaka bomeki na yo na ba calcul moko na oyo ya lokasa Botali.",
+      "sheets": "Mpo na mituna ya bato nyonso, nazwaka makambo na bafisi oyo monganga atalelaki, mpe nalakisaka yango.",
+      "never": "Napesaka dozi te, nazwaka bokono te mpe napesaka toli ya nkisi te: mpo na yango, mosali na yo ya bokolono nde moto ya malamu.",
+      "try": "Meká",
+      "suggestionHint": "Etunaka Afyabora motuna oyo"
+    },
+    "suggestions": {
+      "week": "Comment s'est passée ma semaine ?",
+      "evening": "Mes glycémies du soir sont-elles hautes ?",
+      "hba1c": "C'est quoi l'HbA1c ?",
+      "hypo": "Que faire en cas d'hypoglycémie ?"
+    },
+    "frenchOnly": "Mpo na sikoyo, mosalisi asosolaka mpe ayanolaka kaka na français. Yango wana mituna oyo ezali awa na nsé ezali na français.",
+    "kinds": {
+      "measurements": "Uta na bomeki na yo",
+      "sheet": "Uta na fisi moko",
+      "emergency": "Likama",
+      "refusal": "Ezali mosala na ngai te",
+      "outOfScope": "Eyano ya solo ezali te"
+    },
+    "source": {
+      "title_one": "Fisi oyo elakisami",
+      "title_other": "Bafisi oyo elakisami",
+      "title_many": "Bafisi oyo elakisami",
+      "validated": "Etalelami na monganga",
+      "draft": "Fisi oyo naino etalelami te",
+      "openHint": "Efungolaka fisi mobimba"
+    },
+    "rephrased": "Ekomami na IA ya kati, na nsima etalelami",
+    "pending": {
+      "title": "Afyabora azali kobongisa eyano…",
+      "hint": "Ekoki kozwa kino miniti 2.",
+      "late": "Eyano ezali koumela mwa moke: ekomonana mbala moko ekozala prêt."
+    },
+    "outgoing": {
+      "sending": "Kotinda…",
+      "offline": "Etindami te: internet ezali te. Mosalisi asengeli internet.",
+      "quota": "Etindami te: mituna 20 na ngonga koleka te. Meká lisusu nsima ya miniti {{minutes}}.",
+      "conflict": "Etindami te: meká lisusu.",
+      "unknown": "Etindami te: mosala eyanoli te. Meká lisusu.",
+      "discard": "Longola"
+    },
+    "composer": {
+      "label": "Motuna na yo",
+      "placeholder": "Komá motuna na yo…",
+      "hint": "Bilembo 2 kino 500. Komá nkombo na yo to makambo oyo eyebisaka yo te.",
+      "send": "Tindá motuna",
+      "counter": "{{count}} / {{max}}",
+      "tooLong": "Milai mingi: bilembo {{max}} koleka te."
+    },
+    "emergency": {
+      "button": "Likama",
+      "buttonHint": "Emonisaka ba nimero ya kobenga soki likama",
+      "title": "Soki likama",
+      "body": "Soki omiyoki malamu te, kotikala yo moko te: benga lisalisi sikoyo, to séngá moto moko abenga.",
+      "noNumber": "Nimero ya likama ebombami te: benga lisalisi ya mboka na yo. Okoki kobomba nimero na yo ya likama na profil na yo.",
+      "callNumber": "Benga {{phone}}",
+      "call_relative": "Benga {{name}}",
+      "call_doctor": "Benga {{name}} (monganga)",
+      "callHint": "Efungolaka kobenga na telefone"
+    },
+    "load": {
+      "loading": "Kofungola lisolo",
+      "offlineTitle": "Internet ezali te",
+      "offline": "Masolo na yo ebombami na serveur na sekele: esengeli internet mpo na komonisa yango.",
+      "error": "Lisolo efungwami te.",
+      "notFound": "Lisolo oyo ezali lisusu te: mbele elongolamaki.",
+      "newConversation": "Lisolo ya sika"
+    },
+    "a11y": {
+      "question": "Motuna na yo: {{text}}",
+      "answerReady": "Afyabora ayanoli."
+    },
+    "home": {
+      "subtitle": "Mosalisi na yo ya bolandi: bomeki na yo mpe bafisi oyo monganga atalelaki.",
+      "new": "Lisolo ya sika",
+      "sheets": "Bafisi ya boyebi",
+      "sheetsHint": "Sukali ekiti, HbA1c, bilei…"
+    },
+    "list": {
+      "title": "Masolo na yo",
+      "loading": "Kofungola masolo na yo",
+      "offline": "Masolo na yo ebombami na serveur na sekele: esengeli internet mpo na komonisa yango.",
+      "error": "Masolo na yo efungwami te.",
+      "empty": "Naino lisolo moko te. Tuná Afyabora motuna na yo ya liboso.",
+      "today": "Lelo, {{time}}",
+      "yesterday": "Lobi eleki, {{time}}",
+      "messages_one": "Sango {{count}}",
+      "messages_other": "Bansango {{count}}",
+      "messages_many": "Bansango {{count}}",
+      "noPreview": "Lisolo kozanga motuna",
+      "openHint": "Efungolaka lisolo",
+      "remove": "Longola lisolo oyo",
+      "removeTitle": "Olongoli lisolo oyo?",
+      "removeText": "Mituna mpe biyano ekolongolama mpo na libela.",
+      "removeConfirm": "Longola",
+      "removeAll": "Longola masolo na ngai nyonso",
+      "removeAllTitle": "Olongoli masolo na yo nyonso?",
+      "removeAllText": "Mituna na yo nyonso mpe biyano nyonso ekolongolama mpo na libela.",
+      "removeAllConfirm": "Longola nyonso",
+      "removeOffline": "Eloko moko te elongolami: internet ezali te. Meká lisusu ntango internet ekozala.",
+      "removeError": "Eloko moko te elongolami: mosala eyanoli te. Meká lisusu.",
+      "more": "Talá mingi",
+      "privacy": "Masolo na yo ebombami na sekele mpe etikalaka kino okolongola yango. Monganga na yo akotaka wana soko moke te."
+    },
+    "sheets": {
+      "title": "Bafisi ya boyebi",
+      "intro": "Afyabora ezwaka makambo na bafisi oyo mpo na koyanola mituna ya bato nyonso. Fisi moko na moko elakisaka bisika oyo euti.",
+      "offline": "Bafisi ezali na serveur: esengeli internet mpo na komonisa yango.",
+      "error": "Bafisi efungwami te.",
+      "empty": "Naino fisi moko te ezali.",
+      "notFound": "Fisi oyo ezali te.",
+      "overline": "Fisi ya boyebi",
+      "reviewedOn": "Etalelami na monganga na {{date}}",
+      "reminder": "Fisi oyo epesaka kaka makambo ya bato nyonso. Mpo na mokano oyo etali yo, solola na mosali na yo ya bokolono.",
+      "sources_one": "Esika euti",
+      "sources_other": "Bisika euti",
+      "sources_many": "Bisika euti",
+      "sourceHint": "Efungolaka esika euti na navigateur",
+      "version": "Version {{version}}"
+    }
+  },
+  "import": {
+    "overline": "Kotisa",
+    "title": "Kotisa lisolo ya kala",
+    "intro": "Zwá bomeki ya kaye to ya mashini mosusu, uta na fisyé CSV to Excel. Okomona rapport liboso ete eloko moko ekotisama.",
+    "close": "Kanga kozanga kokotisa",
+    "step": {
+      "file": "Fisyé",
+      "unit": "Unité ya mituya"
+    },
+    "file": {
+      "choose": "Poná fisyé",
+      "chooseHint": "CSV to Excel (.xlsx) · 5 Mo mpe milongo 5000 koleka te",
+      "change": "Bongola fisyé",
+      "kind": {
+        "csv": "Fisyé CSV",
+        "xlsx": "Fisyé Excel"
+      }
+    },
+    "size": {
+      "bytes": "{{amount}} o",
+      "kb": "{{amount}} Ko",
+      "mb": "{{amount}} Mo"
+    },
+    "fileProblem": {
+      "empty": "Fisyé oyo ezali mpamba.",
+      "tooLarge": "Fisyé oyo eleki 5 Mo. Tiká kaka bomeki ya ntina, to kabolá yango na bafisyé mingi.",
+      "oldExcel": "Lolenge ya kala ya Excel (.xls): fungolá yango na Excel, na nsima bomba yango na .xlsx to CSV.",
+      "unsupported": "Lolenge oyo ya fisyé endimami te. Poná fisyé .csv to .xlsx."
+    },
+    "unit": {
+      "hint": "Esalelamaka mpo na milongo oyo elobi unité na yango te.",
+      "example": "ndakisa {{value}}"
+    },
+    "analyse": "Talelá fisyé",
+    "privacy": "Kaka makambo ya fisyé nde etindamaka mpo na botali. Eloko moko te ekotisamaka soki olingi te, mpe okoki kozongisa nyonso nsima.",
+    "network": "Internet esengeli: botali esalemaka na serveur.",
+    "problem": {
+      "offline": {
+        "title": "Internet ezali te",
+        "text": "Botali esalemaka na serveur. Talá internet na yo, na nsima meká lisusu."
+      },
+      "tooLarge": {
+        "title": "Fisyé eleki monene",
+        "text": "5 Mo mpe milongo 5000 koleka te. Kabolá fisyé, na nsima meká lisusu."
+      },
+      "unreadable": {
+        "title": "Fisyé etángami te"
+      },
+      "tooMany": {
+        "title": "Botali mingi mbala moko",
+        "text": "Zelá miniti moko, na nsima meká lisusu."
+      },
+      "rejected": {
+        "title": "Botali ekoki kosalema te"
+      },
+      "error": {
+        "title": "Botali ekoki kosalema te",
+        "text": "Libunga moko ebimi. Meká lisusu nsima ya mwa ntango."
+      }
+    },
+    "stepLabel": "Etape {{number}}: {{title}}",
+    "mapping": {
+      "title": "Ba colonne nini?",
+      "intro": "Toyebi te ba colonne nyonso ya «{{name}}». Lakisá wapi mokolo mpe sukali ezali: mosusu ezali na makasi te.",
+      "back": "Zonga na kopona fisyé",
+      "analyse": "Talelá na ba colonne oyo",
+      "required": "Esengeli",
+      "optional": "Ezali na makasi te",
+      "none": "Moko te",
+      "usedFor": "esalelami kala mpo na {{role}}",
+      "missing": "Poná lisusu: {{roles}}.",
+      "and": " mpe ",
+      "role": {
+        "date": "Mokolo",
+        "time": "Ngonga",
+        "value": "Sukali",
+        "unit": "Unité",
+        "context": "Ntango ya bomeki"
+      },
+      "hint": {
+        "date": "Mokolo ya bomeki moko na moko, na ngonga to kozanga yango.",
+        "time": "Soki ngonga ezali na colonne mosusu.",
+        "value": "Motuya oyo omekaki (ndakisa 1,10 to 110).",
+        "unit": "Soki molongo moko na moko elobi unité na yango. Soki te: {{unit}}, oyo oponaki mpo na fisyé.",
+        "context": "Na libumu mpamba, liboso to nsima ya kolya…"
+      },
+      "changed": {
+        "title": "Ba colonne ya kotala",
+        "text": "Fisyé ezali na ba colonne nyonso oyo oponaki te. Talá lisusu oyo oponi, na nsima banda botali lisusu."
+      },
+      "lost": {
+        "title": "Fisyé moko te ezali",
+        "text": "Poná lisusu fisyé ya kokotisa: ebombamaka te ntango application ekangami."
+      }
+    },
+    "report": {
+      "title": "Rapport ya kokotisa",
+      "analyzed_one": "Molongo {{count}} etalelami",
+      "analyzed_other": "Milongo {{count}} etalelami",
+      "analyzed_many": "Milongo {{count}} etalelami",
+      "label": {
+        "valid": "Malamu",
+        "duplicates": "Oyo ezongi mbala mibale",
+        "inconsistent": "Ya kotala",
+        "errors": "Mabunga"
+      },
+      "tile": {
+        "valid": "{{count}} malamu",
+        "duplicates": "{{count}} ezongi mbala mibale",
+        "inconsistent": "{{count}} ya kotala",
+        "errors": "{{count}} mabunga"
+      },
+      "allValid": "Milongo nyonso ezali malamu: eloko ya kotala ezali te.",
+      "group": {
+        "INCONSISTENT": {
+          "title": "Ya kotala ({{count}})",
+          "text": "Motuya ya kokamwa to unité mosusu: bongisa yango, ndimá yango ndenge ezali, to tiká molongo."
+        },
+        "DUPLICATE": {
+          "title": "Oyo ezongi mbala mibale ({{count}})",
+          "text": "Mokolo moko, ngonga moko, motuya moko na bomeki oyo ezali kala: etikamaka, soki yo moko ondimi yango te."
+        },
+        "ERROR": {
+          "title": "Mabunga ({{count}})",
+          "text": "Molongo etángami te: bongisa motuya, to tiká molongo."
+        }
+      },
+      "acceptAll": "Ndimá nyonso",
+      "ignoreAll": "Tiká nyonso",
+      "line": "Molongo {{line}}",
+      "empty": "(mpamba)",
+      "decisionFor": "Mokano mpo na molongo {{line}}",
+      "action": {
+        "IGNORE": "Tiká",
+        "ACCEPT": "Ndimá",
+        "CORRECT": "Bongisa"
+      },
+      "correctedValue": "Motuya ya solo",
+      "correctedHint": "Motuya na {{unit}} (bongola unité soki esengeli).",
+      "correctedUnit": "Unité ya motuya ya solo",
+      "problem": {
+        "missing": "Komá motuya ya solo.",
+        "invalid": "Motuya etángami te: motuya moko, ndakisa 1,10.",
+        "outOfRange": "Motuya libanda ya ndelo oyo ekoki kozala (20 kino 600 mg/dL): talá unité."
+      },
+      "more_one": "Talá molongo {{count}} mosusu",
+      "more_other": "Talá milongo {{count}} mosusu",
+      "more_many": "Talá milongo {{count}} mosusu",
+      "fixCorrections": "Silisá kobongisa oyo elakisami liboso ya kokotisa.",
+      "rowsRefused": "Mikano mosusu eboyami: talá milongo oyo elakisami.",
+      "import_one": "Kotisa bomeki {{count}}",
+      "import_other": "Kotisa bomeki {{count}}",
+      "import_many": "Kotisa bomeki {{count}}",
+      "nothingToImport": "Eloko ya kokotisa ezali te",
+      "defaults": "Soki mokano ezali te, oyo ezongi mbala mibale, ya kotala mpe mabunga etikamaka.",
+      "undoable": "Eloko moko te ekotisamaka liboso ya bouton oyo, mpe okoki kozongisa kokotisa nsima."
+    },
+    "done": {
+      "title_one": "Bomeki {{count}} ekotisami",
+      "title_other": "Bomeki {{count}} ekotisami",
+      "title_many": "Bomeki {{count}} ekotisami",
+      "skipped_zero": "Molongo moko te etikami.",
+      "skipped_one": "Molongo {{count}} etikami.",
+      "skipped_other": "Milongo {{count}} etikami.",
+      "skipped_many": "Milongo {{count}} etikami.",
+      "sync": "Bomeki ebombami na compte na yo. Ekoya na lisolo ya telefone oyo nsima ya mwa basekóndi (kotinda yango moko).",
+      "finish": "Silisá",
+      "revert": "Zongisa kokotisa oyo",
+      "revertConfirmTitle": "Ozongisi kokotisa oyo?",
+      "revertConfirmText_one": "Bomeki oyo ekotisamaki ekolongolama na compte na yo.",
+      "revertConfirmText_other": "Bomeki {{count}} oyo ekotisamaki ekolongolama na compte na yo.",
+      "revertConfirmText_many": "Bomeki {{count}} oyo ekotisamaki ekolongolama na compte na yo.",
+      "revertedTitle": "Kokotisa ezongisami",
+      "revertedText_zero": "Bomeki moko te ezalaki ya kolongola.",
+      "revertedText_one": "Bomeki {{count}} elongolami na compte na yo.",
+      "revertedText_other": "Bomeki {{count}} elongolami na compte na yo.",
+      "revertedText_many": "Bomeki {{count}} elongolami na compte na yo.",
+      "keep": "Bomba kokotisa",
+      "revertYes_one": "Longola bomeki",
+      "revertYes_other": "Longola bomeki {{count}}",
+      "revertYes_many": "Longola bomeki {{count}}"
+    },
+    "issue": {
+      "restart": "Banda lisusu",
+      "offline": {
+        "title": "Internet ezali te",
+        "text": "Eloko moko te ekotisami. Talá internet na yo, na nsima meká lisusu."
+      },
+      "done": {
+        "title": "Esalemi kala",
+        "text": "Fisyé oyo ekotisamaki kala to ezongisamaki (mbele na esaleli mosusu)."
+      },
+      "expired": {
+        "title": "Botali ya kala mingi",
+        "text": "Rapport eleki ngonga 24: banda botali ya fisyé lisusu."
+      },
+      "notFound": {
+        "title": "Botali emonani te",
+        "text": "Banda botali ya fisyé lisusu."
+      },
+      "error": {
+        "title": "Kokotisa ekoki te",
+        "text": "Libunga moko ebimi. Meká lisusu nsima ya mwa ntango."
+      }
+    }
+  },
+  "report": {
+    "overline": "Rapport PDF",
+    "title": "Bongisa kokutana na monganga",
+    "intro": "Rapport ya polele ya bomeki na yo, ya kopesa monganga na yo: na WhatsApp, na email, ebimisami na papye to emonisami na telefone na yo.",
+    "close": "Kanga",
+    "period": "Ntango ya rapport",
+    "few": {
+      "title": "Bomeki moke na ntango oyo",
+      "text_one": "Bomeki {{count}} na mikolo {{days}} oyo. Rapport ekosalema kaka mpe ekolakisa yango.",
+      "text_other": "Bomeki {{count}} na mikolo {{days}} oyo. Rapport ekosalema kaka mpe ekolakisa yango.",
+      "text_many": "Bomeki {{count}} na mikolo {{days}} oyo. Rapport ekosalema kaka mpe ekolakisa yango."
+    },
+    "contents": {
+      "title": "Nini ezali na rapport",
+      "identity": {
+        "title": "Yo mpe bolandi na yo",
+        "text": "Nkombo, lolenge ya diabète, mobu oyo bamonaki yango mpe bandelo na yo ya malamu."
+      },
+      "quality": {
+        "title": "Bomeki mpe bolamu ya makambo",
+        "text": "Motango ya bomeki, moyenne, mbongwana, mikolo kozanga bomeki."
+      },
+      "ranges": {
+        "title": "Ntango na kati ya ndelo ya malamu",
+        "text": "Ndambo ya bomeki na nsé, na kati ya ndelo mpe likoló."
+      },
+      "episodes": {
+        "title": "Mbala sukali ekitaki to emataki mpe mituya ya kokamwa",
+        "text": "Ntango sukali ezalaki na nsé to likoló ya bandelo na yo, na mikolo na yango."
+      },
+      "points": {
+        "title": "Makambo ya kotala elongo na monganga na yo",
+        "text": "Makambo botali emonisi, na maloba ya petee."
+      },
+      "chart": {
+        "title": "Grafiki mpe makambo mobimba",
+        "text": "Bomeki nyonso ya ntango yango, na unité na yo, elongo na mikolo kozanga bomeki."
+      },
+      "private": "Ba note na yo ya sekele ezalaka na rapport soko moke te. Fisyé ebimaka na telefone kaka soki yo okaboli yango."
+    },
+    "pending_one": "Bomeki {{count}} naino etindami te: ekotindama liboso ya kosala rapport.",
+    "pending_other": "Bomeki {{count}} naino etindami te: ekotindama liboso ya kosala rapport.",
+    "pending_many": "Bomeki {{count}} naino etindami te: ekotindama liboso ya kosala rapport.",
+    "create": "Salá mpe kabolá PDF",
+    "phase": {
+      "syncing": "Kotinda bomeki na yo ya nsúka…",
+      "creating": "Kosala rapport…",
+      "sharing": "Kofungola kokabola…"
+    },
+    "network": "Rapport esalemaka na serveur: internet esengeli.",
+    "shareTitle": "Kabolá rapport",
+    "shareAgain": "Kabolá lisusu",
+    "createAgain": "Salá rapport ya sika",
+    "done": {
+      "title": "Rapport ezali prêt",
+      "text": "{{filename}}. Okoki kokabola yango lisusu, ndakisa mpe na email."
+    },
+    "unsent": {
+      "title_one": "Bomeki {{count}} ezali na rapport te",
+      "title_other": "Bomeki {{count}} ezali na rapport te",
+      "title_many": "Bomeki {{count}} ezali na rapport te",
+      "text_one": "Naino ekokaki kotindama te. Etikali na telefone na yo mpe ekotindama mbala moko ekoki; na nsima salá rapport ya sika.",
+      "text_other": "Naino ekokaki kotindama te. Etikali na telefone na yo mpe ekotindama mbala moko ekoki; na nsima salá rapport ya sika.",
+      "text_many": "Naino ekokaki kotindama te. Etikali na telefone na yo mpe ekotindama mbala moko ekoki; na nsima salá rapport ya sika."
+    },
+    "problem": {
+      "offline": {
+        "title": "Internet ezali te",
+        "text": "Rapport esalemaka na serveur. Kotá lisusu na internet, na nsima meká lisusu."
+      },
+      "tooMany": {
+        "title": "Ba rapport mingi mbala moko",
+        "text": "Zelá miniti moko liboso ya kosala mosusu."
+      },
+      "noProfile": {
+        "title": "Profil ya bokolono esengeli kosilisama",
+        "text": "Rapport esengeli profil na yo ya bokolono (lolenge ya diabète, bandelo ya malamu)."
+      },
+      "cannotShare": {
+        "title": "Kokabola ezali te",
+        "text": "Esaleli oyo ekoki kokabola fisyé te."
+      },
+      "error": {
+        "title": "Rapport ekokaki kosalema te",
+        "text": "Libunga moko ebimi. Meká lisusu nsima ya mwa ntango."
+      }
+    },
+    "doctor": {
+      "title": "Monganga na yo akoki mpe kozwa yango",
+      "text": "Poná «Rapport PDF» ntango ozali kokabola lisolo na yo na QR."
+    },
+    "entry": {
+      "title": "Bongisa kokutana na monganga",
+      "body": "Rapport PDF ya bomeki na yo, ya kopesa monganga na yo."
+    }
+  },
+  "emergency": {
+    "editCard": "Bongola karte na ngai",
+    "overline": "Kabolá",
+    "title": "Karte ya likama",
+    "close": "Kanga",
+    "intro": "Fisi mpo na bato ya lisalisi, ekeseni na kokabola na monganga na yo. QR na yango ebimisamaka na papye to etyamaka na fond d'écran: moto oyo atángi yango amonaka kaka oyo yo oponi.",
+    "status": {
+      "on": "Karte efungwami",
+      "off": "Karte ekangami",
+      "onText": "QR ezali kosala: emonisaka karte na yo na moto oyo atángi yango.",
+      "offText": "QR emonisaka eloko te, ata ebimisami na papye. Fungolá karte mpo esala.",
+      "toggle": "Karte efungwami",
+      "emptyHint": "Tondisá liboso karte na yo («Bongola karte na ngai»)."
+    },
+    "qr": {
+      "hint": "Bimisá yango na papye to tyá yango na fond d'écran. Ezali na nkombo na yo te mpe na likambo moko ya bokolono te.",
+      "export": "Bomba lokola elilingi",
+      "shareTitle": "Elilingi ya karte na ngai ya likama",
+      "exportProblem": {
+        "title": "Elilingi ebombami te",
+        "text": "Meká lisusu nsima ya mwa ntango."
+      },
+      "regenerate": "Salá QR ya sika",
+      "confirm": {
+        "title": "Obongoli QR na yo?",
+        "text": "QR ya kala ekotika kosala mbala moko, ata oyo ebimisami na papye to ezali na fond d'écran.",
+        "yes": "Ee, salá QR ya sika",
+        "no": "Tika"
+      },
+      "elsewhere": {
+        "title": "QR na yo ezali na telefone oyo te",
+        "text": "Esalemaki na telefone mosusu to liboso ya kotya application lisusu. Salá mosusu awa: oyo ya kala ekotika kosala.",
+        "action": "Salá QR ya sika"
+      }
+    },
+    "image": {
+      "title": "KARTE YA LIKAMA",
+      "instruction": "Soki likama, tángá QR oyo",
+      "audience": "Basali ya bokolono mpe bato ya lisalisi",
+      "a11y": "Elilingi ya QR ya karte na yo ya likama, ya kobimisa na papye to ya kotya na fond d'écran."
+    },
+    "preview": {
+      "title": "Nini moto ya lisalisi akomona",
+      "empty": "Karte na yo ezali mpamba: bakisa kaka oyo olingi komonisa bato ya lisalisi.",
+      "updated": "Ebongisami na {{date}}."
+    },
+    "field": {
+      "fullName": "Nkombo",
+      "diabetesType": "Diabète",
+      "declaredTreatment": "Nkisi oyo olobi",
+      "allergies": "Allergie",
+      "bloodGroup": "Lolenge ya makila",
+      "lastKnownGlucoseMgDl": "Sukali ya nsúka oyo eyebani",
+      "emergencyContactName": "Moto ya kobenga soki likama",
+      "emergencyContactPhone": "Telefone ya moto yango"
+    },
+    "edit": {
+      "title": "Bongola karte na ngai",
+      "cancel": "Kanga kozanga kobomba",
+      "intro": "Likambo moko na moko ezali na makasi te: tondisá kaka oyo olingi komonisa bato ya lisalisi.",
+      "profile": {
+        "title": "Zwá profil na ngai",
+        "text": "Nkombo na yo, lolenge ya diabète na yo mpe moto ya kobenga soki likama, mpo na bisika oyo ezali naino mpamba.",
+        "action": "Zwá profil na ngai",
+        "applied": "Makambo ya profil ebakisami. Talá yango liboso ya kobomba.",
+        "nothing": "Eloko ya kobakisa ezali te: bisika oyo etondi kala.",
+        "failed": "Profil etángami te (internet?)."
+      },
+      "hint": {
+        "diabetesType": "Ndakisa: Lolenge 1, Lolenge 2.",
+        "declaredTreatment": "Nini ozali komela, na maloba na yo. Ndakisa: insuline ya malembe na mpokwa.",
+        "allergies": "Ndakisa: Pénicilline. Tiká mpamba soki ezali te.",
+        "glucose": "Kaka motuya oyo nde emonisamaka: lisolo na yo te.",
+        "phone": "Elongo na kode ya mboka, ndakisa +243 81 000 0000."
+      },
+      "noBloodGroup": "Ekomami te",
+      "useLatest": "Salelá bomeki na ngai ya nsúka ({{value}}, na {{date}})",
+      "privacy": "Makambo oyo emonanaka kaka soki karte na yo efungwami mpe moto moko atángi QR na yo. Mbala nyonso efungwami, oyebisamaka.",
+      "fixErrors": "Bongisa bisika oyo elakisami liboso ya kobomba.",
+      "save": "Bomba karte na ngai",
+      "error": {
+        "tooLong": "Milai mingi: bilembo {{max}} koleka te.",
+        "glucoseInvalid": "Komá motuya, ndakisa 1,32.",
+        "glucoseRange": "Motuya libanda ya ndelo (20 kino 600 mg/dL).",
+        "phoneInvalid": "Komá nimero ya mituya kaka (« + » endimami na ebandeli)."
+      }
+    },
+    "log": {
+      "title": "Nani afungolaki karte na ngai",
+      "text": "Mbala nyonso efungwami ekomamaka na «Nani atalaki makambo na ngai» mpe oyebisamaka."
+    },
+    "problem": {
+      "offline": {
+        "title": "Internet ezali te",
+        "text": "Karte ebongolamaka na internet. Kotá lisusu na internet, na nsima meká lisusu."
+      },
+      "noProfile": {
+        "title": "Profil ya bokolono esengeli kosilisama",
+        "text": "Karte na yo ya likama esengeli profil na yo ya bokolono."
+      },
+      "tooMany": {
+        "title": "Masengi mingi",
+        "text": "Zelá miniti moko liboso ya komeka lisusu."
+      },
+      "invalid": {
+        "title": "Likambo eboyami",
+        "text": "Likambo moko ya karte ezali malamu te. Talá yango."
+      },
+      "error": {
+        "title": "Libunga moko ebimi",
+        "text": "Meká lisusu nsima ya mwa ntango."
+      }
+    }
+  },
+  "share": {
+    "home": {
+      "overline": "Kokabola na libateli",
+      "title": "Kabolá na monganga",
+      "intro": "Monganga na yo atángaka QR na écran na yo mpe atalaka, mpo na mwa ntango, kaka oyo yo oponi.",
+      "promise": {
+        "noData": {
+          "title": "Likambo moko te na QR",
+          "text": "QR ezali kaka na kode ya sekele oyo ebongwanaka miniti nyonso mpe esalaka mbala moko kaka."
+        },
+        "limited": {
+          "title": "Nzela ya ndelo",
+          "text": "Yo nde oponaka nini okabola mpe mpo na ntango boni. Kaka monganga oyo andimami nde akoki kotánga yango."
+        },
+        "control": {
+          "title": "Yo nde okambaka",
+          "text": "Okoki kokanga nzela ntango nyonso, mpe komona nani atalaki makambo na yo."
+        }
+      },
+      "start": "Kabolá lisolo na ngai",
+      "network": "Kokabola esengeli internet.",
+      "log": "Nani atalaki makambo na ngai",
+      "logHint": "Ba monganga oyo bazwaki nzela, mpe ntango nini",
+      "emergency": "Karte ya likama",
+      "report": "Bongisa kokutana na monganga",
+      "reportHint": "Rapport PDF ya bomeki na yo ya kopesa monganga",
+      "emergencyHint": "Makambo ya ntina mpo na bato ya lisalisi"
+    },
+    "new": {
+      "overline": "Kabolá lisolo na ngai",
+      "title": "Nini olingi kokabola?",
+      "close": "Kanga kozanga kokabola",
+      "intro": "Monganga akomona kaka oyo oponi. Eloko moko te ekabolami soki atángi naino QR te.",
+      "what": "Nini monganga akoki komona",
+      "count_one": "{{count}} na {{total}}",
+      "count_other": "{{count}} na {{total}}",
+      "count_many": "{{count}} na {{total}}",
+      "noneSelected": "Poná ata eteni moko mpo na kosala QR.",
+      "howLong": "Mpo na ntango boni",
+      "durationLabel": "Ntango ya nzela",
+      "startsAtScan": "Ntango ebandaka ntango monganga atángi QR. Okoki kokanga yango liboso.",
+      "generate": "Salá QR",
+      "qrNote": "QR ezali na likambo moko ya bokolono te. Ebongwanaka basekóndi 60 nyonso mpe esalaka mbala moko kaka."
+    },
+    "category": {
+      "GLUCOSE_HISTORY": {
+        "label": "Lisolo ya sukali",
+        "text": "Bomeki na yo, ntango na yango mpe bandelo na yo ya malamu"
+      },
+      "TREATMENTS": {
+        "label": "Nkisi oyo olobaki",
+        "text": "Nkisi mpe mbala omelaki oyo okomaki"
+      },
+      "MEALS": {
+        "label": "Bilei",
+        "text": "Bilei oyo okomaki"
+      },
+      "ACTIVITY": {
+        "label": "Mosala ya nzoto",
+        "text": "Misala ya nzoto oyo okomaki"
+      },
+      "AI_SUMMARY": {
+        "label": "Mokuse ya botali",
+        "text": "Mituya ya ntina mpe makambo Afyabora emonaki"
+      },
+      "REPORT_DOWNLOAD": {
+        "label": "Kozwa rapport",
+        "text": "Monganga akoki kobomba rapport PDF"
+      },
+      "PERSONAL_NOTES": {
+        "label": "Ba note ya sekele",
+        "text": "Makomi oyo okomaki na ba note na yo",
+        "note": "Ba note na yo ekoki kozala na makambo ya sekele mingi."
+      }
+    },
+    "duration": {
+      "MIN_5": {
+        "label": "5 min",
+        "hint": "Kotala noki"
+      },
+      "MIN_30": {
+        "label": "30 min",
+        "hint": "Kokutana ya mokuse"
+      },
+      "HOUR_1": {
+        "label": "1 h",
+        "hint": "Kokutana ya molai"
+      },
+      "CONSULTATION": {
+        "label": "Consultation",
+        "hint": "Ngonga 2 koleka te"
+      }
+    },
+    "problem": {
+      "offline": {
+        "title": "Internet ezali te",
+        "text": "Kokabola esengeli internet: serveur esalaka mpe etalaka QR. Makambo na yo etikali na telefone oyo."
+      },
+      "tooMany": {
+        "title": "Ba QR mingi esalemi",
+        "text": "Zelá miniti moko liboso ya kosala mosusu."
+      },
+      "busy": {
+        "title": "Mosala ezali te mpo na sikoyo",
+        "text": "Bato mingi bazali kokabola. Meká lisusu nsima ya mwa ntango."
+      },
+      "rejected": {
+        "title": "Kokabola ekoki te mpo na sikoyo"
+      },
+      "error": {
+        "title": "QR ekokaki kosalema te",
+        "text": "Libunga moko ebimi. Meká lisusu nsima ya mwa ntango."
+      }
+    },
+    "qr": {
+      "overline": "Kabolá lisolo na ngai",
+      "title": "Monisa monganga na yo QR oyo",
+      "scannedTitle": "Kokabola na yo",
+      "intro": "Monganga na yo atángaka yango na portail na ye ya Afyabora. QR ebongwanaka yango moko: tiká écran oyo efungwama.",
+      "qrA11y": "QR ya kokabola, ya kotángama na monganga na yo",
+      "expired": "QR oyo esalaka lisusu te",
+      "renewing": "QR ya sika…",
+      "next_one": "QR ya sika nsima ya {{count}} s",
+      "next_other": "QR ya sika nsima ya {{count}} s",
+      "next_many": "QR ya sika nsima ya {{count}} s",
+      "nextA11y_one": "QR ya sika nsima ya sekóndi {{count}}",
+      "nextA11y_other": "QR ya sika nsima ya basekóndi {{count}}",
+      "nextA11y_many": "QR ya sika nsima ya basekóndi {{count}}",
+      "shared": "Ekabolami",
+      "duration": "Ntango ya nzela",
+      "durationValue": "{{duration}}, kobanda ntango atángi",
+      "stop": "Tiká kokabola",
+      "close": "Kanga",
+      "doctorNote": "Kaka monganga oyo andimami nde akoki kotánga QR oyo. Ezali na likambo moko ya bokolono te mpe esalaka mbala moko kaka.",
+      "problem": {
+        "offline": {
+          "title": "Internet ekatani",
+          "text": "QR ekoki kobongwana te soki internet ezali te. Ekomeka lisusu yango moko."
+        },
+        "busy": {
+          "title": "Mosala ezali na bato mingi",
+          "text": "QR ya sika ezali koya. Ekomeka lisusu yango moko."
+        },
+        "error": {
+          "title": "QR ekokaki kobongwana te",
+          "text": "Ekomeka lisusu yango moko nsima ya mwa ntango."
+        }
+      },
+      "scanned": {
+        "title": "QR na yo etángami",
+        "byDoctor": "{{name}} azali kotala dossier na yo",
+        "until": "Nzela kino ngonga {{time}}.",
+        "end": "Kanga nzela",
+        "endFailed": "Nzela ekokaki kokangama te. Talá internet na yo mpe meká lisusu."
+      },
+      "ended": {
+        "title": "Nzela esili",
+        "text": "Monganga azali lisusu na nzela ya makambo na yo te. Okoki kosala QR ya sika ntango nyonso."
+      },
+      "none": {
+        "title": "QR moko te ezali kosala",
+        "text": "Salá QR mpo na kokabola lisolo na yo na monganga.",
+        "action": "Salá QR"
+      },
+      "backup": {
+        "show": "Monganga azali na kamera te? Monisa kode ya lisalisi",
+        "label": "Kode ya lisalisi",
+        "a11y": "Kode ya lisalisi, ya kokoma to kotya na portail ya monganga",
+        "hint": "Monganga akomaka yango na portail na ye, na «Scanner un QR». Lokola QR, ebongwanaka miniti nyonso mpe esalaka mbala moko kaka.",
+        "hide": "Bomba kode"
+      }
+    },
+    "live": {
+      "expiresIn": "Esili nsima ya",
+      "remainingA11y": "Nzela etikali: miniti {{minutes}} basekóndi {{seconds}}",
+      "offline": "Internet ekatani: ntango ezali kokoba, ezalela ekotalelama mbala moko internet ekozonga.",
+      "confirm": "Okangi sikoyo nzela ya {{name}}? Akokoka lisusu komona makambo na yo te.",
+      "confirmNoName": "Okangi sikoyo nzela ya monganga? Akokoka lisusu komona makambo na yo te.",
+      "confirmYes": "Ee, kanga nzela",
+      "confirmNo": "Tika",
+      "checking": "QR esili kotángama. Kotala…",
+      "newQr": "Salá QR ya sika",
+      "ended": {
+        "expired": "Nzela ya {{name}} esili.",
+        "expiredNoName": "Nzela esili.",
+        "revoked": "Okangi nzela ya {{name}}.",
+        "revokedNoName": "Kokabola etikami."
+      }
+    },
+    "log": {
+      "overline": "Zulunalo ya nzela",
+      "title": "Nani atalaki makambo na ngai",
+      "close": "Kanga",
+      "intro": "Mbala nyonso moto akoti na dossier na yo ekomamaka awa. Moto moko te akoki kobongola zulunalo oyo.",
+      "loading": "Kofungola zulunalo",
+      "count_one": "Nzela {{count}}",
+      "count_other": "Banzela {{count}}",
+      "count_many": "Banzela {{count}}",
+      "today": "Lelo na ngonga {{time}}",
+      "onDate": "Na {{date}} na ngonga {{time}}",
+      "lasted": "nzela ya {{duration}}",
+      "doctor": "Dr {{name}}",
+      "unknownDoctor": "Monganga",
+      "end": {
+        "expired": "Esilaki",
+        "revoked": "Yo nde okangaki",
+        "ongoing": "Ezali kokoba"
+      },
+      "views_one": "Botali {{count}}",
+      "views_other": "Botali {{count}}",
+      "views_many": "Botali {{count}}",
+      "report": "Rapport ezwami",
+      "emergency": {
+        "title": "Nzela ya likama",
+        "text": "Karte na yo ya likama efungwamaki, kozanga compte."
+      },
+      "empty": {
+        "title": "Naino moto moko te atalaki makambo na yo",
+        "text": "Ntango monganga akotánga QR na yo, nzela na ye ekomonana awa: nani, ntango nini mpe mpo na ntango boni."
+      },
+      "more": "Talá banzela ya kala",
+      "problem": {
+        "offline": {
+          "title": "Internet ezali te",
+          "text": "Zulunalo ebombami na serveur: kotá lisusu na internet mpo na kotala yango."
+        },
+        "error": {
+          "title": "Zulunalo efungwami te",
+          "text": "Meká lisusu nsima ya mwa ntango."
+        }
+      }
+    }
+  }
+}

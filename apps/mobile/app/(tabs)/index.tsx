@@ -25,6 +25,7 @@ import {
 import { SyncStatusBanner, useSyncRefresh } from '@/features/sync';
 import { MedicalDisclaimer } from '@/features/legal';
 import { spacing } from '@/theme';
+import { formatLocale } from '@/i18n';
 
 export default function DashboardScreen() {
   const { t, i18n } = useTranslation();
@@ -46,7 +47,7 @@ export default function DashboardScreen() {
     [state, period],
   );
   // « Samedi 10 octobre » : la date du jour, en tête, dans la langue de l'application.
-  const today = now.toLocaleDateString(i18n.language, {
+  const today = now.toLocaleDateString(formatLocale(i18n.language), {
     weekday: 'long',
     day: 'numeric',
     month: 'long',

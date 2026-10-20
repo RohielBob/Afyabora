@@ -28,6 +28,7 @@ import {
   useShareWatch,
 } from '@/features/sharing';
 import { enterFromBelow, radii, spacing, useReducedMotion, useTheme } from '@/theme';
+import { formatLocale } from '@/i18n';
 
 export default function ShareActiveScreen() {
   const { t, i18n } = useTranslation();
@@ -138,7 +139,10 @@ export default function ShareActiveScreen() {
     .join(' · ');
   const clock = (iso: string | null) =>
     iso
-      ? new Date(iso).toLocaleTimeString(i18n.language, { hour: '2-digit', minute: '2-digit' })
+      ? new Date(iso).toLocaleTimeString(formatLocale(i18n.language), {
+          hour: '2-digit',
+          minute: '2-digit',
+        })
       : null;
 
   return (

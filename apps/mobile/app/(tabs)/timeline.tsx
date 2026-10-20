@@ -20,6 +20,7 @@ import {
 } from '@/features/timeline';
 import { useSyncRefresh } from '@/features/sync';
 import { enterFromBelow, fadeIn, radii, spacing, useReducedMotion, useTheme } from '@/theme';
+import { formatLocale } from '@/i18n';
 
 export default function TimelineScreen() {
   const { t, i18n } = useTranslation();
@@ -41,7 +42,7 @@ export default function TimelineScreen() {
   const dayTitle = (day: number) => {
     const label = dayLabel(new Date(day), now);
     if (label !== 'earlier') return t(`dashboard.latest.${label}`);
-    const text = new Date(day).toLocaleDateString(i18n.language, {
+    const text = new Date(day).toLocaleDateString(formatLocale(i18n.language), {
       weekday: 'long',
       day: 'numeric',
       month: 'long',
