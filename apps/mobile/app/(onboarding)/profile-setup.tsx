@@ -7,12 +7,25 @@
 //   5. Résumé            vérifier, modifier une étape, enregistrer
 // On ne passe à l'étape suivante que si l'étape est valide (mêmes règles que le serveur).
 // Chaque étape apparaît en glissant ; la barre de progression se remplit.
-import { router } from 'expo-router';
-import { useRef, useState } from 'react';
+//
+// Mode MODIFICATION (« Mon profil médical » → Modifier, paramètre `edit=1`) : le profil enregistré est lu
+// sur le compte et devient le brouillon (profileToDraft) ; l'assistant s'ouvre sur l'étape demandée (`step`) ou
+// sur le résumé ; « Suivant » et « Retour » ramènent au résumé ; à la fin, retour à l'onglet Profil.
+import { router, useLocalSearchParams } from 'expo-router';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View, type TextInput } from 'react-native';
 import Animated, { FadeIn, SlideInLeft, SlideInRight } from 'react-native-reanimated';
-import { Button, Card, ChoiceGroup, InlineAlert, Screen, Text, TextField } from '@/components/ui';
+import {
+  Button,
+  Card,
+  ChoiceGroup,
+  InlineAlert,
+  Screen,
+  SkeletonCard,
+  Text,
+  TextField,
+} from '@/components/ui';
 import {
   SuccessState,
   authErrorMessage,
@@ -24,14 +37,17 @@ import { writeUnit } from '@/features/measurements';
 import {
   STEPS,
   SUGGESTED_COUNTRIES,
+  ProfileSummary,
   StepProgress,
   ThresholdsEditor,
-  UNIT_LABEL,
   finalPayload,
+  fetchProfile,
   firstInvalidStep,
   initialDraft,
+  loadProblem,
   maskBirthDate,
   profileApi,
+  profileToDraft,
   saveThresholds,
   validateStep,
   type CountryChoice,
@@ -53,8 +69,33 @@ export default function ProfileSetupScreen() {
   const [saving, setSaving] = useState(false);
   const [apiError, setApiError] = useState<ErrorMessage | null>(null);
   const [done, setDone] = useState(false);
+  const params = useLocalSearchParams<{ edit?: string; step?: string }>();
+  const editing = params.edit === '1';
+  /** Mode modification : lecture du profil enregistré (prêt tout de suite pour un nouveau profil). */
+  const [loading, setLoading] = useState<'loading' | 'ready' | ReturnType<typeof loadProblem>>(
+    editing ? 'loading' : 'ready',
+  );
   const lastNameRef = useRef<TextInput>(null);
   const birthRef = useRef<TextInput>(null);
+
+  const loadProfile = async () => {
+    setLoading('loading');
+    try {
+      const profile = await fetchProfile(); // attend le réveil du serveur s'il dormait
+      setDraft(profileToDraft(profile));
+      const requested = STEPS.indexOf(params.step as Step);
+      setIndex(requested >= 0 ? requested : FORM_STEPS);
+      setLoading('ready');
+    } catch (error) {
+      setLoading(loadProblem(error));
+    }
+  };
+
+  useEffect(() => {
+    if (editing) void loadProfile();
+    // Une seule lecture, à l'ouverture de l'écran.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const step: Step = STEPS[index]!;
   const update = (patch: Partial<ProfileDraft>) => {
@@ -78,7 +119,8 @@ export default function ProfileSetupScreen() {
       setErrors(stepErrors);
       return;
     }
-    goTo(index + 1);
+    // Modification : une étape corrigée ramène directement au résumé.
+    goTo(editing ? FORM_STEPS : index + 1);
   };
 
   const save = async () => {
@@ -107,17 +149,56 @@ export default function ProfileSetupScreen() {
   };
 
   const finish = async () => {
+    // Modification : retour à l'onglet Profil, qui relit le profil enregistré.
+    if (editing) {
+      router.back();
+      return;
+    }
     await markProfileCompleted(); // l'accueil devient accessible (session, L1-07)
     router.replace('/(tabs)');
   };
+
+  if (loading !== 'ready') {
+    return (
+      <Screen>
+        <View style={{ gap: spacing.sm }}>
+          <Text variant="overline" tone="primary">
+            {t('onboarding.edit.overline')}
+          </Text>
+          <Text variant="title" accessibilityRole="header">
+            {t('onboarding.edit.title')}
+          </Text>
+        </View>
+        {loading === 'loading' ? (
+          <>
+            <SkeletonCard />
+            <SkeletonCard />
+          </>
+        ) : (
+          <>
+            <InlineAlert
+              tone={loading === 'error' ? 'danger' : 'info'}
+              message={t(`profile.medical.${loading}`)}
+            />
+            <Button label={t('common.retry')} onPress={() => void loadProfile()} />
+            <Button label={t('common.back')} variant="ghost" onPress={() => router.back()} />
+          </>
+        )}
+      </Screen>
+    );
+  }
 
   if (done) {
     return (
       <Screen>
         <SuccessState
-          title={t('onboarding.done.title', { name: draft.firstName.trim() })}
-          message={t('onboarding.done.message')}
-          actionLabel={t('onboarding.done.action')}
+          title={
+            editing
+              ? t('onboarding.edit.doneTitle')
+              : t('onboarding.done.title', { name: draft.firstName.trim() })
+          }
+          message={editing ? t('onboarding.edit.doneMessage') : t('onboarding.done.message')}
+          actionLabel={editing ? t('onboarding.edit.doneAction') : t('onboarding.done.action')}
           onAction={finish}
         />
       </Screen>
@@ -136,10 +217,10 @@ export default function ProfileSetupScreen() {
       {step === 'summary' ? (
         <View style={{ gap: spacing.sm }}>
           <Text variant="overline" tone="primary">
-            {t('onboarding.summary.overline')}
+            {editing ? t('onboarding.edit.overline') : t('onboarding.summary.overline')}
           </Text>
           <Text variant="title" accessibilityRole="header">
-            {t('onboarding.summary.title')}
+            {editing ? t('onboarding.edit.title') : t('onboarding.summary.title')}
           </Text>
         </View>
       ) : (
@@ -367,7 +448,11 @@ export default function ProfileSetupScreen() {
 
         {step === 'summary' ? (
           <>
-            <Summary draft={draft} onEdit={(s) => goTo(STEPS.indexOf(s))} />
+            <ProfileSummary
+              draft={draft}
+              intro={editing ? t('onboarding.edit.intro') : t('onboarding.summary.intro')}
+              onEdit={(s) => goTo(STEPS.indexOf(s))}
+            />
             {/* Rappel avant d'enregistrer : les seuils servent au suivi, pas à décider d'un traitement. */}
             <MedicalDisclaimer index={4} />
           </>
@@ -377,15 +462,31 @@ export default function ProfileSetupScreen() {
       {/* Navigation */}
       <View style={{ gap: spacing.sm, marginTop: 'auto' }}>
         {step === 'summary' ? (
-          <Button label={t('onboarding.summary.save')} size="lg" loading={saving} onPress={save} />
+          <Button
+            label={editing ? t('onboarding.edit.save') : t('onboarding.summary.save')}
+            size="lg"
+            loading={saving}
+            onPress={save}
+          />
         ) : (
           <Button
-            label={index === FORM_STEPS - 1 ? t('onboarding.review') : t('onboarding.next')}
+            label={
+              editing || index === FORM_STEPS - 1 ? t('onboarding.review') : t('onboarding.next')
+            }
             size="lg"
             onPress={next}
           />
         )}
-        {index > 0 ? (
+        {editing ? (
+          // Modification : depuis une étape, « Retour » revient au résumé (sans garder l'étape en cours si
+          // elle n'est pas valide) ; depuis le résumé, « Annuler » quitte sans rien enregistrer.
+          <Button
+            label={step === 'summary' ? t('common.cancel') : t('common.back')}
+            variant="ghost"
+            disabled={saving}
+            onPress={() => (step === 'summary' ? router.back() : goTo(FORM_STEPS))}
+          />
+        ) : index > 0 ? (
           <Button
             label={t('common.back')}
             variant="ghost"
@@ -399,128 +500,4 @@ export default function ProfileSetupScreen() {
       </View>
     </Screen>
   );
-}
-
-/** Résumé : une carte par étape, chacune avec « Modifier ». */
-function Summary({ draft, onEdit }: { draft: ProfileDraft; onEdit: (step: Step) => void }) {
-  const { t } = useTranslation();
-  const dash = '—';
-  const sexLabel = { F: 'sexF', M: 'sexM', OTHER: 'sexOther' } as const;
-  const typeLabel = {
-    TYPE_1: 'type1',
-    TYPE_2: 'type2',
-    GESTATIONAL: 'gestational',
-    OTHER: 'other',
-  } as const;
-  const unit = UNIT_LABEL[draft.unit];
-
-  const sections: { step: Step; title: string; lines: [string, string][] }[] = [
-    {
-      step: 'identity',
-      title: t('onboarding.identity.title'),
-      lines: [
-        [t('onboarding.summary.name'), `${draft.firstName.trim()} ${draft.lastName.trim()}`],
-        [t('onboarding.identity.birthDate'), draft.birthDate],
-        [
-          t('onboarding.identity.sex'),
-          draft.sex ? t(`onboarding.identity.${sexLabel[draft.sex]}`) : dash,
-        ],
-      ],
-    },
-    {
-      step: 'diabetes',
-      title: t('onboarding.diabetes.title'),
-      lines: [
-        [
-          t('onboarding.diabetes.type'),
-          draft.diabetesType ? t(`onboarding.diabetes.${typeLabel[draft.diabetesType]}`) : dash,
-        ],
-        [t('onboarding.diabetes.year'), draft.diagnosisYear || dash],
-      ],
-    },
-    {
-      step: 'thresholds',
-      title: t('onboarding.thresholds.title'),
-      lines: [
-        [t('onboarding.thresholds.unit'), unit],
-        [
-          t('onboarding.summary.target'),
-          `${draft.thresholds.targetMinMgDl} – ${draft.thresholds.targetMaxMgDl} ${unit}`,
-        ],
-        [t('onboarding.thresholds.veryLowMgDl'), `< ${draft.thresholds.veryLowMgDl} ${unit}`],
-        [t('onboarding.thresholds.veryHighMgDl'), `> ${draft.thresholds.veryHighMgDl} ${unit}`],
-      ],
-    },
-    {
-      step: 'contacts',
-      title: t('onboarding.contacts.title'),
-      lines: [
-        [
-          t('onboarding.contacts.relativeTitle'),
-          draft.relativeName.trim()
-            ? `${draft.relativeName.trim()} · ${draft.relativePhone.trim()}`
-            : t('onboarding.summary.none'),
-        ],
-        [
-          t('onboarding.contacts.doctorTitle'),
-          draft.doctorName.trim()
-            ? `${draft.doctorName.trim()} · ${draft.doctorPhone.trim()}`
-            : t('onboarding.summary.none'),
-        ],
-        [
-          t('onboarding.contacts.emergencyTitle'),
-          emergencySummary(draft, (key) => t(key)) ?? t('onboarding.summary.none'),
-        ],
-      ],
-    },
-  ];
-
-  return (
-    <View style={{ gap: spacing.md }}>
-      <Text tone="muted">{t('onboarding.summary.intro')}</Text>
-      {sections.map((section, i) => (
-        <Card key={section.step} index={i} variant="outlined">
-          <View
-            style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}
-          >
-            <Text variant="subheading">{section.title}</Text>
-            <Text
-              variant="label"
-              tone="primary"
-              accessibilityRole="button"
-              accessibilityLabel={`${t('onboarding.summary.edit')} : ${section.title}`}
-              onPress={() => onEdit(section.step)}
-            >
-              {t('onboarding.summary.edit')}
-            </Text>
-          </View>
-          {section.lines.map(([label, value]) => (
-            <View
-              key={label}
-              style={{ flexDirection: 'row', justifyContent: 'space-between', gap: spacing.md }}
-            >
-              <Text variant="bodySmall" tone="muted">
-                {label}
-              </Text>
-              <Text variant="bodySmall" style={{ flexShrink: 1, textAlign: 'right' }}>
-                {value}
-              </Text>
-            </View>
-          ))}
-        </Card>
-      ))}
-    </View>
-  );
-}
-
-/** Ligne « En cas d'urgence » du résumé : « RD Congo · 112 », « KE · 999 », « 112 »… ; null si rien. */
-function emergencySummary(draft: ProfileDraft, t: (key: string) => string): string | null {
-  const country =
-    draft.country === null
-      ? ''
-      : draft.country === 'OTHER'
-        ? draft.otherCountry.trim().toUpperCase()
-        : t(`onboarding.contacts.countries.${draft.country}`);
-  const parts = [country, draft.emergencyNumber.trim()].filter(Boolean);
-  return parts.length ? parts.join(' · ') : null;
 }

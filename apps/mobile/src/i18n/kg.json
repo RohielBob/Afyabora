@@ -207,8 +207,14 @@
   },
   "profile": {
     "title": "Profil",
-    "todoTitle": "Na ntwala: profil na nge ya maladi",
-    "todoText": "Zina, mutindu ya diabète, ndilu ya mbote mpi bandilu, muntu ya kubinga kana mpasi.",
+    "medical": {
+      "title": "Profil na mono ya maladi",
+      "intro": "Mambu na nge ya kulanda, yina me bumbama na compte na nge. Simba « Soba » sambu na kusoba kitini mosi.",
+      "offline": "Internet kele ve: profil na nge me bumbama na compte na nge mpi ke monanaka kana internet kele.",
+      "noProfile": "Profil na nge ya maladi me fuluka ntete ve.",
+      "fill": "Fulusa profil na mono",
+      "error": "Profil na nge me kanguka ve. Meka diaka na nima ya ntangu fioti."
+    },
     "settings": "Mambu ya kubongisa",
     "settingsHint": "Ndinga, mutindu yo ke monana, ba unité, lutaninu",
     "signOut": "Basika",
@@ -440,6 +446,15 @@
       "target": "Ndilu ya mbote",
       "none": "Me sonikama ve",
       "save": "Bumba profil na mono"
+    },
+    "edit": {
+      "overline": "Profil na mono ya maladi",
+      "title": "Bongisa profil na mono",
+      "intro": "Simba « Soba » na kitini yina nge ke zola kusoba, na nima bumba.",
+      "save": "Bumba bansoba",
+      "doneTitle": "Profil me bumbama",
+      "doneMessage": "Bansoba na nge me bumbama na compte na nge.",
+      "doneAction": "Vutuka na profil"
     },
     "done": {
       "title": "Mbote, {{name}}!",

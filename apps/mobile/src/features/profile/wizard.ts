@@ -56,6 +56,16 @@ export interface ProfileDraft {
   otherCountry: string;
   /** Numéro d'urgence saisi par le patient : Afyabora ne le devine jamais (L9-04). */
   emergencyNumber: string;
+  /**
+   * Seuils EXACTS du profil enregistré (modification du profil). Un seuil dont le texte n'a pas changé garde sa
+   * valeur en mg/dL : sinon l'arrondi de l'affichage (1 décimale en mmol/L) le décalerait sans que la personne
+   * l'ait touché (73 mg/dL → « 4,1 » → 74 mg/dL).
+   */
+  savedThresholds?: {
+    unit: GlucoseUnit;
+    display: Record<ThresholdKey, string>;
+    mgDl: Record<ThresholdKey, number>;
+  };
 }
 
 /** Champs (premier niveau du schéma) contrôlés à chaque étape. */
@@ -152,6 +162,57 @@ export function initialDraft(): ProfileDraft {
   };
 }
 
+/** « 1980-05-14 » → « 14/05/1980 » (saisie de l'assistant). Un texte d'un autre format reste tel quel. */
+export function isoToBirthDate(iso: string): string {
+  const match = iso.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (!match) return iso;
+  const [, year, month, day] = match as unknown as [string, string, string, string];
+  return `${day}/${month}/${year}`;
+}
+
+/**
+ * Profil enregistré → brouillon de l'assistant (« Mon profil médical » → Modifier). C'est l'inverse de
+ * `toPayload` : le profil renvoyé tel quel redonne EXACTEMENT le même profil (test aller-retour), pour que
+ * modifier une seule partie ne change rien aux autres (PUT /me/profile remplace tout le profil).
+ */
+export function profileToDraft(profile: PatientProfileInput): ProfileDraft {
+  const country = profile.country ?? null;
+  const suggested = (SUGGESTED_COUNTRIES as readonly string[]).includes(country ?? '');
+  return {
+    firstName: profile.firstName,
+    lastName: profile.lastName,
+    birthDate: isoToBirthDate(profile.birthDate),
+    sex: profile.sex,
+    diabetesType: profile.diabetesType,
+    diagnosisYear: profile.diagnosisYear === undefined ? '' : String(profile.diagnosisYear),
+    unit: profile.preferredUnit,
+    thresholds: thresholdsInUnit(profile.thresholds, profile.preferredUnit),
+    thresholdsReviewedByClinician: profile.thresholdsReviewedByClinician,
+    relativeName: profile.emergencyContact?.name ?? '',
+    relativePhone: profile.emergencyContact?.phone ?? '',
+    relativeRelation: profile.emergencyContact?.relation ?? '',
+    doctorName: profile.doctorContact?.name ?? '',
+    doctorPhone: profile.doctorContact?.phone ?? '',
+    country: country === null ? null : suggested ? (country as CountryChoice) : 'OTHER',
+    otherCountry: country !== null && !suggested ? country : '',
+    emergencyNumber: profile.emergencyNumber ?? '',
+    savedThresholds: {
+      unit: profile.preferredUnit,
+      display: thresholdsInUnit(profile.thresholds, profile.preferredUnit),
+      mgDl: { ...profile.thresholds },
+    },
+  };
+}
+
+/** Seuil à envoyer, en mg/dL : la valeur exacte enregistrée si son texte n'a pas changé (voir savedThresholds). */
+function thresholdMgDl(draft: ProfileDraft, key: ThresholdKey): number | null {
+  const saved = draft.savedThresholds;
+  if (saved && saved.unit === draft.unit && saved.display[key] === draft.thresholds[key]) {
+    return saved.mgDl[key];
+  }
+  return displayToMgDl(draft.thresholds[key], draft.unit);
+}
+
 /**
  * Code pays envoyé à l'API : le choix proposé, ou le code saisi (majuscules) ; null si aucun pays choisi.
  * « Autre » sans code donne « » : le schéma le refuse, et la personne voit l'erreur sous le champ.
@@ -177,7 +238,7 @@ export function toPayload(draft: ProfileDraft): Record<string, unknown> {
     ...(year ? { diagnosisYear: /^\d{4}$/.test(year) ? Number(year) : year } : {}),
     preferredUnit: draft.unit,
     thresholds: Object.fromEntries(
-      THRESHOLD_KEYS.map((key) => [key, displayToMgDl(draft.thresholds[key], draft.unit) ?? NaN]),
+      THRESHOLD_KEYS.map((key) => [key, thresholdMgDl(draft, key) ?? NaN]),
     ),
     thresholdsReviewedByClinician: draft.thresholdsReviewedByClinician,
     // Un contact n'est envoyé que si au moins un de ses champs est rempli (alors nom ET téléphone sont exigés).

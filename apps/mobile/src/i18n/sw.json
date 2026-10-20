@@ -207,8 +207,14 @@
   },
   "profile": {
     "title": "Wasifu",
-    "todoTitle": "Inakuja: wasifu wako wa kiafya",
-    "todoText": "Utambulisho, aina ya kisukari, kiwango lengwa na mipaka, mtu wa kuwasiliana naye wakati wa dharura.",
+    "medical": {
+      "title": "Wasifu wangu wa kitabibu",
+      "intro": "Taarifa zako za ufuatiliaji, zilizohifadhiwa kwenye akaunti yako. Gusa « Badilisha » kubadilisha sehemu moja.",
+      "offline": "Hakuna mtandao: wasifu wako umehifadhiwa kwenye akaunti yako na unaonekana ukiwa na mtandao.",
+      "noProfile": "Wasifu wako wa kitabibu bado haujajazwa.",
+      "fill": "Jaza wasifu wangu",
+      "error": "Wasifu wako haukuweza kupakiwa. Jaribu tena baada ya muda mfupi."
+    },
     "settings": "Mipangilio",
     "settingsHint": "Lugha, mwonekano, vipimo, usalama",
     "signOut": "Toka",
@@ -440,6 +446,15 @@
       "target": "Kiwango lengwa",
       "none": "Haijajazwa",
       "save": "Hifadhi wasifu wangu"
+    },
+    "edit": {
+      "overline": "Wasifu wangu wa kitabibu",
+      "title": "Badilisha wasifu wangu",
+      "intro": "Gusa « Badilisha » kwenye sehemu ya kubadilisha, kisha hifadhi.",
+      "save": "Hifadhi mabadiliko",
+      "doneTitle": "Wasifu umehifadhiwa",
+      "doneMessage": "Mabadiliko yako yamehifadhiwa kwenye akaunti yako.",
+      "doneAction": "Rudi kwenye wasifu"
     },
     "done": {
       "title": "Karibu, {{name}}!",

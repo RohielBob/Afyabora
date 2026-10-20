@@ -207,8 +207,14 @@
   },
   "profile": {
     "title": "Profil",
-    "todoTitle": "Mu matuku adi alua: profil webe wa disama",
-    "todoText": "Dina, mushindu wa diabète, mikalu mimpe ne mikalu ya dimanyisha, muntu wa kubikila mu ntatu.",
+    "medical": {
+      "title": "Profil wanyi wa disama",
+      "intro": "Malu ebe a dilonda, malamibue mu compte webe. Lenga « Shintulula » bua kushintulula tshitupa tshimue.",
+      "offline": "Internet kayena to: profil webe mmulamibue mu compte webe ne udi umueneka pikala internet.",
+      "noProfile": "Profil webe wa disama kena muanji kuujibua to.",
+      "fill": "Uja profil wanyi",
+      "error": "Profil webe kawakubululuka to. Tentekela kabidi panyima pa kakese."
+    },
     "settings": "Malongolola",
     "settingsHint": "Muakulu, mushindu wa kumueneka, ba unité, bukubi",
     "signOut": "Patuka",
@@ -440,6 +446,15 @@
       "target": "Mikalu mimpe",
       "none": "Kabiyi bifunda to",
       "save": "Lama profil wanyi"
+    },
+    "edit": {
+      "overline": "Profil wanyi wa disama",
+      "title": "Longolola profil wanyi",
+      "intro": "Lenga « Shintulula » pa tshitupa tshiudi musue kushintulula, panyima lama.",
+      "save": "Lama mashintuluka",
+      "doneTitle": "Profil mmulamibue",
+      "doneMessage": "Mashintuluka ebe mmalamibue mu compte webe.",
+      "doneAction": "Pingana ku profil"
     },
     "done": {
       "title": "Moyo, {{name}}!",

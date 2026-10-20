@@ -207,8 +207,14 @@
   },
   "profile": {
     "title": "Profil",
-    "todoTitle": "Bientôt : votre profil médical",
-    "todoText": "Identité, type de diabète, plage cible et seuils, contact d'urgence.",
+    "medical": {
+      "title": "Mon profil médical",
+      "intro": "Vos informations de suivi, enregistrées sur votre compte. Touchez « Modifier » pour changer une partie.",
+      "offline": "Pas de connexion : votre profil est gardé sur votre compte et s’affiche avec Internet.",
+      "noProfile": "Votre profil médical n’est pas encore rempli.",
+      "fill": "Remplir mon profil",
+      "error": "Votre profil n’a pas pu être chargé. Réessayez dans un instant."
+    },
     "settings": "Paramètres",
     "settingsHint": "Langue, apparence, unités, sécurité",
     "signOut": "Se déconnecter",
@@ -440,6 +446,15 @@
       "target": "Plage cible",
       "none": "Non renseigné",
       "save": "Enregistrer mon profil"
+    },
+    "edit": {
+      "overline": "Mon profil médical",
+      "title": "Modifier mon profil",
+      "intro": "Touchez « Modifier » sur la partie à changer, puis enregistrez.",
+      "save": "Enregistrer les modifications",
+      "doneTitle": "Profil enregistré",
+      "doneMessage": "Vos modifications sont enregistrées sur votre compte.",
+      "doneAction": "Retour au profil"
     },
     "done": {
       "title": "Bienvenue, {{name}} !",
