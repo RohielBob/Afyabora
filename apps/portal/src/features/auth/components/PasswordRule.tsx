@@ -1,7 +1,7 @@
 // Règle du mot de passe affichée en direct sous le champ : le rond se remplit (coche) quand elle est
 // respectée. Même règle que le serveur (PASSWORD_MIN_LENGTH de @glyka/shared).
 import { PASSWORD_MIN_LENGTH } from '@glyka/shared';
-import { fr } from '@/i18n/fr';
+import { texts } from '@/i18n';
 
 export function PasswordRule({ password }: { password: string }) {
   const ok = password.length >= PASSWORD_MIN_LENGTH;
@@ -27,8 +27,8 @@ export function PasswordRule({ password }: { password: string }) {
         ) : null}
       </span>
       <span>
-        {fr.password.rule}
-        <span className="sr-only">{ok ? ' : respecté' : ' : pas encore respecté'}</span>
+        {texts.password.rule}
+        <span className="sr-only">{`, ${ok ? texts.password.met : texts.password.notMet}`}</span>
       </span>
     </p>
   );

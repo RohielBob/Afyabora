@@ -1,6 +1,7 @@
-// Textes du portail (français). Aucun texte n'est écrit dans les pages : tout est ici, pour relire,
-// corriger et traduire au même endroit. Pas de bibliothèque d'i18n (pas de nouvelle dépendance) :
-// un objet typé suffit ; `fill` remplace les {{variables}}.
+// Textes du portail en français : la langue de RÉFÉRENCE (chaque texte est écrit ici d'abord, puis
+// traduit dans en.ts, es.ts, pt.ts, ln.ts, sw.ts, kg.ts, lua.ts, qui ont exactement la même forme).
+// Aucun texte n'est écrit dans les pages : elles lisent `texts` (src/i18n/index.ts), qui donne la langue
+// affichée. Pas de bibliothèque d'i18n (pas de nouvelle dépendance) ; `fill` remplace les {{variables}}.
 export const fr = {
   app: {
     name: 'Afyabora',
@@ -40,6 +41,8 @@ export const fr = {
   },
   password: {
     rule: 'Au moins 12 caractères',
+    met: 'respecté',
+    notMet: 'pas encore respecté',
   },
   validation: {
     email: 'Saisissez une adresse email valide.',
@@ -163,16 +166,24 @@ export const fr = {
   },
   shell: {
     nav: { patients: 'Mes patients', scan: 'Scanner un QR' },
+    navA11y: 'Navigation principale',
     signedInAs: 'Connecté : {{email}}',
     signOut: 'Se déconnecter',
     signingOut: 'Déconnexion…',
     menu: 'Compte',
   },
-  // Menu « Apparence » (en-tête de toutes les pages) : mêmes choix que Réglages → Apparence du mobile.
+  // Menu « Langue et apparence » (en-tête de toutes les pages) : mêmes choix que Réglages → Langue et
+  // Réglages → Apparence du mobile.
   appearance: {
-    button: 'Apparence',
-    title: 'Apparence',
-    intro: 'Réglage gardé dans ce navigateur. Les textes restent toujours lisibles.',
+    button: 'Langue et apparence',
+    title: 'Langue et apparence',
+    intro: 'Réglages gardés dans ce navigateur. Les textes restent toujours lisibles.',
+    language: 'Langue',
+    languageSystem: 'Langue du navigateur ({{name}})',
+    reviewing:
+      'Traduction en relecture : en cas de doute sur un texte médical, la version française fait foi.',
+    frenchOnly:
+      'Restent en français : les phrases des observations d’analyse, le rapport PDF et les emails.',
     theme: 'Thème',
     light: 'Clair',
     dark: 'Sombre',

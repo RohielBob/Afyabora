@@ -19,7 +19,7 @@ import {
   YAxis,
 } from 'recharts';
 import { GlucoseStateBadge } from '@/components/ui';
-import { fill, fr } from '@/i18n/fr';
+import { dateLocale, fill, texts } from '@/i18n';
 import { dateTimeText, valueIn, valueText } from '../view';
 
 /** Écart entre deux graduations de l'axe des valeurs, selon l'unité. */
@@ -78,7 +78,7 @@ function ChartTooltip({
         </span>
         <GlucoseStateBadge state={point.state} />
       </span>
-      <span className="text-muted">{fr.record.contexts[point.context]}</span>
+      <span className="text-muted">{texts.record.contexts[point.context]}</span>
     </div>
   );
 }
@@ -112,13 +112,13 @@ export default function GlucoseChart({
   const days = (to - from) / 86_400_000;
   const tick = (t: number) =>
     new Date(t).toLocaleDateString(
-      'fr-FR',
+      dateLocale(),
       days <= 7 ? { weekday: 'short', day: 'numeric' } : { day: 'numeric', month: 'short' },
     );
   return (
     <div
       role="img"
-      aria-label={fill(fr.record.glucose.chartA11y, {
+      aria-label={fill(texts.record.glucose.chartA11y, {
         count: points.length,
         min: valueText(thresholds.targetMinMgDl, unit, false),
         max: valueText(thresholds.targetMaxMgDl, unit),
@@ -161,7 +161,7 @@ export default function GlucoseChart({
             domain={[0, yMax]}
             ticks={ticks}
             tick={{ fill: 'var(--afy-text-muted)', fontSize: 12 }}
-            tickFormatter={(v: number) => v.toLocaleString('fr-FR')}
+            tickFormatter={(v: number) => v.toLocaleString(dateLocale())}
             axisLine={false}
             tickLine={false}
             width={44}

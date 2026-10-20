@@ -7,7 +7,7 @@
 import type { Html5Qrcode } from 'html5-qrcode';
 import { useEffect, useId, useRef, useState } from 'react';
 import { Alert, Button } from '@/components/ui';
-import { fr } from '@/i18n/fr';
+import { texts } from '@/i18n';
 import { cameraProblem, type CameraProblem } from './claim';
 
 type CameraState = 'off' | 'starting' | 'on';
@@ -82,7 +82,7 @@ export function QrScanner({
           serait lu (échec vu une fois en vérification réelle). Caméra éteinte : un message la recouvre. */}
       <div
         className="relative aspect-[4/3] w-full overflow-hidden rounded-xl border border-line bg-surface-muted"
-        aria-label={fr.scan.camera.viewA11y}
+        aria-label={texts.scan.camera.viewA11y}
         role="region"
       >
         <div
@@ -104,22 +104,22 @@ export function QrScanner({
               <path d="M3 8V6a2 2 0 0 1 2-2h2M17 4h2a2 2 0 0 1 2 2v2M21 16v2a2 2 0 0 1-2 2h-2M7 20H5a2 2 0 0 1-2-2v-2" />
               <rect x="7.5" y="7.5" width="9" height="9" rx="1.5" />
             </svg>
-            <p className="max-w-xs text-[14px] text-muted">{fr.scan.camera.idle}</p>
+            <p className="max-w-xs text-[14px] text-muted">{texts.scan.camera.idle}</p>
           </div>
         ) : null}
       </div>
       {problem ? (
-        <Alert tone="warning" title={fr.scan.camera.problem[problem].title}>
-          {fr.scan.camera.problem[problem].text}
+        <Alert tone="warning" title={texts.scan.camera.problem[problem].title}>
+          {texts.scan.camera.problem[problem].text}
         </Alert>
       ) : null}
       {state === 'off' ? (
         <Button onClick={() => void start()} disabled={disabled}>
-          {fr.scan.camera.start}
+          {texts.scan.camera.start}
         </Button>
       ) : (
         <Button variant="outline" loading={state === 'starting'} onClick={() => void stop()}>
-          {fr.scan.camera.stop}
+          {texts.scan.camera.stop}
         </Button>
       )}
     </div>

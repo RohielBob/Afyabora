@@ -16,7 +16,7 @@ import {
   type DoctorSignUpValues,
 } from '@/features/auth';
 import { PasswordRule } from '@/features/auth/components/PasswordRule';
-import { fill, fr } from '@/i18n/fr';
+import { fill, texts } from '@/i18n';
 
 const EMPTY: DoctorSignUpValues = {
   firstName: '',
@@ -80,16 +80,16 @@ export default function RegisterRoute() {
       <AuthLayout>
         <ResultPanel
           tone="info"
-          title={fr.register.sentTitle}
+          title={texts.register.sentTitle}
           actions={
             <ButtonLink to={`/login?email=${encodeURIComponent(sentTo)}`} variant="outline">
-              {fr.register.signIn}
+              {texts.register.signIn}
             </ButtonLink>
           }
         >
-          <p>{fill(fr.register.sentText, { email: sentTo })}</p>
+          <p>{fill(texts.register.sentText, { email: sentTo })}</p>
           <ol className="my-2 flex flex-col gap-3 rounded-2xl border border-line bg-surface p-5">
-            {fr.register.steps.map((step, i) => (
+            {texts.register.steps.map((step, i) => (
               <li key={step} className="flex items-center gap-3 text-[14px] text-ink">
                 <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-primary-soft text-[13px] font-bold text-primary-text">
                   {i + 1}
@@ -98,8 +98,8 @@ export default function RegisterRoute() {
               </li>
             ))}
           </ol>
-          <p>{fr.register.sentNext}</p>
-          <p className="text-[13px] text-subtle">{fr.register.sentSpam}</p>
+          <p>{texts.register.sentNext}</p>
+          <p className="text-[13px] text-subtle">{texts.register.sentSpam}</p>
         </ResultPanel>
       </AuthLayout>
     );
@@ -108,17 +108,17 @@ export default function RegisterRoute() {
   return (
     <AuthLayout
       wide
-      overline={fr.register.overline}
-      title={fr.register.title}
-      subtitle={fr.register.subtitle}
+      overline={texts.register.overline}
+      title={texts.register.title}
+      subtitle={texts.register.subtitle}
     >
       {error ? <Alert tone="danger">{error}</Alert> : null}
 
       <form noValidate onSubmit={onSubmit} className="flex flex-col gap-6">
-        <Fieldset legend={fr.register.identity}>
+        <Fieldset legend={texts.register.identity}>
           <div className="grid gap-4 sm:grid-cols-2">
             <TextField
-              label={fr.fields.firstName}
+              label={texts.fields.firstName}
               autoComplete="given-name"
               autoFocus
               value={values.firstName}
@@ -128,7 +128,7 @@ export default function RegisterRoute() {
               maxLength={80}
             />
             <TextField
-              label={fr.fields.lastName}
+              label={texts.fields.lastName}
               autoComplete="family-name"
               value={values.lastName}
               onChange={(e) => set('lastName', e.target.value)}
@@ -139,10 +139,10 @@ export default function RegisterRoute() {
           </div>
         </Fieldset>
 
-        <Fieldset legend={fr.register.practice}>
+        <Fieldset legend={texts.register.practice}>
           <TextField
-            label={fr.fields.licenseNumber}
-            hint={fr.fields.licenseHint}
+            label={texts.fields.licenseNumber}
+            hint={texts.fields.licenseHint}
             value={values.licenseNumber}
             onChange={(e) => set('licenseNumber', e.target.value)}
             error={fieldErrors.licenseNumber}
@@ -152,8 +152,8 @@ export default function RegisterRoute() {
             spellCheck={false}
           />
           <TextField
-            label={fr.fields.institution}
-            placeholder={fr.fields.institutionPlaceholder}
+            label={texts.fields.institution}
+            placeholder={texts.fields.institutionPlaceholder}
             autoComplete="organization"
             value={values.institution}
             onChange={(e) => set('institution', e.target.value)}
@@ -163,10 +163,10 @@ export default function RegisterRoute() {
           />
         </Fieldset>
 
-        <Fieldset legend={fr.register.access}>
+        <Fieldset legend={texts.register.access}>
           <TextField
-            label={fr.fields.email}
-            placeholder={fr.fields.emailPlaceholder}
+            label={texts.fields.email}
+            placeholder={texts.fields.emailPlaceholder}
             type="email"
             autoComplete="email"
             value={values.email}
@@ -176,8 +176,8 @@ export default function RegisterRoute() {
           />
           <div className="flex flex-col gap-2">
             <TextField
-              label={fr.fields.password}
-              hint={fr.fields.passwordHint}
+              label={texts.fields.password}
+              hint={texts.fields.passwordHint}
               secret
               autoComplete="new-password"
               value={values.password}
@@ -196,24 +196,24 @@ export default function RegisterRoute() {
             onChange={(checked) => set('attest', checked)}
             error={fieldErrors.attest}
           >
-            {fr.register.attest}
+            {texts.register.attest}
           </Checkbox>
           <Checkbox
             checked={values.terms}
             onChange={(checked) => set('terms', checked)}
             error={fieldErrors.terms}
           >
-            {fr.register.terms}
+            {texts.register.terms}
           </Checkbox>
         </div>
 
         <Button type="submit" size="lg" loading={loading}>
-          {fr.register.submit}
+          {texts.register.submit}
         </Button>
       </form>
 
       <p className="text-center text-[14px] text-muted">
-        {fr.register.haveAccount} <TextLink to="/login">{fr.register.signIn}</TextLink>
+        {texts.register.haveAccount} <TextLink to="/login">{texts.register.signIn}</TextLink>
       </p>
     </AuthLayout>
   );

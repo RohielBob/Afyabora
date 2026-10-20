@@ -19,7 +19,8 @@ src/
 │                            #   reset-password, pending, scan, patients, patient-record, expired, not-found
 ├─ features/                 # auth · scanner · sessions · patient-record · report (README + tickets)
 ├─ components/               # ui/ (Button, TextField, Checkbox, Alert…), layout/, brand/ (logo)
-├─ i18n/fr.ts                # TOUS les textes du portail (aucun texte écrit dans les pages)
+├─ i18n/                     # TOUS les textes (aucun texte écrit dans les pages) : fr.ts (référence) + 7 langues,
+│                            #   index.ts (`texts`, `dateLocale()`, choix de la langue) — voir « Langues »
 ├─ theme/theme.ts            # jetons @glyka/ui-tokens → variables CSS (thème et accent choisis)
 ├─ theme/appearance.ts       # choix « Apparence » (Clair/Sombre/Automatique × accent), gardé dans le navigateur
 ├─ lib/                      # config, client HTTP (jeton d'accès en mémoire, renouvellement unique)
@@ -50,3 +51,24 @@ src/
 L1-11 (compte médecin) · L5-10 (scanner) · L5-11 (liste) · L5-12 (dossier) · L5-13 (expiration) · L6-04 (rapport).
 
 **Lots : L1, L5, L6 (partie portail).**
+
+## Langues
+
+Mêmes 8 langues que l'application mobile : français (référence), English, Español, Português, Lingála,
+Kiswahili, Kikongo, Tshiluba. Choix dans le menu **« Langue et apparence »** de l'en-tête (le bouton montre
+la langue affichée). Par défaut : la langue du navigateur si le portail la connaît, sinon le français.
+
+- Une page lit ses textes dans `texts` (`import { texts, fill } from '@/i18n'`), jamais dans `fr`
+  directement, et écrit ses dates avec `toLocaleDateString(dateLocale(), …)`, jamais `'fr-FR'`.
+- `dateLocale()` : si le navigateur ne connaît pas la langue (kikongo, tshiluba), dates et nombres en
+  français (même règle que le mobile).
+- Chaque traduction a le type `Messages` : TypeScript refuse un texte manquant ou en trop. Les tests
+  (`src/i18n/__tests__/languages.test.ts`) vérifient aussi les `{{variables}}`, la longueur des listes,
+  les textes vides, les caractères invisibles et les lettres ɛ/ɔ.
+- Au changement de langue, tout le portail est redessiné (`src/main.tsx`) ; la session et les données
+  déjà chargées sont gardées.
+- Restent en français : les phrases des observations d'analyse (écrites par le serveur), le rapport PDF
+  et les emails. Le menu le dit.
+- Toutes les langues sauf le français et l'anglais sont marquées « traduction en relecture »
+  (`reviewed: false` dans `src/i18n/languages.ts`) jusqu'à la relecture par une personne qui parle la
+  langue, en commençant par les textes médicaux (`record`, `emergency`, `scan`).

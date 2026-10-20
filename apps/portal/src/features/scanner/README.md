@@ -26,7 +26,7 @@ Lecture du QR par la caméra du navigateur, code de secours, appel de /shares/cl
 - html5-qrcode est chargé **seulement sur cette page** (import dynamique) et préparé au démarrage du
   serveur de développement (`optimizeDeps` dans `vite.config.ts`) ; la zone de la caméra reste toujours
   dans la page (jamais cachée) pour que le lecteur mesure bien la zone de lecture.
-- Textes : `fr.scan` (`src/i18n/fr.ts`). Tests : `__tests__/claim.test.ts`.
+- Textes : `texts.scan` (`src/i18n/fr.ts` et ses 7 traductions). Tests : `__tests__/claim.test.ts`.
 - Limite : le code de secours contient des caractères qui se ressemblent (« O » et « 0 », « l » et « I »),
   car c'est le jeton lui-même ; un code court demanderait de changer le contrat.
 

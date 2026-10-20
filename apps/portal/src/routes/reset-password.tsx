@@ -9,7 +9,7 @@ import { Alert, Button, ButtonLink, TextField } from '@/components/ui';
 import { authApi, authErrorMessage, tokenFromSearch, validateNewPassword } from '@/features/auth';
 import { ApiError } from '@/lib/api-client';
 import { PasswordRule } from '@/features/auth/components/PasswordRule';
-import { fr } from '@/i18n/fr';
+import { texts } from '@/i18n';
 
 export default function ResetPasswordRoute() {
   const location = useLocation();
@@ -51,12 +51,12 @@ export default function ResetPasswordRoute() {
       <AuthLayout>
         <ResultPanel
           tone="success"
-          title={fr.reset.okTitle}
-          actions={<ButtonLink to="/login">{fr.verify.signIn}</ButtonLink>}
+          title={texts.reset.okTitle}
+          actions={<ButtonLink to="/login">{texts.verify.signIn}</ButtonLink>}
         >
           <ul className="flex flex-col gap-2 rounded-2xl border border-line bg-surface p-5 text-[14px] text-ink">
-            <li>{fr.reset.okDoctor}</li>
-            <li>{fr.reset.okPatient}</li>
+            <li>{texts.reset.okDoctor}</li>
+            <li>{texts.reset.okPatient}</li>
           </ul>
         </ResultPanel>
       </AuthLayout>
@@ -68,25 +68,29 @@ export default function ResetPasswordRoute() {
       <AuthLayout>
         <ResultPanel
           tone="danger"
-          title={fr.verify.failTitle}
-          actions={<ButtonLink to="/forgot-password">{fr.reset.newLink}</ButtonLink>}
+          title={texts.verify.failTitle}
+          actions={<ButtonLink to="/forgot-password">{texts.reset.newLink}</ButtonLink>}
         >
-          <p>{error ?? fr.reset.missing}</p>
+          <p>{error ?? texts.reset.missing}</p>
         </ResultPanel>
       </AuthLayout>
     );
   }
 
   return (
-    <AuthLayout overline={fr.reset.overline} title={fr.reset.title} subtitle={fr.reset.subtitle}>
+    <AuthLayout
+      overline={texts.reset.overline}
+      title={texts.reset.title}
+      subtitle={texts.reset.subtitle}
+    >
       {error ? <Alert tone="danger">{error}</Alert> : null}
       <form noValidate onSubmit={onSubmit} className="flex flex-col gap-5">
         {/* Champ caché : aide les gestionnaires de mots de passe à associer le nouveau mot de passe. */}
         <input type="text" autoComplete="username" hidden readOnly />
         <div className="flex flex-col gap-2">
           <TextField
-            label={fr.fields.newPassword}
-            hint={fr.fields.passwordHint}
+            label={texts.fields.newPassword}
+            hint={texts.fields.passwordHint}
             secret
             autoComplete="new-password"
             autoFocus
@@ -99,7 +103,7 @@ export default function ResetPasswordRoute() {
           <PasswordRule password={password} />
         </div>
         <Button type="submit" size="lg" loading={loading}>
-          {fr.reset.submit}
+          {texts.reset.submit}
         </Button>
       </form>
     </AuthLayout>

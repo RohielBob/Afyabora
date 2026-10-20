@@ -3,10 +3,10 @@
 // garde-fous, L3-05) et le nombre de mesures qui les justifient. Jamais un diagnostic ni un conseil.
 import type { InsightDto, InsightSeverity } from '@glyka/shared';
 import { Alert } from '@/components/ui';
-import { fr } from '@/i18n/fr';
+import { texts } from '@/i18n';
 import { insightView } from '../view';
 
-const t = fr.record.summary;
+const t = texts.record.summary;
 
 /** Gravité : icône + mot (jamais la couleur seule), sans rouge (le rouge est la marque). */
 const SEVERITY_TONE: Record<InsightSeverity, string> = {

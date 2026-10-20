@@ -5,13 +5,13 @@
 import type { GlucoseUnit, TimelineItem, TimelineKind } from '@glyka/shared';
 import { useMemo, useState } from 'react';
 import { Button, GlucoseStateBadge, ProvenanceBadge } from '@/components/ui';
-import { fill, fr } from '@/i18n/fr';
+import { fill, texts } from '@/i18n';
 import { groupByDay, itemText, timeText } from '../view';
 
 /** Lignes affichées d'abord, puis par paquets (« Afficher plus »). */
 export const TIMELINE_STEP = 150;
 
-const t = fr.record.timeline;
+const t = texts.record.timeline;
 
 function KindIcon({ kind }: { kind: TimelineKind }) {
   const common = {
@@ -115,7 +115,7 @@ export function TimelineTab({
                         kind: t.kind[item.kind],
                         text: [
                           text,
-                          item.state ? fr.record.states[item.state] : null,
+                          item.state ? texts.record.states[item.state] : null,
                           item.details ? fill(t.detailsA11y, { details: item.details }) : null,
                         ]
                           .filter(Boolean)

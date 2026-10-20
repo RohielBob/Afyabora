@@ -4,12 +4,12 @@
 // Pastille neutre : icône + texte (jamais la couleur seule), lisible en clair comme en sombre.
 // Utilisé par le dossier patient (L5-12) : chronologie et tableau des mesures.
 import { provenanceOf, type MeasurementSource } from '@glyka/shared';
-import { fill, fr } from '@/i18n/fr';
+import { fill, texts } from '@/i18n';
 
 /** Texte du badge : « Saisie », « Import », « Import · lot 3F2A1C », « Appareil ». */
 export function provenanceLabel(source: MeasurementSource, importBatchId?: string | null): string {
   const { batch } = provenanceOf(source, importBatchId);
-  return batch ? fill(fr.provenance.importBatch, { batch }) : fr.provenance[source];
+  return batch ? fill(texts.provenance.importBatch, { batch }) : texts.provenance[source];
 }
 
 function Icon({ source }: { source: MeasurementSource }) {
@@ -56,7 +56,7 @@ export function ProvenanceBadge({
   return (
     <span
       role="img"
-      aria-label={fill(fr.provenance.a11y, { label })}
+      aria-label={fill(texts.provenance.a11y, { label })}
       title={label}
       className="inline-flex items-center gap-1 rounded-full bg-surface-muted px-2 py-0.5 text-xs font-medium text-muted"
     >

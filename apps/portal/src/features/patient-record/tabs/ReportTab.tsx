@@ -5,7 +5,7 @@
 // entier est effacé, comme pour les autres onglets (onEnded).
 import { useState } from 'react';
 import { Alert, Button, Segmented } from '@/components/ui';
-import { fill, fr } from '@/i18n/fr';
+import { fill, texts } from '@/i18n';
 import {
   DEFAULT_REPORT_PERIOD,
   REPORT_PERIODS,
@@ -17,7 +17,7 @@ import {
 } from '../report';
 import { timeText, type EndReason } from '../view';
 
-const t = fr.record.report;
+const t = texts.record.report;
 
 type State =
   | { status: 'idle' }
@@ -121,8 +121,8 @@ export function ReportTab({
           }}
           options={REPORT_PERIODS.map((days) => ({
             value: days,
-            label: fill(fr.record.periodDays, { days }),
-            a11y: fill(fr.record.periodA11y, { days }),
+            label: fill(texts.record.periodDays, { days }),
+            a11y: fill(texts.record.periodA11y, { days }),
           }))}
         />
 

@@ -35,7 +35,7 @@ Onglets du dossier, graphiques, chronologie, résumé IA.
   réponse dit expiré, arrêté, compte non approuvé ou « pas votre dossier », tout le dossier est **effacé de la
   mémoire** et l'écran « Accès expiré » le remplace (voir la feature `sessions`). Le résumé est relu toutes
   les 30 s (arrêt par le patient). Données jamais gardées après avoir quitté la page (`gcTime: 0`).
-- Textes : `fr.record` (`src/i18n/fr.ts`). Tests : `__tests__/view.test.tsx`.
+- Textes : `texts.record` (`src/i18n/fr.ts` et ses 7 traductions). Tests : `__tests__/view.test.tsx`.
 
 ## Fait (L6-04)
 

@@ -6,10 +6,10 @@ import type { ReactNode } from 'react';
 import { GlucoseStateBadge } from '@/components/ui';
 import { QUALITY_TONE, QualityIcon } from '@/features/sessions/SessionCard';
 import { qualityView } from '@/features/sessions/view';
-import { fill, fr } from '@/i18n/fr';
+import { fill, texts } from '@/i18n';
 import { decimal, orderedCategories, valueText } from '../view';
 
-const t = fr.record.overview;
+const t = texts.record.overview;
 
 function Card({ title, hint, children }: { title: string; hint?: string; children: ReactNode }) {
   return (
@@ -228,7 +228,7 @@ export function OverviewTab({ summary, unit }: { summary: DoctorSummary; unit: G
               >
                 <path d="M5 12.5l4.5 4.5L19 7.5" />
               </svg>
-              {fr.patients.categories[category]}
+              {texts.patients.categories[category]}
             </li>
           ))}
         </ul>

@@ -13,7 +13,7 @@ import {
   useSession,
   validateSignIn,
 } from '@/features/auth';
-import { fill, fr } from '@/i18n/fr';
+import { fill, texts } from '@/i18n';
 
 export default function LoginRoute() {
   const navigate = useNavigate();
@@ -35,9 +35,9 @@ export default function LoginRoute() {
   const reason = session.status === 'signedOut' ? session.reason : 'none';
   const notice =
     reason === 'expired'
-      ? fr.errors.sessionExpired
+      ? texts.errors.sessionExpired
       : reason === 'idle'
-        ? fill(fr.errors.idle, { minutes: IDLE_LIMIT_MS / 60_000 })
+        ? fill(texts.errors.idle, { minutes: IDLE_LIMIT_MS / 60_000 })
         : null;
 
   const onSubmit = async (event: FormEvent) => {
@@ -49,7 +49,7 @@ export default function LoginRoute() {
     try {
       const destination = await signIn(email, password);
       if (destination === 'notDoctor') {
-        setError(fr.errors.notDoctor);
+        setError(texts.errors.notDoctor);
         setSubmitted(false);
         setPassword('');
         return;
@@ -70,14 +70,18 @@ export default function LoginRoute() {
   };
 
   return (
-    <AuthLayout overline={fr.login.overline} title={fr.login.title} subtitle={fr.login.subtitle}>
+    <AuthLayout
+      overline={texts.login.overline}
+      title={texts.login.title}
+      subtitle={texts.login.subtitle}
+    >
       {notice && !error ? <Alert tone="info">{notice}</Alert> : null}
       {error ? <Alert tone="danger">{error}</Alert> : null}
 
       <form noValidate onSubmit={onSubmit} className="flex flex-col gap-5">
         <TextField
-          label={fr.fields.email}
-          placeholder={fr.fields.emailPlaceholder}
+          label={texts.fields.email}
+          placeholder={texts.fields.emailPlaceholder}
           type="email"
           autoComplete="username"
           autoFocus={!presetEmail}
@@ -89,7 +93,7 @@ export default function LoginRoute() {
         <div className="flex flex-col gap-2">
           <TextField
             ref={passwordRef}
-            label={fr.fields.password}
+            label={texts.fields.password}
             secret
             autoComplete="current-password"
             autoFocus={!!presetEmail}
@@ -99,20 +103,20 @@ export default function LoginRoute() {
             disabled={loading}
           />
           <TextLink to="/forgot-password" state={{ email }} className="self-end text-[14px]">
-            {fr.login.forgot}
+            {texts.login.forgot}
           </TextLink>
         </div>
         <Button type="submit" size="lg" loading={loading}>
-          {fr.login.submit}
+          {texts.login.submit}
         </Button>
       </form>
 
       <p className="text-center text-[14px] text-muted">
-        {fr.login.noAccount} <TextLink to="/register">{fr.login.register}</TextLink>
+        {texts.login.noAccount} <TextLink to="/register">{texts.login.register}</TextLink>
       </p>
 
       <p className="rounded-xl bg-surface-muted px-4 py-3 text-[13px] leading-[1.5] text-muted">
-        {fill(fr.login.sharedComputer, { minutes: IDLE_LIMIT_MS / 60_000 })}
+        {fill(texts.login.sharedComputer, { minutes: IDLE_LIMIT_MS / 60_000 })}
       </p>
     </AuthLayout>
   );

@@ -9,7 +9,7 @@ import { AuthLayout } from '@/components/layout/AuthLayout';
 import { ResultPanel } from '@/components/layout/ResultPanel';
 import { ButtonLink, Spinner } from '@/components/ui';
 import { authApi, authErrorMessage, tokenFromSearch } from '@/features/auth';
-import { fr } from '@/i18n/fr';
+import { texts } from '@/i18n';
 
 type State = { kind: 'working' } | { kind: 'ok' } | { kind: 'error'; message: string };
 
@@ -25,7 +25,7 @@ export default function VerifyEmailRoute() {
     const token = tokenFromSearch(location.search);
     navigate(location.pathname, { replace: true }); // le jeton quitte l'adresse affichée
     if (!token) {
-      setState({ kind: 'error', message: fr.verify.missing });
+      setState({ kind: 'error', message: texts.verify.missing });
       return;
     }
     authApi
@@ -41,27 +41,27 @@ export default function VerifyEmailRoute() {
           <span className="text-primary-text">
             <Spinner size={22} />
           </span>
-          {fr.verify.working}
+          {texts.verify.working}
         </div>
       ) : state.kind === 'ok' ? (
         <ResultPanel
           tone="success"
-          title={fr.verify.okTitle}
-          actions={<ButtonLink to="/login">{fr.verify.signIn}</ButtonLink>}
+          title={texts.verify.okTitle}
+          actions={<ButtonLink to="/login">{texts.verify.signIn}</ButtonLink>}
         >
-          <p>{fr.verify.okText}</p>
+          <p>{texts.verify.okText}</p>
           <ul className="flex flex-col gap-2 rounded-2xl border border-line bg-surface p-5 text-[14px] text-ink">
-            <li>{fr.verify.okDoctor}</li>
-            <li>{fr.verify.okPatient}</li>
+            <li>{texts.verify.okDoctor}</li>
+            <li>{texts.verify.okPatient}</li>
           </ul>
         </ResultPanel>
       ) : (
         <ResultPanel
           tone="danger"
-          title={fr.verify.failTitle}
+          title={texts.verify.failTitle}
           actions={
             <ButtonLink to="/register" variant="outline">
-              {fr.verify.register}
+              {texts.verify.register}
             </ButtonLink>
           }
         >

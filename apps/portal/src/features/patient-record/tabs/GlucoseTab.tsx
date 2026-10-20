@@ -9,7 +9,7 @@ import {
 } from '@glyka/shared';
 import { lazy, Suspense, useMemo, useState } from 'react';
 import { Button, GlucoseStateBadge, ProvenanceBadge, Spinner } from '@/components/ui';
-import { fill, fr } from '@/i18n/fr';
+import { fill, texts } from '@/i18n';
 import { dateTimeText, valueIn, valueText } from '../view';
 import type { ChartPoint } from './GlucoseChart';
 
@@ -18,7 +18,7 @@ const GlucoseChart = lazy(() => import('./GlucoseChart'));
 /** Lignes du tableau affichées d'abord, puis par paquets (« Afficher plus »). */
 export const TABLE_STEP = 100;
 
-const t = fr.record.glucose;
+const t = texts.record.glucose;
 
 export function GlucoseTab({
   summary,
@@ -135,7 +135,7 @@ export function GlucoseTab({
                   <td className="px-4 py-2.5">
                     <GlucoseStateBadge state={classifyGlucose(m.valueMgDl, thresholds)} />
                   </td>
-                  <td className="px-4 py-2.5 text-muted">{fr.record.contexts[m.context]}</td>
+                  <td className="px-4 py-2.5 text-muted">{texts.record.contexts[m.context]}</td>
                   <td className="px-4 py-2.5">
                     <ProvenanceBadge source={m.source} importBatchId={m.importBatchId} />
                   </td>

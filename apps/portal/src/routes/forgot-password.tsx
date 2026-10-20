@@ -6,7 +6,7 @@ import { AuthLayout } from '@/components/layout/AuthLayout';
 import { ResultPanel } from '@/components/layout/ResultPanel';
 import { Alert, Button, ButtonLink, TextField, TextLink } from '@/components/ui';
 import { authApi, authErrorMessage, validateEmail } from '@/features/auth';
-import { fill, fr } from '@/i18n/fr';
+import { fill, texts } from '@/i18n';
 
 export default function ForgotPasswordRoute() {
   const location = useLocation();
@@ -39,27 +39,31 @@ export default function ForgotPasswordRoute() {
       <AuthLayout>
         <ResultPanel
           tone="info"
-          title={fr.forgot.sentTitle}
+          title={texts.forgot.sentTitle}
           actions={
             <ButtonLink to="/login" variant="outline">
-              {fr.forgot.backToLogin}
+              {texts.forgot.backToLogin}
             </ButtonLink>
           }
         >
-          <p>{fill(fr.forgot.sentText, { email: sentTo })}</p>
-          <p className="text-[13px] text-subtle">{fr.register.sentSpam}</p>
+          <p>{fill(texts.forgot.sentText, { email: sentTo })}</p>
+          <p className="text-[13px] text-subtle">{texts.register.sentSpam}</p>
         </ResultPanel>
       </AuthLayout>
     );
   }
 
   return (
-    <AuthLayout overline={fr.forgot.overline} title={fr.forgot.title} subtitle={fr.forgot.subtitle}>
+    <AuthLayout
+      overline={texts.forgot.overline}
+      title={texts.forgot.title}
+      subtitle={texts.forgot.subtitle}
+    >
       {error ? <Alert tone="danger">{error}</Alert> : null}
       <form noValidate onSubmit={onSubmit} className="flex flex-col gap-5">
         <TextField
-          label={fr.fields.email}
-          placeholder={fr.fields.emailPlaceholder}
+          label={texts.fields.email}
+          placeholder={texts.fields.emailPlaceholder}
           type="email"
           autoComplete="email"
           autoFocus
@@ -69,11 +73,11 @@ export default function ForgotPasswordRoute() {
           disabled={loading}
         />
         <Button type="submit" size="lg" loading={loading}>
-          {fr.forgot.submit}
+          {texts.forgot.submit}
         </Button>
       </form>
       <p className="text-center text-[14px]">
-        <TextLink to="/login">{fr.forgot.backToLogin}</TextLink>
+        <TextLink to="/login">{texts.forgot.backToLogin}</TextLink>
       </p>
     </AuthLayout>
   );

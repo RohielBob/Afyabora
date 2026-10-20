@@ -43,7 +43,7 @@ import {
   type PeriodDays,
   type RecordTab,
 } from '@/features/patient-record/view';
-import { fill, fr } from '@/i18n/fr';
+import { fill, texts } from '@/i18n';
 import { MOTIF } from './expired';
 
 /** Relecture du résumé : un arrêt par le patient est vu en 30 s au plus. */
@@ -71,13 +71,13 @@ const retry = (count: number, error: unknown) =>
 
 function Problem({ error, onRetry }: { error: unknown; onRetry: () => void }) {
   const offline = recordProblem(error).kind === 'network';
-  const text = offline ? fr.record.problem.network : fr.record.problem.server;
+  const text = offline ? texts.record.problem.network : texts.record.problem.server;
   return (
     <Alert tone={offline ? 'warning' : 'danger'} title={text.title}>
       <span className="flex flex-col items-start gap-3">
         {text.text}
         <Button variant="outline" fullWidth={false} onClick={onRetry}>
-          {fr.record.retry}
+          {texts.record.retry}
         </Button>
       </span>
     </Alert>
@@ -88,7 +88,7 @@ function Loading() {
   return (
     <div className="flex items-center gap-3 text-[14px] text-muted">
       <Spinner size={20} />
-      {fr.common.loading}
+      {texts.common.loading}
     </div>
   );
 }
@@ -185,19 +185,19 @@ export default function PatientRecordRoute() {
             <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
               {withPeriod ? (
                 <Segmented
-                  label={fr.record.period}
+                  label={texts.record.period}
                   value={period}
                   onChange={setPeriod}
                   options={PERIODS.map((days) => ({
                     value: days,
-                    label: fill(fr.record.periodDays, { days }),
-                    a11y: fill(fr.record.periodA11y, { days }),
+                    label: fill(texts.record.periodDays, { days }),
+                    a11y: fill(texts.record.periodA11y, { days }),
                   }))}
                 />
               ) : null}
               {withUnit ? (
                 <Segmented
-                  label={fr.record.unit}
+                  label={texts.record.unit}
                   value={unit}
                   onChange={setUnitChoice}
                   options={UNITS.map((u) => ({ value: u, label: UNIT_LABELS[u] }))}

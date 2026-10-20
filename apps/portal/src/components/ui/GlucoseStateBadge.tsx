@@ -2,7 +2,7 @@
 // (@glyka/ui-tokens, SANS rouge, ADR-0008). L'état n'est jamais dit par la couleur seule : « ▲ Au-dessus ».
 // Mêmes symboles et mêmes mots que l'application du patient (STATE_SYMBOLS de @glyka/shared).
 import { STATE_SYMBOLS, type GlucoseState } from '@glyka/shared';
-import { fr } from '@/i18n/fr';
+import { texts } from '@/i18n';
 
 /** Classes de chaque état, écrites en entier pour que Tailwind les génère. */
 export const STATE_CLASSES: Record<GlucoseState, string> = {
@@ -21,7 +21,7 @@ export function GlucoseStateBadge({
   /** Symbole seul (le libellé reste lu par les lecteurs d'écran et affiché au survol). */
   compact?: boolean;
 }) {
-  const label = fr.record.states[state];
+  const label = texts.record.states[state];
   return (
     <span
       title={label}

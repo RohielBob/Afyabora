@@ -9,7 +9,7 @@ import {
   type UserRole,
 } from '@glyka/shared';
 import { ApiError } from '@/lib/api-client';
-import { fill, fr } from '@/i18n/fr';
+import { fill, texts } from '@/i18n';
 
 // ---------- Utilisateur connecté ----------
 
@@ -69,31 +69,31 @@ export function doctorPayload(values: DoctorSignUpValues) {
 export function validateEmail(email: string): string | undefined {
   return emailSchema.safeParse(email.trim().toLowerCase()).success
     ? undefined
-    : fr.validation.email;
+    : texts.validation.email;
 }
 
 export function validateNewPassword(password: string): string | undefined {
-  return passwordSchema.safeParse(password).success ? undefined : fr.validation.passwordLength;
+  return passwordSchema.safeParse(password).success ? undefined : texts.validation.passwordLength;
 }
 
 export function validateDoctorSignUp(values: DoctorSignUpValues): FieldErrors<SignUpField> {
   const errors: FieldErrors<SignUpField> = {};
-  if (!values.firstName.trim()) errors.firstName = fr.validation.firstName;
-  if (!values.lastName.trim()) errors.lastName = fr.validation.lastName;
-  if (values.licenseNumber.trim().length < 3) errors.licenseNumber = fr.validation.licenseNumber;
-  if (values.institution.trim().length < 2) errors.institution = fr.validation.institution;
+  if (!values.firstName.trim()) errors.firstName = texts.validation.firstName;
+  if (!values.lastName.trim()) errors.lastName = texts.validation.lastName;
+  if (values.licenseNumber.trim().length < 3) errors.licenseNumber = texts.validation.licenseNumber;
+  if (values.institution.trim().length < 2) errors.institution = texts.validation.institution;
   const email = validateEmail(values.email);
   if (email) errors.email = email;
   const password = validateNewPassword(values.password);
   if (password) errors.password = password;
-  if (!values.attest) errors.attest = fr.validation.attest;
-  if (!values.terms) errors.terms = fr.validation.terms;
+  if (!values.attest) errors.attest = texts.validation.attest;
+  if (!values.terms) errors.terms = texts.validation.terms;
   // Garde-fou : le schéma complet du serveur (une règle ajoutée côté serveur sera vue ici aussi).
   if (
     !Object.keys(errors).length &&
     !registerDoctorSchema.safeParse(doctorPayload(values)).success
   ) {
-    errors.email = fr.errors.invalidData;
+    errors.email = texts.errors.invalidData;
   }
   return errors;
 }
@@ -105,7 +105,7 @@ export function validateSignIn(values: {
   const errors: FieldErrors<'email' | 'password'> = {};
   const email = validateEmail(values.email);
   if (email) errors.email = email;
-  if (!values.password) errors.password = fr.validation.passwordRequired;
+  if (!values.password) errors.password = texts.validation.passwordRequired;
   return errors;
 }
 
@@ -115,21 +115,21 @@ export type AuthContext = 'login' | 'register' | 'verify' | 'forgot' | 'reset';
 
 /** Message à afficher : dire QUOI FAIRE, sans détail technique ni révéler si un compte existe. */
 export function authErrorMessage(error: unknown, context: AuthContext): string {
-  if (!(error instanceof ApiError)) return fr.errors.unexpected;
-  if (error.status === 0) return fr.errors.network;
+  if (!(error instanceof ApiError)) return texts.errors.unexpected;
+  if (error.status === 0) return texts.errors.network;
   if (error.code === 'ACCOUNT_LOCKED') {
     const minutes = Math.max(1, Math.ceil((error.retryAfterSeconds ?? 600) / 60));
-    return fill(fr.errors.locked, { minutes });
+    return fill(texts.errors.locked, { minutes });
   }
-  if (error.status === 429) return fr.errors.tooManyRequests;
-  if (error.code === 'EMAIL_NOT_VERIFIED') return fr.errors.emailNotVerified;
+  if (error.status === 429) return texts.errors.tooManyRequests;
+  if (error.code === 'EMAIL_NOT_VERIFIED') return texts.errors.emailNotVerified;
   if (error.code === 'TOKEN_INVALID') {
-    return context === 'reset' ? fr.errors.resetLinkInvalid : fr.errors.verifyLinkInvalid;
+    return context === 'reset' ? texts.errors.resetLinkInvalid : texts.errors.verifyLinkInvalid;
   }
-  if (context === 'login' && error.status === 401) return fr.errors.invalidCredentials;
-  if (error.status === 400) return fr.errors.invalidData;
-  if (error.status >= 500) return fr.errors.server;
-  return fr.errors.unexpected;
+  if (context === 'login' && error.status === 401) return texts.errors.invalidCredentials;
+  if (error.status === 400) return texts.errors.invalidData;
+  if (error.status >= 500) return texts.errors.server;
+  return texts.errors.unexpected;
 }
 
 // ---------- Liens reçus par email ----------

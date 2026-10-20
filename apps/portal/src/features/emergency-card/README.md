@@ -29,4 +29,4 @@ téléphone, **sans compte**.
 - `card.ts` : lecture (`fetchEmergencyCard`), erreurs (`cardProblem`), lignes à afficher (`cardLines`),
   glycémie (`glucoseText`), lien d'appel (`telHref`), date (`updatedText`).
 - `routes/emergency.tsx` : la page (`/e/:token?`, publique dans `router.tsx`).
-- Textes : `fr.emergency` (`src/i18n/fr.ts`). Tests : `__tests__/card.test.tsx`.
+- Textes : `texts.emergency` (`src/i18n/fr.ts` et ses 7 traductions). Tests : `__tests__/card.test.tsx`.

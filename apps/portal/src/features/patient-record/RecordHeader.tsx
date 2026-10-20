@@ -3,7 +3,7 @@
 // dans le bandeau permanent au-dessus (AccessBanner, L5-13).
 import type { DoctorSummary } from '@glyka/shared';
 import { TextLink } from '@/components/ui';
-import { fill, fr } from '@/i18n/fr';
+import { fill, texts } from '@/i18n';
 import { orderedCategories } from './view';
 
 export function RecordHeader({ summary }: { summary: DoctorSummary }) {
@@ -23,28 +23,28 @@ export function RecordHeader({ summary }: { summary: DoctorSummary }) {
         >
           <path d="M15 18l-6-6 6-6" />
         </svg>
-        {fr.record.back}
+        {texts.record.back}
       </TextLink>
       <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
         <div className="flex flex-col gap-2">
           <p className="text-[11px] font-bold tracking-[1.2px] text-primary-text uppercase">
-            {fr.record.overline}
+            {texts.record.overline}
           </p>
           <h1 className="text-[30px] leading-[1.2] font-bold tracking-[-0.6px] text-ink">
             {patient.firstName}
           </h1>
           <p className="text-[15px] text-muted">
-            {fr.patients.diabetes[patient.diabetesType]}
+            {texts.patients.diabetes[patient.diabetesType]}
             {patient.diagnosisYear
-              ? ` · ${fill(fr.record.diagnosed, { year: patient.diagnosisYear })}`
+              ? ` · ${fill(texts.record.diagnosed, { year: patient.diagnosisYear })}`
               : ''}
           </p>
         </div>
         <div className="flex flex-col gap-2 lg:items-end">
           <p className="text-[13px] text-muted lg:text-right">
-            <span className="font-semibold text-ink">{fr.patients.shared}</span>{' '}
+            <span className="font-semibold text-ink">{texts.patients.shared}</span>{' '}
             {orderedCategories(session.categories)
-              .map((c) => fr.patients.categories[c])
+              .map((c) => texts.patients.categories[c])
               .join(' · ')}
           </p>
         </div>
@@ -64,7 +64,7 @@ export function RecordHeader({ summary }: { summary: DoctorSummary }) {
           <path d="M12 11v5M12 8h.01" />
         </svg>
         <span>
-          {fr.record.disclaimer} {fr.record.readOnly}
+          {texts.record.disclaimer} {texts.record.readOnly}
         </span>
       </p>
     </header>
