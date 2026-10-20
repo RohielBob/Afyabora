@@ -21,3 +21,20 @@ export {
 export { readThresholds, saveThresholds } from './local-thresholds';
 export { StepProgress } from './components/StepProgress';
 export { ThresholdBar } from './components/ThresholdBar';
+export {
+  ThresholdsEditor,
+  UNIT_LABEL,
+  defaultThresholdsIn,
+  type ThresholdsValue,
+} from './components/ThresholdsEditor';
+export {
+  checkUnitsDraft,
+  draftFromProfile,
+  draftMgDl,
+  hasChanges,
+  unitsProblem,
+  type UnitsCheck,
+  type UnitsDraft,
+  type UnitsProblem,
+} from './settings';
+export { useUnitsSettings, type UnitsSettingsState } from './useUnitsSettings';

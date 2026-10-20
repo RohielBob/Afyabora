@@ -224,6 +224,19 @@
     "appearanceHint": "Light or dark theme, accent colour",
     "units": "Units and thresholds",
     "unitsHint": "Preferred unit, target range, alert thresholds",
+    "unitsScreen": {
+      "intro": "Display unit, target range and alert thresholds. To be decided with your doctor: Afyabora never gives treatment advice.",
+      "saved": "Saved. Your readings are now shown in {{unit}}.",
+      "discard": "Discard changes",
+      "storedNote": "Readings already saved do not change: only how they are shown follows the chosen unit.",
+      "problem": {
+        "offline": "No connection: this setting needs the Internet. Try again when you are back online.",
+        "noProfile": "Complete your profile first: these settings are part of it.",
+        "invalid": "The server refused these values. Check the order: very low < target range < very high.",
+        "profile": "Your profile has incomplete information: complete it before changing these settings.",
+        "error": "The setting could not be saved. Try again in a moment."
+      }
+    },
     "notifications": "Notifications",
     "notificationsHint": "Reminders, alerts, quiet hours",
     "security": "Security",

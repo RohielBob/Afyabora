@@ -9,6 +9,7 @@ Assistant de profil, unité préférée, plage cible et seuils, contacts.
 - **L1-05** — API : profil patient et seuils d'alerte (validation Zod) — **fait**
 - **L1-08** — Mobile : assistant de profil — **fait** (4 étapes + résumé, décision du 2026-10-10)
 - **L9-04** — Mobile : saisie du pays et du numéro d'urgence (étape 4) — **fait** (contrat 0.4.0, API L9-03)
+- **L1-05 (mobile)** — Réglages ⇒ Unités et seuils — **fait** (voir plus bas)
 
 ## Assistant (`app/(onboarding)/profile-setup.tsx`)
 
@@ -29,15 +30,33 @@ Assistant de profil, unité préférée, plage cible et seuils, contacts.
 
 ## Fichiers
 
-| Fichier                       | Rôle                                                                                                  |
-| ----------------------------- | ----------------------------------------------------------------------------------------------------- |
-| `wizard.ts`                   | Logique sans interface : brouillon, conversions d'unités, dates, validation par étape, requête finale |
-| `api.ts`                      | `GET` / `PUT /me/profile`                                                                             |
-| `components/StepProgress.tsx` | « Étape 2 sur 4 », barre animée, titre                                                                |
-| `components/ThresholdBar.tsx` | Aperçu des 5 zones de glycémie                                                                        |
-| `__tests__/wizard.test.ts`    | Unités, dates, validation de chaque étape, requête finale                                             |
+| Fichier                               | Rôle                                                                                                  |
+| ------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| `wizard.ts`                           | Logique sans interface : brouillon, conversions d'unités, dates, validation par étape, requête finale |
+| `api.ts`                              | `GET` / `PUT /me/profile`                                                                             |
+| `components/StepProgress.tsx`         | « Étape 2 sur 4 », barre animée, titre                                                                |
+| `components/ThresholdBar.tsx`         | Aperçu des 5 zones de glycémie                                                                        |
+| `components/ThresholdsEditor.tsx`     | Saisie unité + seuils (assistant étape 3 et Réglages ⇒ Unités et seuils)                              |
+| `settings.ts` / `useUnitsSettings.ts` | Réglages ⇒ Unités et seuils : logique (testée) et branchement sur l'API                               |
+| `__tests__/wizard.test.ts`            | Unités, dates, validation de chaque étape, requête finale                                             |
 
 Composant partagé ajouté : `ChoiceGroup` (`src/components/ui`), choix unique en pastilles.
+
+## Réglages ⇒ Unités et seuils (`app/settings/units-thresholds.tsx`, L1-05 mobile)
+
+- Même saisie que l'étape 3 de l'assistant : composant partagé **`ThresholdsEditor`** (unité, plage cible, seuils
+  d'alerte, mention « à définir avec votre médecin », aperçu des 5 zones, valeurs par défaut, case « définis avec
+  mon médecin »). L'assistant l'utilise aussi : une seule saisie à maintenir.
+- Ouverture : `GET /me/profile` ; les seuils du serveur remplacent la copie du téléphone (message de sécurité
+  hors-ligne à la saisie, L2-04). Réseau obligatoire : sans lui, message et « Réessayer ».
+- **`PUT /me/profile` remplace TOUT le profil** : on renvoie le profil lu à l'identique (nom, contacts, pays, numéro
+  d'urgence…) en ne changeant que l'unité, les seuils et la case (`settings.ts`, vérifié avec `patientProfileSchema`).
+- « Enregistrer » n'est actif que si quelque chose a changé (valeurs comparées en mg/dL : « 0.7 » = « 0,70 ») ;
+  « Annuler les modifications » revient aux valeurs enregistrées. Après l'enregistrement : unité de saisie
+  (`writeUnit`) et seuils du téléphone mis à jour ; tableau de bord et chronologie les relisent en revenant.
+- Les mesures déjà enregistrées ne changent jamais (mg/dL, ADR-0002) : seul leur affichage suit l'unité.
+- Tests : `__tests__/settings.test.ts` (profil renvoyé complet, conversions, erreurs par seuil, profil abîmé,
+  détection des changements, erreurs du serveur).
 
 ## Règle importante
 
