@@ -1,10 +1,23 @@
 // « Tirer pour rafraîchir » aux couleurs du thème (L8-07) : l'indicateur qui tourne en haut d'une liste
 // tirée vers le bas. À passer à `refreshControl` d'une liste avec pullToRefresh(), ou via la propriété
 // `refresh` de <Screen>.
-// Sur le web (aperçu de développement), le geste n'existe pas, et React Native Web enveloppe alors la liste
-// dans un conteneur sans hauteur : l'écran s'affichait VIDE. pullToRefresh() ne renvoie donc rien sur le web.
-import type { ReactElement } from 'react';
-import { Platform, RefreshControl, type RefreshControlProps } from 'react-native';
+//
+// IMPORTANT (bug vu sur un vrai téléphone Android, 2026-10-20) : sur Android, React Native ne place pas
+// l'indicateur DANS la liste, il place la liste DANS l'indicateur. Il recopie notre élément en lui donnant
+// la liste en `children` et sa taille en `style`. Ce composant doit donc TRANSMETTRE ces propriétés à
+// <RefreshControl> ; avant, il les ignorait, et l'écran entier (Accueil, Historique, Synchronisation,
+// journal d'accès) s'affichait VIDE sur Android. Sur iPhone, l'indicateur est passé autrement (pas de
+// recopie), d'où un bug invisible ailleurs. Test : src/components/ui/__tests__/pull-to-refresh.test.tsx.
+//
+// Sur le web (aperçu de développement), le geste n'existe pas : pullToRefresh() ne renvoie rien.
+import type { ReactElement, ReactNode } from 'react';
+import {
+  Platform,
+  RefreshControl,
+  type RefreshControlProps,
+  type StyleProp,
+  type ViewStyle,
+} from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@/theme';
 
@@ -13,7 +26,18 @@ export interface RefreshProps {
   onRefresh: () => void;
 }
 
-export function PullToRefresh({ refreshing, onRefresh }: RefreshProps) {
+/** Propriétés ajoutées par React Native sur Android quand il recopie l'indicateur (voir plus haut). */
+interface InjectedProps {
+  children?: ReactNode;
+  style?: StyleProp<ViewStyle>;
+}
+
+export function PullToRefresh({
+  refreshing,
+  onRefresh,
+  children,
+  style,
+}: RefreshProps & InjectedProps) {
   const { colors } = useTheme();
   const { t } = useTranslation();
   return (
@@ -26,7 +50,10 @@ export function PullToRefresh({ refreshing, onRefresh }: RefreshProps) {
       title={refreshing ? t('sync.refreshing') : undefined}
       titleColor={colors.textMuted}
       accessibilityLabel={t('sync.pullToRefresh')}
-    />
+      style={style}
+    >
+      {children}
+    </RefreshControl>
   );
 }
 

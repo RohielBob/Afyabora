@@ -50,6 +50,8 @@ le contrat d'API (ticket à part).
 3. **Pluriels** : `_one` (1), `_other` (le reste), `_many` (forme du français, de l'espagnol, du portugais pour
    1 000 000 : recopier `_other`), `_zero` quand le français en a une. Ajouter les formes propres à la langue si
    ses règles en demandent d'autres (le test le signale).
+   **Sur Android, les règles du pluriel viennent de `intl-polyfill.ts`** (le téléphone n'a pas
+   `Intl.PluralRules`) : y ajouter les règles CLDR de la nouvelle langue, sinon ce sont celles du français.
 4. Dans les écrans, toujours `formatLocale(i18n.language)` pour les dates et nombres, jamais `i18n.language` seul.
 5. L'ajouter dans `languages.ts` (`code`, nom écrit dans sa propre langue, `reviewed: false`) et dans `index.ts`.
 6. `pnpm --filter @glyka/mobile test` : `__tests__/languages.test.ts` vérifie mêmes clés que le français, mêmes

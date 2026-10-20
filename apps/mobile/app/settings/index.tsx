@@ -49,12 +49,16 @@ export default function SettingsScreen() {
           subtitle={t('settings.unitsHint')}
           onPress={() => router.push('/settings/units-thresholds')}
         />
-        <ListRow
-          icon={ico('notifications-outline')}
-          title={t('settings.notifications')}
-          subtitle={t('settings.notificationsHint')}
-          onPress={() => router.push('/settings/notifications')}
-        />
+        {/* Réglages des notifications : écran pas encore réalisé (L8-12, L8-13, L8-15). Visible seulement en
+            développement : un patient ne doit jamais tomber sur une page « À réaliser ». */}
+        {__DEV__ ? (
+          <ListRow
+            icon={ico('notifications-outline')}
+            title={t('settings.notifications')}
+            subtitle={t('settings.notificationsHint')}
+            onPress={() => router.push('/settings/notifications')}
+          />
+        ) : null}
         <ListRow
           icon={ico('lock-closed-outline')}
           title={t('settings.security')}

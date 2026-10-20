@@ -7,6 +7,7 @@ import { AnimatedSplash } from '@/components/brand';
 import { initSession, signOut, useSession } from '@/features/auth';
 import { LockScreen, initAppLock, resetAppLock, useAppLock } from '@/features/security';
 import { useSyncTriggers } from '@/features/sync';
+import { wakeServer } from '@/lib/server-wake';
 import { AppProviders } from '@/providers/AppProviders';
 import { useTheme } from '@/theme';
 import { appFonts } from '@/theme/fonts';
@@ -128,9 +129,11 @@ export default function RootLayout() {
   const ready = fontsReady && session.status !== 'loading' && lock.ready;
 
   // Rouvre la session enregistrée et lit les réglages de verrouillage (coffre sécurisé : rapide, sans réseau).
+  // Réveille aussi le serveur hébergé, qui peut mettre une minute à redémarrer (src/lib/server-wake.ts).
   useEffect(() => {
     void initSession();
     void initAppLock();
+    void wakeServer();
   }, []);
 
   useEffect(() => {

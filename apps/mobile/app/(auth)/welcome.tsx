@@ -73,7 +73,12 @@ export default function WelcomeScreen() {
           <View
             style={{
               flexDirection: 'row',
+              // Les deux textes passent l'un sous l'autre quand la ligne est trop étroite (téléphone, langue
+              // aux mots plus longs) au lieu de déborder à droite.
+              flexWrap: 'wrap',
               justifyContent: 'space-between',
+              columnGap: spacing.sm,
+              rowGap: 4,
               borderTopWidth: 1,
               borderTopColor: colors.border,
               marginTop: spacing.sm,

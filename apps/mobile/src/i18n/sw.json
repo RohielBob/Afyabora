@@ -8,7 +8,12 @@
     "cancel": "Ghairi",
     "next": "Endelea",
     "back": "Rudi",
-    "retry": "Jaribu tena"
+    "retry": "Jaribu tena",
+    "show": "Onyesha",
+    "hide": "Ficha",
+    "showPassword": "Onyesha nenosiri",
+    "hidePassword": "Ficha nenosiri",
+    "loading": "Inapakia"
   },
   "disclaimer": "Afyabora ni chombo cha kusaidia ufuatiliaji. Hakichukui nafasi ya ushauri wa mtaalamu wa afya.",
   "glucose": {
@@ -95,7 +100,7 @@
     "extreme": "Fuata maelekezo ya timu yako ya afya. Ukijisikia vibaya, omba msaada mara moja."
   },
   "errors": {
-    "network": "Imeshindwa kufikia seva. Angalia muunganisho wako wa intaneti kisha ujaribu tena.",
+    "network": "Seva haipatikani. Baada ya muda bila matumizi, inaweza kuchukua hadi dakika moja kuanza: jaribu tena baada ya muda mfupi, na uangalie mtandao wako.",
     "server": "Huduma ina tatizo. Jaribu tena baada ya muda mfupi.",
     "tooManyRequests": "Majaribio mengi mno. Subiri dakika moja kabla ya kujaribu tena.",
     "invalidData": "Baadhi ya taarifa si sahihi. Kagua fomu.",
@@ -169,6 +174,7 @@
       "resendIn": "Tuma barua pepe tena baada ya sekunde {{seconds}}",
       "resent": "Barua pepe mpya imetumwa. Kiungo cha zamani hakifanyi kazi tena.",
       "resendUnavailable": "Ili kupokea barua pepe mpya, jisajili tena kwa barua pepe ile ile.",
+      "alreadyAccount": "Bado hakuna kitu baada ya dakika chache? Huenda tayari una akaunti kwa anwani hii: ingia, au tumia « Umesahau nenosiri ».",
       "successTitle": "Barua pepe imethibitishwa",
       "successMessage": "Akaunti yako imewashwa. Sasa unaweza kuingia.",
       "goToSignIn": "Ingia"
@@ -204,7 +210,7 @@
     "todoTitle": "Inakuja: wasifu wako wa kiafya",
     "todoText": "Utambulisho, aina ya kisukari, kiwango lengwa na mipaka, mtu wa kuwasiliana naye wakati wa dharura.",
     "settings": "Mipangilio",
-    "settingsHint": "Mwonekano, vipimo, arifa, usalama",
+    "settingsHint": "Lugha, mwonekano, vipimo, usalama",
     "signOut": "Toka",
     "signOutConfirmTitle": "Toka kwenye simu hii?",
     "signOutConfirmText": "Data yako inabaki kwenye akaunti yako. Itaondolewa kwenye simu hii na unaweza kuingia tena wakati wowote.",

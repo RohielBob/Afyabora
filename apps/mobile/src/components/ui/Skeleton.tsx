@@ -1,6 +1,7 @@
 // Squelette de chargement : formes grises qui « respirent » doucement à l'endroit où le contenu va arriver.
 // Plus professionnel qu'un écran vide ou qu'un indicateur seul : l'utilisateur voit déjà la mise en page.
 import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { View, type DimensionValue, type StyleProp, type ViewStyle } from 'react-native';
 import Animated, {
   cancelAnimation,
@@ -53,11 +54,12 @@ export function Skeleton({
 /** Squelette d'une carte « dernière mesure » (titre, grande valeur, badge, pied). */
 export function SkeletonCard() {
   const { colors } = useTheme();
+  const { t } = useTranslation();
   return (
     <View
       accessible
       accessibilityRole="progressbar"
-      accessibilityLabel="Chargement"
+      accessibilityLabel={t('common.loading')}
       style={{
         backgroundColor: colors.surface,
         borderColor: colors.border,

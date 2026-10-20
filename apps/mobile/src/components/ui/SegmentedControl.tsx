@@ -92,9 +92,24 @@ export function SegmentedControl<T extends string>({
             aria-checked={selected}
             accessibilityLabel={option.label}
             onPress={() => onChange(option.value)}
-            style={{ flex: 1, paddingVertical: spacing.sm + 2, alignItems: 'center' }}
+            style={{
+              flex: 1,
+              paddingVertical: spacing.sm + 2,
+              paddingHorizontal: 4,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
           >
-            <Text variant="label" tone={selected ? 'default' : 'muted'}>
+            {/* Un mot seul (« Maintenant ») ne doit jamais être coupé au milieu : sur un téléphone étroit, il
+                rétrécit un peu pour tenir sur UNE ligne. Plusieurs mots peuvent passer sur deux lignes. */}
+            <Text
+              variant="label"
+              tone={selected ? 'default' : 'muted'}
+              align="center"
+              numberOfLines={/\s/.test(option.label) ? 2 : 1}
+              adjustsFontSizeToFit
+              minimumFontScale={0.7}
+            >
               {option.label}
             </Text>
           </PressableScale>

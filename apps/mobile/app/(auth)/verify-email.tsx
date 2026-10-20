@@ -155,6 +155,12 @@ export default function VerifyEmailScreen() {
             onPress={onResend}
           />
         </Animated.View>
+        {/* Adresse DÉJÀ inscrite et vérifiée : le serveur n'envoie rien (il ne révèle jamais si un compte
+            existe). On le dit ici, pour tout le monde, avec le bouton de connexion. */}
+        <Text variant="bodySmall" tone="muted" style={{ textAlign: 'center' }}>
+          {t('auth.verify.alreadyAccount')}
+        </Text>
+        <Button label={t('auth.verify.goToSignIn')} variant="outline" onPress={goToSignIn} />
       </Animated.View>
     </Screen>
   );

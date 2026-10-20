@@ -91,7 +91,7 @@ export function AnimatedSplash({ onFinish }: { onFinish: () => void }) {
   return (
     <Animated.View
       accessible
-      accessibilityLabel="Afyabora, chargement"
+      accessibilityLabel={`Afyabora, ${t('common.loading')}`}
       pointerEvents="none"
       style={[
         StyleSheet.absoluteFill,

@@ -8,7 +8,12 @@
     "cancel": "Annuler",
     "next": "Suivant",
     "back": "Retour",
-    "retry": "Réessayer"
+    "retry": "Réessayer",
+    "show": "Afficher",
+    "hide": "Masquer",
+    "showPassword": "Afficher le mot de passe",
+    "hidePassword": "Masquer le mot de passe",
+    "loading": "Chargement"
   },
   "disclaimer": "Afyabora est un outil d'aide au suivi. Il ne remplace pas l'avis d'un professionnel de santé.",
   "glucose": {
@@ -95,7 +100,7 @@
     "extreme": "Suivez les consignes de votre équipe soignante. En cas de malaise, demandez de l'aide immédiatement."
   },
   "errors": {
-    "network": "Impossible de joindre le serveur. Vérifiez votre connexion internet puis réessayez.",
+    "network": "Impossible de joindre le serveur. Après une période calme, il peut mettre jusqu’à une minute à démarrer : réessayez dans un instant, et vérifiez votre connexion internet.",
     "server": "Le service rencontre un problème. Réessayez dans quelques instants.",
     "tooManyRequests": "Trop de tentatives. Patientez une minute avant de réessayer.",
     "invalidData": "Certaines informations ne sont pas valides. Vérifiez le formulaire.",
@@ -169,6 +174,7 @@
       "resendIn": "Renvoyer l'email dans {{seconds}} s",
       "resent": "Un nouvel email vient d'être envoyé. L'ancien lien ne fonctionne plus.",
       "resendUnavailable": "Pour recevoir un nouvel email, recommencez l'inscription avec la même adresse.",
+      "alreadyAccount": "Toujours rien après quelques minutes ? Vous avez peut-être déjà un compte avec cette adresse : connectez-vous, ou utilisez « Mot de passe oublié ».",
       "successTitle": "Adresse vérifiée",
       "successMessage": "Votre compte est activé. Vous pouvez maintenant vous connecter.",
       "goToSignIn": "Se connecter"
@@ -204,7 +210,7 @@
     "todoTitle": "Bientôt : votre profil médical",
     "todoText": "Identité, type de diabète, plage cible et seuils, contact d'urgence.",
     "settings": "Paramètres",
-    "settingsHint": "Apparence, unités, notifications, sécurité",
+    "settingsHint": "Langue, apparence, unités, sécurité",
     "signOut": "Se déconnecter",
     "signOutConfirmTitle": "Se déconnecter de ce téléphone ?",
     "signOutConfirmText": "Vos données restent enregistrées sur votre compte. Elles seront retirées de ce téléphone et vous pourrez vous reconnecter à tout moment.",

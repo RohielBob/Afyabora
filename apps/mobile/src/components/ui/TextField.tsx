@@ -1,6 +1,7 @@
 // Champ de saisie : libellé au-dessus (toujours visible), bordure qui s'anime au focus et en erreur,
 // message d'aide ou d'erreur qui apparaît en fondu, bouton « Afficher » pour les mots de passe.
 import { forwardRef, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Platform, Pressable, TextInput, View, type TextInputProps } from 'react-native';
 import Animated, {
   interpolateColor,
@@ -25,6 +26,7 @@ export const TextField = forwardRef<TextInput, TextFieldProps>(function TextFiel
   ref,
 ) {
   const { colors } = useTheme();
+  const { t } = useTranslation();
   const [visible, setVisible] = useState(false);
   // 0 = repos, 1 = focus ; l'erreur l'emporte (couleur danger).
   const focus = useSharedValue(0);
@@ -87,12 +89,12 @@ export const TextField = forwardRef<TextInput, TextFieldProps>(function TextFiel
         {secret ? (
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel={visible ? 'Masquer le mot de passe' : 'Afficher le mot de passe'}
+            accessibilityLabel={visible ? t('common.hidePassword') : t('common.showPassword')}
             hitSlop={12}
             onPress={() => setVisible((v) => !v)}
           >
             <Text variant="label" tone="primary">
-              {visible ? 'Masquer' : 'Afficher'}
+              {visible ? t('common.hide') : t('common.show')}
             </Text>
           </Pressable>
         ) : null}

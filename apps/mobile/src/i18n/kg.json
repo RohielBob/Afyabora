@@ -8,7 +8,12 @@
     "cancel": "Bika",
     "next": "Landa",
     "back": "Vutuka",
-    "retry": "Meka diaka"
+    "retry": "Meka diaka",
+    "show": "Monisa",
+    "hide": "Bumba",
+    "showPassword": "Monisa mot de passe",
+    "hidePassword": "Bumba mot de passe",
+    "loading": "Kukangula"
   },
   "disclaimer": "Afyabora kele kisadi ya kusadisa nge na kulanda maladi na nge. Yo ke baka ve kisika ya ndongisila ya munganga.",
   "glucose": {
@@ -95,7 +100,7 @@
     "extreme": "Landa malongi ya bantu ya nzo ya munganga na nge. Kana nge ke wa mbote ve, lomba lusadisu nswalu."
   },
   "errors": {
-    "network": "Beto ke lenda kutana ve na serveur. Tala internet na nge mpi meka diaka.",
+    "network": "Serveur ke vutula ve. Na nima ya ntangu mosi kukonda kisalu, yo lenda baka tii minute mosi sambu na kuyantika: meka diaka na nima ya ntangu fioti, mpi tala internet na nge.",
     "server": "Kisalu kele na mpasi. Meka diaka na nima ya ntangu fioti.",
     "tooManyRequests": "Nge me meka mbala mingi. Vingila minuti mosi na ntwala ya kumeka diaka.",
     "invalidData": "Mambu ya nkaka kele mbote ve. Tala diaka formulaire.",
@@ -169,6 +174,7 @@
       "resendIn": "Tinda email diaka na nima ya {{seconds}} s",
       "resent": "Email ya mpa me tindama. Lien ya ntama ke sala diaka ve.",
       "resendUnavailable": "Sambu na kubaka email ya mpa, sonika diaka zina na adresse ya kaka yina.",
+      "alreadyAccount": "Kima ve ntete na nima ya baminute fioti? Ziku nge kele dezia ti compte na adresse yai: kota, to sadila « Nge me vila mot de passe ».",
       "successTitle": "Adresse me ndimama",
       "successMessage": "Compte na nge me kanguka. Nge lenda kukota sesepi.",
       "goToSignIn": "Kota"
@@ -204,7 +210,7 @@
     "todoTitle": "Na ntwala: profil na nge ya maladi",
     "todoText": "Zina, mutindu ya diabète, ndilu ya mbote mpi bandilu, muntu ya kubinga kana mpasi.",
     "settings": "Mambu ya kubongisa",
-    "settingsHint": "Mutindu yo ke monana, ba unité, ba notification, lutaninu",
+    "settingsHint": "Ndinga, mutindu yo ke monana, ba unité, lutaninu",
     "signOut": "Basika",
     "signOutConfirmTitle": "Kubasika na telefone yai?",
     "signOutConfirmText": "Mambu na nge ke bikala na compte na nge. Yo ta katuka na telefone yai mpi nge lenda kota diaka ntangu yonso.",
