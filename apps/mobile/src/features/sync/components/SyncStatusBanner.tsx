@@ -25,6 +25,7 @@ import {
   syncStatusView,
   type SyncTone,
 } from '../status';
+import { formatLocale } from '@/i18n';
 
 /** Icône et couleur de chaque état (la couleur double l'icône et le texte, elle ne les remplace pas). */
 export const TONE_ICON: Record<
@@ -55,10 +56,12 @@ export function SyncStatusBanner({ index = 0 }: { index?: number }) {
   const details = [
     view.title !== 'pending' ? pending : null,
     view.lastSuccessAt || view.tone === 'ok'
-      ? lastSyncPhrase(t, view.lastSuccessAt, now, i18n.language)
+      ? lastSyncPhrase(t, view.lastSuccessAt, now, formatLocale(i18n.language))
       : null,
     view.title === 'pending' ? t('sync.autoSend') : null,
-    view.nextRetryAt ? nextRetryPhrase(t, view.nextRetryAt, now, i18n.language) : null,
+    view.nextRetryAt
+      ? nextRetryPhrase(t, view.nextRetryAt, now, formatLocale(i18n.language))
+      : null,
   ].filter((line): line is string => Boolean(line));
   const title =
     view.title === 'pending' && pending

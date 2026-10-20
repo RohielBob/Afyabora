@@ -9,6 +9,7 @@ import { View } from 'react-native';
 import { Card, Text } from '@/components/ui';
 import { radii, spacing, useTheme } from '@/theme';
 import { previewLines } from '../card';
+import { formatLocale } from '@/i18n';
 
 type IconName = ComponentProps<typeof Ionicons>['name'];
 
@@ -35,7 +36,7 @@ export function CardPreview({
   const { t, i18n } = useTranslation();
   const { colors } = useTheme();
   const lines = previewLines(card, unit);
-  const updated = new Date(card.updatedAt).toLocaleDateString(i18n.language, {
+  const updated = new Date(card.updatedAt).toLocaleDateString(formatLocale(i18n.language), {
     day: 'numeric',
     month: 'long',
     year: 'numeric',

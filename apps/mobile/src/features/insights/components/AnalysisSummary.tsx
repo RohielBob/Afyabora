@@ -13,6 +13,7 @@ import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-na
 import { Card, Text } from '@/components/ui';
 import { durations, easing, radii, spacing, useReducedMotion, useTheme } from '@/theme';
 import type { Headline } from '../presentation';
+import { formatLocale } from '@/i18n';
 
 const QUALITY_ICON: Record<QualityLevel, 'checkmark-circle' | 'contrast' | 'ellipse-outline'> = {
   GOOD: 'checkmark-circle',
@@ -74,7 +75,10 @@ export function AnalysisSummary({
         : colors.textMuted;
   // Fin de période exclue (minuit ce soir) : on affiche le dernier jour compris.
   const dateOf = (iso: string) =>
-    new Date(iso).toLocaleDateString(i18n.language, { day: 'numeric', month: 'long' });
+    new Date(iso).toLocaleDateString(formatLocale(i18n.language), {
+      day: 'numeric',
+      month: 'long',
+    });
   const lastDay = new Date(Date.parse(analysis.period.to) - 1).toISOString();
   const calm = headline.kind === 'calm';
 

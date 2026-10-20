@@ -28,6 +28,7 @@ import {
 } from '@/features/imports';
 import { readUnit } from '@/features/measurements';
 import { enterFromBelow, radii, spacing, useReducedMotion, useTheme } from '@/theme';
+import { formatLocale } from '@/i18n';
 
 export default function ImportStartScreen() {
   const { t, i18n } = useTranslation();
@@ -89,7 +90,7 @@ export default function ImportStartScreen() {
     value: unit,
     label: UNIT_LABELS[unit],
     hint: t('import.unit.example', {
-      value: UNIT_EXAMPLES[unit].toLocaleString(i18n.language, {
+      value: UNIT_EXAMPLES[unit].toLocaleString(formatLocale(i18n.language), {
         minimumFractionDigits: unit === 'G_L' ? 2 : 0,
       }),
     }),

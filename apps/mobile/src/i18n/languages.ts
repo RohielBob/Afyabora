@@ -11,6 +11,13 @@ export const LANGUAGES = [
   { code: 'en', nativeName: 'English', reviewed: true },
   { code: 'es', nativeName: 'Español', reviewed: false },
   { code: 'pt', nativeName: 'Português', reviewed: false },
+  // Langues de la RD Congo. Lingala de Kinshasa (orthographe courante, sans ɛ/ɔ), kiswahili standard,
+  // kikongo ya leta (kituba) et ciluba (tshiluba). Le moteur des dates ne connaît ni le kikongo ni le
+  // tshiluba : leurs dates et nombres s'écrivent en français (voir formatLocale plus bas).
+  { code: 'ln', nativeName: 'Lingála', reviewed: false },
+  { code: 'sw', nativeName: 'Kiswahili', reviewed: false },
+  { code: 'kg', nativeName: 'Kikongo', reviewed: false },
+  { code: 'lua', nativeName: 'Tshiluba', reviewed: false },
 ] as const;
 
 export type LanguageCode = (typeof LANGUAGES)[number]['code'];
@@ -48,4 +55,24 @@ export function resolveLanguage(
 
 export function languageInfo(code: LanguageCode) {
   return LANGUAGES.find((language) => language.code === code) ?? LANGUAGES[0];
+}
+
+/** Langue de secours pour les dates et les nombres : celle du pays (RD Congo), comprise par tous. */
+const FORMAT_FALLBACK = 'fr';
+
+/**
+ * Langue à utiliser pour écrire les DATES et les NOMBRES (toLocaleDateString, toLocaleString…). Le moteur ne
+ * connaît pas toutes les langues (kikongo, tshiluba…) : il prendrait alors la langue par défaut de l'appareil,
+ * parfois l'anglais (« 1,000.5 », « October »). Dans ce cas, on écrit dates et nombres en français.
+ */
+export function formatLocale(
+  code: string,
+  supported: (code: string) => boolean = (c) =>
+    Intl.DateTimeFormat.supportedLocalesOf([c]).length > 0,
+): string {
+  try {
+    return supported(code) ? code : FORMAT_FALLBACK;
+  } catch {
+    return FORMAT_FALLBACK;
+  }
 }

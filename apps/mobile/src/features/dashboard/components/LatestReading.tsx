@@ -14,6 +14,7 @@ import { formatClock, formatReading, type LatestMeasurement } from '@/features/m
 import { ProvenanceBadge, provenanceText } from '@/features/timeline';
 import { durations, radii, spacing, useReducedMotion, useTheme } from '@/theme';
 import { ageOf, dayLabel } from '../latest';
+import { formatLocale } from '@/i18n';
 
 export function LatestReading({
   latest,
@@ -38,7 +39,11 @@ export function LatestReading({
   const label = dayLabel(date, now);
   const day =
     label === 'earlier'
-      ? date.toLocaleDateString(i18n.language, { weekday: 'long', day: 'numeric', month: 'long' })
+      ? date.toLocaleDateString(formatLocale(i18n.language), {
+          weekday: 'long',
+          day: 'numeric',
+          month: 'long',
+        })
       : t(`dashboard.latest.${label}`);
   const when = t('dashboard.latest.when', {
     day,

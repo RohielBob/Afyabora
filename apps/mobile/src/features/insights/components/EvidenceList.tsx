@@ -14,6 +14,7 @@ import { dayLabel } from '@/features/dashboard';
 import { formatClock, formatReading, type MeasurementPoint } from '@/features/measurements';
 import { enterFromBelow, radii, spacing, useReducedMotion, useTheme } from '@/theme';
 import { EVIDENCE_PREVIEW } from '../presentation';
+import { formatLocale } from '@/i18n';
 
 function EvidenceRow({
   point,
@@ -35,7 +36,11 @@ function EvidenceRow({
   const label = dayLabel(date, now);
   const day =
     label === 'earlier'
-      ? date.toLocaleDateString(i18n.language, { weekday: 'short', day: 'numeric', month: 'short' })
+      ? date.toLocaleDateString(formatLocale(i18n.language), {
+          weekday: 'short',
+          day: 'numeric',
+          month: 'short',
+        })
       : t(`dashboard.latest.${label}`);
   const when = t('dashboard.latest.when', {
     day,

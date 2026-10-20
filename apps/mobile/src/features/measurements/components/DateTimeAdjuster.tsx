@@ -8,6 +8,7 @@ import { PressableScale, Text } from '@/components/ui';
 import { radii, spacing, useTheme } from '@/theme';
 import { formatClock } from '../entry';
 import { canGoForward, shiftDays, shiftMinutes } from '../edit';
+import { formatLocale } from '@/i18n';
 
 export function DateTimeAdjuster({
   at,
@@ -47,7 +48,7 @@ export function DateTimeAdjuster({
     );
   };
 
-  const day = at.toLocaleDateString(i18n.language, {
+  const day = at.toLocaleDateString(formatLocale(i18n.language), {
     weekday: 'long',
     day: 'numeric',
     month: 'long',

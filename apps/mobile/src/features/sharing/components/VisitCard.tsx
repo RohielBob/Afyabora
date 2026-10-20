@@ -9,6 +9,7 @@ import { Card, Text } from '@/components/ui';
 import { whenLabel } from '@/features/sync';
 import { radii, spacing, useTheme } from '@/theme';
 import { formatMinutes, visitMinutes, type Visit } from '../log';
+import { formatLocale } from '@/i18n';
 
 type IconName = ComponentProps<typeof Ionicons>['name'];
 
@@ -17,7 +18,7 @@ export function VisitCard({ visit, index, now }: { visit: Visit; index: number; 
   const { colors } = useTheme();
 
   const when = (iso: string) => {
-    const label = whenLabel(iso, now, i18n.language);
+    const label = whenLabel(iso, now, formatLocale(i18n.language));
     return label.sameDay
       ? t('share.log.today', { time: label.time })
       : t('share.log.onDate', { date: label.date, time: label.time });

@@ -1,0 +1,1834 @@
+{
+  "app": {
+    "name": "Afyabora",
+    "tagline": "Londa. Lama. Umvua."
+  },
+  "common": {
+    "save": "Lama",
+    "cancel": "Lekela",
+    "next": "Tungunuka",
+    "back": "Pingana",
+    "retry": "Tentekela kabidi"
+  },
+  "disclaimer": "Afyabora ndi tshiamu tshia kukuambuluisha bua kulonda disama diebe. Katshiena tshiangata muaba wa mubelu wa muena manga to.",
+  "glucose": {
+    "unusualConfirm": "Bungi ebu ki mbua pa tshibidilu to. Mbulelela?",
+    "state": {
+      "VERY_LOW": "Muinshi bikole",
+      "LOW": "Muinshi",
+      "IN_RANGE": "Munda mua mikalu",
+      "HIGH": "Pulu",
+      "VERY_HIGH": "Pulu bikole"
+    },
+    "stateA11y": "Mushindu: {{label}}"
+  },
+  "sync": {
+    "pending_one": "Dipima {{count}} didi dindila kutumibua",
+    "pending_other": "Mapima {{count}} adi andila kutumibua",
+    "pending_many": "Mapima {{count}} adi andila kutumibua",
+    "offline": "Internet kayena to — malu ebe mmalama mu telefone eu",
+    "upToDate": "Malu onso mmalongolola",
+    "refreshing": "Kutuma…",
+    "pullToRefresh": "Koka muinshi bua kutuma",
+    "status": {
+      "upToDate": "Malu onso mmalongolola",
+      "pending": "Bidi bindila kutumibua",
+      "syncing": "Kutuma kudi kuenzeka…",
+      "offline": "Internet kayena to: malu ebe mmalama mu telefone eu",
+      "problem": "Kutuma kakuena mua kuenzeka katataka to",
+      "session": "Tshikondo tshia kubuela tshijika: buela kabidi bua kutuma",
+      "rejected_one": "Dishintulula {{count}} dia kutangila",
+      "rejected_other": "Mashintulula {{count}} a kutangila",
+      "rejected_many": "Mashintulula {{count}} a kutangila"
+    },
+    "measurements_one": "dipima {{count}}",
+    "measurements_other": "mapima {{count}}",
+    "measurements_many": "mapima {{count}}",
+    "events_one": "tshienzedi {{count}}",
+    "events_other": "bienzedi {{count}}",
+    "events_many": "bienzedi {{count}}",
+    "pendingBoth": "{{measurements}} ne {{events}}",
+    "pendingLine": "{{what}} bidi bindila kutumibua",
+    "lastToday": "Kutuma kua ndekelu ku dîba dia {{time}}",
+    "lastOn": "Kutuma kua ndekelu dituku dia {{date}} ku dîba dia {{time}}",
+    "never": "Kakuena kutumibua mu telefone eu to",
+    "nextRetry": "Kutentekela kabidi ku dîba dia {{time}}",
+    "nextRetrySoon": "Kutentekela kabidi panyima pa bitupa bikese",
+    "autoSend": "Nebitumibue nkayabi bitu bikumbane",
+    "retry": "Tentekela kabidi",
+    "rejected_one": "Dishintulula {{count}} diakapidia ku serveur",
+    "rejected_other": "Mashintulula {{count}} akapidia ku serveur",
+    "rejected_many": "Mashintulula {{count}} akapidia ku serveur",
+    "open": "Tangila mushindu udi kutuma",
+    "screen": {
+      "overline": "Kakuyi internet",
+      "title": "Kutuma",
+      "intro": "Bualu buonso udi ufunda budi bulamibua kumpala mu telefone eu, panyima butumibua ku compte webe bitu bikumbane, nansha panyima pa internet kukosoka.",
+      "syncNow": "Tuma katataka",
+      "pendingTitle": "Bidi bindila kutumibua",
+      "pendingNone": "Kakuena tshidi tshindila to",
+      "lastTitle": "Kutuma kua ndekelu",
+      "rejectedTitle": "Mashintulula adi mapidibue",
+      "rejectedIntro": "Serveur mmupidie mashintulula aa. Adi ashala mu telefone eu too ne paudi wangata dipangadika.",
+      "measurementSave": "Dipima dia {{value}}, {{date}}",
+      "measurementDelete": "Kumusha dipima dia {{value}}, {{date}}",
+      "eventSave": "{{type}} «{{label}}», {{date}}",
+      "eventDelete": "Kumusha: {{type}} «{{label}}», {{date}}",
+      "gone": "Bualu ebu kabuena kabidi mu telefone eu to",
+      "reason": "Bualu: {{reason}}",
+      "attempts_one": "Mipidibue musangu {{count}}",
+      "attempts_other": "Mipidibue misangu {{count}}",
+      "attempts_many": "Mipidibue misangu {{count}}",
+      "retry": "Tentekela kabidi",
+      "discard": "Lekela",
+      "discardTitle": "Kulekela dishintulula edi?",
+      "discardText": "Nedimushibue mu telefone eu. Edi dilamibue ku compte webe, bikalaku, nedipingane mu kutuma kulonda.",
+      "discardConfirm": "Lekela dishintulula",
+      "keep": "Lama",
+      "noRejected": "Kakuena dishintulula dipidibue to",
+      "lastToday": "Lelu ku dîba dia {{time}}",
+      "lastOn": "Dituku dia {{date}} ku dîba dia {{time}}",
+      "lastNever": "Kakuena mu telefone eu to"
+    }
+  },
+  "safety": {
+    "extreme": "Londa mibelu ya bena manga bebe. Biwadiumvua bibi, lomba diambuluisha diakamue."
+  },
+  "errors": {
+    "network": "Katuena mua kupeta serveur to. Tangila internet webe ne utentekela kabidi.",
+    "server": "Mudimu udi ne lutatu. Tentekela kabidi panyima pa tshikondo tshikese.",
+    "tooManyRequests": "Wakutentekela misangu ya bungi. Indila minite umue kumpala kua kutentekela kabidi.",
+    "invalidData": "Malu amue kaena mimpe to. Tangila kabidi formulaire.",
+    "unexpected": "Tshilema tshimue tshilumbuke. Tentekela kabidi."
+  },
+  "welcome": {
+    "lastMeasurement": "Dipima dia ndekelu",
+    "demoTag": "Tshilejilu tshia dishima",
+    "demoA11y": "Tshilejilu tshia dipima dia ndekelu: 1,12 gramme ku litre, munda mua mikalu",
+    "offlineSaved": "Dilamibue nansha kakuyi internet",
+    "onThisPhone": "✓ Mu telefone eu",
+    "title": "Muyuki wa sukadi wa mu mashi ebe, misangu yonso nebe.",
+    "description": "Lama mapima ebe, umvua mushindu udi uya, ne sungula nganyi neamone tshinyi, ne bua tshikondo tshinyi.",
+    "createAccount": "Enza compte",
+    "signIn": "Buela"
+  },
+  "auth": {
+    "fields": {
+      "email": "Adresse email",
+      "emailPlaceholder": "dina@tshilejilu.com",
+      "password": "Mot de passe",
+      "newPassword": "Mot de passe mupiamupia",
+      "link": "Lien anyi code uvua mupete ku email",
+      "linkPlaceholder": "Teka muaba eu lien wa email"
+    },
+    "password": {
+      "rulesTitle": "Mikenji ya mot de passe",
+      "ruleLength": "Bikole ne mifundu {{count}}",
+      "ruleOk": "mukumbane",
+      "ruleTodo": "kakumbane to",
+      "hint": "Muaku mupepele wa kuvuluka udi ne bukubi kupita muaku umue mukole."
+    },
+    "validation": {
+      "email": "Funda adresse email muimpe.",
+      "passwordLength": "Mot de passe udi ne bua kuikala ne mifundu 12 bikole.",
+      "passwordRequired": "Funda mot de passe webe.",
+      "consent": "Dianyisha diebe didi dikengedibua bua kuenza compte.",
+      "link": "Lien eu kamumanyike to. Kuata lien wonso wa email.",
+      "disclaimer": "Itabuja ne wakumvua dimanyisha bua kutungunuka."
+    },
+    "errors": {
+      "invalidCredentials": "Adresse email anyi mot de passe kabiena bimpe to.",
+      "emailNotVerified": "Adresse email webe kayena muanji kujadikibua to.",
+      "locked": "Wakutentekela misangu ya bungi: bua bukubi, compte webe mmukangibue bua minite {{minutes}}.",
+      "verifyLinkInvalid": "Lien eu wa kujadika kena muimpe to, mmuenzeja anyi tshikondo tshiende tshijike. Lomba email mupiamupia.",
+      "resetLinkInvalid": "Lien eu kena muimpe to, mmuenzeja anyi tshikondo tshiende tshijike (dîba 1). Lomba kabidi.",
+      "notPatient": "Compte eu ndia muena mudimu wa manga. Buela mu portail wa Afyabora."
+    },
+    "signUp": {
+      "title": "Enza compte",
+      "subtitle": "Bitupa bikese bua kutuadija kulonda sukadi webe.",
+      "consent": "Ndi nyitaba ne Afyabora alame ne enzeje malu a disama dianyi bua kundonda, bu mudibi bileja mu mikenji ya bulami bua musokoko.",
+      "consentA11y": "Dianyisha bua kuenzeja malu a disama dianyi",
+      "submit": "Enza compte wanyi",
+      "haveAccount": "Udi kale ne compte?",
+      "signIn": "Buela",
+      "consentLink": "Bala mikenji ya bulami bua musokoko",
+      "disclaimer": "Ndi mumvue ne Afyabora ndi tshiamu tshia kuambuluisha mu dilonda: katshiena tshijadika disama to, katshiena tshifila dose wa manga to, ne katshiena tshiangata muaba wa mubelu wa muena manga to.",
+      "disclaimerA11y": "Ndi mumvue ne application kayiangata muaba wa mubelu wa munganga to",
+      "disclaimerLink": "Bala dimanyisha"
+    },
+    "verify": {
+      "title": "Tangila email webe",
+      "subtitle": "Tuakutumina lien wa kujadika ku {{email}}. Udi wenza mudimu bua mêba 24.",
+      "subtitleNoEmail": "Bulula email wa kujadika utuakutumina. Lien udi wenza mudimu bua mêba 24.",
+      "steps": "Bulula email «Afyabora : confirmez votre adresse email» ne utshinyike lien. Kuena mumupete to? Tangila mu ba spam.",
+      "pasteTitle": "Lien kadi ubululuka mu application to?",
+      "pasteHelp": "Kuata lien wa email ne umuteke muaba eu muinshi.",
+      "submit": "Jadika adresse wanyi",
+      "resend": "Tuma kabidi email",
+      "resendIn": "Tuma kabidi email panyima pa {{seconds}} s",
+      "resent": "Email mupiamupia mmutumibue. Lien wa kale kena wenza kabidi mudimu to.",
+      "resendUnavailable": "Bua kupeta email mupiamupia, funda kabidi dina ne adresse umue eu.",
+      "successTitle": "Adresse mmujadikibue",
+      "successMessage": "Compte webe mmubululuke. Udi mua kubuela katataka.",
+      "goToSignIn": "Buela"
+    },
+    "signIn": {
+      "title": "Wapingana bimpe",
+      "subtitle": "Buela bua kupeta kabidi dilonda diebe.",
+      "forgot": "Wakupua mot de passe muoyo?",
+      "submit": "Buela",
+      "noAccount": "Kuena muanji ne compte to?",
+      "signUp": "Enza compte",
+      "verifyAction": "Jadika adresse wanyi",
+      "success": "Wabuela bimpe",
+      "expired": "Tshikondo tshia kubuela tshijika. Buela kabidi bua kutungunuka.",
+      "signedOut": "Wapatuka."
+    },
+    "forgot": {
+      "title": "Wakupua mot de passe muoyo",
+      "subtitle": "Funda adresse webe: bikalaku compte, neupete lien bua kusungula mot de passe mupiamupia.",
+      "submit": "Peta lien",
+      "sentTitle": "Email mmutumibue",
+      "sentMessage": "Bikalaku compte bua {{email}}, lien udi wenza mudimu bua dîba 1 mmutumibue.",
+      "resetTitle": "Sungula mot de passe mupiamupia",
+      "resetHelp": "Teka lien uvua mupete ku email, panyima sungula mot de passe webe mupiamupia.",
+      "resetSubmit": "Lama mot de passe mupiamupia",
+      "successTitle": "Mot de passe mmushintuluke",
+      "successMessage": "Bua bukubi buebe, ba session bebe bakuabu mbakangibue. Buela ne mot de passe webe mupiamupia.",
+      "changeEmail": "Enzeja adresse mukuabu"
+    }
+  },
+  "profile": {
+    "title": "Profil",
+    "todoTitle": "Mu matuku adi alua: profil webe wa disama",
+    "todoText": "Dina, mushindu wa diabète, mikalu mimpe ne mikalu ya dimanyisha, muntu wa kubikila mu ntatu.",
+    "settings": "Malongolola",
+    "settingsHint": "Mushindu wa kumueneka, ba unité, ba notification, bukubi",
+    "signOut": "Patuka",
+    "signOutConfirmTitle": "Kupatuka mu telefone eu?",
+    "signOutConfirmText": "Malu ebe adi ashala ku compte webe. Neamushibue mu telefone eu ne udi mua kubuela kabidi misangu yonso.",
+    "signOutUnsynced_one": "Ditabalela: dishintulula {{count}} kadiena muanji kutumibua ku serveur to. Nedijimine biwapatuka katataka. Biwakumbana, buela kumpala ku internet.",
+    "signOutUnsynced_other": "Ditabalela: mashintulula {{count}} kaena muanji kutumibua ku serveur to. Neajimine biwapatuka katataka. Biwakumbana, buela kumpala ku internet.",
+    "signOutUnsynced_many": "Ditabalela: mashintulula {{count}} kaena muanji kutumibua ku serveur to. Neajimine biwapatuka katataka. Biwakumbana, buela kumpala ku internet.",
+    "import": "Buelesha muyuki wa kale",
+    "importHint": "Fichier CSV anyi Excel wa kaye anyi wa tshiamu",
+    "sync": "Kutuma",
+    "syncHint": "Mushindu, bidi bindila, mashintulula mapidibue"
+  },
+  "tabs": {
+    "home": "Ntuadijilu",
+    "timeline": "Muyuki",
+    "insights": "Dikonkonona",
+    "share": "Abanya",
+    "profile": "Profil",
+    "add": "Bakisha"
+  },
+  "settings": {
+    "overline": "Malongolola",
+    "title": "Malongolola",
+    "appearance": "Mushindu wa kumueneka",
+    "appearanceHint": "Butoke anyi mîdima, dikala",
+    "language": "Muakulu",
+    "languageHint": "Muakulu wa application",
+    "units": "Ba unité ne mikalu",
+    "unitsHint": "Unité udi musue, mikalu mimpe, mikalu ya dimanyisha",
+    "unitsScreen": {
+      "intro": "Unité wa kuleja, mikalu mimpe ne mikalu ya dimanyisha. Bua kusungula ne munganga webe: Afyabora kafidi nansha kakese mubelu wa manga to.",
+      "saved": "Mbilamibue. Mapima ebe adi aleja katataka mu {{unit}}.",
+      "discard": "Lekela mashintulula",
+      "storedNote": "Mapima uvua mulame kale kaashintuluki to: anu mushindu wa kumueneka ke udi ulonda unité uwasungula.",
+      "problem": {
+        "offline": "Internet kayena to: dilongolola edi didi dikengela internet. Tentekela kabidi pikala internet mupingane.",
+        "noProfile": "Umbusha kumpala profil webe: malongolola aa adi tshitupa tshiende.",
+        "invalid": "Serveur mmupidie bungi ebu. Tangila mulongo: muinshi bikole < mikalu mimpe < pulu bikole.",
+        "profile": "Profil webe udi ne bualu bumue kabuyi bujima: umbusha kumpala kua kushintulula malongolola aa.",
+        "error": "Dilongolola kadiena dilamibue to. Tentekela kabidi panyima pa tshikondo tshikese."
+      }
+    },
+    "notifications": "Ba notification",
+    "notificationsHint": "Bivulukishi, dimanyisha, mêba a dikalakala",
+    "security": "Bukubi",
+    "securityHint": "Kubulula ne tshiala anyi code",
+    "account": "Malu anyi ne compte wanyi",
+    "accountHint": "Patula malu anyi, umbusha compte wanyi",
+    "about": "Bua application",
+    "aboutHint": "Version, dimanyisha, musokoko",
+    "design": "Planche ya style",
+    "designHint": "Kumueneka anu mu développement: makala, mifundu, bitupa"
+  },
+  "account": {
+    "title": "Malu anyi ne compte wanyi",
+    "intro": "Peta copie wa malu ebe misangu yonso, anyi umbusha compte webe ne bionso bidimu.",
+    "export": {
+      "title": "Patula malu anyi",
+      "body": "Fichier (JSON) udi ne profil webe, mapima ebe onso ne bienzedi biebe, ne ba note. Udi mua kumulama anyi kumufila ku mudimu mukuabu.",
+      "privacy": "Fichier eu udi ne malu a disama diebe patoke: umulame bimpe ne umuabanye anu ne bantu buudi weyemena.",
+      "pendingFirst_one": "Bualu {{count}} kabuyi muanji kutumibua nebutumibue kumpala, bua kuikala mu fichier.",
+      "pendingFirst_other": "Malu {{count}} kaayi muanji kutumibua neatumibue kumpala, bua kuikala mu fichier.",
+      "pendingFirst_many": "Malu {{count}} kaayi muanji kutumibua neatumibue kumpala, bua kuikala mu fichier.",
+      "button": "Patula malu anyi",
+      "again": "Patula kabidi",
+      "shareAgain": "Abanya fichier eu kabidi",
+      "shareTitle": "Malu anyi a Afyabora",
+      "phase": {
+        "syncing": "Kutuma malu ebe a ndekelu…",
+        "downloading": "Kulongolola fichier…",
+        "sharing": "Kubulula diabanya…"
+      },
+      "done": "Fichier mmulongoluke: {{name}}",
+      "unsent_one": "Bualu {{count}} kabuvua mua kutumibua to: kabuena mu fichier eu to. Tentekela kabidi pikala internet muimpe.",
+      "unsent_other": "Malu {{count}} kaavua mua kutumibua to: kaena mu fichier eu to. Tentekela kabidi pikala internet muimpe.",
+      "unsent_many": "Malu {{count}} kaavua mua kutumibua to: kaena mu fichier eu to. Tentekela kabidi pikala internet muimpe.",
+      "problem": {
+        "offline": "Internet kayena to: dipatula didi dikengela internet.",
+        "tooMany": "Wakupatula misangu ya bungi mu tshikondo tshikese. Tentekela kabidi panyima pa minite umue.",
+        "noProfile": "Umbusha kumpala profil webe: kakuena muanji tshia kupatula to.",
+        "cannotShare": "Fichier mmulongoluke, kadi diabanya kadiena mu tshiamu etshi to.",
+        "error": "Dipatula kadiakajika bimpe to. Tentekela kabidi panyima pa tshikondo tshikese."
+      }
+    },
+    "delete": {
+      "title": "Umbusha compte wanyi",
+      "body": "Compte webe ne malu ebe onso neamushibue ku ba serveur betu ne mu telefone eu:",
+      "what": {
+        "data": "profil webe, mapima ebe onso ne bienzedi biebe, ne ba note;",
+        "shares": "malu uvua muabanye: bamunganga nebajimije njila wa kutangila dossier webe diakamue;",
+        "emergency": "carte webe wa ntatu: QR wende kena ubululuka kabidi to;",
+        "phone": "malu malamibue mu telefone eu."
+      },
+      "irreversible": "Bidi bia tshiendelele: kakuena tshia kupingana to. Patula malu ebe kumpala biwasua kuamulama.",
+      "start": "Umbusha compte wanyi…",
+      "password": "Mot de passe",
+      "passwordHint": "Bua kujadika ne nduwe bulelela.",
+      "understand": "Ndi mumvue ne compte wanyi ne malu anyi onso neamushibue bua tshiendelele.",
+      "confirm": "Umbusha bua tshiendelele",
+      "problem": {
+        "password": "Mot de passe kena muimpe to. Kakuena tshimushibue to.",
+        "tooMany": "Wakutentekela misangu ya bungi. Indila minite umue kumpala kua kutentekela kabidi. Kakuena tshimushibue to.",
+        "offline": "Internet kayena to: diumbusha didi dikengela internet. Kakuena tshimushibue to.",
+        "error": "Diumbusha kadiakajika bimpe to. Kakuena tshimushibue to: tentekela kabidi panyima pa tshikondo tshikese."
+      },
+      "doneTitle": "Compte mmumushibue",
+      "done": "Compte webe ne malu ebe onso mmamushibue. Tuasakidila bua wakenzeja Afyabora."
+    }
+  },
+  "appearance": {
+    "overline": "Malongolola",
+    "title": "Mushindu wa kumueneka",
+    "intro": "Sungula mushindu udi Afyabora umueneka. Mifundu idi ibalibua bimpe misangu yonso.",
+    "theme": "Thème",
+    "themeA11y": "Thème wa application",
+    "light": "Butoke",
+    "dark": "Mîdima",
+    "system": "Nkayabi",
+    "systemHint": "Udi ulonda dilongolola dia telefone (katataka: {{mode}}).",
+    "systemLight": "butoke",
+    "systemDark": "mîdima",
+    "accent": "Dikala",
+    "preview": "Kumona kumpala",
+    "previewOverline": "Dipima dia ndekelu · tshilejilu",
+    "previewButton": "Bakisha dipima"
+  },
+  "language": {
+    "title": "Muakulu",
+    "intro": "Sungula muakulu wa application. Malu ebe kaashintuluki to.",
+    "system": "Muakulu wa telefone",
+    "systemHint": "Katataka: {{name}}",
+    "inReview": "Dikudimuna didi ditangidibua",
+    "inReviewNote": "Miakulu idi ne «dikudimuna didi ditangidibua» kayena muanji kutangidibua kudi muntu udi wakula muakulu au to. Bikala mukenji umue wa disama kauyi patoke, ebeja bena manga bebe.",
+    "serverNote": "Malu amue adi ashala muanji mu français: mandamuna ne bifiche bia muambuluishi, rapport PDF ne ba email."
+  },
+  "onboarding": {
+    "progress": "Tshitupa {{current}} pa {{total}}",
+    "next": "Tungunuka",
+    "review": "Tangila malu anyi",
+    "privacy": "Malu ebe adi a musokoko: anu wewe udi usungula nganyi udi mua kuamona.",
+    "identity": {
+      "title": "Udi nganyi?",
+      "intro": "Malu aa adi aambuluisha munganga webe bua kukumanya ne kumvua mapima ebe.",
+      "firstName": "Dina dia kumpala",
+      "lastName": "Dina dia diku",
+      "birthDate": "Dituku dia kuledibua",
+      "birthDatePlaceholder": "DT/NG/TSH",
+      "sex": "Mulume anyi mukaji",
+      "sexF": "Mukaji",
+      "sexM": "Mulume",
+      "sexOther": "Mukuabu"
+    },
+    "diabetes": {
+      "title": "Diabète webe",
+      "intro": "Mushindu wa diabète udi wambuluisha bua kumvua dilonda diebe. Bikala kuyi mumanye bimpe, sungula «Mukuabu»: udi mua kumushintulula panyima.",
+      "type": "Mushindu wa diabète",
+      "type1": "Mushindu 1",
+      "type2": "Mushindu 2",
+      "gestational": "Wa mu difu",
+      "other": "Mukuabu",
+      "year": "Tshidimu tshiakamumonabu",
+      "yearHint": "Ki mbua bualu bua bukole to. Nansha biudi mumanye anu pa buipi."
+    },
+    "thresholds": {
+      "title": "Unité ne mikalu",
+      "intro": "Sungula unité wa tshiamu tshiebe ne tangila mikalu yebe mimpe.",
+      "unit": "Unité wa dipima",
+      "doctorNote": "Bungi bua tshibidilu mbufidibue kumpala: bua kusungula ne munganga webe. Afyabora kafidi nansha kakese mubelu wa manga to.",
+      "veryLowMgDl": "Muinshi bikole bikala muinshi mua",
+      "targetMinMgDl": "Mikalu mimpe: ntuadijilu",
+      "targetMaxMgDl": "Mikalu mimpe: ndekelu",
+      "veryHighMgDl": "Pulu bikole bikala pulu pa",
+      "reset": "Pingana ku bungi bua kumpala",
+      "reviewed": "Mikalu eyi mmisungula ne munganga wanyi.",
+      "barCaption": "Muinshi bikole · muinshi · mikalu mimpe · pulu · pulu bikole",
+      "barA11y": "Mikalu mimpe kubangila ku {{min}} too ne ku {{max}} milligrammes ku décilitre",
+      "rangeTitle": "Mikalu mimpe",
+      "alertTitle": "Mikalu ya dimanyisha",
+      "rangeHint": "Bungi budi pankatshi pa bungi ebi bibidi budi «munda mua mikalu».",
+      "alertHint": "Muinshi mua «muinshi bikole» anyi pulu pa «pulu bikole», Afyabora neakumanyishe.",
+      "short": {
+        "targetMinMgDl": "Kubangila",
+        "targetMaxMgDl": "Too ne",
+        "veryLowMgDl": "Muinshi bikole",
+        "veryHighMgDl": "Pulu bikole"
+      }
+    },
+    "contacts": {
+      "title": "Bantu bebe ba kubikila",
+      "intro": "Ki mbua bualu bua bukole to, kadi bidi mua kuambuluisha mu ntatu. Udi mua kubishintulula panyima.",
+      "relativeTitle": "Muntu wa mu diku wa kumanyisha",
+      "relativeHint": "Neikale pa carte webe wa ntatu biwamubulula.",
+      "name": "Dina",
+      "phone": "Telefone",
+      "relation": "Bulongo (ki mbua bukole to)",
+      "relationPlaceholder": "Mukaji, muana wa balume, mulunda…",
+      "doctorTitle": "Munganga webe",
+      "doctorHint": "Munganga udi ulonda diabète webe.",
+      "doctorName": "Dina dia munganga",
+      "doctorNamePlaceholder": "Dr …",
+      "emergencyTitle": "Mu ntatu ya lukasa",
+      "emergencyHint": "Numero wa kubikila diambuluisha muaba udi musombele. Afyabora kamumanyi to: ebeja ku tshiondo tshiebe tshia manga.",
+      "country": "Ditunga",
+      "countries": {
+        "CD": "RD Congo",
+        "CG": "Congo",
+        "RW": "Rwanda",
+        "BI": "Burundi",
+        "UG": "Uganda",
+        "AO": "Angola",
+        "FR": "France",
+        "BE": "Belgique",
+        "OTHER": "Ditunga dikuabu"
+      },
+      "otherCountry": "Code wa ditunga (mifundu 2)",
+      "otherCountryHint": "Tshilejilu KE bua Kenya, CM bua Cameroun.",
+      "clearCountry": "Kufunda ditunga to",
+      "emergencyNumber": "Numero wa ntatu ya lukasa",
+      "emergencyNumberHint": "Diambuluisha, ambulance anyi lopitalo wa pa buipi.",
+      "emergencyNumberPlaceholder": "Tshilejilu 112"
+    },
+    "summary": {
+      "overline": "Tshitupa tshia ndekelu",
+      "title": "Bionso bidi bimpe?",
+      "intro": "Tangila malu ebe kumpala kua kuamulama.",
+      "edit": "Shintulula",
+      "name": "Dina",
+      "target": "Mikalu mimpe",
+      "none": "Kabiyi bifunda to",
+      "save": "Lama profil wanyi"
+    },
+    "done": {
+      "title": "Moyo, {{name}}!",
+      "message": "Profil webe mmulongoluke. Udi mua kulama dipima diebe dia kumpala.",
+      "action": "Manya Afyabora"
+    },
+    "errors": {
+      "firstName": "Funda dina diebe dia kumpala.",
+      "lastName": "Funda dina diebe dia diku.",
+      "birthDate": "Dituku kadiena dimpe to: enzeja DT/NG/TSH (kadi dituku dikalaku dilua to).",
+      "sex": "Sungula umue.",
+      "diabetesType": "Sungula mushindu wa diabète.",
+      "diagnosisYear": "Tshidimu pankatshi pa 1950 ne lelu, panyima pa kuledibua kuebe.",
+      "preferredUnit": "Sungula unité.",
+      "thresholds": {
+        "veryLowMgDl": "Bungi kabuena buimpe to: budi ne bua kuikala muinshi mua ntuadijilu wa mikalu mimpe.",
+        "targetMinMgDl": "Bungi kabuena buimpe to anyi budi pambelu pa mikalu (20 too ne 600 mg/dL).",
+        "targetMaxMgDl": "Bungi kabuena buimpe to: ndekelu wa mikalu udi ne bua kuikala pulu pa ntuadijilu.",
+        "veryHighMgDl": "Bungi kabuena buimpe to: budi ne bua kuikala pulu pa ndekelu wa mikalu mimpe."
+      },
+      "emergencyContact": {
+        "name": "Funda dina dia muntu webe wa mu diku.",
+        "phone": "Funda numero wa telefone (bikole ne mifundu 6).",
+        "relation": "Mifundu mmipite bungi."
+      },
+      "doctorContact": {
+        "name": "Funda dina dia munganga webe.",
+        "phone": "Funda numero wa telefone (bikole ne mifundu 6)."
+      },
+      "country": "Sungula ditunga anyi funda code wende wa mifundu 2 (tshilejilu KE).",
+      "emergencyNumber": "Funda numero wa bungi anu (« + » udi mwitabuja ku ntuadijilu)."
+    }
+  },
+  "security": {
+    "pad": {
+      "progress": "Bungi {{count}} bufunda pa {{total}}",
+      "delete": "Umbusha"
+    },
+    "lock": {
+      "title": "Afyabora mmukangibue",
+      "prompt": "Funda code webe bua kutungunuka.",
+      "wrong": "Code kena muimpe to. Tentekela kabidi.",
+      "wait": "Wakutentekela misangu ya bungi. Tentekela kabidi panyima pa {{seconds}} s.",
+      "bioPrompt": "Bulula Afyabora",
+      "useCode": "Enzeja code wanyi",
+      "useFace": "Bulula ne mpala",
+      "useFinger": "Bulula ne tshiala",
+      "forgot": "Wakupua code muoyo?",
+      "forgotTitle": "Patuka bua kulongolola kabidi",
+      "forgotText": "Neubuele kabidi ne email ne mot de passe webe. Malu kaayi muanji kutumibua neajimine mu telefone eu.",
+      "forgotConfirm": "Patuka"
+    },
+    "settings": {
+      "title": "Bukubi",
+      "intro": "Kuba njila wa kubuela mu malu a disama diebe mu telefone eu.",
+      "lockLabel": "Kanga application",
+      "lockHint": "Code (ne tshiala biwasua) nebakulombe paudi ubulula.",
+      "bioFinger": "Bulula ne tshiala",
+      "bioFace": "Bulula ne mpala",
+      "bioHint": "Code webe udi mua kuenzejibua misangu yonso.",
+      "bioUnavailable": "Tshiala anyi mpala kabiena mu telefone eu to: nebalombe code.",
+      "timeoutLabel": "Kanga kabidi panyima pa",
+      "timeout": {
+        "immediate": "Diakamue",
+        "1min": "1 min",
+        "5min": "5 min"
+      },
+      "change": "Shintulula code",
+      "lengthTitle": "Sungula code webe",
+      "lengthLabel": "Bule bua code",
+      "four": "Bungi 4",
+      "fourHint": "Bia lukasa bua kufunda",
+      "six": "Bungi 6",
+      "sixHint": "Bikole bua kumanya",
+      "createTitle": "Funda code mupiamupia",
+      "confirmTitle": "Mufunde kabidi",
+      "verifyTitle": "Funda code webe wa katataka",
+      "mismatch": "Ba code babidi kabafuane to. Tuadija kabidi.",
+      "problem": {
+        "length": "Code udi ne bua kuikala ne bungi 4 too ne 6.",
+        "digits": "Code udi anu ne bungi.",
+        "tooSimple": "Code mmupepele bikole (tshilejilu 1234, 0000). Sungula mukuabu."
+      },
+      "enabled": "Dikanga ndibululuke.",
+      "changed": "Code mmushintuluke.",
+      "disabled": "Dikanga ndikangibue.",
+      "tipsTitle": "Bimpe bua kumanya",
+      "tips": "Code webe kalamibu patoke nansha kakese to. Panyima pa bilema 5, udi ne bua kuindila kumpala kua kutentekela kabidi. Wakupua code muoyo? Udi mua kupatuka ne kubuela kabidi ne mot de passe webe.",
+      "storage": {
+        "title": "Malu a disama mu telefone eu",
+        "loading": "Kutangila…",
+        "encrypted": "Malamibue mu musokoko",
+        "encryptedHint": "Base locale mmulamibue mu musokoko (AES-256, SQLCipher). Nsapi mulamibue mu muaba wa bukubi wa telefone.",
+        "unencrypted": "Kaayi malamibue mu musokoko to",
+        "unencryptedHint": "Mode wa développement (Expo Go): musokoko udi wenza anu mu application muteka (APK).",
+        "web": "Kumona ku web",
+        "webHint": "Kakuena tshilamibua mu tshiamu etshi to: malu adi ashala mu mémoire anu paudi muaba eu.",
+        "error": "Kaena to",
+        "errorHint": "Base locale kayivua mua kubululuka to. Kanga ne bulula application kabidi.",
+        "migrated": "Malu avua malamibue kale mu telefone eu mmalamibue katataka mu musokoko.",
+        "reset": "Base wa telefone eu kavua ubalibua to: mmuenzibue kabidi. Malu ebe adi apingana kufumina ku serveur; anu malu kaavua matumibue ke adi mua kujimina."
+      }
+    }
+  },
+  "legal": {
+    "updated": "Version {{version}} · mulongolola dituku dia {{date}}",
+    "date": "10 ngondo wa dikumi 2026",
+    "close": "Kanga",
+    "emergencyTitle": "Mu ntatu ya lukasa",
+    "emergency": "Biwadiumvua bibi, anyi sukadi wa mu mashi udi muinshi bikole anyi pulu bikole ne bimanyinu, kuindidi application to: bikila diambuluisha anyi ya ku tshiondo tshia manga tshia pa buipi.",
+    "disclaimer": {
+      "overline": "Dimanyisha",
+      "title": "Tshiamu tshia kuambuluisha, ki mubelu wa munganga to",
+      "short": "Afyabora udi ukuambuluisha bua kulonda sukadi webe. Katshiena tshijadika disama to ne katshiena tshiangata muaba wa mubelu wa muena manga to.",
+      "more": "Manya bia bungi",
+      "moreA11y": "Bala dimanyisha dionso",
+      "intro": "Afyabora ndi tshiamu tshia kuambuluisha mu dilonda dia diabète. Kumpala kua kutshienzeja, bidi bimpe kumanya tshidi tshienza, nangananga tshidi katshienzi to.",
+      "does": {
+        "title": "Tshidi Afyabora wenza",
+        "body": "Udi ulama mapima ebe, nansha kakuyi internet. Udi wenza bungi bupepele kufumina ku malu ebe nkayebe (moyenne, tshikondo munda mua mikalu yebe mimpe, misangu ivua sukadi mubande anyi mupueke). Udi ukuambuluisha bua kulongolola dipetangana ne munganga ne kuabanya muyuki webe ne munganga uwasungula."
+      },
+      "doesNot": {
+        "title": "Tshidi katshienzi to",
+        "body": "Katshiena tshijadika disama to. Katshiena tshifila dose wa insuline anyi wa manga to. Katshiena tshiamba bualu budi bubandisha anyi bupuekesha sukadi to: malu adi tshileja adi anu njila ya kuyukila ne muena manga."
+      },
+      "quality": {
+        "title": "Mandamuna adi alonda malu audi ufunda",
+        "body": "Bungi budi bulelela anu bikala mapima malelela: bungi bufunda bibi anyi matuku kaayi ne dipima adi ashintulula mandamuna. Application udi ukumanyisha pikala malu makese bua kuangata dipangadika."
+      },
+      "treatment": {
+        "title": "Manga ebe",
+        "body": "Kushintulula manga ebe anu bua application to. Yukila kumpala ne munganga webe anyi bena manga bebe."
+      },
+      "alerts": {
+        "title": "Bivulukishi ne dimanyisha",
+        "body": "Bivulukishi ne dimanyisha bidi mua kubenga kulua (telefone mujime, batterie mujike, ba notification bakangibue). Kabiena biangata muaba wa ditabalela diebe ne dia bantu bebe to."
+      }
+    },
+    "privacy": {
+      "overline": "Musokoko",
+      "title": "Mikenji ya bulami bua musokoko",
+      "intro": "Malu a disama diebe adi aebe. Dibeji edi didi dileja patoke tshitudi tulama, bua tshinyi, penyi ne nganyi udi mua kutshimona.",
+      "prototype": "Afyabora ndi katataka prototype muenza mu tshilongelu. Mikenji eyi neitangidibue kabidi ne bakokeshi kumpala kua kumufila kudi bantu bonso.",
+      "data": {
+        "title": "Malu adi alamibua",
+        "body": "Compte webe: adresse email ne mot de passe (kalamibu patoke nansha kakese to). Profil webe: dina, dituku dia kuledibua, mulume anyi mukaji, mushindu wa diabète, tshidimu tshiakamumonabu, unité ne mikalu iwasungula. Biwasua: muntu wa mu diku wa kumanyisha ne munganga webe. Dilonda diebe: mapima a sukadi, bienzedi (biakudia, mudimu wa mubidi, manga…) ne ba note."
+      },
+      "purpose": {
+        "title": "Bua tshinyi",
+        "body": "Anu bua dilonda diebe: kuleja muyuki webe, kuenza bungi buebe ne kulongolola dipetangana ne munganga. Piblisite kayena to. Malu ebe kaapanyibu nansha kakese to."
+      },
+      "storage": {
+        "title": "Penyi padiwu alamibua",
+        "body": "Kumpala mu telefone webe, bua kuenza mudimu nansha kakuyi internet, panyima ku serveur wetu pikala internet. Ditumangana didi mu musokoko, ba note bebe badi mu musokoko ku serveur, ne udi mua kukanga application ne code anyi tshiala. Paudi upatuka, malu adi amushibua mu telefone."
+      },
+      "sharing": {
+        "title": "Kuabanya ne munganga",
+        "body": "Kakuena tshiabanyibua kuwakutshienza to. Wewe udi wenza QR code, udi wenza mudimu tshikondo tshikese ne musangu umue anu; anu munganga mubuele ne muitabujibue ke udi mua kumubala. Wewe udi usungula tshiamona ne bua tshikondo tshinyi, udi mua kulekela diabanya misangu yonso, ne ditangila dionso didi dimueneka mu kalasa webe."
+      },
+      "emergency": {
+        "title": "Carte wa ntatu",
+        "body": "Biwamubulula, carte wa ntatu udi mua kubalibua nansha kakuyi compte: ke tshipatshilu tshiende, bua bena diambuluisha. Udi anu ne malu auwasungula, ki muyuki webe to. Misangu yonso udi mubululuke, badi bakumanyisha, ne udi mua kumukanga anyi kumushintulula misangu yonso."
+      },
+      "analysis": {
+        "title": "Dikonkonona",
+        "body": "Bungi ne malu adi amueneka bidi bienzibua kudi application ne mikenji kayi ishintuluka ne idi mua kutangidibua, anu kufumina ku malu ebe. Dituku dimue tshiamu bu tshilongolola mifundu, netshipete anu bungi bukese, kakuyi dina diebe ne adresse webe to."
+      },
+      "retention": {
+        "title": "Bua tshikondo tshinyi",
+        "body": "Malu ebe adi alamibua bitu compte webe udiku. Diumbusha dia compte didi diumbusha malu ebe ku ba serveur betu."
+      },
+      "rights": {
+        "title": "Makokeshi ebe",
+        "body": "Udi mua kupeta copie wa malu ebe, kualongolola ne kuumbusha compte webe. Dianyisha diuvua mufile paudi wenza compte didi mua kumushibua biwaumbusha compte webe. Kuena ne bua kuabanya malu ebe ne munganga to."
+      }
+    },
+    "about": {
+      "overline": "Malongolola",
+      "title": "Bua application",
+      "version": "Version {{version}}",
+      "legalTitle": "Malu a mikenji",
+      "privacyHint": "Tshitudi tulama ne nganyi udi mua kutshimona",
+      "disclaimerHint": "Tshidi application wenza, ne tshidi kenzi to",
+      "credits": "Projet PBL 5 · MEO. Muenza bua bantu badi ne diabète."
+    }
+  },
+  "measurement": {
+    "overline": "Kufunda",
+    "title": "Dipima dipiadipia",
+    "close": "Kanga kakuyi kulama",
+    "valueLabel": "Sukadi wa mu mashi",
+    "valueA11y": "Bungi bua sukadi wa mu mashi, mu {{unit}}",
+    "equals": "mmumue ne {{values}}",
+    "unitLabel": "Unité",
+    "when": {
+      "label": "Tshikondo tshinyi?",
+      "now": "Katataka",
+      "minus30": "−30 min",
+      "minus60": "−1 h",
+      "custom": "Tshikuabu",
+      "today": "Lelu",
+      "yesterday": "Makelela",
+      "dayBefore": "Dituku dia kumpala kua makelela",
+      "time": "Diba dia dipima",
+      "hourMinus": "Diba dimue kumpala",
+      "hourPlus": "Diba dimue panyima",
+      "minuteMinus": "Minite itanu kumpala",
+      "minutePlus": "Minite itanu panyima",
+      "summary": "{{day}}, {{time}}"
+    },
+    "context": {
+      "label": "Tshikondo tshia dipima",
+      "FASTING": "Kakuyi kudia",
+      "BEFORE_MEAL": "Kumpala kua kudia",
+      "AFTER_MEAL": "Panyima pa kudia",
+      "BEDTIME": "Pa kulala",
+      "NIGHT": "Butuku",
+      "OTHER": "Tshikuabu"
+    },
+    "noteLabel": "Note (biwasua)",
+    "notePlaceholder": "Tshilejilu: panyima pa kuendakana, biakudia bia butuku bua mu dilolo…",
+    "noteHint": "Wewe nkayebe udi umumona; udi uabanyibua anu biwasungula.",
+    "save": "Lama",
+    "problem": {
+      "empty": "Funda bungi buwapima.",
+      "invalid": "Bungi kabuena bubalibua to: enzeja anu bungi.",
+      "zero": "Bungi budi ne bua kupita zero.",
+      "decimals": "Bungi bua bungi panyima pa virgule bua unité eu: tangila bimpe tshiwafunda.",
+      "unusual": "Bungi kabuyi bumanyike: tangila bungi ne unité uwasungula.",
+      "future": "Diba edi kadiena dianji kufika to.",
+      "context": "Sungula tshikondo tshia dipima."
+    },
+    "duplicateTitle": "Wakudilama kale?",
+    "duplicate": "Dipima dia bungi bumue budi kale ku diba edi.",
+    "duplicateConfirm": "Lama nansha nanku",
+    "error": "Dipima kadiakulamibua mu telefone eu to. Tentekela kabidi.",
+    "saved": {
+      "title": "Dipima ndilamibue",
+      "detail": "{{value}} · {{context}} · {{when}}",
+      "local": "Ndilamibue mu telefone eu, nedituminyibue pikala internet.",
+      "another": "Ela dipima dikuabu",
+      "done": "Bijike",
+      "confirmedUnusual": "Bungi kabuyi bumanyike buwakujadika wewe nkayebe."
+    },
+    "addA11y": "Ela dipima dia sukadi wa mu mashi",
+    "unusual": {
+      "question": "{{value}}: bidi bilelela?",
+      "explain": "Bungi ebu kabuyi bumanyike: tshiamu tshia kupima sukadi tshidi tshileja tshiapamue pankatshi pa {{min}} ne {{max}}.",
+      "unitHint": "Tshilema tshia unité? Shiya bungi, shintulula unité:",
+      "switchUnit": "Buvua mu {{unit}}",
+      "confirm": "Eyowa, bidi bilelela",
+      "fix": "Longolola bungi"
+    },
+    "safety": {
+      "title": {
+        "VERY_LOW": "Bungi muinshi bikole",
+        "VERY_HIGH": "Bungi pulu bikole"
+      },
+      "message": "Londa mibelu ya bena manga bebe. Biwadiumvua bibi, lomba diambuluisha diakamue."
+    },
+    "edit": {
+      "overline": "Dipima",
+      "title": "Longolola dipima",
+      "close": "Kanga kakuyi kulama",
+      "savedAt": "{{day}} ku {{time}}",
+      "whenLabel": "Dituku ne diba",
+      "day": "Dituku dia dipima",
+      "previousDay": "Dituku dia kumpala",
+      "nextDay": "Dituku didi dilonda",
+      "save": "Lama mashintuluka",
+      "saveError": "Dishintuluka kadiakulamibua mu telefone eu to. Tentekela kabidi.",
+      "delete": "Umbusha dipima edi",
+      "deleteTitle": "Umbusha dipima edi?",
+      "deleteText": "Nedijimine mu muyuki webe ne mu bungi buebe, mu telefone eu ne panyima ku serveur.",
+      "deleteConfirm": "Umbusha",
+      "deleteError": "Dipima kadiakuumbushibua mu telefone eu to. Tentekela kabidi.",
+      "cancel": "Lekela",
+      "missingTitle": "Dipima kadiena dimueneka to",
+      "missingText": "Pamuapa ndiumbushibue kale.",
+      "back": "Pingana"
+    }
+  },
+  "dashboard": {
+    "greeting": {
+      "morning": "Moyo",
+      "evening": "Moyo wa dilolo"
+    },
+    "latest": {
+      "title": "Dipima dia ndekelu",
+      "today": "Lelu",
+      "yesterday": "Makelela",
+      "when": "{{day}}, {{time}}",
+      "age": {
+        "justNow": "Katataka emu",
+        "minutes_one": "Kukadi {{count}} min",
+        "minutes_other": "Kukadi {{count}} min",
+        "minutes_many": "Kukadi {{count}} min",
+        "hours_one": "Kukadi {{count}} h",
+        "hours_other": "Kukadi {{count}} h",
+        "hours_many": "Kukadi {{count}} h",
+        "days_one": "Kukadi dituku {{count}}",
+        "days_other": "Kukadi matuku {{count}}",
+        "days_many": "Kukadi matuku {{count}}"
+      },
+      "a11y": "Dipima dia ndekelu: {{value}}, {{state}}. {{context}}, {{when}}.",
+      "add": "Dipima dipiadipia"
+    },
+    "empty": {
+      "title": "Kakuena dipima to too ne katataka",
+      "text": "Funda sukadi webe wa kumpala: udi ushala mu telefone eu, nansha kakuyi internet.",
+      "action": "Funda dipima dianyi dia kumpala"
+    },
+    "error": "Mapima ebe kaakubalibua mu telefone eu to.",
+    "chart": {
+      "title": "Dishintuluka",
+      "periodLabel": "Tshikondo tshia graphique",
+      "period_one": "{{count}} dt",
+      "period_other": "{{count}} dt",
+      "period_many": "{{count}} dt",
+      "summary_one": "Dipima {{count}} mu matuku {{days}}",
+      "summary_other": "Mapima {{count}} mu matuku {{days}}",
+      "summary_many": "Mapima {{count}} mu matuku {{days}}",
+      "hint": "Lenga mulongo wa graphique bua kumona malu a dipima dimue.",
+      "empty": "Kakuena dipima mu matuku aa {{days}} to.",
+      "target": "Mikalu mimpe: {{min}} – {{max}}",
+      "a11y_one": "Graphique wa sukadi wa mu mashi mu matuku {{days}}: dipima {{count}}.",
+      "a11y_other": "Graphique wa sukadi wa mu mashi mu matuku {{days}}: mapima {{count}}.",
+      "a11y_many": "Graphique wa sukadi wa mu mashi mu matuku {{days}}: mapima {{count}}.",
+      "a11yHint": "Kokesha munu pulu anyi muinshi bua kuya ku dipima dikuabu.",
+      "a11yPoint": "{{value}}, {{state}}. {{detail}}"
+    },
+    "stats": {
+      "title": "Bungi",
+      "count_one": "Dipima {{count}} · {{days}} dt",
+      "count_other": "Mapima {{count}} · {{days}} dt",
+      "count_many": "Mapima {{count}} · {{days}} dt",
+      "insufficientTitle": "Malu kaena makumbane to",
+      "insufficient_one": "Bidi bikengela mapima {{min}} pa nshinga mu matuku aa {{days}} bua bungi bulelela. Udi ne {{count}}.",
+      "insufficient_other": "Bidi bikengela mapima {{min}} pa nshinga mu matuku aa {{days}} bua bungi bulelela. Udi ne {{count}}.",
+      "insufficient_many": "Bidi bikengela mapima {{min}} pa nshinga mu matuku aa {{days}} bua bungi bulelela. Udi ne {{count}}.",
+      "shareA11y": "Diabanya dia mapima: {{below}} % muinshi, {{inRange}} % munda mua mikalu, {{above}} % pulu.",
+      "mean": "Moyenne",
+      "sd": "Écart-type",
+      "cv": "Dishintuluka",
+      "compareTitle": "Bitudi tufuanyikija ne matuku {{days}} a kumpala",
+      "tirChange": "Tshikondo munda mua mikalu: {{value}}",
+      "meanChange": "Moyenne: {{value}}",
+      "points_one": "{{sign}}{{count}} point",
+      "points_other": "{{sign}}{{count}} points",
+      "points_many": "{{sign}}{{count}} points",
+      "stable": "kabuena bushintuluka to",
+      "direction": {
+        "up": "budi bubanda",
+        "down": "budi bupueka",
+        "flat": "kabuena bushintuluka to"
+      },
+      "noPrevious": "Mapima kaena makumbane mu matuku {{days}} a kumpala bua kufuanyikija to."
+    },
+    "quality": {
+      "title": "Bimpe bia malu",
+      "level": {
+        "GOOD": "Bimpe",
+        "PARTIAL": "Tshitupa",
+        "INSUFFICIENT": "Kabiena bikumbane to"
+      },
+      "reason": {
+        "empty": "Kakuena dipima mu matuku aa {{days}} to: kakuena tshia kutangila katataka to.",
+        "good": "Mapima a misangu yonso: matuku {{covered}} ne mapima pa matuku {{days}}, {{perDay}} ku dituku mu moyenne.",
+        "coverage": "Mapima anu mu matuku {{covered}} pa matuku {{days}}: matuku a bungi ne mapima adi enza bua dikonkonona dikale dilelela bikole.",
+        "freshness_one": "Dipima dia ndekelu kukadi dituku {{count}}: bungi kabuena buleja bimpe malu a lelu to.",
+        "freshness_other": "Dipima dia ndekelu kukadi matuku {{count}}: bungi kabuena buleja bimpe malu a lelu to.",
+        "freshness_many": "Dipima dia ndekelu kukadi matuku {{count}}: bungi kabuena buleja bimpe malu a lelu to.",
+        "density_one": "Mapima {{perDay}} ku dituku dia mapima mu moyenne: tshipatshilu ndi {{target}} bua kumona malu bimpe.",
+        "density_other": "Mapima {{perDay}} ku dituku dia mapima mu moyenne: tshipatshilu ndi {{target}} bua kumona malu bimpe.",
+        "density_many": "Mapima {{perDay}} ku dituku dia mapima mu moyenne: tshipatshilu ndi {{target}} bua kumona malu bimpe."
+      },
+      "coverage": "Matuku ne mapima",
+      "density": "Mapima ku dituku",
+      "freshness": "Tshikondo tshia dipima dia ndekelu",
+      "formula": "Score = 50 % matuku ne mapima + 30 % mapima ku dituku + 20 % tshikondo tshia dipima dia ndekelu.",
+      "a11y": "Bimpe bia malu: {{score}} pa 100, {{level}}. {{sentence}}"
+    }
+  },
+  "timeline": {
+    "overline": "Mulongo wa bikondo",
+    "title": "Muyuki",
+    "filtersLabel": "Sungula tshia kumona mu muyuki",
+    "filter": {
+      "all": "Bionso",
+      "glucose": "Sukadi wa mu mashi",
+      "MEAL": "Biakudia",
+      "ACTIVITY": "Mudimu wa mubidi",
+      "TREATMENT": "Manga",
+      "alerts": "Bivulukishi"
+    },
+    "type": {
+      "MEAL": "Biakudia",
+      "ACTIVITY": "Mudimu wa mubidi",
+      "TREATMENT": "Manga"
+    },
+    "duration_one": "{{type}} · {{count}} min",
+    "duration_other": "{{type}} · {{count}} min",
+    "duration_many": "{{type}} · {{count}} min",
+    "declared": "Mufunda kudi wewe",
+    "pending": "Kaayi muanji kutumibua to",
+    "source": {
+      "MANUAL": "Kufunda",
+      "IMPORT": "Import",
+      "DEVICE": "Tshiamu",
+      "importBatch": "Import · tshisumbu {{batch}}",
+      "a11y": "Muaba udiye mufume: {{label}}"
+    },
+    "count_one": "Tshintu {{count}}",
+    "count_other": "Bintu {{count}}",
+    "count_many": "Bintu {{count}}",
+    "more": "Mona matuku {{days}} a kumpala",
+    "end": "Kakuena tshintu tshia kale bikole mu telefone eu to.",
+    "empty": {
+      "title": "Muyuki webe kawena ne tshintu to",
+      "text": "Mapima ebe, biakudia, mudimu wa mubidi ne manga nebimueneke muaba eu, dituku ne dituku.",
+      "action": "Funda dipima",
+      "import": "Buela ne fichier"
+    },
+    "emptyFilter": {
+      "title": "Kakuena tshia kuleja to",
+      "text": "Kakuena tshintu tshia « {{filter}} » mu matuku {{days}} a ndekelu to."
+    },
+    "error": "Muyuki kawakubalibua mu telefone eu to.",
+    "a11y": {
+      "measurement": "{{time}}, sukadi wa mu mashi {{value}}, {{state}}, {{context}}",
+      "event": "{{time}}, {{label}}, {{meta}}"
+    },
+    "addEvent": "Ela",
+    "openHint": "Udi ubulula malu onso bua kulongolola anyi kuumbusha"
+  },
+  "event": {
+    "overline": "Diela dia lukasa",
+    "title": "Bualu bupiabupia",
+    "close": "Kanga kakuyi kulama",
+    "typeLabel": "Mushindu",
+    "type": {
+      "MEAL": "Biakudia",
+      "ACTIVITY": "Mudimu wa mubidi",
+      "TREATMENT": "Manga"
+    },
+    "typeHint": {
+      "MEAL": "Tshiwakudia, ne tshikondo tshinyi",
+      "ACTIVITY": "Mudimu wa mubidi ne tshikondo tshiwuakuangata",
+      "TREATMENT": "Manga muwakuangata, mudiwu umba"
+    },
+    "chooseFirst": "Sungula kumpala mushindu wa bualu.",
+    "label": {
+      "MEAL": "Biakudia",
+      "ACTIVITY": "Mudimu wa mubidi",
+      "TREATMENT": "Dina dia manga"
+    },
+    "placeholder": {
+      "MEAL": "Tshilejilu: biakudia bia munda munya, loso ne madesu",
+      "ACTIVITY": "Tshilejilu: kuendakana",
+      "TREATMENT": "Tshilejilu: insuline wa bulelela, metformine"
+    },
+    "suggestionsLabel": "Mibelu",
+    "suggestion": {
+      "breakfast": "Biakudia bia mu dinda",
+      "lunch": "Biakudia bia munda munya",
+      "dinner": "Biakudia bia dilolo",
+      "snack": "Biakudia bikese",
+      "walk": "Kuendakana",
+      "run": "Kunyema",
+      "bike": "Velo",
+      "football": "Football",
+      "dance": "Mazanshi",
+      "housework": "Midimu ya mu nzubu"
+    },
+    "durationLabel": "Tshikondo",
+    "durationOther": "Tshikondo tshikuabu (minite)",
+    "minutes_one": "{{count}} min",
+    "minutes_other": "{{count}} min",
+    "minutes_many": "{{count}} min",
+    "details": {
+      "MEAL": "Malu makuabu (biwasua)",
+      "ACTIVITY": "Malu makuabu (biwasua)",
+      "TREATMENT": "Note (biwasua)"
+    },
+    "detailsPlaceholder": {
+      "MEAL": "Tshilejilu: tshitupa tshinene kupita bia misangu yonso",
+      "ACTIVITY": "Tshilejilu: mu tshimenga tshionso",
+      "TREATMENT": "Tshilejilu: bu misangu yonso ku dilolo"
+    },
+    "detailsHint": "Wewe nkayebe udi umumona; udi uabanyibua anu biwasungula.",
+    "treatmentTitle": "Mufunda kudi wewe",
+    "treatmentInfo": "Afyabora udi ulama tshiudi ufunda, kakuyi kubala anyi kufila mubelu wa dose. Londa mibelu ya bena manga bebe.",
+    "save": "Lama",
+    "error": "Bualu kabuakulamibua mu telefone eu to. Tentekela kabidi.",
+    "problem": {
+      "type": "Sungula mushindu wa bualu.",
+      "label": "Funda dina.",
+      "labelTooLong": "Mifundu {{max}} pa bungi.",
+      "duration": "Tshikondo mu minite, kubangila ku 1 too ne ku 1440.",
+      "future": "Diba edi kadiena dianji kufika to."
+    },
+    "saved": {
+      "title": "Bualu mbulamibue",
+      "local": "Mbulamibue mu telefone eu, nebutuminyibue pikala internet.",
+      "another": "Ela bualu bukuabu",
+      "done": "Bijike"
+    }
+  },
+  "insights": {
+    "title": "Dikonkonona",
+    "subtitle": "Tshidi mapima ebe aleja. Mibala mu telefone eu, nansha kakuyi internet.",
+    "periodLabel": "Tshikondo tshikonkonona",
+    "error": "Mapima malamibue mu telefone eu kaena mua kubalibua to.",
+    "summary": {
+      "title": "Matuku {{days}} a ndekelu",
+      "range": "Kubangila {{from}} too ne {{to}}",
+      "inRange": "munda mua mikalu mimpe",
+      "count_one": "Dipima {{count}}",
+      "count_other": "Mapima {{count}}",
+      "count_many": "Mapima {{count}}",
+      "quality": "Bimpe bia malu: {{score}}/100 · {{level}}",
+      "a11y": "Mu matuku {{days}} a ndekelu: {{percent}} % ya mapima munda mua mikalu mimpe, {{readings}}. Bimpe bia malu: {{score}} pa 100, {{level}}."
+    },
+    "headline": {
+      "calm": "Kakuena bualu bua pa buabu mu tshikondo etshi to.",
+      "watch_one": "Bualu {{count}} bua kutangila bimpe.",
+      "watch_other": "Malu {{count}} a kutangila bimpe.",
+      "watch_many": "Malu {{count}} a kutangila bimpe."
+    },
+    "insufficient": {
+      "title": "Mapima kaena muanji kukumbana to",
+      "body_one": "Dipima {{count}} mu matuku aa {{days}}: bidi bikengela 10 pa nshinga bua dikonkonona dilelela.",
+      "body_other": "Mapima {{count}} mu matuku aa {{days}}: bidi bikengela 10 pa nshinga bua dikonkonona dilelela.",
+      "body_many": "Mapima {{count}} mu matuku aa {{days}}: bidi bikengela 10 pa nshinga bua dikonkonona dilelela.",
+      "action": "Funda dipima"
+    },
+    "observations_one": "Bualu {{count}}",
+    "observations_other": "Malu {{count}}",
+    "observations_many": "Malu {{count}}",
+    "severity": {
+      "INFO": "Lumu",
+      "ATTENTION": "Bua kutabalela",
+      "ALERT": "Dimanyisha"
+    },
+    "type": {
+      "TREND": "Njila wa bungi",
+      "TIME_OF_DAY_PATTERN": "Tshikondo tshia dituku",
+      "ANOMALY": "Bungi kabuyi bumanyike",
+      "HIGH_STREAK": "Bungi bua pulu bulondangane",
+      "REPEATED_HYPO": "Bungi bua muinshi misangu ya bungi",
+      "MISSING_DATA": "Matuku kakuyi dipima",
+      "PERIOD_COMPARISON": "Difuanyikija"
+    },
+    "slot": {
+      "MORNING": "dinda",
+      "NOON": "munda munya",
+      "EVENING": "dilolo",
+      "NIGHT": "butuku"
+    },
+    "sentence": {
+      "REPEATED_HYPO": "Ndi mmona mapima {{count}} muinshi mua mukalu wa muinshi mu matuku {{days}} a ndekelu.",
+      "HIGH_STREAK": "Ndi mmona mapima {{length}} malondangane pulu pa mukalu wa pulu.",
+      "ANOMALY": "Mapima {{count}} adi ashilangana bikole ne muyuki webe wa matuku aa.",
+      "TIME_OF_DAY_PATTERN": "Bungi bua pulu budi bumueneka bikole mu tshikondo tshia « {{slot}} » ({{slotAbovePct}} % pa muaba wa {{globalAbovePct}} % mu bionso).",
+      "MISSING_DATA": "Matuku {{daysWithoutData}} pa {{daysInPeriod}} kaena ne dipima to: makonkonona makuabu adi mua kuikala kaayi mapuangane to.",
+      "PERIOD_COMPARISON": "Tshikondo munda mua mikalu: {{timeInRangePct}} % (tshikondo tshia kumpala: {{previousTimeInRangePct}} %).",
+      "TREND": "Njila wa bungi mumueneke mu tshikondo etshi."
+    },
+    "threshold": {
+      "below": "Mukalu mupita: muinshi mua {{value}}",
+      "above": "Mukalu mupita: pulu pa {{value}}"
+    },
+    "alertReminder": "Yukila bualu ebu ne munganga webe.",
+    "evidence": {
+      "show_one": "Mona dipima didi ditangila bualu ebu",
+      "show_other": "Mona mapima {{count}} adi atangila bualu ebu",
+      "show_many": "Mona mapima {{count}} adi atangila bualu ebu",
+      "hide": "Sokoka mapima",
+      "more_one": "Leja dipima {{count}} dikuabu",
+      "more_other": "Leja mapima {{count}} makuabu",
+      "more_many": "Leja mapima {{count}} makuabu",
+      "openHint": "Udi ubulula malu onso a dipima edi.",
+      "a11y": "{{when}}: {{value}}, {{state}}. {{context}}."
+    },
+    "cardA11y": "{{severity}}. {{title}}. {{sentence}}",
+    "summaryText": {
+      "title": "Mu bukese",
+      "note": "Bukese buenza kufumina ku mapima ebe. Ki mubelu wa munganga to.",
+      "insufficient": "Mapima kaena muanji kukumbana mu matuku {{days}} a ndekelu bua dikonkonona dilelela to (bidi bikengela 10 pa nshinga).",
+      "counts": "Mu matuku {{days}} a ndekelu, mapima {{measures}} mmakonkononyibue (bimpe bia malu: {{level}}, {{score}}/100).",
+      "level": {
+        "GOOD": "bimpe",
+        "PARTIAL": "tshitupa",
+        "INSUFFICIENT": "kabiena bikumbane to"
+      },
+      "split": "Avua munda mua mikalu {{inRange}} % ya tshikondo, pulu {{above}} % ne muinshi {{below}} %.",
+      "previous": "Mu tshikondo tshia kumpala, tshikondo munda mua mikalu tshivua {{previous}} %.",
+      "points": "Malu a kutangila ne munganga webe: {{list}}.",
+      "none": "Kakuena bualu bua pa buabu buakamueneka mu tshikondo etshi to.",
+      "missing": "Matuku {{missing}} pa {{days}} kakuyi dipima: makonkonona makuabu adi mua kuikala kaayi mapuangane to.",
+      "point": {
+        "REPEATED_HYPO": "bungi bua muinshi misangu ya bungi",
+        "HIGH_STREAK": "bungi bua pulu bulondangane",
+        "ANOMALY": "bungi kabuyi bumanyike",
+        "TIME_OF_DAY_PATTERN": "bungi bua pulu bia bungi {{slots}}"
+      },
+      "slot": {
+        "MORNING": "mu dinda",
+        "NOON": "munda munya",
+        "EVENING": "ku dilolo",
+        "NIGHT": "butuku"
+      },
+      "and": "ne"
+    },
+    "rewritten": "Mifundu milongolola kudi IA, bungi butangidibue"
+  },
+  "assistant": {
+    "title": "Afyabora",
+    "subtitle": "Muambuluishi webe wa dilonda",
+    "entry": {
+      "title": "Lukonko lumue bua mapima ebe?",
+      "body": "Konka Afyabora, muambuluishi webe: udi wandamuna kufumina ku mapima ebe ne ku ba fiche bakatangila munganga."
+    },
+    "welcome": {
+      "title": "Moyo, meme ndi Afyabora",
+      "body": "Nkonka nkonko yebe bua sukadi webe anyi bua diabète.",
+      "measures": "Ndi ndeja mapima ebe ne mabala amue ne a dibeji dia Dikonkonona.",
+      "sheets": "Bua nkonko ya bantu bonso, ndi nenzeja ba fiche bakatangila munganga, ne ndi mbaleja.",
+      "never": "Tshiena mfila dose, tshiena njadika disama to, ne tshiena mfila mubelu wa manga to: bua bualu ebu, munganga webe ke muntu muimpe.",
+      "try": "Tentekela",
+      "suggestionHint": "Udi ukonka Afyabora lukonko elu"
+    },
+    "suggestions": {
+      "week": "Comment s'est passée ma semaine ?",
+      "evening": "Mes glycémies du soir sont-elles hautes ?",
+      "hba1c": "C'est quoi l'HbA1c ?",
+      "hypo": "Que faire en cas d'hypoglycémie ?"
+    },
+    "frenchOnly": "Katataka, muambuluishi udi umvua ne wandamuna anu mu français. Ke bualu kayi nkonko idi muinshi emu idi mu français.",
+    "kinds": {
+      "measurements": "Kufumina ku mapima ebe",
+      "sheet": "Kufumina ku fiche umue",
+      "emergency": "Ntatu ya lukasa",
+      "refusal": "Ki mudimu wanyi to",
+      "outOfScope": "Kakuena diandamuna dilelela to"
+    },
+    "source": {
+      "title_one": "Fiche muleja",
+      "title_other": "Ba fiche baleja",
+      "title_many": "Ba fiche baleja",
+      "validated": "Mutangila kudi munganga",
+      "draft": "Fiche kaayi muanji kutangidibua to",
+      "openHint": "Udi ubulula fiche wonso"
+    },
+    "rephrased": "Mufunda kudi IA wa mu telefone, panyima mutangidibue",
+    "pending": {
+      "title": "Afyabora udi ulongolola diandamuna…",
+      "hint": "Bidi mua kuangata too ne minite 2.",
+      "late": "Diandamuna didi dinenga kakese: nedimueneke padi dilongolola."
+    },
+    "outgoing": {
+      "sending": "Kutuma…",
+      "offline": "Kaayi mutumibue to: internet kayena to. Muambuluishi udi ukengela internet.",
+      "quota": "Kaayi mutumibue to: nkonko 20 ku diba pa bungi. Tentekela kabidi panyima pa {{minutes}} min.",
+      "conflict": "Kaayi mutumibue to: tentekela kabidi.",
+      "unknown": "Kaayi mutumibue to: mudimu kawena wandamuna to. Tentekela kabidi.",
+      "discard": "Umbusha"
+    },
+    "composer": {
+      "label": "Lukonko luebe",
+      "placeholder": "Funda lukonko luebe…",
+      "hint": "Mifundu 2 too ne 500. Kufundi dina diebe anyi malu adi akumanyisha to.",
+      "send": "Tuma lukonko",
+      "counter": "{{count}} / {{max}}",
+      "tooLong": "Mmule bikole: mifundu {{max}} pa bungi."
+    },
+    "emergency": {
+      "button": "Ntatu ya lukasa",
+      "buttonHint": "Udi uleja ba nimero ya kubikila mu ntatu ya lukasa",
+      "title": "Mu ntatu ya lukasa",
+      "body": "Biwadiumvua bibi, kushadi nkayebe to: bikila diambuluisha diakamue, anyi lomba muntu bua kubikila.",
+      "noNumber": "Kakuena nimero wa ntatu ya lukasa mulamibue to: bikila diambuluisha dia ditunga diebe. Udi mua kulama nimero webe wa ntatu ya lukasa mu profil webe.",
+      "callNumber": "Bikila {{phone}}",
+      "call_relative": "Bikila {{name}}",
+      "call_doctor": "Bikila {{name}} (munganga)",
+      "callHint": "Udi ubulula dibikila dia telefone"
+    },
+    "load": {
+      "loading": "Kubulula muyuki",
+      "offlineTitle": "Internet kayena to",
+      "offline": "Miyuki yebe idi milamibue ku serveur, mu musokoko: bidi bikengela internet bua kuyileja.",
+      "error": "Muyuki kawakubululuka to.",
+      "notFound": "Muyuki eu kawena kabidi to: pamuapa mmuumbushibue.",
+      "newConversation": "Muyuki mupiamupia"
+    },
+    "a11y": {
+      "question": "Lukonko luebe: {{text}}",
+      "answerReady": "Afyabora mmuandamune."
+    },
+    "home": {
+      "subtitle": "Muambuluishi webe wa dilonda: mapima ebe ne ba fiche bakatangila munganga.",
+      "new": "Muyuki mupiamupia",
+      "sheets": "Ba fiche ba dimanya",
+      "sheetsHint": "Hypoglycémie, HbA1c, biakudia…"
+    },
+    "list": {
+      "title": "Miyuki yebe",
+      "loading": "Kubulula miyuki yebe",
+      "offline": "Miyuki yebe idi milamibue ku serveur, mu musokoko: bidi bikengela internet bua kuyileja.",
+      "error": "Miyuki yebe kayakubululuka to.",
+      "empty": "Kakuena muyuki to too ne katataka. Konka Afyabora lukonko luebe lua kumpala.",
+      "today": "Lelu, {{time}}",
+      "yesterday": "Makelela, {{time}}",
+      "messages_one": "Mukenji {{count}}",
+      "messages_other": "Mikenji {{count}}",
+      "messages_many": "Mikenji {{count}}",
+      "noPreview": "Muyuki kakuyi lukonko",
+      "openHint": "Udi ubulula muyuki",
+      "remove": "Umbusha muyuki eu",
+      "removeTitle": "Umbusha muyuki eu?",
+      "removeText": "Nkonko ne mandamuna nebiumbushibue tshiendelele.",
+      "removeConfirm": "Umbusha",
+      "removeAll": "Umbusha miyuki yanyi yonso",
+      "removeAllTitle": "Umbusha miyuki yebe yonso?",
+      "removeAllText": "Nkonko yebe yonso ne mandamuna onso nebiumbushibue tshiendelele.",
+      "removeAllConfirm": "Umbusha bionso",
+      "removeOffline": "Kakuena tshiumbushibue to: internet kayena to. Tentekela kabidi pikala internet.",
+      "removeError": "Kakuena tshiumbushibue to: mudimu kawena wandamuna to. Tentekela kabidi.",
+      "more": "Mona bia bungi",
+      "privacy": "Miyuki yebe idi mu musokoko ne idi ishala too ne paudi uyumbusha. Munganga webe kena uyimona nansha kakese to."
+    },
+    "sheets": {
+      "title": "Ba fiche ba dimanya",
+      "intro": "Afyabora udi wenzeja ba fiche aba bua kuandamuna ku nkonko ya bantu bonso. Fiche yonso udi uleja miaba milelela muakafumina malu.",
+      "offline": "Ba fiche badi ku serveur: bidi bikengela internet bua kubaleja.",
+      "error": "Ba fiche kabakubululuka to.",
+      "empty": "Kakuena fiche udiku to katataka.",
+      "notFound": "Fiche eu kena to.",
+      "overline": "Fiche wa dimanya",
+      "reviewedOn": "Mutangila kudi munganga dituku dia {{date}}",
+      "reminder": "Fiche eu udi ufila malu a bantu bonso. Bua dipangadika didi dikutangila, yukila ne munganga webe.",
+      "sources_one": "Muaba wa lumu",
+      "sources_other": "Miaba ya lumu",
+      "sources_many": "Miaba ya lumu",
+      "sourceHint": "Udi ubulula muaba wa lumu mu navigateur",
+      "version": "Version {{version}}"
+    }
+  },
+  "import": {
+    "overline": "Kubuela ne malu",
+    "title": "Kubuela ne muyuki",
+    "intro": "Angata mapima a mu kaye anyi a tshiamu tshikuabu, kufumina ku fichier CSV anyi Excel. Neumone rapport kumpala kua tshintu nansha tshimue kubuela.",
+    "close": "Kanga kakuyi kubuela",
+    "step": {
+      "file": "Fichier",
+      "unit": "Unité wa bungi"
+    },
+    "file": {
+      "choose": "Sungula fichier",
+      "chooseHint": "CSV anyi Excel (.xlsx) · 5 Mo ne milongo 5 000 pa bungi",
+      "change": "Shintulula fichier",
+      "kind": {
+        "csv": "Fichier CSV",
+        "xlsx": "Classeur Excel"
+      }
+    },
+    "size": {
+      "bytes": "{{amount}} o",
+      "kb": "{{amount}} Ko",
+      "mb": "{{amount}} Mo"
+    },
+    "fileProblem": {
+      "empty": "Fichier eu kena ne tshintu to.",
+      "tooLarge": "Fichier eu mmupite 5 Mo. Shiya anu mapima a mushinga, anyi mukosolole mu ba fichier ba bungi.",
+      "oldExcel": "Mushindu wa kale wa Excel (.xls): mubulule mu Excel, panyima mulame mu .xlsx anyi mu CSV.",
+      "unsupported": "Mushindu eu wa fichier kawena witabujibua to. Sungula fichier .csv anyi .xlsx."
+    },
+    "unit": {
+      "hint": "Udi wenzejibua bua milongo kayi ileja unité wayi.",
+      "example": "tshilejilu {{value}}"
+    },
+    "analyse": "Konkonona fichier",
+    "privacy": "Anu malu a mu fichier ke adi atumibua bua dikonkonona. Kakuena tshidi tshibuela kakuyi dianyisha diebe to, ne neupete mua kulekela bionso panyima.",
+    "network": "Internet udi ukengedibua: dikonkonona didi dienzekela ku serveur.",
+    "problem": {
+      "offline": {
+        "title": "Internet kayena to",
+        "text": "Dikonkonona didi dienzekela ku serveur. Tangila internet webe, panyima tentekela kabidi."
+      },
+      "tooLarge": {
+        "title": "Fichier mmunene bikole",
+        "text": "5 Mo ne milongo 5 000 pa bungi. Kosolola fichier, panyima tentekela kabidi."
+      },
+      "unreadable": {
+        "title": "Fichier kena ubalibua to"
+      },
+      "tooMany": {
+        "title": "Makonkonona a bungi pamue",
+        "text": "Indila minite umue, panyima tentekela kabidi."
+      },
+      "rejected": {
+        "title": "Dikonkonona kadiena mua kuenzeka to"
+      },
+      "error": {
+        "title": "Dikonkonona kadiena mua kuenzeka to",
+        "text": "Tshilema tshimue tshiakenzeka. Tentekela kabidi panyima pa kakese."
+      }
+    },
+    "stepLabel": "Tshitupa {{number}}: {{title}}",
+    "mapping": {
+      "title": "Ba colonne kayi?",
+      "intro": "Katuakumanya ba colonne bonso ba « {{name}} » to. Leja penyi padi dituku ne sukadi wa mu mashi: bikuabu bidi biwasua.",
+      "back": "Pingana ku disungula dia fichier",
+      "analyse": "Konkonona ne ba colonne aba",
+      "required": "Bia bushuwa",
+      "optional": "Biwasua",
+      "none": "Nansha umue",
+      "usedFor": "mmuenzejibue kale bua {{role}}",
+      "missing": "Sungula kabidi: {{roles}}.",
+      "and": " ne ",
+      "role": {
+        "date": "Dituku",
+        "time": "Diba",
+        "value": "Sukadi wa mu mashi",
+        "unit": "Unité",
+        "context": "Tshikondo tshia dipima"
+      },
+      "hint": {
+        "date": "Dituku dia dipima dionso, ne diba anyi kakuyi diba.",
+        "time": "Bikala diba mu colonne wadi nkayende.",
+        "value": "Bungi bupima (tshilejilu 1,10 anyi 110).",
+        "unit": "Bikala mulongo wonso uleja unité wawu. Bikalaku: {{unit}}, musungula bua fichier.",
+        "context": "Kakuyi kudia, kumpala anyi panyima pa kudia…"
+      },
+      "changed": {
+        "title": "Ba colonne ba kutangila",
+        "text": "Fichier kena ne ba colonne bonso basungula to. Tangila tshiwasungula, panyima konkonona fichier kabidi."
+      },
+      "lost": {
+        "title": "Kakuena fichier mu mudimu to",
+        "text": "Sungula kabidi fichier wa kubuela nende: kalamibu padi application ukangibua to."
+      }
+    },
+    "report": {
+      "title": "Rapport wa dibuela",
+      "analyzed_one": "Mulongo {{count}} mukonkononyibue",
+      "analyzed_other": "Milongo {{count}} mikonkononyibue",
+      "analyzed_many": "Milongo {{count}} mikonkononyibue",
+      "label": {
+        "valid": "Bimpe",
+        "duplicates": "Bia tshibidi",
+        "inconsistent": "Bia kutangila",
+        "errors": "Bilema"
+      },
+      "tile": {
+        "valid": "{{count}} bimpe",
+        "duplicates": "{{count}} bia tshibidi",
+        "inconsistent": "{{count}} bia kutangila",
+        "errors": "{{count}} bilema"
+      },
+      "allValid": "Milongo yonso idi mimpe: kakuena tshia kutangila to.",
+      "group": {
+        "INCONSISTENT": {
+          "title": "Bia kutangila ({{count}})",
+          "text": "Bungi kabuyi bumanyike anyi unité mukuabu: bulongolole, butabule bu mudibu, anyi shiya mulongo."
+        },
+        "DUPLICATE": {
+          "title": "Bia tshibidi ({{count}})",
+          "text": "Dituku dimue, diba dimue, bungi bumue ne dipima didiku kale: bidi bishiibua, anu biwabitabuja."
+        },
+        "ERROR": {
+          "title": "Bilema ({{count}})",
+          "text": "Mulongo kena ubalibua to: longolola bungi, anyi shiya mulongo."
+        }
+      },
+      "acceptAll": "Itaba bionso",
+      "ignoreAll": "Shiya bionso",
+      "line": "Mulongo {{line}}",
+      "empty": "(kakuena tshintu)",
+      "decisionFor": "Dipangadika bua mulongo {{line}}",
+      "action": {
+        "IGNORE": "Shiya",
+        "ACCEPT": "Itaba",
+        "CORRECT": "Longolola"
+      },
+      "correctedValue": "Bungi bulelela",
+      "correctedHint": "Bungi mu {{unit}} (shintulula unité bikala bikengela).",
+      "correctedUnit": "Unité wa bungi bulelela",
+      "problem": {
+        "missing": "Funda bungi bulelela.",
+        "invalid": "Bungi kabuena bubalibua to: bungi bumue, tshilejilu 1,10.",
+        "outOfRange": "Bungi mbupatuke mu mikalu ya bulelela (20 too ne 600 mg/dL): tangila unité."
+      },
+      "more_one": "Mona mulongo {{count}} mukuabu",
+      "more_other": "Mona milongo {{count}} mikuabu",
+      "more_many": "Mona milongo {{count}} mikuabu",
+      "fixCorrections": "Jikija malongolola maleja kumpala kua kubuela.",
+      "rowsRefused": "Mapangadika makuabu kaakuitabujibua to: tangila milongo mileja.",
+      "import_one": "Buela ne dipima {{count}}",
+      "import_other": "Buela ne mapima {{count}}",
+      "import_many": "Buela ne mapima {{count}}",
+      "nothingToImport": "Kakuena tshia kubuela natshi to",
+      "defaults": "Kakuyi dipangadika, bia tshibidi, milongo ya kutangila ne bilema bidi bishiibua.",
+      "undoable": "Kakuena tshidi tshibuela kumpala kua bouton eu to, ne neupete mua kulekela dibuela panyima."
+    },
+    "done": {
+      "title_one": "Dipima {{count}} ndibuele",
+      "title_other": "Mapima {{count}} mmabuele",
+      "title_many": "Mapima {{count}} mmabuele",
+      "skipped_zero": "Kakuena mulongo mushiibue to.",
+      "skipped_one": "Mulongo {{count}} mushiibue.",
+      "skipped_other": "Milongo {{count}} mishiibue.",
+      "skipped_many": "Milongo {{count}} mishiibue.",
+      "sync": "Mapima mmalamibue mu compte webe. Neafike mu muyuki wa telefone eu panyima pa ba segonde bakese (dipetangana dia nkayadi).",
+      "finish": "Jikija",
+      "revert": "Lekela dibuela edi",
+      "revertConfirmTitle": "Lekela dibuela edi?",
+      "revertConfirmText_one": "Dipima dibuele nedimushibue mu compte webe.",
+      "revertConfirmText_other": "Mapima {{count}} mabuele neamushibue mu compte webe.",
+      "revertConfirmText_many": "Mapima {{count}} mabuele neamushibue mu compte webe.",
+      "revertedTitle": "Dibuela ndilekela",
+      "revertedText_zero": "Kakuvua dipima dia kuumbusha to.",
+      "revertedText_one": "Dipima {{count}} ndimushibue mu compte webe.",
+      "revertedText_other": "Mapima {{count}} mmamushibue mu compte webe.",
+      "revertedText_many": "Mapima {{count}} mmamushibue mu compte webe.",
+      "keep": "Shiya dibuela",
+      "revertYes_one": "Umbusha dipima",
+      "revertYes_other": "Umbusha mapima {{count}}",
+      "revertYes_many": "Umbusha mapima {{count}}"
+    },
+    "issue": {
+      "restart": "Tuadija kabidi",
+      "offline": {
+        "title": "Internet kayena to",
+        "text": "Kakuena tshiakubuela to. Tangila internet webe, panyima tentekela kabidi."
+      },
+      "done": {
+        "title": "Bimane kuenzeka",
+        "text": "Fichier eu mmumane kubuela anyi mmulekela (pamuapa kufumina ku tshiamu tshikuabu)."
+      },
+      "expired": {
+        "title": "Dikonkonona ndia kale bikole",
+        "text": "Rapport mmupite mêba 24: konkonona fichier kabidi."
+      },
+      "notFound": {
+        "title": "Dikonkonona kadiena dimueneka to",
+        "text": "Konkonona fichier kabidi."
+      },
+      "error": {
+        "title": "Dibuela kadiena mua kuenzeka to",
+        "text": "Tshilema tshimue tshiakenzeka. Tentekela kabidi panyima pa kakese."
+      }
+    }
+  },
+  "report": {
+    "overline": "Rapport PDF",
+    "title": "Longolola dipetangana ne munganga",
+    "intro": "Rapport mutoke wa mapima ebe, bua kufila munganga webe: ku WhatsApp, ku email, ku dibeji anyi kumuleja mu telefone webe.",
+    "close": "Kanga",
+    "period": "Tshikondo tshia rapport",
+    "few": {
+      "title": "Mapima makese mu tshikondo etshi",
+      "text_one": "Dipima {{count}} mu matuku aa {{days}}. Rapport neenzibue nansha nanku ne neumanyishe bualu ebu.",
+      "text_other": "Mapima {{count}} mu matuku aa {{days}}. Rapport neenzibue nansha nanku ne neumanyishe bualu ebu.",
+      "text_many": "Mapima {{count}} mu matuku aa {{days}}. Rapport neenzibue nansha nanku ne neumanyishe bualu ebu."
+    },
+    "contents": {
+      "title": "Tshidi mu rapport",
+      "identity": {
+        "title": "Wewe ne dilonda diebe",
+        "text": "Dina dia kumpala, dina dia diku, mushindu wa diabète, tshidimu tshiakamumonabu ne mikalu yebe mimpe."
+      },
+      "quality": {
+        "title": "Mapima ne bimpe bia malu",
+        "text": "Bungi bua mapima, moyenne, dishintuluka, matuku kakuyi dipima."
+      },
+      "ranges": {
+        "title": "Tshikondo munda mua mikalu mimpe",
+        "text": "Tshitupa tshia mapima muinshi, munda mua mikalu ne pulu."
+      },
+      "episodes": {
+        "title": "Bikondo ne bungi kabuyi bumanyike",
+        "text": "Bikondo bivua sukadi muinshi anyi pulu pa mikalu yebe, ne matuku."
+      },
+      "points": {
+        "title": "Malu a kutangila ne munganga webe",
+        "text": "Malu adi dikonkonona dileja, mu miaku mipepele."
+      },
+      "chart": {
+        "title": "Graphique ne malu onso",
+        "text": "Mapima onso a tshikondo etshi, mu unité webe, ne matuku kakuyi dipima."
+      },
+      "private": "Ba note bebe ba pa buebe kabatu mu rapport nansha kakese to. Fichier udi upatuka mu telefone anu biwamuabanya."
+    },
+    "pending_one": "Dipima {{count}} kadiena dianji kutumibua to: nedituminyibue kumpala kua kuenza rapport.",
+    "pending_other": "Mapima {{count}} kaena muanji kutumibua to: neatuminyibue kumpala kua kuenza rapport.",
+    "pending_many": "Mapima {{count}} kaena muanji kutumibua to: neatuminyibue kumpala kua kuenza rapport.",
+    "create": "Enza ne abanya PDF",
+    "phase": {
+      "syncing": "Kutuma mapima ebe a ndekelu…",
+      "creating": "Kuenza rapport…",
+      "sharing": "Kubulula diabanya…"
+    },
+    "network": "Rapport udi wenzibua ku serveur: internet udi ukengedibua.",
+    "shareTitle": "Abanya rapport",
+    "shareAgain": "Abanya kabidi",
+    "createAgain": "Enza rapport mupiamupia",
+    "done": {
+      "title": "Rapport mmulongolola",
+      "text": "{{filename}}. Udi mua kumuabanya kabidi, tshilejilu kabidi ku email."
+    },
+    "unsent": {
+      "title_one": "Dipima {{count}} kadiena mu rapport to",
+      "title_other": "Mapima {{count}} kaena mu rapport to",
+      "title_many": "Mapima {{count}} kaena mu rapport to",
+      "text_one": "Kadiena dianji kutumibua to. Didi dishala mu telefone webe ne nedituminyibue pashishe; enza rapport mupiamupia panyima.",
+      "text_other": "Kaena muanji kutumibua to. Adi ashala mu telefone webe ne neatuminyibue pashishe; enza rapport mupiamupia panyima.",
+      "text_many": "Kaena muanji kutumibua to. Adi ashala mu telefone webe ne neatuminyibue pashishe; enza rapport mupiamupia panyima."
+    },
+    "problem": {
+      "offline": {
+        "title": "Internet kayena to",
+        "text": "Rapport udi wenzibua ku serveur. Bulula internet kabidi, panyima tentekela kabidi."
+      },
+      "tooMany": {
+        "title": "Ba rapport ba bungi pamue",
+        "text": "Indila minite umue kumpala kua kuenza mukuabu."
+      },
+      "noProfile": {
+        "title": "Profil wa disama wa kujikija",
+        "text": "Rapport udi ukengela profil webe wa disama (mushindu wa diabète, mikalu mimpe)."
+      },
+      "cannotShare": {
+        "title": "Diabanya kadiena to",
+        "text": "Tshiamu etshi katshiena tshifila njila wa kuabanya fichier to."
+      },
+      "error": {
+        "title": "Rapport kawakuenzeka to",
+        "text": "Tshilema tshimue tshiakenzeka. Tentekela kabidi panyima pa kakese."
+      }
+    },
+    "doctor": {
+      "title": "Munganga webe udi mua kumupweja pende",
+      "text": "Sungula « Rapport PDF » paudi uabanya muyuki webe ku QR."
+    },
+    "entry": {
+      "title": "Longolola dipetangana ne munganga",
+      "body": "Rapport PDF wa mapima ebe, bua kufila munganga webe."
+    }
+  },
+  "emergency": {
+    "editCard": "Longolola carte wanyi",
+    "overline": "Kuabanya",
+    "title": "Carte wa ntatu",
+    "close": "Kanga",
+    "intro": "Fiche umue bua bena diambuluisha, mushilangane ne diabanya ne munganga webe. QR wende udi upatuka ku dibeji anyi udi uteka ku fond d'écran: muntu udi umu-scanner udi umona anu tshiwasungula.",
+    "status": {
+      "on": "Carte udi wenza mudimu",
+      "off": "Carte mmukangibue",
+      "onText": "QR udi wenza mudimu: udi uleja carte webe kudi udi umu-scanner.",
+      "offText": "QR kena uleja tshintu to, nansha ku dibeji. Bulula carte bua enze mudimu.",
+      "toggle": "Carte udi wenza mudimu",
+      "emptyHint": "Uja kumpala carte webe (« Longolola carte wanyi »)."
+    },
+    "qr": {
+      "hint": "Mupatule ku dibeji anyi muteke ku fond d'écran. Kena ne dina diebe anyi malu a disama to.",
+      "export": "Lama bu image",
+      "shareTitle": "Image wa carte wanyi wa ntatu",
+      "exportProblem": {
+        "title": "Image kawakulamibua to",
+        "text": "Tentekela kabidi panyima pa kakese."
+      },
+      "regenerate": "Enza QR mupiamupia",
+      "confirm": {
+        "title": "Shintulula QR webe?",
+        "text": "QR wa kale neulekele kuenza mudimu diakamue, nansha ba copie bapatula ku dibeji anyi badi ku fond d'écran.",
+        "yes": "Eyowa, enza QR mupiamupia",
+        "no": "Lekela"
+      },
+      "elsewhere": {
+        "title": "QR webe kena mu telefone eu to",
+        "text": "Wakenzibua mu telefone mukuabu anyi kumpala kua kuteka application kabidi. Enza mupiamupia muaba eu: wa kale neulekele kuenza mudimu.",
+        "action": "Enza QR mupiamupia"
+      }
+    },
+    "image": {
+      "title": "CARTE WA NTATU",
+      "instruction": "Mu ntatu ya lukasa, scanner QR eu",
+      "audience": "Bena manga ne bena diambuluisha",
+      "a11y": "Image wa QR wa carte webe wa ntatu, wa kupatula ku dibeji anyi wa kuteka ku fond d'écran."
+    },
+    "preview": {
+      "title": "Tshiamona muena diambuluisha",
+      "empty": "Carte webe kena ne tshintu to: ela anu tshiudi musue kuleja bena diambuluisha.",
+      "updated": "Mulongolola dituku dia {{date}}."
+    },
+    "field": {
+      "fullName": "Dina",
+      "diabetesType": "Diabète",
+      "declaredTreatment": "Manga muwafunda",
+      "allergies": "Allergies",
+      "bloodGroup": "Groupe wa mashi",
+      "lastKnownGlucoseMgDl": "Sukadi wa ndekelu mumanyike",
+      "emergencyContactName": "Muntu wa kubikila mu ntatu",
+      "emergencyContactPhone": "Telefone wa muntu eu"
+    },
+    "edit": {
+      "title": "Longolola carte wanyi",
+      "cancel": "Kanga kakuyi kulama",
+      "intro": "Lumu luonso ndua dikuatshisha: uja anu tshiudi musue kuleja bena diambuluisha.",
+      "profile": {
+        "title": "Angata profil wanyi",
+        "text": "Dina diebe, mushindu wa diabète ne muntu wa kubikila mu ntatu, bua miaba kayi muanji kuujibua.",
+        "action": "Angata profil wanyi",
+        "applied": "Malu a profil mmaele. Atangile kumpala kua kulama.",
+        "nothing": "Kakuena tshia kuela to: miaba eyi mmiuje kale.",
+        "failed": "Profil kawakubalibua to (internet?)."
+      },
+      "hint": {
+        "diabetesType": "Tshilejilu: Type 1, Type 2.",
+        "declaredTreatment": "Tshiudi wangata, mu miaku yebe. Tshilejilu: insuline wa bulelela ku dilolo.",
+        "allergies": "Tshilejilu: pénicilline. Shiya muaba eu mupele bikalaku tshintu.",
+        "glucose": "Anu bungi ebu ke budi bumueneka: ki muyuki webe to.",
+        "phone": "Ne nimero wa ditunga, tshilejilu +243 81 000 0000."
+      },
+      "noBloodGroup": "Kabuena bufunda to",
+      "useLatest": "Enzeja dipima dianyi dia ndekelu ({{value}}, dituku dia {{date}})",
+      "privacy": "Malu aa adi amueneka anu bikala carte webe wenza mudimu ne muntu mu-scanner QR webe. Misangu yonso udi mubululuke, badi bakumanyisha.",
+      "fixErrors": "Longolola miaba mileja kumpala kua kulama.",
+      "save": "Lama carte wanyi",
+      "error": {
+        "tooLong": "Mmule bikole: mifundu {{max}} pa bungi.",
+        "glucoseInvalid": "Funda bungi, tshilejilu 1,32.",
+        "glucoseRange": "Bungi mbupatuke mu mikalu (20 too ne 600 mg/dL).",
+        "phoneInvalid": "Funda nimero wa bungi anu (« + » mmuitabujibue ku ntuadijilu)."
+      }
+    },
+    "log": {
+      "title": "Nganyi wakabulula carte wanyi",
+      "text": "Misangu yonso udi mubululuke, bidi bifundibua mu « Nganyi wakatangila malu anyi » ne badi bakumanyisha."
+    },
+    "problem": {
+      "offline": {
+        "title": "Internet kayena to",
+        "text": "Carte udi ulongololibua ku internet. Bulula internet kabidi, panyima tentekela kabidi."
+      },
+      "noProfile": {
+        "title": "Profil wa disama wa kujikija",
+        "text": "Carte webe wa ntatu udi ukengela profil webe wa disama."
+      },
+      "tooMany": {
+        "title": "Malomba a bungi",
+        "text": "Indila minite umue kumpala kua kutentekela kabidi."
+      },
+      "invalid": {
+        "title": "Lumu kaluakuitabujibua to",
+        "text": "Lumu lumue lua mu carte kaluena luimpe to. Lutangile."
+      },
+      "error": {
+        "title": "Tshilema tshimue tshiakenzeka",
+        "text": "Tentekela kabidi panyima pa kakese."
+      }
+    }
+  },
+  "share": {
+    "home": {
+      "overline": "Diabanya dia bukubi",
+      "title": "Abanya ne munganga",
+      "intro": "Munganga webe udi u-scanner QR wa mu écran webe ne utangila, mu tshikondo tshikese, anu tshiwasungula.",
+      "promise": {
+        "noData": {
+          "title": "Kakuena malu mu QR to",
+          "text": "QR udi anu ne code wa musokoko udi ushintuluka minite yonso ne wenza mudimu musangu umue anu."
+        },
+        "limited": {
+          "title": "Njila wa mikalu",
+          "text": "Wewe udi usungula tshia kuabanya ne bua tshikondo tshinyi. Anu munganga muitabujibue ke udi mua ku-scanner."
+        },
+        "control": {
+          "title": "Wewe udi ushala mukokeshi",
+          "text": "Udi mua kukanga njila misangu yonso, ne kumona nganyi wakatangila malu ebe."
+        }
+      },
+      "start": "Abanya muyuki wanyi",
+      "network": "Diabanya didi dikengela internet.",
+      "log": "Nganyi wakatangila malu anyi",
+      "logHint": "Banganga bakapeta njila, ne tshikondo tshinyi",
+      "emergency": "Carte wa ntatu",
+      "report": "Longolola dipetangana ne munganga",
+      "reportHint": "Rapport PDF wa mapima ebe wa kufila munganga",
+      "emergencyHint": "Malu a mushinga bua bena diambuluisha"
+    },
+    "new": {
+      "overline": "Abanya muyuki wanyi",
+      "title": "Tshinyi tshiudi musue kuabanya?",
+      "close": "Kanga kakuyi kuabanya",
+      "intro": "Munganga neamone anu tshiwasungula. Kakuena tshiabanyibua too ne padiye mu-scanner QR to.",
+      "what": "Tshiapeta munganga mua kumona",
+      "count_one": "{{count}} pa {{total}}",
+      "count_other": "{{count}} pa {{total}}",
+      "count_many": "{{count}} pa {{total}}",
+      "noneSelected": "Sungula pa nshinga mushindu umue bua kuenza QR.",
+      "howLong": "Bua tshikondo tshinyi",
+      "durationLabel": "Tshikondo tshia njila",
+      "startsAtScan": "Tshikondo tshidi tshibangila padi munganga u-scanner QR. Neupete mua kutshikanga kumpala.",
+      "generate": "Enza QR",
+      "qrNote": "QR kena ne malu a disama to. Udi ushintuluka ba segonde 60 yonso ne wenza mudimu musangu umue anu."
+    },
+    "category": {
+      "GLUCOSE_HISTORY": {
+        "label": "Muyuki wa sukadi",
+        "text": "Mapima ebe, bikondo biawu ne mikalu yebe mimpe"
+      },
+      "TREATMENTS": {
+        "label": "Manga muwafunda",
+        "text": "Manga ne bikondo bia kuwangata biwafunda"
+      },
+      "MEALS": {
+        "label": "Biakudia",
+        "text": "Biakudia biwafunda"
+      },
+      "ACTIVITY": {
+        "label": "Mudimu wa mubidi",
+        "text": "Midimu ya mubidi iwafunda"
+      },
+      "AI_SUMMARY": {
+        "label": "Bukese bua makonkonona",
+        "text": "Bungi bua mushinga ne malu akabala Afyabora"
+      },
+      "REPORT_DOWNLOAD": {
+        "label": "Dipweja dia rapport",
+        "text": "Munganga neapete mua kulama rapport PDF"
+      },
+      "PERSONAL_NOTES": {
+        "label": "Ba note ba pa buebe",
+        "text": "Mifundu iwakafunda mu ba note bebe",
+        "note": "Ba note bebe badi mua kuikala ne malu a musokoko bikole."
+      }
+    },
+    "duration": {
+      "MIN_5": {
+        "label": "5 min",
+        "hint": "Ditangila dia lukasa"
+      },
+      "MIN_30": {
+        "label": "30 min",
+        "hint": "Dipetangana dikese"
+      },
+      "HOUR_1": {
+        "label": "1 h",
+        "hint": "Dipetangana dile"
+      },
+      "CONSULTATION": {
+        "label": "Dipetangana",
+        "hint": "2 h pa bungi"
+      }
+    },
+    "problem": {
+      "offline": {
+        "title": "Internet kayena to",
+        "text": "Diabanya didi dikengela internet: serveur udi wenza ne utangila QR. Malu ebe adi ashala mu telefone eu."
+      },
+      "tooMany": {
+        "title": "Ba QR ba bungi benza",
+        "text": "Indila minite umue kumpala kua kuenza mupiamupia."
+      },
+      "busy": {
+        "title": "Mudimu kawena katataka to",
+        "text": "Bantu ba bungi badi baabanya katataka. Tentekela kabidi panyima pa kakese."
+      },
+      "rejected": {
+        "title": "Diabanya kadiena mua kuenzeka katataka to"
+      },
+      "error": {
+        "title": "QR kawakuenzeka to",
+        "text": "Tshilema tshimue tshiakenzeka. Tentekela kabidi panyima pa kakese."
+      }
+    },
+    "qr": {
+      "overline": "Abanya muyuki wanyi",
+      "title": "Leja munganga webe QR eu",
+      "scannedTitle": "Diabanya diebe",
+      "intro": "Munganga webe udi umu-scanner kufumina ku portail wende wa Afyabora. QR udi ushintuluka nkayende, shiya écran eu mubululuke.",
+      "qrA11y": "QR wa diabanya, bua munganga webe amu-scanner",
+      "expired": "QR eu kena wenza mudimu kabidi to",
+      "renewing": "QR mupiamupia…",
+      "next_one": "QR mupiamupia mu {{count}} s",
+      "next_other": "QR mupiamupia mu {{count}} s",
+      "next_many": "QR mupiamupia mu {{count}} s",
+      "nextA11y_one": "QR mupiamupia mu segonde {{count}}",
+      "nextA11y_other": "QR mupiamupia mu ba segonde {{count}}",
+      "nextA11y_many": "QR mupiamupia mu ba segonde {{count}}",
+      "shared": "Biabanyibue",
+      "duration": "Tshikondo tshia njila",
+      "durationValue": "{{duration}}, kubangila ku di-scanner",
+      "stop": "Kanga diabanya",
+      "close": "Kanga",
+      "doctorNote": "Anu munganga muitabujibue ke udi mua ku-scanner QR eu. Kena ne malu a disama to ne udi wenza mudimu musangu umue anu.",
+      "problem": {
+        "offline": {
+          "title": "Internet mmujimine",
+          "text": "QR kena mua kushintuluka kakuyi internet to. Neatentekele kabidi nkayende."
+        },
+        "busy": {
+          "title": "Bantu ba bungi badi benzeja mudimu",
+          "text": "QR mupiamupia udi ulua panyima pa kakese. Neatentekele kabidi nkayende."
+        },
+        "error": {
+          "title": "QR kawakushintuluka to",
+          "text": "Neatentekele kabidi nkayende panyima pa kakese."
+        }
+      },
+      "scanned": {
+        "title": "QR webe mmu-scannibue",
+        "byDoctor": "{{name}} udi utangila dossier webe",
+        "until": "Njila too ne {{time}}.",
+        "end": "Kanga njila",
+        "endFailed": "Njila kawakukangibua to. Tangila internet webe ne tentekela kabidi."
+      },
+      "ended": {
+        "title": "Njila mmukangibue",
+        "text": "Munganga kena kabidi ne njila wa malu ebe to. Udi mua kuenza QR mupiamupia misangu yonso."
+      },
+      "none": {
+        "title": "Kakuena QR mu mudimu to",
+        "text": "Enza QR bua kuabanya muyuki webe ne munganga.",
+        "action": "Enza QR"
+      },
+      "backup": {
+        "show": "Munganga kena ne camera? Leja code wa diambuluisha",
+        "label": "Code wa diambuluisha",
+        "a11y": "Code wa diambuluisha, wa kufunda kabidi anyi wa kuteka mu portail wa munganga",
+        "hint": "Munganga udi umufunda mu portail wende, mu « Scanner un QR ». Bu QR, udi ushintuluka minite yonso ne wenza mudimu musangu umue anu.",
+        "hide": "Sokoka code"
+      }
+    },
+    "live": {
+      "expiresIn": "Udi ujika mu",
+      "remainingA11y": "Tshikondo tshishala: {{minutes}} min {{seconds}} s",
+      "offline": "Internet mmujimine: tshikondo tshidi tshitungunuka, malu neatangidibue padi internet upingana.",
+      "confirm": "Kanga njila wa {{name}} katataka? Kakuena kumona kabidi malu ebe to.",
+      "confirmNoName": "Kanga njila wa munganga katataka? Kakuena kumona kabidi malu ebe to.",
+      "confirmYes": "Eyowa, kanga njila",
+      "confirmNo": "Lekela",
+      "checking": "QR mmumane ku-scannibua. Kutangila…",
+      "newQr": "Enza QR mupiamupia",
+      "ended": {
+        "expired": "Njila wa {{name}} mmujike.",
+        "expiredNoName": "Njila mmujike.",
+        "revoked": "Wakukanga njila wa {{name}}.",
+        "revokedNoName": "Diabanya ndikangibue."
+      }
+    },
+    "log": {
+      "overline": "Kalasa ka dibuela",
+      "title": "Nganyi wakatangila malu anyi",
+      "close": "Kanga",
+      "intro": "Dibuela dionso mu dossier webe didi difundibua muaba eu. Kakuena muntu udi mua kushintulula kalasa aka to.",
+      "loading": "Kubulula kalasa",
+      "count_one": "Dibuela {{count}}",
+      "count_other": "Mabuela {{count}}",
+      "count_many": "Mabuela {{count}}",
+      "today": "Lelu ku {{time}}",
+      "onDate": "Dituku dia {{date}} ku {{time}}",
+      "lasted": "njila wa {{duration}}",
+      "doctor": "Dr {{name}}",
+      "unknownDoctor": "Munganga",
+      "end": {
+        "expired": "Mmujike",
+        "revoked": "Mukanga kudi wewe",
+        "ongoing": "Udi utungunuka"
+      },
+      "views_one": "Ditangila {{count}}",
+      "views_other": "Matangila {{count}}",
+      "views_many": "Matangila {{count}}",
+      "report": "Rapport mmupwejibue",
+      "emergency": {
+        "title": "Dibuela dia ntatu",
+        "text": "Carte webe wa ntatu mmubululuke, kakuyi compte."
+      },
+      "empty": {
+        "title": "Kakuena muntu muanji kutangila malu ebe to",
+        "text": "Padi munganga u-scanner QR webe, dibuela diende didi dimueneka muaba eu: nganyi, tshikondo tshinyi ne bua tshikondo bule bushi."
+      },
+      "more": "Mona mabuela a kale",
+      "problem": {
+        "offline": {
+          "title": "Internet kayena to",
+          "text": "Kalasa mmulamibue ku serveur: bulula internet kabidi bua kumutangila."
+        },
+        "error": {
+          "title": "Kalasa kakubululuka to",
+          "text": "Tentekela kabidi panyima pa kakese."
+        }
+      }
+    }
+  }
+}

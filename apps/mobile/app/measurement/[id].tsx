@@ -54,6 +54,7 @@ import {
 import { readThresholds } from '@/features/profile';
 import { ProvenanceBadge } from '@/features/timeline';
 import { enterFromBelow, radii, spacing, useReducedMotion, useTheme } from '@/theme';
+import { formatLocale } from '@/i18n';
 
 type Load =
   { status: 'loading' } | { status: 'missing' } | { status: 'ready'; row: LocalMeasurement };
@@ -213,7 +214,7 @@ export default function MeasurementDetailScreen() {
 
   const row = load.row;
   const saved = new Date(row.measured_at);
-  const savedDay = saved.toLocaleDateString(i18n.language, {
+  const savedDay = saved.toLocaleDateString(formatLocale(i18n.language), {
     weekday: 'long',
     day: 'numeric',
     month: 'long',

@@ -3,23 +3,33 @@ import i18next from 'i18next';
 import en from '../en.json';
 import es from '../es.json';
 import fr from '../fr.json';
+import kg from '../kg.json';
 import {
   DEFAULT_LANGUAGE,
   LANGUAGES,
+  formatLocale,
   isLanguageCode,
   languageInfo,
   parsePreference,
   resolveLanguage,
 } from '../languages';
+import ln from '../ln.json';
+import lua from '../lua.json';
 import pt from '../pt.json';
+import sw from '../sw.json';
 
-const FILES = { fr, en, es, pt } as const;
+const FILES = { fr, en, es, pt, ln, sw, kg, lua } as const;
 
 describe('choix de la langue', () => {
   it('« Langue du téléphone » : la première langue du téléphone que l’application connaît', () => {
     expect(resolveLanguage('system', ['pt-BR', 'fr'])).toBe('pt');
     expect(resolveLanguage('system', ['de', 'es_ES', 'en'])).toBe('es');
     expect(resolveLanguage('system', ['EN'])).toBe('en');
+    // Langues de la RD Congo, dont le code à 3 lettres du tshiluba.
+    expect(resolveLanguage('system', ['ln-CD', 'fr'])).toBe('ln');
+    expect(resolveLanguage('system', ['sw_CD'])).toBe('sw');
+    expect(resolveLanguage('system', ['lua'])).toBe('lua');
+    expect(resolveLanguage('system', ['kg'])).toBe('kg');
   });
 
   it('téléphone dans une langue inconnue (ou sans langue) : français', () => {
@@ -44,15 +54,45 @@ describe('choix de la langue', () => {
     expect(new Set(codes).size).toBe(codes.length);
     for (const code of codes) expect(Object.keys(FILES)).toContain(code);
     expect(languageInfo('es').nativeName).toBe('Español');
+    expect(languageInfo('ln').nativeName).toBe('Lingála');
+    expect(languageInfo('lua').nativeName).toBe('Tshiluba');
     expect(isLanguageCode('pt')).toBe(true);
     expect(isLanguageCode('xx')).toBe(false);
   });
 
-  it('français et anglais relus ; espagnol et portugais signalés « en relecture »', () => {
+  it('français et anglais relus ; toutes les autres langues signalées « en relecture »', () => {
     expect(languageInfo('fr').reviewed).toBe(true);
     expect(languageInfo('en').reviewed).toBe(true);
     expect(languageInfo('es').reviewed).toBe(false);
     expect(languageInfo('pt').reviewed).toBe(false);
+    for (const code of ['ln', 'sw', 'kg', 'lua'] as const)
+      expect(languageInfo(code).reviewed).toBe(false);
+  });
+});
+
+describe('dates et nombres (formatLocale)', () => {
+  it('langue connue du moteur des dates : gardée', () => {
+    expect(formatLocale('ln', () => true)).toBe('ln');
+    expect(formatLocale('en', () => true)).toBe('en');
+  });
+
+  it('langue inconnue du moteur (kikongo, tshiluba…) : français, jamais la langue de l’appareil', () => {
+    expect(formatLocale('kg', () => false)).toBe('fr');
+    expect(formatLocale('lua', (c) => c !== 'lua')).toBe('fr');
+  });
+
+  it('moteur qui plante sur un code : français, sans erreur', () => {
+    const broken = () => {
+      throw new RangeError('invalid language tag');
+    };
+    expect(formatLocale('xx', broken)).toBe('fr');
+  });
+
+  it('moteur réel : le résultat est toujours utilisable pour écrire une date', () => {
+    for (const { code } of LANGUAGES) {
+      const locale = formatLocale(code);
+      expect(Intl.DateTimeFormat.supportedLocalesOf([locale])).toEqual([locale]);
+    }
   });
 });
 

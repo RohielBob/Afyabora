@@ -43,6 +43,7 @@ import {
   type ChartPeriod,
   type ChartPoint,
 } from '../chart';
+import { formatLocale } from '@/i18n';
 
 const AnimatedPath = Animated.createAnimatedComponent(Path);
 const AnimatedG = Animated.createAnimatedComponent(G);
@@ -180,7 +181,7 @@ export function GlucoseChart({
   const current = selected >= 0 ? visible[selected] : undefined;
   const describe = (p: ChartPoint) => {
     const date = new Date(p.at);
-    const day = date.toLocaleDateString(i18n.language, {
+    const day = date.toLocaleDateString(formatLocale(i18n.language), {
       weekday: 'short',
       day: 'numeric',
       month: 'short',
@@ -196,7 +197,7 @@ export function GlucoseChart({
   // 7 jours : « lun. » ; au-delà : « 3 oct. ».
   const tickLabel = (time: number) =>
     new Date(time).toLocaleDateString(
-      i18n.language,
+      formatLocale(i18n.language),
       period === 7 ? { weekday: 'short' } : { day: 'numeric', month: 'short' },
     );
   const ticks = xTicks(period, bounds);
