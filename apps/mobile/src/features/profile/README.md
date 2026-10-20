@@ -58,6 +58,23 @@ Composant partagé ajouté : `ChoiceGroup` (`src/components/ui`), choix unique e
 - Tests : `__tests__/settings.test.ts` (profil renvoyé complet, conversions, erreurs par seuil, profil abîmé,
   détection des changements, erreurs du serveur).
 
+## Onglet Profil ⇒ « Mon profil médical » (`app/(tabs)/profile.tsx`)
+
+- Le profil enregistré sur le compte (`GET /me/profile`), relu à chaque retour sur l'onglet
+  (`useMedicalProfile.ts`), affiché avec le même résumé que l'assistant (`components/ProfileSummary.tsx`) :
+  identité, diabète, unité et seuils, contacts et urgence.
+- Le profil reste sur le serveur (identité, contacts) : sans réseau, l'onglet le dit et propose « Réessayer ».
+  Serveur hébergé endormi : la lecture attend son réveil puis réessaie une fois (`fetchProfile`).
+- « Modifier » sur une partie ouvre l'assistant en **mode modification** (`profile-setup?edit=1&step=…`) :
+  - le profil devient le brouillon (`profileToDraft` dans `wizard.ts`) ; « Vérifier mes informations » et
+    « Retour » ramènent au résumé ; « Annuler » quitte sans rien enregistrer ; à la fin, retour à l'onglet ;
+  - **aller-retour exact** : le profil renvoyé sans changement est identique (PUT remplace tout le profil) ;
+    un seuil non touché garde sa valeur en mg/dL malgré l'arrondi de l'affichage (73 mg/dL ⇒ « 4,1 » mmol/L
+    ⇒ 74 sinon) grâce à `savedThresholds`.
+- Tests : `__tests__/profile-to-draft.test.ts` (aller-retour, champs facultatifs, pays « Autre », mmol/L),
+  `__tests__/fetch-profile.test.ts` (réveil du serveur), `__tests__/profile-summary.test.tsx` (« Modifier »
+  ouvre la bonne étape).
+
 ## Règle importante
 
 Les seuils affichent « à définir avec votre médecin ». Afyabora ne donne jamais de conseil de traitement.

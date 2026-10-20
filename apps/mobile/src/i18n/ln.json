@@ -207,8 +207,14 @@
   },
   "profile": {
     "title": "Profil",
-    "todoTitle": "Mokolo moko: profil na yo ya bokolono",
-    "todoText": "Nkombo, lolenge ya diabète, ndelo ya malamu mpe bandelo, moto ya kobenga soki likama.",
+    "medical": {
+      "title": "Profil na ngai ya bokono",
+      "intro": "Makambo na yo ya bolandi, ebombami na compte na yo. Fíná « Bongola » mpo na kobongola eteni moko.",
+      "offline": "Internet ezali te: profil na yo ebombami na compte na yo mpe emonanaka soki internet ezali.",
+      "noProfile": "Profil na yo ya bokono naino etondisami te.",
+      "fill": "Tondisa profil na ngai",
+      "error": "Profil na yo ekokaki kofungwama te. Meká lisusu nsima ya mwa ntango."
+    },
     "settings": "Mibongiseli",
     "settingsHint": "Lokóta, ndenge emonanaka, ba unité, libateli",
     "signOut": "Bimá",
@@ -440,6 +446,15 @@
       "target": "Ndelo ya malamu",
       "none": "Ekomami te",
       "save": "Bomba profil na ngai"
+    },
+    "edit": {
+      "overline": "Profil na ngai ya bokono",
+      "title": "Bongola profil na ngai",
+      "intro": "Fíná « Bongola » na eteni oyo olingi kobongola, na nsima bomba.",
+      "save": "Bomba mbongwana",
+      "doneTitle": "Profil ebombami",
+      "doneMessage": "Mbongwana na yo ebombami na compte na yo.",
+      "doneAction": "Zonga na profil"
     },
     "done": {
       "title": "Boyei malamu, {{name}}!",

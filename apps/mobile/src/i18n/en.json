@@ -207,8 +207,14 @@
   },
   "profile": {
     "title": "Profile",
-    "todoTitle": "Coming soon: your medical profile",
-    "todoText": "Identity, diabetes type, target range and thresholds, emergency contact.",
+    "medical": {
+      "title": "My medical profile",
+      "intro": "Your follow-up information, saved on your account. Tap “Edit” to change a part.",
+      "offline": "No connection: your profile is kept on your account and shows up with internet.",
+      "noProfile": "Your medical profile is not filled in yet.",
+      "fill": "Fill in my profile",
+      "error": "Your profile could not be loaded. Try again in a moment."
+    },
     "settings": "Settings",
     "settingsHint": "Language, appearance, units, security",
     "signOut": "Sign out",
@@ -440,6 +446,15 @@
       "target": "Target range",
       "none": "Not provided",
       "save": "Save my profile"
+    },
+    "edit": {
+      "overline": "My medical profile",
+      "title": "Edit my profile",
+      "intro": "Tap “Edit” on the part to change, then save.",
+      "save": "Save changes",
+      "doneTitle": "Profile saved",
+      "doneMessage": "Your changes are saved on your account.",
+      "doneAction": "Back to profile"
     },
     "done": {
       "title": "Welcome, {{name}}!",

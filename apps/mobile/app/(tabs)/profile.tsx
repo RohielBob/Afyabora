@@ -1,4 +1,6 @@
-// Onglet Profil (provisoire : le profil médical complet arrive avec l'assistant L1-08).
+// Onglet Profil. « Mon profil médical » : le profil enregistré sur le compte (identité, diabète, unité et
+// seuils, contacts), relu à chaque retour sur l'onglet ; « Modifier » ouvre l'assistant de profil sur la
+// bonne étape (mode modification). Sans réseau, l'onglet le dit : le profil est gardé sur le compte.
 // L1-07 : déconnexion avec confirmation dans la page ; si des mesures ne sont pas encore envoyées au
 // serveur, la personne est prévenue qu'elles seront effacées de ce téléphone (ADR-0004).
 import { Ionicons } from '@expo/vector-icons';
@@ -7,9 +9,10 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 import Animated from 'react-native-reanimated';
-import { Button, Card, InlineAlert, ListRow, Screen, Text } from '@/components/ui';
+import { Button, Card, InlineAlert, ListRow, Screen, SkeletonCard, Text } from '@/components/ui';
 import { countUnsyncedChanges } from '@/db/reset';
 import { signOut } from '@/features/auth';
+import { ProfileSummary, profileToDraft, useMedicalProfile, type Step } from '@/features/profile';
 import { enterFromBelow, spacing, useReducedMotion, useTheme } from '@/theme';
 
 export default function ProfileScreen() {
@@ -19,6 +22,11 @@ export default function ProfileScreen() {
   const [confirming, setConfirming] = useState(false);
   const [unsynced, setUnsynced] = useState(0);
   const [leaving, setLeaving] = useState(false);
+  const { state: medical, retry } = useMedicalProfile();
+
+  /** « Modifier » sur une partie : l'assistant s'ouvre en mode modification, sur cette étape. */
+  const editStep = (step: Step) =>
+    router.push({ pathname: '/(onboarding)/profile-setup', params: { edit: '1', step } });
 
   const askSignOut = async () => {
     setUnsynced(await countUnsyncedChanges());
@@ -34,14 +42,44 @@ export default function ProfileScreen() {
     <Screen>
       <Text variant="title">{t('profile.title')}</Text>
 
-      <Card variant="outlined" index={0}>
-        <Text variant="overline" tone="primary">
-          {t('profile.todoTitle')}
+      <View style={{ gap: spacing.xs }}>
+        <Text variant="subheading" accessibilityRole="header">
+          {t('profile.medical.title')}
         </Text>
-        <Text tone="muted">{t('profile.todoText')}</Text>
-      </Card>
+        <Text variant="bodySmall" tone="muted">
+          {t('profile.medical.intro')}
+        </Text>
+      </View>
 
-      <Card variant="outlined" index={1} style={{ padding: 6, gap: 0 }}>
+      {medical.status === 'loading' ? (
+        <>
+          <SkeletonCard />
+          <SkeletonCard />
+        </>
+      ) : null}
+
+      {medical.status === 'failed' ? (
+        <Animated.View entering={enterFromBelow(0, reduced)} style={{ gap: spacing.md }}>
+          <InlineAlert
+            tone={medical.problem === 'error' ? 'danger' : 'info'}
+            message={t(`profile.medical.${medical.problem}`)}
+          />
+          {medical.problem === 'noProfile' ? (
+            <Button
+              label={t('profile.medical.fill')}
+              onPress={() => router.push('/(onboarding)/profile-setup')}
+            />
+          ) : (
+            <Button label={t('common.retry')} variant="outline" onPress={retry} />
+          )}
+        </Animated.View>
+      ) : null}
+
+      {medical.status === 'ready' ? (
+        <ProfileSummary draft={profileToDraft(medical.profile)} onEdit={editStep} />
+      ) : null}
+
+      <Card variant="outlined" index={4} style={{ padding: 6, gap: 0 }}>
         <ListRow
           icon={<Ionicons name="settings-outline" size={20} color={colors.primaryText} />}
           title={t('profile.settings')}

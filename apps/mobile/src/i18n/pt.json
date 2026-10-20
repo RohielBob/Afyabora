@@ -207,8 +207,14 @@
   },
   "profile": {
     "title": "Perfil",
-    "todoTitle": "Em breve: o seu perfil médico",
-    "todoText": "Identidade, tipo de diabetes, intervalo-alvo e limites, contacto de emergência.",
+    "medical": {
+      "title": "O meu perfil médico",
+      "intro": "As suas informações de acompanhamento, guardadas na sua conta. Toque em «Alterar» para mudar uma parte.",
+      "offline": "Sem ligação: o seu perfil está guardado na sua conta e aparece com internet.",
+      "noProfile": "O seu perfil médico ainda não está preenchido.",
+      "fill": "Preencher o meu perfil",
+      "error": "Não foi possível carregar o seu perfil. Tente novamente dentro de um instante."
+    },
     "settings": "Definições",
     "settingsHint": "Idioma, aparência, unidades, segurança",
     "signOut": "Terminar sessão",
@@ -440,6 +446,15 @@
       "target": "Intervalo-alvo",
       "none": "Não indicado",
       "save": "Guardar o meu perfil"
+    },
+    "edit": {
+      "overline": "O meu perfil médico",
+      "title": "Modificar o meu perfil",
+      "intro": "Toque em «Alterar» na parte a mudar e depois guarde.",
+      "save": "Guardar as alterações",
+      "doneTitle": "Perfil guardado",
+      "doneMessage": "As suas alterações estão guardadas na sua conta.",
+      "doneAction": "Voltar ao perfil"
     },
     "done": {
       "title": "Bem-vindo(a), {{name}}!",

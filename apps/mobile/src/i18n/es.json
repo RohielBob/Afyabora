@@ -207,8 +207,14 @@
   },
   "profile": {
     "title": "Perfil",
-    "todoTitle": "Próximamente: su perfil médico",
-    "todoText": "Identidad, tipo de diabetes, rango objetivo y umbrales, contacto de emergencia.",
+    "medical": {
+      "title": "Mi perfil médico",
+      "intro": "Su información de seguimiento, guardada en su cuenta. Toque «Modificar» para cambiar una parte.",
+      "offline": "Sin conexión: su perfil se guarda en su cuenta y se muestra con internet.",
+      "noProfile": "Su perfil médico aún no está completado.",
+      "fill": "Completar mi perfil",
+      "error": "No se pudo cargar su perfil. Inténtelo de nuevo en un momento."
+    },
     "settings": "Ajustes",
     "settingsHint": "Idioma, apariencia, unidades, seguridad",
     "signOut": "Cerrar sesión",
@@ -440,6 +446,15 @@
       "target": "Rango objetivo",
       "none": "Sin indicar",
       "save": "Guardar mi perfil"
+    },
+    "edit": {
+      "overline": "Mi perfil médico",
+      "title": "Modificar mi perfil",
+      "intro": "Toque «Modificar» en la parte que quiere cambiar y luego guarde.",
+      "save": "Guardar los cambios",
+      "doneTitle": "Perfil guardado",
+      "doneMessage": "Sus cambios se han guardado en su cuenta.",
+      "doneAction": "Volver al perfil"
     },
     "done": {
       "title": "¡Bienvenido/a, {{name}}!",
