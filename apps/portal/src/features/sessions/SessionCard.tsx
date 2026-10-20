@@ -3,7 +3,7 @@
 // Un accès terminé reste visible (historique) mais grisé et sans bouton : son dossier ne s'ouvre plus.
 import type { DoctorSessionDto, QualityLevel } from '@glyka/shared';
 import { ButtonLink } from '@/components/ui';
-import { fr } from '@/i18n/fr';
+import { texts } from '@/i18n';
 import { lastMeasurementText, orderedCategories, qualityView, statusView } from './view';
 
 /** Couleur du niveau de qualité (toujours avec l'icône et le texte). Aussi utilisée par le dossier (L5-12). */
@@ -94,7 +94,7 @@ export function SessionCard({
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
           <h2 className="text-[18px] font-bold text-ink">{session.patient.firstName}</h2>
           <span className="text-[14px] text-muted">
-            {fr.patients.diabetes[session.patient.diabetesType]}
+            {texts.patients.diabetes[session.patient.diabetesType]}
           </span>
         </div>
         <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-[13px]">
@@ -107,9 +107,9 @@ export function SessionCard({
           {status.when ? <span className="text-muted">{status.when}</span> : null}
         </div>
         <p className="text-[13px] text-muted">
-          <span className="font-semibold text-ink">{fr.patients.shared}</span>{' '}
+          <span className="font-semibold text-ink">{texts.patients.shared}</span>{' '}
           {orderedCategories(session.categories)
-            .map((c) => fr.patients.categories[c])
+            .map((c) => texts.patients.categories[c])
             .join(' · ')}
         </p>
         {last || quality ? (
@@ -131,7 +131,7 @@ export function SessionCard({
       </div>
       {active ? (
         <ButtonLink to={`/patients/${session.sessionId}`} className="sm:w-auto sm:min-w-[200px]">
-          {fr.patients.open}
+          {texts.patients.open}
         </ButtonLink>
       ) : null}
     </li>

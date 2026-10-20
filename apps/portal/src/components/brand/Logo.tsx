@@ -2,7 +2,7 @@
 // (apps/mobile/src/components/brand/Logo.tsx) et que public/favicon.svg.
 import { useId } from 'react';
 import { brand } from '@glyka/ui-tokens';
-import { fr } from '@/i18n/fr';
+import { texts } from '@/i18n';
 
 const DROP_PATH =
   'M 232 0 C 189 85 0 244 0 409 A 228.5 228.5 0 0 0 457 409 C 457 244 275 85 232 0 Z';
@@ -18,7 +18,7 @@ export function LogoMark({ size = 40, className }: { size?: number; className?: 
   return (
     <svg
       role="img"
-      aria-label={`Logo ${fr.app.name}`}
+      aria-label={`Logo ${texts.app.name}`}
       viewBox="0 0 457 637"
       height={size}
       width={(size * 457) / 637}
@@ -57,7 +57,7 @@ export function Wordmark({ size = 34, showSpace = true }: { size?: number; showS
         </span>
         {showSpace ? (
           <span className="mt-1 text-[11px] font-bold tracking-[1.2px] text-muted uppercase">
-            {fr.app.space}
+            {texts.app.space}
           </span>
         ) : null}
       </span>

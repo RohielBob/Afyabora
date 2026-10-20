@@ -2,21 +2,21 @@
 import { AuthLayout } from '@/components/layout/AuthLayout';
 import { ResultPanel } from '@/components/layout/ResultPanel';
 import { ButtonLink } from '@/components/ui';
-import { fr } from '@/i18n/fr';
+import { texts } from '@/i18n';
 
 export default function NotFoundRoute() {
   return (
     <AuthLayout>
       <ResultPanel
         tone="info"
-        title={fr.notFound.title}
+        title={texts.notFound.title}
         actions={
           <ButtonLink to="/" variant="outline">
-            {fr.notFound.home}
+            {texts.notFound.home}
           </ButtonLink>
         }
       >
-        <p>{fr.notFound.text}</p>
+        <p>{texts.notFound.text}</p>
       </ResultPanel>
     </AuthLayout>
   );

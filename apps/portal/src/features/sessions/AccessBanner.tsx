@@ -8,7 +8,7 @@
 //  - À zéro : `onEnd()` une seule fois ; la page efface le dossier et affiche « Accès expiré ».
 import { useEffect, useRef, useState } from 'react';
 import { when } from '@/features/sessions/view';
-import { fill, fr } from '@/i18n/fr';
+import { fill, texts } from '@/i18n';
 import { announcement, countdownView } from './countdown';
 import { useCountdown } from './useCountdown';
 
@@ -76,10 +76,10 @@ export function AccessBanner({ expiresAt, onEnd }: { expiresAt: string; onEnd: (
         {view.text}
       </span>
       {view.tone === 'soon' ? (
-        <span className="text-[13px] font-semibold text-warning">{fr.access.soon}</span>
+        <span className="text-[13px] font-semibold text-warning">{texts.access.soon}</span>
       ) : null}
       <span className="ml-auto text-[13px] text-muted">
-        {fill(fr.access.until, { when: when(expiresAt, new Date()) })}
+        {fill(texts.access.until, { when: when(expiresAt, new Date()) })}
       </span>
       <span className="sr-only" aria-live="polite" aria-atomic="true">
         {spoken}

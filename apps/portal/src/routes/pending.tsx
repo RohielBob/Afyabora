@@ -10,7 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import { AppShell } from '@/components/layout/AppShell';
 import { Button } from '@/components/ui';
 import { signOut, useSession } from '@/features/auth';
-import { fr } from '@/i18n/fr';
+import { texts } from '@/i18n';
 
 type StepState = 'done' | 'now' | 'next';
 
@@ -68,9 +68,9 @@ export default function PendingRoute() {
   const rejected = user?.status === 'REJECTED';
   const states: StepState[] = ['done', 'now', 'next'];
   const stepLabel: Record<StepState, string> = {
-    done: fr.pending.stepDone,
-    now: fr.pending.stepNow,
-    next: fr.pending.stepNext,
+    done: texts.pending.stepDone,
+    now: texts.pending.stepNow,
+    next: texts.pending.stepNext,
   };
 
   const reconnect = async () => {
@@ -87,13 +87,13 @@ export default function PendingRoute() {
           <p
             className={`text-[11px] font-bold tracking-[1.2px] uppercase ${rejected ? 'text-danger' : 'text-warning'}`}
           >
-            {rejected ? fr.pending.rejectedOverline : fr.pending.overline}
+            {rejected ? texts.pending.rejectedOverline : texts.pending.overline}
           </p>
           <h1 className="text-[30px] leading-[1.2] font-bold tracking-[-0.6px] text-ink">
-            {rejected ? fr.pending.rejectedTitle : fr.pending.title}
+            {rejected ? texts.pending.rejectedTitle : texts.pending.title}
           </h1>
           <p className="text-[16px] text-muted">
-            {rejected ? fr.pending.rejectedText : fr.pending.text}
+            {rejected ? texts.pending.rejectedText : texts.pending.text}
           </p>
         </header>
 
@@ -101,11 +101,11 @@ export default function PendingRoute() {
           <>
             {/* Où en est le compte : étapes reliées par un trait. */}
             <ol className="animate-enter flex flex-col rounded-2xl border border-line bg-surface p-6 [animation-delay:60ms]">
-              {fr.pending.steps.map((step, i) => {
+              {texts.pending.steps.map((step, i) => {
                 const state = states[i] ?? 'next';
                 return (
                   <li key={step} className="relative flex gap-4 pb-6 last:pb-0">
-                    {i < fr.pending.steps.length - 1 ? (
+                    {i < texts.pending.steps.length - 1 ? (
                       <span
                         aria-hidden="true"
                         className={`absolute top-10 bottom-1 left-[17px] w-0.5 rounded-full ${state === 'done' ? 'bg-success' : 'bg-line'}`}
@@ -126,9 +126,9 @@ export default function PendingRoute() {
             </ol>
 
             <section className="animate-enter flex flex-col gap-3 rounded-2xl bg-surface-muted p-6 [animation-delay:120ms]">
-              <h2 className="text-[17px] font-semibold text-ink">{fr.pending.whileTitle}</h2>
+              <h2 className="text-[17px] font-semibold text-ink">{texts.pending.whileTitle}</h2>
               <ul className="flex flex-col gap-2 text-[15px] text-muted">
-                {fr.pending.while.map((line) => (
+                {texts.pending.while.map((line) => (
                   <li key={line} className="flex gap-2">
                     <span
                       aria-hidden="true"
@@ -142,7 +142,7 @@ export default function PendingRoute() {
 
             <div className="animate-enter [animation-delay:180ms]">
               <Button variant="outline" size="lg" loading={leaving} onClick={reconnect}>
-                {fr.pending.recheck}
+                {texts.pending.recheck}
               </Button>
             </div>
           </>

@@ -5,7 +5,7 @@ import { NavLink, Outlet } from 'react-router-dom';
 import { Wordmark } from '@/components/brand/Logo';
 import { Button } from '@/components/ui';
 import { signOut, useSession } from '@/features/auth';
-import { fill, fr } from '@/i18n/fr';
+import { fill, texts } from '@/i18n';
 import { AppearanceMenu } from './AppearanceMenu';
 
 function NavItem({ to, children }: { to: string; children: ReactNode }) {
@@ -38,15 +38,15 @@ export function AppShell({ children }: { children?: ReactNode }) {
         <div className="mx-auto flex h-16 max-w-6xl items-center gap-6 px-4 sm:px-6">
           <Wordmark size={30} />
           {approved ? (
-            <nav aria-label="Navigation principale" className="hidden items-center gap-1 sm:flex">
-              <NavItem to="/patients">{fr.shell.nav.patients}</NavItem>
-              <NavItem to="/scan">{fr.shell.nav.scan}</NavItem>
+            <nav aria-label={texts.shell.navA11y} className="hidden items-center gap-1 sm:flex">
+              <NavItem to="/patients">{texts.shell.nav.patients}</NavItem>
+              <NavItem to="/scan">{texts.shell.nav.scan}</NavItem>
             </nav>
           ) : null}
           <div className="ml-auto flex items-center gap-2 sm:gap-4">
             {user ? (
               <span className="hidden max-w-[240px] truncate text-[13px] text-muted md:inline">
-                {fill(fr.shell.signedInAs, { email: user.email })}
+                {fill(texts.shell.signedInAs, { email: user.email })}
               </span>
             ) : null}
             <AppearanceMenu />
@@ -59,7 +59,7 @@ export function AppShell({ children }: { children?: ReactNode }) {
                 await signOut();
               }}
             >
-              {fr.shell.signOut}
+              {texts.shell.signOut}
             </Button>
           </div>
         </div>

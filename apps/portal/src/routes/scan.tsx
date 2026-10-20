@@ -12,7 +12,7 @@ import { Alert, Button, TextField } from '@/components/ui';
 import { QrScanner, readQrFromImage } from '@/features/scanner/QrScanner';
 import { scannerApi } from '@/features/scanner/api';
 import { claimProblem, readShareToken, type ClaimProblem } from '@/features/scanner/claim';
-import { fill, fr } from '@/i18n/fr';
+import { fill, texts } from '@/i18n';
 
 export default function ScanRoute() {
   const navigate = useNavigate();
@@ -72,12 +72,12 @@ export default function ScanRoute() {
     <div className="mx-auto flex max-w-5xl flex-col gap-8">
       <header className="animate-enter flex flex-col gap-3">
         <p className="text-[11px] font-bold tracking-[1.2px] text-primary-text uppercase">
-          {fr.scan.overline}
+          {texts.scan.overline}
         </p>
         <h1 className="text-[30px] leading-[1.2] font-bold tracking-[-0.6px] text-ink">
-          {fr.scan.title}
+          {texts.scan.title}
         </h1>
-        <p className="max-w-2xl text-[16px] text-muted">{fr.scan.intro}</p>
+        <p className="max-w-2xl text-[16px] text-muted">{texts.scan.intro}</p>
       </header>
 
       {message ? (
@@ -91,8 +91,8 @@ export default function ScanRoute() {
         </Alert>
       ) : null}
       {claiming ? (
-        <Alert tone="info" title={fr.scan.claiming}>
-          {fr.scan.claimingText}
+        <Alert tone="info" title={texts.scan.claiming}>
+          {texts.scan.claimingText}
         </Alert>
       ) : null}
 
@@ -102,11 +102,11 @@ export default function ScanRoute() {
           className="animate-enter flex flex-col gap-4 rounded-2xl border border-line bg-surface p-6 [animation-delay:60ms]"
         >
           <h2 id="scan-camera" className="text-[18px] font-bold text-ink">
-            {fr.scan.camera.title}
+            {texts.scan.camera.title}
           </h2>
           <QrScanner onDecoded={(text) => void claim(text)} disabled={claiming} />
           <ul className="flex flex-col gap-2 text-[13px] text-muted">
-            {fr.scan.tips.map((tip) => (
+            {texts.scan.tips.map((tip) => (
               <li key={tip} className="flex gap-2">
                 <span aria-hidden="true" className="text-primary-text">
                   •
@@ -123,14 +123,14 @@ export default function ScanRoute() {
         >
           <div className="flex flex-col gap-1">
             <h2 id="scan-backup" className="text-[18px] font-bold text-ink">
-              {fr.scan.backup.title}
+              {texts.scan.backup.title}
             </h2>
-            <p className="text-[14px] text-muted">{fr.scan.backup.intro}</p>
+            <p className="text-[14px] text-muted">{texts.scan.backup.intro}</p>
           </div>
 
           <div className="flex flex-col gap-2">
-            <p className="text-[14px] font-semibold text-ink">{fr.scan.photo.title}</p>
-            <p className="text-[13px] text-muted">{fr.scan.photo.text}</p>
+            <p className="text-[14px] font-semibold text-ink">{texts.scan.photo.title}</p>
+            <p className="text-[13px] text-muted">{texts.scan.photo.text}</p>
             <input
               ref={fileInput}
               type="file"
@@ -145,7 +145,7 @@ export default function ScanRoute() {
               disabled={claiming}
               onClick={() => fileInput.current?.click()}
             >
-              {fr.scan.photo.action}
+              {texts.scan.photo.action}
             </Button>
             {/* Zone de travail invisible exigée par html5-qrcode pour lire une image. */}
             <div id={imageHost} className="hidden" aria-hidden="true" />
@@ -153,8 +153,8 @@ export default function ScanRoute() {
 
           <form onSubmit={submitCode} className="flex flex-col gap-3" noValidate>
             <TextField
-              label={fr.scan.code.label}
-              hint={fr.scan.code.hint}
+              label={texts.scan.code.label}
+              hint={texts.scan.code.hint}
               value={code}
               onChange={(event) => setCode(event.target.value)}
               autoComplete="off"
@@ -164,13 +164,13 @@ export default function ScanRoute() {
               className="[&_input]:font-mono [&_input]:text-[14px]"
             />
             <Button type="submit" loading={claiming} disabled={code.trim().length === 0}>
-              {fr.scan.code.submit}
+              {texts.scan.code.submit}
             </Button>
           </form>
         </section>
       </div>
 
-      <p className="text-[13px] text-muted">{fr.brand.disclaimer}</p>
+      <p className="text-[13px] text-muted">{texts.brand.disclaimer}</p>
     </div>
   );
 }
@@ -179,10 +179,10 @@ function problemMessage(problem: ClaimProblem): { title: string; text: string } 
   switch (problem.kind) {
     case 'blocked':
       return {
-        title: fr.scan.problem.blocked.title,
-        text: fill(fr.scan.problem.blocked.text, { seconds: problem.seconds }),
+        title: texts.scan.problem.blocked.title,
+        text: fill(texts.scan.problem.blocked.text, { seconds: problem.seconds }),
       };
     default:
-      return fr.scan.problem[problem.kind];
+      return texts.scan.problem[problem.kind];
   }
 }

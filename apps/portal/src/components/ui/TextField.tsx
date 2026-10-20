@@ -2,7 +2,7 @@
 // seule), bouton « Afficher / Masquer » pour les mots de passe. L'erreur est reliée au champ
 // (aria-describedby) pour les lecteurs d'écran.
 import { forwardRef, useId, useState, type InputHTMLAttributes } from 'react';
-import { fr } from '@/i18n/fr';
+import { texts } from '@/i18n';
 
 export const TextField = forwardRef<
   HTMLInputElement,
@@ -51,7 +51,7 @@ export const TextField = forwardRef<
             aria-controls={inputId}
             className="transition-afy absolute top-1/2 right-2 -translate-y-1/2 rounded-lg px-3 py-1.5 text-[14px] font-semibold text-primary-text hover:bg-primary-soft"
           >
-            {visible ? fr.common.hide : fr.common.show}
+            {visible ? texts.common.hide : texts.common.show}
           </button>
         ) : null}
       </div>

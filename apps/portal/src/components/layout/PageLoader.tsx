@@ -1,13 +1,13 @@
 // Écran de chargement (reprise de la session au démarrage) : le logo, entouré d'une onde qui s'élargit
 // doucement. Pas de texte qui clignote ; annoncé aux lecteurs d'écran.
 import { LogoMark } from '@/components/brand/Logo';
-import { fr } from '@/i18n/fr';
+import { texts } from '@/i18n';
 
 export function PageLoader() {
   return (
     <div
       role="status"
-      aria-label={fr.common.loading}
+      aria-label={texts.common.loading}
       className="flex min-h-dvh items-center justify-center bg-page"
     >
       <div className="animate-fade relative flex size-24 items-center justify-center">

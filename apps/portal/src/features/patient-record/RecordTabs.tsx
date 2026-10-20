@@ -4,7 +4,7 @@
 // Sur un écran étroit, la barre défile horizontalement : l'onglet choisi est toujours ramené dans la partie
 // visible (ouverture du dossier sur `?onglet=rapport`, flèches du clavier…), sans faire défiler la page.
 import { useEffect, useRef, type KeyboardEvent, type ReactNode } from 'react';
-import { fr } from '@/i18n/fr';
+import { texts } from '@/i18n';
 import type { RecordTab } from './view';
 
 export const tabId = (tab: RecordTab) => `record-tab-${tab}`;
@@ -80,7 +80,7 @@ export function RecordTabs({
     <div
       ref={listRef}
       role="tablist"
-      aria-label={fr.record.tabsA11y}
+      aria-label={texts.record.tabsA11y}
       className="-mx-4 flex gap-1 overflow-x-auto overflow-y-hidden border-b border-line px-4 sm:mx-0 sm:px-0"
     >
       {tabs.map((tab, index) => {
@@ -107,7 +107,7 @@ export function RecordTabs({
                 : 'border-transparent text-muted hover:border-line-strong hover:text-ink',
             ].join(' ')}
           >
-            {fr.record.tabs[tab]}
+            {texts.record.tabs[tab]}
           </button>
         );
       })}

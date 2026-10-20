@@ -12,7 +12,7 @@ import {
   type ShareCategory,
   type TimelineItem,
 } from '@glyka/shared';
-import { fill, fr } from '@/i18n/fr';
+import { dateLocale, fill, texts } from '@/i18n';
 import { ApiError } from '@/lib/api-client';
 
 // ---------- Onglets ----------
@@ -92,7 +92,7 @@ export function valueIn(mgDl: number, unit: GlucoseUnit): number {
 export function stateView(state: GlucoseState): { symbol: string; label: string; slug: string } {
   return {
     symbol: STATE_SYMBOLS[state].symbol,
-    label: fr.record.states[state],
+    label: texts.record.states[state],
     slug: state.toLowerCase().replace(/_/g, '-'),
   };
 }
@@ -106,14 +106,14 @@ export function decimal(value: number, digits = 0): string {
 
 /** « 08:12 » (heure de l'ordinateur du médecin). */
 export function timeText(iso: string): string {
-  return new Date(iso).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+  return new Date(iso).toLocaleTimeString(dateLocale(), { hour: '2-digit', minute: '2-digit' });
 }
 
 /** « 17 oct. à 08:12 ». */
 export function dateTimeText(iso: string): string {
   const at = new Date(iso);
-  return fill(fr.patients.dateTime, {
-    date: at.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' }),
+  return fill(texts.patients.dateTime, {
+    date: at.toLocaleDateString(dateLocale(), { day: 'numeric', month: 'short' }),
     time: timeText(iso),
   });
 }
@@ -121,11 +121,11 @@ export function dateTimeText(iso: string): string {
 /** Titre d'un jour : « Aujourd'hui », « Hier », sinon « samedi 17 octobre ». */
 export function dayLabel(iso: string, now: Date): string {
   const at = new Date(iso);
-  if (at.toDateString() === now.toDateString()) return fr.record.timeline.today;
+  if (at.toDateString() === now.toDateString()) return texts.record.timeline.today;
   const yesterday = new Date(now);
   yesterday.setDate(now.getDate() - 1);
-  if (at.toDateString() === yesterday.toDateString()) return fr.record.timeline.yesterday;
-  return at.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' });
+  if (at.toDateString() === yesterday.toDateString()) return texts.record.timeline.yesterday;
+  return at.toLocaleDateString(dateLocale(), { weekday: 'long', day: 'numeric', month: 'long' });
 }
 
 // ---------- Chronologie ----------
@@ -136,13 +136,13 @@ export function dayLabel(iso: string, now: Date): string {
  */
 export function itemText(item: TimelineItem, unit: GlucoseUnit): string {
   if (item.kind === 'MEASUREMENT' && item.valueMgDl !== null) {
-    const context = fr.record.contexts[item.label as keyof typeof fr.record.contexts];
+    const context = texts.record.contexts[item.label as keyof typeof texts.record.contexts];
     return context
       ? `${valueText(item.valueMgDl, unit)} · ${context}`
       : valueText(item.valueMgDl, unit);
   }
   return item.durationMinutes
-    ? `${item.label} · ${fill(fr.record.timeline.duration, { count: item.durationMinutes })}`
+    ? `${item.label} · ${fill(texts.record.timeline.duration, { count: item.durationMinutes })}`
     : item.label;
 }
 
@@ -171,14 +171,14 @@ export function insightView(insight: InsightDto): {
 } {
   const count = insight.evidenceIds.length;
   return {
-    severity: fr.record.summary.severity[insight.severity],
-    type: fr.record.summary.type[insight.type],
+    severity: texts.record.summary.severity[insight.severity],
+    type: texts.record.summary.type[insight.type],
     evidence:
       count === 0
         ? null
         : count === 1
-          ? fr.record.summary.evidenceOne
-          : fill(fr.record.summary.evidence, { count }),
+          ? texts.record.summary.evidenceOne
+          : fill(texts.record.summary.evidence, { count }),
   };
 }
 

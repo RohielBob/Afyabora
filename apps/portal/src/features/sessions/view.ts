@@ -7,7 +7,7 @@ import {
   type QualityLevel,
   type ShareCategory,
 } from '@glyka/shared';
-import { fill, fr } from '@/i18n/fr';
+import { dateLocale, fill, texts } from '@/i18n';
 
 export type StatusTone = 'active' | 'ended';
 
@@ -21,16 +21,16 @@ export function statusView(
     case 'ACTIVE':
       return {
         tone: 'active',
-        label: fr.patients.status.ACTIVE,
-        when: end ? fill(fr.patients.until, { when: end }) : null,
+        label: texts.patients.status.ACTIVE,
+        when: end ? fill(texts.patients.until, { when: end }) : null,
       };
     case 'REVOKED':
-      return { tone: 'ended', label: fr.patients.status.REVOKED, when: null };
+      return { tone: 'ended', label: texts.patients.status.REVOKED, when: null };
     default:
       return {
         tone: 'ended',
-        label: fr.patients.status.EXPIRED,
-        when: end ? fill(fr.patients.endedAt, { when: end }) : null,
+        label: texts.patients.status.EXPIRED,
+        when: end ? fill(texts.patients.endedAt, { when: end }) : null,
       };
   }
 }
@@ -38,30 +38,30 @@ export function statusView(
 /** « 18:12 » aujourd'hui, sinon « 17 oct. à 18:12 » (heure de l'ordinateur du médecin). */
 export function when(iso: string, now: Date): string {
   const at = new Date(iso);
-  const time = at.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+  const time = at.toLocaleTimeString(dateLocale(), { hour: '2-digit', minute: '2-digit' });
   if (at.toDateString() === now.toDateString()) return time;
-  const date = at.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
-  return fill(fr.patients.dateTime, { date, time });
+  const date = at.toLocaleDateString(dateLocale(), { day: 'numeric', month: 'short' });
+  return fill(texts.patients.dateTime, { date, time });
 }
 
 /** Dernière mesure : « aujourd'hui à 08:12 », « le 17 oct. à 08:12 », ou rien (non partagée / accès fini). */
 export function lastMeasurementText(session: DoctorSessionDto, now: Date): string | null {
   if (session.status !== 'ACTIVE' || !session.categories.includes('GLUCOSE_HISTORY')) return null;
-  if (!session.lastMeasurementAt) return fr.patients.noMeasurement;
+  if (!session.lastMeasurementAt) return texts.patients.noMeasurement;
   const at = new Date(session.lastMeasurementAt);
-  const time = at.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+  const time = at.toLocaleTimeString(dateLocale(), { hour: '2-digit', minute: '2-digit' });
   return at.toDateString() === now.toDateString()
-    ? fill(fr.patients.lastToday, { time })
-    : fill(fr.patients.lastOn, {
-        date: at.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' }),
+    ? fill(texts.patients.lastToday, { time })
+    : fill(texts.patients.lastOn, {
+        date: at.toLocaleDateString(dateLocale(), { day: 'numeric', month: 'short' }),
         time,
       });
 }
 
 /** Qualité des données : libellé et ton (icône + texte côté écran, jamais la couleur seule). */
 export function qualityView(level: QualityLevel, score: number): { label: string; a11y: string } {
-  const label = fr.patients.quality[level];
-  return { label, a11y: fill(fr.patients.qualityA11y, { label, score }) };
+  const label = texts.patients.quality[level];
+  return { label, a11y: fill(texts.patients.qualityA11y, { label, score }) };
 }
 
 /** Catégories dans l'ordre du contrat (stable d'une ligne à l'autre). */

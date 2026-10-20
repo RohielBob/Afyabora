@@ -2,7 +2,7 @@
 // Règles pures, testées sans navigateur (__tests__/countdown.test.ts). L'heure de fin vient du SERVEUR
 // (`expiresAt`) et l'heure actuelle aussi (lib/server-clock.ts) : l'horloge de l'ordinateur ne compte pas.
 // Le minuteur est INDICATIF : le serveur revérifie l'accès à chaque requête et refuse après la fin.
-import { fill, fr } from '@/i18n/fr';
+import { fill, texts } from '@/i18n';
 
 /** Sous ce nombre de secondes, le bandeau passe en « se termine bientôt » (couleur + icône + mot). */
 export const SOON_SECONDS = 120;
@@ -33,13 +33,16 @@ export function countdownView(seconds: number): {
   a11y: string;
 } {
   if (seconds <= 0) {
-    return { tone: 'ended', text: fr.access.ended, a11y: fr.access.ended };
+    return { tone: 'ended', text: texts.access.ended, a11y: texts.access.ended };
   }
   const minutes = Math.ceil(seconds / 60);
   return {
     tone: seconds <= SOON_SECONDS ? 'soon' : 'normal',
-    text: fill(fr.access.valid, { time: formatCountdown(seconds) }),
-    a11y: minutes <= 1 ? fr.access.a11yLastMinute : fill(fr.access.a11yMinutes, { count: minutes }),
+    text: fill(texts.access.valid, { time: formatCountdown(seconds) }),
+    a11y:
+      minutes <= 1
+        ? texts.access.a11yLastMinute
+        : fill(texts.access.a11yMinutes, { count: minutes }),
   };
 }
 
@@ -49,7 +52,7 @@ export function countdownView(seconds: number): {
  */
 export function announcement(previous: number | null, current: number): string | null {
   if (previous === null) return null;
-  if (previous > 60 && current <= 60 && current > 0) return fr.access.announce1;
-  if (previous > 300 && current <= 300 && current > 60) return fr.access.announce5;
+  if (previous > 60 && current <= 60 && current > 0) return texts.access.announce1;
+  if (previous > 300 && current <= 300 && current > 60) return texts.access.announce5;
   return null;
 }

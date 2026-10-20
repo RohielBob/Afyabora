@@ -6,7 +6,7 @@
 // Le contenu entre en douceur (fondu + léger glissement), désactivé si l'ordinateur réduit les animations.
 import type { ReactNode } from 'react';
 import { Wordmark } from '@/components/brand/Logo';
-import { fr } from '@/i18n/fr';
+import { texts } from '@/i18n';
 import { AppearanceMenu } from './AppearanceMenu';
 
 function Check() {
@@ -52,10 +52,10 @@ export function AuthLayout({
         </div>
         <div className="animate-enter relative flex max-w-[440px] flex-col gap-8">
           <h2 className="text-[30px] leading-[1.2] font-extrabold tracking-[-0.6px] text-ink">
-            {fr.brand.title}
+            {texts.brand.title}
           </h2>
           <ul className="flex flex-col gap-4">
-            {fr.brand.points.map((point) => (
+            {texts.brand.points.map((point) => (
               <li key={point} className="flex items-start gap-3 text-[15px] text-muted">
                 <Check />
                 <span>{point}</span>
@@ -64,7 +64,7 @@ export function AuthLayout({
           </ul>
         </div>
         <p className="relative max-w-[440px] text-[12px] leading-[1.5] text-subtle">
-          {fr.brand.disclaimer}
+          {texts.brand.disclaimer}
         </p>
       </aside>
 
@@ -95,7 +95,7 @@ export function AuthLayout({
           {children}
         </div>
         <p className="mx-auto mt-10 max-w-[420px] text-center text-[12px] text-subtle lg:hidden">
-          {fr.brand.disclaimer}
+          {texts.brand.disclaimer}
         </p>
       </main>
     </div>

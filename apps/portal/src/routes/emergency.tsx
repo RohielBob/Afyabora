@@ -21,9 +21,9 @@ import {
   updatedText,
   type CardProblem,
 } from '@/features/emergency-card/card';
-import { fill, fr } from '@/i18n/fr';
+import { fill, texts } from '@/i18n';
 
-const t = fr.emergency;
+const t = texts.emergency;
 
 type State =
   | { kind: 'confirm' }

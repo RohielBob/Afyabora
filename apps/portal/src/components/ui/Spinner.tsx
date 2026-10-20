@@ -1,9 +1,9 @@
 // Indicateur de chargement : un arc qui tourne (couleur du texte autour). Annoncé aux lecteurs d'écran.
-import { fr } from '@/i18n/fr';
+import { texts } from '@/i18n';
 
 export function Spinner({
   size = 20,
-  label = fr.common.loading,
+  label = texts.common.loading,
 }: {
   size?: number;
   label?: string;

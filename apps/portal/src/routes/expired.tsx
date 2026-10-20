@@ -9,7 +9,7 @@ import { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { ButtonLink } from '@/components/ui';
 import type { EndReason } from '@/features/patient-record/view';
-import { fr } from '@/i18n/fr';
+import { texts } from '@/i18n';
 
 /** Motif dans l'adresse ⇔ raison de fin. */
 export const MOTIF: Record<EndReason, string> = {
@@ -31,7 +31,7 @@ export default function ExpiredRoute() {
   const [params] = useSearchParams();
   const queryClient = useQueryClient();
   const reason = reasonFromMotif(params.get('motif'));
-  const text = fr.expired.reason[reason];
+  const text = texts.expired.reason[reason];
 
   useEffect(() => {
     queryClient.removeQueries({ queryKey: ['record'] });
@@ -56,7 +56,7 @@ export default function ExpiredRoute() {
       </span>
       <div className="flex flex-col gap-2">
         <p className="text-[11px] font-bold tracking-[1.2px] text-primary-text uppercase">
-          {fr.expired.overline}
+          {texts.expired.overline}
         </p>
         <h1 className="text-[24px] leading-tight font-bold text-ink">{text.title}</h1>
       </div>
@@ -74,14 +74,14 @@ export default function ExpiredRoute() {
         >
           <path d="M5 12.5l4.5 4.5L19 7.5" />
         </svg>
-        {fr.expired.erased}
+        {texts.expired.erased}
       </p>
       <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
         <ButtonLink to="/patients" className="sm:w-auto sm:min-w-[200px]">
-          {fr.expired.patients}
+          {texts.expired.patients}
         </ButtonLink>
         <ButtonLink to="/scan" variant="outline" className="sm:w-auto sm:min-w-[200px]">
-          {fr.expired.scan}
+          {texts.expired.scan}
         </ButtonLink>
       </div>
     </section>

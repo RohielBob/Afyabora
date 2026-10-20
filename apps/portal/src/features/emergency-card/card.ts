@@ -8,6 +8,7 @@
 //  - La réponse est vérifiée avec le schéma de @glyka/shared, qui refuse tout champ en plus : jamais de
 //    donnée inattendue à l'écran.
 //  - Glycémie : la valeur seule, en mg/dL et en g/L ; jamais d'état en couleur (la page n'en juge pas).
+import { dateLocale } from '@/i18n';
 import {
   EMERGENCY_CARD_FIELDS,
   emergencyCardPublicSchema,
@@ -73,7 +74,7 @@ export function telHref(phone: string): string {
 export function updatedText(iso: string): { date: string; time: string } {
   const at = new Date(iso);
   return {
-    date: at.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }),
-    time: at.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
+    date: at.toLocaleDateString(dateLocale(), { day: 'numeric', month: 'long', year: 'numeric' }),
+    time: at.toLocaleTimeString(dateLocale(), { hour: '2-digit', minute: '2-digit' }),
   };
 }
