@@ -36,6 +36,20 @@
 - **expo-sqlite sur le web** : l'ouverture de la base peut rester bloquée sans erreur (le navigateur exige des en-têtes de sécurité que le serveur de dev ne fournit pas). Les accès à la base locale passent par `src/db/reset.ts` (ignorés sur le web, limite de temps sur téléphone) : un bouton ne doit jamais attendre une base qui ne répond pas.
 - **Clés React en double** (`key`) entre éléments voisins : React garde un « fantôme » de l'ancien élément (vu avec deux en-têtes affichés en même temps). Deux voisins ne partagent jamais la même `key`.
 - **Clavier fermé tout seul dans l'aperçu web** : sur le web, un `ScrollView` avec `keyboardDismissMode="on-drag"` (notre `Screen`) ferme le clavier à **chaque** défilement, même quand la page rapetisse (ex. une carte qui disparaît). Sur téléphone, seul un glissement du doigt le ferme : ne pas « corriger » `Screen` pour l'aperçu (vu avec « Corriger la valeur », L2-04).
+- **L'aperçu web ne remplace pas un vrai téléphone Android** (2026-10-20). Deux bugs invisibles dans le navigateur
+  rendaient l'APK inutilisable :
+  - **`Intl.PluralRules` n'existe pas sur Android (moteur Hermes)** : i18next affichait le NOM des textes au
+    pluriel (« dashboard.chart.period »). Corrigé par `src/i18n/intl-polyfill.ts` (règles CLDR de nos 8
+    langues), importé en premier dans `src/i18n/index.ts`. Ne pas le retirer ; une nouvelle langue doit y
+    ajouter ses règles (le test `intl-polyfill.test.ts` le vérifie en retirant `Intl.PluralRules`). La
+    bibliothèque `@formatjs/intl-pluralrules` ne suffit pas seule : sur Hermes, elle demande aussi
+    `Intl.Locale`.
+  - **Un composant passé à `refreshControl` doit transmettre `children` et `style`** : sur Android, React
+    Native place la LISTE DANS l'indicateur. `PullToRefresh` les ignorait : Accueil, Historique,
+    Synchronisation et journal d'accès étaient entièrement vides.
+
+  Vérifier chaque ticket mobile aussi sur un téléphone : `adb` (platform-tools de Google) + Expo Go branché en
+  USB (`adb reverse tcp:8081 tcp:8081`, puis `exp://127.0.0.1:8081`), journal filtré sur `ReactNativeJS`.
 
 ## API / base de données
 

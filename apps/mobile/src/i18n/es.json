@@ -8,7 +8,12 @@
     "cancel": "Cancelar",
     "next": "Siguiente",
     "back": "Volver",
-    "retry": "Reintentar"
+    "retry": "Reintentar",
+    "show": "Mostrar",
+    "hide": "Ocultar",
+    "showPassword": "Mostrar la contraseña",
+    "hidePassword": "Ocultar la contraseña",
+    "loading": "Cargando"
   },
   "disclaimer": "Afyabora es una herramienta de apoyo al seguimiento. No sustituye la opinión de un profesional de la salud.",
   "glucose": {
@@ -95,7 +100,7 @@
     "extreme": "Siga las indicaciones de su equipo de salud. Si se siente mal, pida ayuda de inmediato."
   },
   "errors": {
-    "network": "No es posible conectar con el servidor. Compruebe su conexión a internet y vuelva a intentarlo.",
+    "network": "No se puede contactar con el servidor. Tras un periodo sin uso, puede tardar hasta un minuto en arrancar: inténtelo de nuevo en un momento y compruebe su conexión a internet.",
     "server": "El servicio tiene un problema. Vuelva a intentarlo en unos instantes.",
     "tooManyRequests": "Demasiados intentos. Espere un minuto antes de volver a intentarlo.",
     "invalidData": "Algunos datos no son válidos. Revise el formulario.",
@@ -169,6 +174,7 @@
       "resendIn": "Reenviar el correo en {{seconds}} s",
       "resent": "Se acaba de enviar un nuevo correo. El enlace anterior ya no funciona.",
       "resendUnavailable": "Para recibir un nuevo correo, vuelva a registrarse con la misma dirección.",
+      "alreadyAccount": "¿Sigue sin llegar nada tras unos minutos? Quizá ya tenga una cuenta con esta dirección: inicie sesión o use «¿Olvidó su contraseña?».",
       "successTitle": "Correo verificado",
       "successMessage": "Su cuenta está activada. Ya puede iniciar sesión.",
       "goToSignIn": "Iniciar sesión"
@@ -204,7 +210,7 @@
     "todoTitle": "Próximamente: su perfil médico",
     "todoText": "Identidad, tipo de diabetes, rango objetivo y umbrales, contacto de emergencia.",
     "settings": "Ajustes",
-    "settingsHint": "Apariencia, unidades, notificaciones, seguridad",
+    "settingsHint": "Idioma, apariencia, unidades, seguridad",
     "signOut": "Cerrar sesión",
     "signOutConfirmTitle": "¿Cerrar sesión en este teléfono?",
     "signOutConfirmText": "Sus datos siguen guardados en su cuenta. Se quitarán de este teléfono y podrá volver a iniciar sesión en cualquier momento.",

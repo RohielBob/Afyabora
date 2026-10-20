@@ -1,6 +1,8 @@
 // Textes de l'application dans chaque langue (Réglages → Langue). Les textes ne sont JAMAIS écrits en dur
 // dans les écrans : tout passe par ces fichiers. Le français est la langue de référence (et de secours :
 // une clé absente d'une traduction s'affiche en français, jamais vide).
+// En PREMIER : règles du pluriel absentes des téléphones Android (voir intl-polyfill.ts).
+import './intl-polyfill';
 import { getLocales } from 'expo-localization';
 import i18n from 'i18next';
 import { useSyncExternalStore } from 'react';

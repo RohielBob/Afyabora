@@ -8,7 +8,12 @@
     "cancel": "Lekela",
     "next": "Tungunuka",
     "back": "Pingana",
-    "retry": "Tentekela kabidi"
+    "retry": "Tentekela kabidi",
+    "show": "Leja",
+    "hide": "Sokoka",
+    "showPassword": "Leja mot de passe",
+    "hidePassword": "Sokoka mot de passe",
+    "loading": "Kubulula"
   },
   "disclaimer": "Afyabora ndi tshiamu tshia kukuambuluisha bua kulonda disama diebe. Katshiena tshiangata muaba wa mubelu wa muena manga to.",
   "glucose": {
@@ -95,7 +100,7 @@
     "extreme": "Londa mibelu ya bena manga bebe. Biwadiumvua bibi, lomba diambuluisha diakamue."
   },
   "errors": {
-    "network": "Katuena mua kupeta serveur to. Tangila internet webe ne utentekela kabidi.",
+    "network": "Serveur kena wandamuna to. Panyima pa tshikondo kakuyi mudimu, udi mua kuangata too ne minite umue bua kutuadija: tentekela kabidi panyima pa kakese, ne tangila internet webe.",
     "server": "Mudimu udi ne lutatu. Tentekela kabidi panyima pa tshikondo tshikese.",
     "tooManyRequests": "Wakutentekela misangu ya bungi. Indila minite umue kumpala kua kutentekela kabidi.",
     "invalidData": "Malu amue kaena mimpe to. Tangila kabidi formulaire.",
@@ -169,6 +174,7 @@
       "resendIn": "Tuma kabidi email panyima pa {{seconds}} s",
       "resent": "Email mupiamupia mmutumibue. Lien wa kale kena wenza kabidi mudimu to.",
       "resendUnavailable": "Bua kupeta email mupiamupia, funda kabidi dina ne adresse umue eu.",
+      "alreadyAccount": "Kakuena tshintu to panyima pa minite mikese? Pamuapa udi kale ne compte ku adresse eu: buela, anyi enzeja « Wakupua mot de passe muoyo ».",
       "successTitle": "Adresse mmujadikibue",
       "successMessage": "Compte webe mmubululuke. Udi mua kubuela katataka.",
       "goToSignIn": "Buela"
@@ -204,7 +210,7 @@
     "todoTitle": "Mu matuku adi alua: profil webe wa disama",
     "todoText": "Dina, mushindu wa diabète, mikalu mimpe ne mikalu ya dimanyisha, muntu wa kubikila mu ntatu.",
     "settings": "Malongolola",
-    "settingsHint": "Mushindu wa kumueneka, ba unité, ba notification, bukubi",
+    "settingsHint": "Muakulu, mushindu wa kumueneka, ba unité, bukubi",
     "signOut": "Patuka",
     "signOutConfirmTitle": "Kupatuka mu telefone eu?",
     "signOutConfirmText": "Malu ebe adi ashala ku compte webe. Neamushibue mu telefone eu ne udi mua kubuela kabidi misangu yonso.",

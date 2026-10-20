@@ -8,7 +8,12 @@
     "cancel": "Tika",
     "next": "Oyo elandí",
     "back": "Zonga",
-    "retry": "Meká lisusu"
+    "retry": "Meká lisusu",
+    "show": "Lakisa",
+    "hide": "Bomba",
+    "showPassword": "Lakisa mot de passe",
+    "hidePassword": "Bomba mot de passe",
+    "loading": "Ezali kofungwama"
   },
   "disclaimer": "Afyabora ezali esaleli ya kosalisa yo olanda bokolono na yo. Ezwi esika ya toli ya mosali ya bokolono te.",
   "glucose": {
@@ -95,7 +100,7 @@
     "extreme": "Landá malako ya bato ya bokolono na yo. Soki omiyoki malamu te, séngá lisalisi mbala moko."
   },
   "errors": {
-    "network": "Tokoki kokutana na serveur te. Talá internet na yo mpe meká lisusu.",
+    "network": "Serveur ezali koyanola te. Nsima ya ntango moko kozanga mosala, ekoki kozwa kino minute moko mpo na kobanda: meká lisusu mwa moke, mpe talá internet na yo.",
     "server": "Mosala ezali na mokakatano. Meká lisusu nsima ya mwa ntango.",
     "tooManyRequests": "Omeki mbala ebele. Zelá miniti moko liboso ya komeka lisusu.",
     "invalidData": "Makambo mosusu ezali malamu te. Talá lisusu formulaire.",
@@ -169,6 +174,7 @@
       "resendIn": "Tindá email lisusu nsima ya {{seconds}} s",
       "resent": "Email ya sika etindami. Lien ya kala esalaka lisusu te.",
       "resendUnavailable": "Mpo na kozwa email ya sika, kotisá nkombo lisusu na adresse moko wana.",
+      "alreadyAccount": "Naino eloko te nsima ya miniti mwa moke? Mbala mosusu ozali kala na compte na adresse oyo: kotá, to salelá « Obosani mot de passe ».",
       "successTitle": "Adresse endimami",
       "successMessage": "Compte na yo efungwami. Okoki sikoyo kokota.",
       "goToSignIn": "Kotá"
@@ -204,7 +210,7 @@
     "todoTitle": "Mokolo moko: profil na yo ya bokolono",
     "todoText": "Nkombo, lolenge ya diabète, ndelo ya malamu mpe bandelo, moto ya kobenga soki likama.",
     "settings": "Mibongiseli",
-    "settingsHint": "Ndenge emonanaka, ba unité, ba notification, libateli",
+    "settingsHint": "Lokóta, ndenge emonanaka, ba unité, libateli",
     "signOut": "Bimá",
     "signOutConfirmTitle": "Obimi na telefone oyo?",
     "signOutConfirmText": "Makambo na yo etikali na compte na yo. Ekolongwa na telefone oyo mpe okoki kokota lisusu ntango nyonso.",

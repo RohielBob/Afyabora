@@ -8,7 +8,12 @@
     "cancel": "Cancelar",
     "next": "Seguinte",
     "back": "Voltar",
-    "retry": "Tentar novamente"
+    "retry": "Tentar novamente",
+    "show": "Mostrar",
+    "hide": "Ocultar",
+    "showPassword": "Mostrar a palavra-passe",
+    "hidePassword": "Ocultar a palavra-passe",
+    "loading": "A carregar"
   },
   "disclaimer": "O Afyabora é uma ferramenta de apoio ao acompanhamento. Não substitui a opinião de um profissional de saúde.",
   "glucose": {
@@ -95,7 +100,7 @@
     "extreme": "Siga as indicações da sua equipa de saúde. Se se sentir mal, peça ajuda imediatamente."
   },
   "errors": {
-    "network": "Não é possível contactar o servidor. Verifique a sua ligação à internet e tente novamente.",
+    "network": "Não é possível contactar o servidor. Depois de um período sem utilização, pode demorar até um minuto a arrancar: tente novamente dentro de um instante e verifique a sua ligação à internet.",
     "server": "O serviço está com um problema. Tente novamente dentro de instantes.",
     "tooManyRequests": "Demasiadas tentativas. Aguarde um minuto antes de tentar novamente.",
     "invalidData": "Algumas informações não são válidas. Verifique o formulário.",
@@ -169,6 +174,7 @@
       "resendIn": "Reenviar o email dentro de {{seconds}} s",
       "resent": "Acabou de ser enviado um novo email. A ligação anterior já não funciona.",
       "resendUnavailable": "Para receber um novo email, volte a registar-se com o mesmo endereço.",
+      "alreadyAccount": "Continua sem receber nada após alguns minutos? Talvez já tenha uma conta com este endereço: inicie sessão ou use «Esqueceu-se da palavra-passe?».",
       "successTitle": "Endereço verificado",
       "successMessage": "A sua conta está ativada. Já pode iniciar sessão.",
       "goToSignIn": "Iniciar sessão"
@@ -204,7 +210,7 @@
     "todoTitle": "Em breve: o seu perfil médico",
     "todoText": "Identidade, tipo de diabetes, intervalo-alvo e limites, contacto de emergência.",
     "settings": "Definições",
-    "settingsHint": "Aparência, unidades, notificações, segurança",
+    "settingsHint": "Idioma, aparência, unidades, segurança",
     "signOut": "Terminar sessão",
     "signOutConfirmTitle": "Terminar sessão neste telefone?",
     "signOutConfirmText": "Os seus dados continuam guardados na sua conta. Serão retirados deste telefone e poderá voltar a iniciar sessão a qualquer momento.",

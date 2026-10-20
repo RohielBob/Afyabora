@@ -8,7 +8,12 @@
     "cancel": "Cancel",
     "next": "Next",
     "back": "Back",
-    "retry": "Retry"
+    "retry": "Retry",
+    "show": "Show",
+    "hide": "Hide",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
+    "loading": "Loading"
   },
   "disclaimer": "Afyabora is a self-monitoring aid. It does not replace the advice of a healthcare professional.",
   "glucose": {
@@ -95,7 +100,7 @@
     "extreme": "Follow your care team's instructions. If you feel unwell, get help immediately."
   },
   "errors": {
-    "network": "Cannot reach the server. Check your internet connection and try again.",
+    "network": "Cannot reach the server. After a quiet period it can take up to a minute to start: try again in a moment, and check your internet connection.",
     "server": "The service is having trouble. Please try again in a moment.",
     "tooManyRequests": "Too many attempts. Please wait a minute before trying again.",
     "invalidData": "Some information is not valid. Please check the form.",
@@ -169,6 +174,7 @@
       "resendIn": "Resend the email in {{seconds}} s",
       "resent": "A new email has just been sent. The previous link no longer works.",
       "resendUnavailable": "To receive a new email, sign up again with the same address.",
+      "alreadyAccount": "Still nothing after a few minutes? You may already have an account with this address: sign in, or use “Forgot password”.",
       "successTitle": "Address verified",
       "successMessage": "Your account is active. You can now sign in.",
       "goToSignIn": "Sign in"
@@ -204,7 +210,7 @@
     "todoTitle": "Coming soon: your medical profile",
     "todoText": "Identity, diabetes type, target range and thresholds, emergency contact.",
     "settings": "Settings",
-    "settingsHint": "Appearance, units, notifications, security",
+    "settingsHint": "Language, appearance, units, security",
     "signOut": "Sign out",
     "signOutConfirmTitle": "Sign out of this phone?",
     "signOutConfirmText": "Your data stays saved in your account. It will be removed from this phone and you can sign in again at any time.",
