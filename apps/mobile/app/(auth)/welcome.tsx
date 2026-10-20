@@ -1,6 +1,7 @@
 // Écran d'accueil : première impression d'Afyabora. Construit uniquement avec le système de design
 // (thème, composants) : il suit automatiquement le thème clair / sombre et la couleur d'accent.
 // Entrée en cascade : logo, carte d'exemple, message, puis boutons (≈ 0,5 s au total).
+import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
@@ -9,10 +10,11 @@ import { LogoMark, Wordmark } from '@/components/brand';
 import { Button, Card, InlineAlert, RangeBadge, Screen, Text } from '@/components/ui';
 import { useSession } from '@/features/auth';
 import { MedicalDisclaimer } from '@/features/legal';
+import { languageInfo, type LanguageCode } from '@/i18n';
 import { enterFromBelow, spacing, useReducedMotion, useTheme } from '@/theme';
 
 export default function WelcomeScreen() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { colors } = useTheme();
   const reduced = useReducedMotion();
   const session = useSession();
@@ -107,6 +109,15 @@ export default function WelcomeScreen() {
             size="lg"
             variant="outline"
             onPress={() => router.push('/(auth)/sign-in')}
+          />
+          {/* Langue (choisie avant même de créer un compte), écrite dans sa propre langue. */}
+          <Button
+            label={languageInfo(i18n.language as LanguageCode).nativeName}
+            variant="ghost"
+            size="sm"
+            icon={<Ionicons name="language-outline" size={18} color={colors.primaryText} />}
+            accessibilityHint={t('settings.languageHint')}
+            onPress={() => router.push('/settings/language')}
           />
           {/* Avertissement d'usage (CDC F1, L1-10) avec lien vers le texte complet */}
           <View style={{ marginTop: spacing.xs }}>

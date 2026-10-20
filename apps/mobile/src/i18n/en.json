@@ -25,6 +25,7 @@
   "sync": {
     "pending_one": "{{count}} reading waiting to sync",
     "pending_other": "{{count}} readings waiting to sync",
+    "pending_many": "{{count}} readings waiting to sync",
     "offline": "Offline — your data is saved on this phone",
     "upToDate": "Everything is up to date",
     "refreshing": "Syncing…",
@@ -37,12 +38,15 @@
       "problem": "Sync is not possible right now",
       "session": "Session expired: sign in again to sync",
       "rejected_one": "{{count}} change to review",
-      "rejected_other": "{{count}} changes to review"
+      "rejected_other": "{{count}} changes to review",
+      "rejected_many": "{{count}} changes to review"
     },
     "measurements_one": "{{count}} reading",
     "measurements_other": "{{count}} readings",
+    "measurements_many": "{{count}} readings",
     "events_one": "{{count}} event",
     "events_other": "{{count}} events",
+    "events_many": "{{count}} events",
     "pendingBoth": "{{measurements}} and {{events}}",
     "pendingLine": "{{what}} waiting to sync",
     "lastToday": "Last sync at {{time}}",
@@ -54,6 +58,7 @@
     "retry": "Try again",
     "rejected_one": "{{count}} change refused by the server",
     "rejected_other": "{{count}} changes refused by the server",
+    "rejected_many": "{{count}} changes refused by the server",
     "open": "See sync status",
     "screen": {
       "overline": "Offline",
@@ -73,6 +78,7 @@
       "reason": "Reason: {{reason}}",
       "attempts_one": "Refused {{count}} time",
       "attempts_other": "Refused {{count}} times",
+      "attempts_many": "Refused {{count}} times",
       "retry": "Try again",
       "discard": "Discard",
       "discardTitle": "Discard this change?",
@@ -204,6 +210,7 @@
     "signOutConfirmText": "Your data stays saved in your account. It will be removed from this phone and you can sign in again at any time.",
     "signOutUnsynced_one": "Warning: {{count}} change has not been sent to the server yet. It will be lost if you sign out now. Reconnect to the internet first if possible.",
     "signOutUnsynced_other": "Warning: {{count}} changes have not been sent to the server yet. They will be lost if you sign out now. Reconnect to the internet first if possible.",
+    "signOutUnsynced_many": "Warning: {{count}} changes have not been sent to the server yet. They will be lost if you sign out now. Reconnect to the internet first if possible.",
     "import": "Import a history",
     "importHint": "CSV or Excel file from a logbook or a meter",
     "sync": "Sync",
@@ -222,6 +229,8 @@
     "title": "Settings",
     "appearance": "Appearance",
     "appearanceHint": "Light or dark theme, accent colour",
+    "language": "Language",
+    "languageHint": "App language",
     "units": "Units and thresholds",
     "unitsHint": "Preferred unit, target range, alert thresholds",
     "unitsScreen": {
@@ -257,6 +266,7 @@
       "privacy": "This file contains your health data unencrypted: keep it somewhere safe and only share it with people you trust.",
       "pendingFirst_one": "{{count}} entry not yet sent will be sent first, so that it is in the file.",
       "pendingFirst_other": "{{count}} entries not yet sent will be sent first, so that they are in the file.",
+      "pendingFirst_many": "{{count}} entries not yet sent will be sent first, so that they are in the file.",
       "button": "Export my data",
       "again": "Export again",
       "shareAgain": "Share this file again",
@@ -269,6 +279,7 @@
       "done": "File ready: {{name}}",
       "unsent_one": "{{count}} entry could not be sent: it is not in this file. Try again when the connection is better.",
       "unsent_other": "{{count}} entries could not be sent: they are not in this file. Try again when the connection is better.",
+      "unsent_many": "{{count}} entries could not be sent: they are not in this file. Try again when the connection is better.",
       "problem": {
         "offline": "No connection: exporting needs the Internet.",
         "tooMany": "Too many exports in a short time. Try again in a minute.",
@@ -318,6 +329,15 @@
     "preview": "Preview",
     "previewOverline": "Last reading · sample",
     "previewButton": "Add a reading"
+  },
+  "language": {
+    "title": "Language",
+    "intro": "Choose the app language. Your data does not change.",
+    "system": "Phone language",
+    "systemHint": "Currently: {{name}}",
+    "inReview": "Translation under review",
+    "inReviewNote": "Languages marked “translation under review” have not yet been checked by someone who speaks the language. If a health message is unclear, ask your care team.",
+    "serverNote": "Some content stays in French for now: the assistant’s answers and fact sheets, the PDF report and emails."
   },
   "onboarding": {
     "progress": "Step {{current}} of {{total}}",
@@ -710,10 +730,13 @@
         "justNow": "Just now",
         "minutes_one": "{{count}} min ago",
         "minutes_other": "{{count}} min ago",
+        "minutes_many": "{{count}} min ago",
         "hours_one": "{{count}} h ago",
         "hours_other": "{{count}} h ago",
+        "hours_many": "{{count}} h ago",
         "days_one": "{{count}} day ago",
-        "days_other": "{{count}} days ago"
+        "days_other": "{{count}} days ago",
+        "days_many": "{{count}} days ago"
       },
       "a11y": "Latest reading: {{value}}, {{state}}. {{context}}, {{when}}.",
       "add": "New reading"
@@ -729,13 +752,16 @@
       "periodLabel": "Chart period",
       "period_one": "{{count}} d",
       "period_other": "{{count}} d",
+      "period_many": "{{count}} d",
       "summary_one": "{{count}} reading over {{days}} days",
       "summary_other": "{{count}} readings over {{days}} days",
+      "summary_many": "{{count}} readings over {{days}} days",
       "hint": "Touch the curve to see a reading in detail.",
       "empty": "No readings over these {{days}} days.",
       "target": "Target range: {{min}} – {{max}}",
       "a11y_one": "Glucose chart over {{days}} days: {{count}} reading.",
       "a11y_other": "Glucose chart over {{days}} days: {{count}} readings.",
+      "a11y_many": "Glucose chart over {{days}} days: {{count}} readings.",
       "a11yHint": "Swipe up or down to move from one reading to another.",
       "a11yPoint": "{{value}}, {{state}}. {{detail}}"
     },
@@ -743,9 +769,11 @@
       "title": "Statistics",
       "count_one": "{{count}} reading · {{days}} d",
       "count_other": "{{count}} readings · {{days}} d",
+      "count_many": "{{count}} readings · {{days}} d",
       "insufficientTitle": "Not enough data",
       "insufficient_one": "At least {{min}} readings over these {{days}} days are needed for reliable figures. You have {{count}}.",
       "insufficient_other": "At least {{min}} readings over these {{days}} days are needed for reliable figures. You have {{count}}.",
+      "insufficient_many": "At least {{min}} readings over these {{days}} days are needed for reliable figures. You have {{count}}.",
       "shareA11y": "Distribution of readings: {{below}} % below, {{inRange}} % in range, {{above}} % above.",
       "mean": "Average",
       "sd": "Std. deviation",
@@ -755,6 +783,7 @@
       "meanChange": "Average: {{value}}",
       "points_one": "{{sign}}{{count}} point",
       "points_other": "{{sign}}{{count}} points",
+      "points_many": "{{sign}}{{count}} points",
       "stable": "stable",
       "direction": {
         "up": "up",
@@ -776,8 +805,10 @@
         "coverage": "Readings on only {{covered}} days out of {{days}}: more days with readings make the analysis more reliable.",
         "freshness_one": "Last reading {{count}} day ago: the figures reflect the current situation less well.",
         "freshness_other": "Last reading {{count}} days ago: the figures reflect the current situation less well.",
+        "freshness_many": "Last reading {{count}} days ago: the figures reflect the current situation less well.",
         "density_one": "{{perDay}} reading per day on average: the target is {{target}} for a more complete picture.",
-        "density_other": "{{perDay}} readings per day on average: the target is {{target}} for a more complete picture."
+        "density_other": "{{perDay}} readings per day on average: the target is {{target}} for a more complete picture.",
+        "density_many": "{{perDay}} readings per day on average: the target is {{target}} for a more complete picture."
       },
       "coverage": "Days with readings",
       "density": "Readings per day",
@@ -805,6 +836,7 @@
     },
     "duration_one": "{{type}} · {{count}} min",
     "duration_other": "{{type}} · {{count}} min",
+    "duration_many": "{{type}} · {{count}} min",
     "declared": "Declared by you",
     "pending": "Not sent yet",
     "source": {
@@ -816,6 +848,7 @@
     },
     "count_one": "{{count}} item",
     "count_other": "{{count}} items",
+    "count_many": "{{count}} items",
     "more": "Show the previous {{days}} days",
     "end": "Nothing older on this phone.",
     "empty": {
@@ -879,6 +912,7 @@
     "durationOther": "Other duration (minutes)",
     "minutes_one": "{{count}} min",
     "minutes_other": "{{count}} min",
+    "minutes_many": "{{count}} min",
     "details": {
       "MEAL": "Details (optional)",
       "ACTIVITY": "Details (optional)",
@@ -919,22 +953,26 @@
       "inRange": "in target range",
       "count_one": "{{count}} reading",
       "count_other": "{{count}} readings",
+      "count_many": "{{count}} readings",
       "quality": "Data quality: {{score}}/100 · {{level}}",
       "a11y": "Over the last {{days}} days: {{percent}} % of readings in target range, {{readings}}. Data quality: {{score}} out of 100, {{level}}."
     },
     "headline": {
       "calm": "Nothing in particular to report for this period.",
       "watch_one": "{{count}} observation worth a closer look.",
-      "watch_other": "{{count}} observations worth a closer look."
+      "watch_other": "{{count}} observations worth a closer look.",
+      "watch_many": "{{count}} observations worth a closer look."
     },
     "insufficient": {
       "title": "Not enough readings yet",
       "body_one": "{{count}} reading over these {{days}} days: at least 10 are needed for a reliable analysis.",
       "body_other": "{{count}} readings over these {{days}} days: at least 10 are needed for a reliable analysis.",
+      "body_many": "{{count}} readings over these {{days}} days: at least 10 are needed for a reliable analysis.",
       "action": "Log a reading"
     },
     "observations_one": "{{count}} observation",
     "observations_other": "{{count}} observations",
+    "observations_many": "{{count}} observations",
     "severity": {
       "INFO": "Information",
       "ATTENTION": "Worth watching",
@@ -972,9 +1010,11 @@
     "evidence": {
       "show_one": "See the reading involved",
       "show_other": "See the {{count}} readings involved",
+      "show_many": "See the {{count}} readings involved",
       "hide": "Hide the readings",
       "more_one": "Show {{count}} more reading",
       "more_other": "Show the {{count}} other readings",
+      "more_many": "Show the {{count}} other readings",
       "openHint": "Opens the details of this reading.",
       "a11y": "{{when}}: {{value}}, {{state}}. {{context}}."
     },
@@ -1032,6 +1072,7 @@
       "hba1c": "What is HbA1c?",
       "hypo": "What should I do in case of hypoglycaemia?"
     },
+    "frenchOnly": "For now, the assistant only understands and answers in French. The suggestions below are in French for that reason.",
     "kinds": {
       "measurements": "From your readings",
       "sheet": "From a sheet",
@@ -1042,6 +1083,7 @@
     "source": {
       "title_one": "Cited sheet",
       "title_other": "Cited sheets",
+      "title_many": "Cited sheets",
       "validated": "Reviewed by a doctor",
       "draft": "Sheet not yet reviewed",
       "openHint": "Opens the full sheet"
@@ -1107,6 +1149,7 @@
       "yesterday": "Yesterday, {{time}}",
       "messages_one": "{{count}} message",
       "messages_other": "{{count}} messages",
+      "messages_many": "{{count}} messages",
       "noPreview": "Conversation without a question",
       "openHint": "Opens the conversation",
       "remove": "Delete this conversation",
@@ -1134,6 +1177,7 @@
       "reminder": "This sheet gives general guidance. For a decision about you, talk to your healthcare professional.",
       "sources_one": "Source",
       "sources_other": "Sources",
+      "sources_many": "Sources",
       "sourceHint": "Opens the source in the browser",
       "version": "Version {{version}}"
     }
@@ -1237,6 +1281,7 @@
       "title": "Import report",
       "analyzed_one": "{{count}} row analysed",
       "analyzed_other": "{{count}} rows analysed",
+      "analyzed_many": "{{count}} rows analysed",
       "label": {
         "valid": "Valid",
         "duplicates": "Duplicates",
@@ -1284,10 +1329,12 @@
       },
       "more_one": "Show {{count}} more row",
       "more_other": "Show {{count}} more rows",
+      "more_many": "Show {{count}} more rows",
       "fixCorrections": "Complete the flagged corrections before importing.",
       "rowsRefused": "Some decisions were refused: see the flagged rows.",
       "import_one": "Import {{count}} reading",
       "import_other": "Import {{count}} readings",
+      "import_many": "Import {{count}} readings",
       "nothingToImport": "Nothing to import",
       "defaults": "Without a decision, duplicates, rows to check and errors are ignored.",
       "undoable": "Nothing is imported before this button, and you can undo the import afterwards."
@@ -1295,22 +1342,27 @@
     "done": {
       "title_one": "{{count}} reading imported",
       "title_other": "{{count}} readings imported",
+      "title_many": "{{count}} readings imported",
       "skipped_zero": "No row ignored.",
       "skipped_one": "{{count}} row ignored.",
       "skipped_other": "{{count}} rows ignored.",
+      "skipped_many": "{{count}} rows ignored.",
       "sync": "The readings are saved to your account. They arrive in this phone’s history within a few seconds (automatic sync).",
       "finish": "Done",
       "revert": "Undo this import",
       "revertConfirmTitle": "Undo this import?",
       "revertConfirmText_one": "The imported reading will be removed from your account.",
       "revertConfirmText_other": "The {{count}} imported readings will be removed from your account.",
+      "revertConfirmText_many": "The {{count}} imported readings will be removed from your account.",
       "revertedTitle": "Import undone",
       "revertedText_zero": "There was no reading to remove.",
       "revertedText_one": "{{count}} reading removed from your account.",
       "revertedText_other": "{{count}} readings removed from your account.",
+      "revertedText_many": "{{count}} readings removed from your account.",
       "keep": "Keep the import",
       "revertYes_one": "Remove the reading",
-      "revertYes_other": "Remove the {{count}} readings"
+      "revertYes_other": "Remove the {{count}} readings",
+      "revertYes_many": "Remove the {{count}} readings"
     },
     "issue": {
       "restart": "Start again",
@@ -1345,7 +1397,8 @@
     "few": {
       "title": "Few readings in this period",
       "text_one": "{{count}} reading over these {{days}} days. The report will still be created and will say so.",
-      "text_other": "{{count}} readings over these {{days}} days. The report will still be created and will say so."
+      "text_other": "{{count}} readings over these {{days}} days. The report will still be created and will say so.",
+      "text_many": "{{count}} readings over these {{days}} days. The report will still be created and will say so."
     },
     "contents": {
       "title": "What the report contains",
@@ -1377,6 +1430,7 @@
     },
     "pending_one": "{{count}} reading has not been sent yet: it will be sent before the report is created.",
     "pending_other": "{{count}} readings have not been sent yet: they will be sent before the report is created.",
+    "pending_many": "{{count}} readings have not been sent yet: they will be sent before the report is created.",
     "create": "Create and share the PDF",
     "phase": {
       "syncing": "Sending your latest readings…",
@@ -1394,8 +1448,10 @@
     "unsent": {
       "title_one": "{{count}} reading is not in the report",
       "title_other": "{{count}} readings are not in the report",
+      "title_many": "{{count}} readings are not in the report",
       "text_one": "It could not be sent yet. It stays on your phone and will be sent as soon as possible; create a new report afterwards.",
-      "text_other": "They could not be sent yet. They stay on your phone and will be sent as soon as possible; create a new report afterwards."
+      "text_other": "They could not be sent yet. They stay on your phone and will be sent as soon as possible; create a new report afterwards.",
+      "text_many": "They could not be sent yet. They stay on your phone and will be sent as soon as possible; create a new report afterwards."
     },
     "problem": {
       "offline": {
@@ -1578,6 +1634,7 @@
       "what": "What the doctor will be able to see",
       "count_one": "{{count}} of {{total}}",
       "count_other": "{{count}} of {{total}}",
+      "count_many": "{{count}} of {{total}}",
       "noneSelected": "Tick at least one category to create the QR code.",
       "howLong": "For how long",
       "durationLabel": "Access duration",
@@ -1665,8 +1722,10 @@
       "renewing": "New QR code…",
       "next_one": "New QR code in {{count}} s",
       "next_other": "New QR code in {{count}} s",
+      "next_many": "New QR code in {{count}} s",
       "nextA11y_one": "New QR code in {{count}} second",
       "nextA11y_other": "New QR code in {{count}} seconds",
+      "nextA11y_many": "New QR code in {{count}} seconds",
       "shared": "Shared",
       "duration": "Access duration",
       "durationValue": "{{duration}}, from the scan",
@@ -1736,6 +1795,7 @@
       "loading": "Loading the log",
       "count_one": "{{count}} access",
       "count_other": "{{count}} accesses",
+      "count_many": "{{count}} accesses",
       "today": "Today at {{time}}",
       "onDate": "On {{date}} at {{time}}",
       "lasted": "{{duration}} of access",
@@ -1748,6 +1808,7 @@
       },
       "views_one": "{{count}} view",
       "views_other": "{{count}} views",
+      "views_many": "{{count}} views",
       "report": "Report downloaded",
       "emergency": {
         "title": "Emergency access",

@@ -1,0 +1,1834 @@
+{
+  "app": {
+    "name": "Afyabora",
+    "tagline": "Registre. Controle. Comprenda."
+  },
+  "common": {
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "next": "Siguiente",
+    "back": "Volver",
+    "retry": "Reintentar"
+  },
+  "disclaimer": "Afyabora es una herramienta de apoyo al seguimiento. No sustituye la opinión de un profesional de la salud.",
+  "glucose": {
+    "unusualConfirm": "Este valor es inusual. ¿Es correcto?",
+    "state": {
+      "VERY_LOW": "Muy bajo",
+      "LOW": "Por debajo",
+      "IN_RANGE": "En el rango",
+      "HIGH": "Por encima",
+      "VERY_HIGH": "Muy alto"
+    },
+    "stateA11y": "Estado: {{label}}"
+  },
+  "sync": {
+    "pending_one": "{{count}} medición pendiente de sincronización",
+    "pending_other": "{{count}} mediciones pendientes de sincronización",
+    "pending_many": "{{count}} mediciones pendientes de sincronización",
+    "offline": "Sin conexión — sus datos se guardan en este teléfono",
+    "upToDate": "Todo está al día",
+    "refreshing": "Sincronizando…",
+    "pullToRefresh": "Deslice hacia abajo para sincronizar",
+    "status": {
+      "upToDate": "Todo está al día",
+      "pending": "Pendiente de envío",
+      "syncing": "Sincronización en curso…",
+      "offline": "Sin conexión: sus datos se guardan en este teléfono",
+      "problem": "No es posible sincronizar por el momento",
+      "session": "Sesión caducada: vuelva a iniciar sesión para sincronizar",
+      "rejected_one": "{{count}} cambio por revisar",
+      "rejected_other": "{{count}} cambios por revisar",
+      "rejected_many": "{{count}} cambios por revisar"
+    },
+    "measurements_one": "{{count}} medición",
+    "measurements_other": "{{count}} mediciones",
+    "measurements_many": "{{count}} mediciones",
+    "events_one": "{{count}} evento",
+    "events_other": "{{count}} eventos",
+    "events_many": "{{count}} eventos",
+    "pendingBoth": "{{measurements}} y {{events}}",
+    "pendingLine": "{{what}} pendiente(s) de sincronización",
+    "lastToday": "Última sincronización a las {{time}}",
+    "lastOn": "Última sincronización el {{date}} a las {{time}}",
+    "never": "Aún no sincronizado en este teléfono",
+    "nextRetry": "Nuevo intento automático a las {{time}}",
+    "nextRetrySoon": "Nuevo intento automático en unos segundos",
+    "autoSend": "Envío automático en cuanto sea posible",
+    "retry": "Reintentar",
+    "rejected_one": "{{count}} cambio rechazado por el servidor",
+    "rejected_other": "{{count}} cambios rechazados por el servidor",
+    "rejected_many": "{{count}} cambios rechazados por el servidor",
+    "open": "Ver el estado de la sincronización",
+    "screen": {
+      "overline": "Sin conexión",
+      "title": "Sincronización",
+      "intro": "Sus registros se guardan primero en este teléfono y luego se envían a su cuenta en cuanto es posible, incluso después de un corte.",
+      "syncNow": "Sincronizar ahora",
+      "pendingTitle": "Pendiente de envío",
+      "pendingNone": "Nada pendiente",
+      "lastTitle": "Última sincronización",
+      "rejectedTitle": "Cambios rechazados",
+      "rejectedIntro": "El servidor rechazó estos cambios. Permanecen en este teléfono hasta que usted decida.",
+      "measurementSave": "Medición de {{value}}, {{date}}",
+      "measurementDelete": "Eliminación de la medición de {{value}}, {{date}}",
+      "eventSave": "{{type}} «{{label}}», {{date}}",
+      "eventDelete": "Eliminación: {{type}} «{{label}}», {{date}}",
+      "gone": "Dato que ya no está en este teléfono",
+      "reason": "Motivo: {{reason}}",
+      "attempts_one": "Rechazado {{count}} vez",
+      "attempts_other": "Rechazado {{count}} veces",
+      "attempts_many": "Rechazado {{count}} veces",
+      "retry": "Reintentar",
+      "discard": "Descartar",
+      "discardTitle": "¿Descartar este cambio?",
+      "discardText": "Se quitará de este teléfono. La versión guardada en su cuenta, si existe, volverá en la próxima sincronización.",
+      "discardConfirm": "Descartar el cambio",
+      "keep": "Conservar",
+      "noRejected": "Ningún cambio rechazado",
+      "lastToday": "Hoy a las {{time}}",
+      "lastOn": "El {{date}} a las {{time}}",
+      "lastNever": "Nunca en este teléfono"
+    }
+  },
+  "safety": {
+    "extreme": "Siga las indicaciones de su equipo de salud. Si se siente mal, pida ayuda de inmediato."
+  },
+  "errors": {
+    "network": "No es posible conectar con el servidor. Compruebe su conexión a internet y vuelva a intentarlo.",
+    "server": "El servicio tiene un problema. Vuelva a intentarlo en unos instantes.",
+    "tooManyRequests": "Demasiados intentos. Espere un minuto antes de volver a intentarlo.",
+    "invalidData": "Algunos datos no son válidos. Revise el formulario.",
+    "unexpected": "Se produjo un error inesperado. Vuelva a intentarlo."
+  },
+  "welcome": {
+    "lastMeasurement": "Última medición",
+    "demoTag": "Ejemplo ficticio",
+    "demoA11y": "Ejemplo de última medición: 1,12 gramos por litro, en el rango",
+    "offlineSaved": "Guardada incluso sin red",
+    "onThisPhone": "✓ En este teléfono",
+    "title": "Su historial de glucemia, siempre con usted.",
+    "description": "Registre sus mediciones, comprenda su evolución y elija quién ve qué, y durante cuánto tiempo.",
+    "createAccount": "Crear una cuenta",
+    "signIn": "Iniciar sesión"
+  },
+  "auth": {
+    "fields": {
+      "email": "Correo electrónico",
+      "emailPlaceholder": "nombre@ejemplo.com",
+      "password": "Contraseña",
+      "newPassword": "Nueva contraseña",
+      "link": "Enlace o código recibido por correo",
+      "linkPlaceholder": "Pegue aquí el enlace del correo"
+    },
+    "password": {
+      "rulesTitle": "Reglas de la contraseña",
+      "ruleLength": "Al menos {{count}} caracteres",
+      "ruleOk": "cumplida",
+      "ruleTodo": "por cumplir",
+      "hint": "Una frase fácil de recordar es más segura que una palabra complicada."
+    },
+    "validation": {
+      "email": "Introduzca un correo electrónico válido.",
+      "passwordLength": "La contraseña debe tener al menos 12 caracteres.",
+      "passwordRequired": "Introduzca su contraseña.",
+      "consent": "Se necesita su consentimiento para crear una cuenta.",
+      "link": "No se reconoce este enlace. Copie el enlace completo del correo.",
+      "disclaimer": "Confirme que ha entendido el aviso para continuar."
+    },
+    "errors": {
+      "invalidCredentials": "Correo electrónico o contraseña incorrectos.",
+      "emailNotVerified": "Su correo electrónico aún no está verificado.",
+      "locked": "Demasiados intentos: por seguridad, su cuenta está bloqueada durante {{minutes}} min.",
+      "verifyLinkInvalid": "Este enlace de verificación no es válido, ya se usó o caducó. Solicite un nuevo correo.",
+      "resetLinkInvalid": "Este enlace no es válido, ya se usó o caducó (1 hora). Haga una nueva solicitud.",
+      "notPatient": "Esta cuenta es una cuenta profesional. Inicie sesión en el portal Afyabora."
+    },
+    "signUp": {
+      "title": "Crear una cuenta",
+      "subtitle": "Unos segundos para empezar a seguir su glucemia.",
+      "consent": "Acepto que Afyabora registre y trate mis datos de salud para mi seguimiento, como se describe en la política de privacidad.",
+      "consentA11y": "Consentimiento para el tratamiento de mis datos de salud",
+      "submit": "Crear mi cuenta",
+      "haveAccount": "¿Ya tiene una cuenta?",
+      "signIn": "Iniciar sesión",
+      "consentLink": "Leer la política de privacidad",
+      "disclaimer": "Entiendo que Afyabora es una herramienta de apoyo al seguimiento: no hace diagnósticos, no indica dosis de tratamiento y no sustituye la opinión de un profesional de la salud.",
+      "disclaimerA11y": "Entiendo que la aplicación no sustituye una opinión médica",
+      "disclaimerLink": "Leer el aviso"
+    },
+    "verify": {
+      "title": "Revise su correo",
+      "subtitle": "Hemos enviado un enlace de confirmación a {{email}}. Es válido durante 24 horas.",
+      "subtitleNoEmail": "Abra el correo de confirmación que le enviamos. El enlace es válido durante 24 horas.",
+      "steps": "Abra el correo «Afyabora : confirmez votre adresse email» y pulse el enlace. ¿No lo recibió? Revise la carpeta de correo no deseado.",
+      "pasteTitle": "¿El enlace no se abre en la aplicación?",
+      "pasteHelp": "Copie el enlace del correo y péguelo a continuación.",
+      "submit": "Confirmar mi correo",
+      "resend": "Reenviar el correo",
+      "resendIn": "Reenviar el correo en {{seconds}} s",
+      "resent": "Se acaba de enviar un nuevo correo. El enlace anterior ya no funciona.",
+      "resendUnavailable": "Para recibir un nuevo correo, vuelva a registrarse con la misma dirección.",
+      "successTitle": "Correo verificado",
+      "successMessage": "Su cuenta está activada. Ya puede iniciar sesión.",
+      "goToSignIn": "Iniciar sesión"
+    },
+    "signIn": {
+      "title": "Bienvenido de nuevo",
+      "subtitle": "Inicie sesión para recuperar su seguimiento.",
+      "forgot": "¿Olvidó su contraseña?",
+      "submit": "Iniciar sesión",
+      "noAccount": "¿Aún no tiene cuenta?",
+      "signUp": "Crear una cuenta",
+      "verifyAction": "Verificar mi correo",
+      "success": "Sesión iniciada",
+      "expired": "Su sesión ha caducado. Vuelva a iniciar sesión para continuar.",
+      "signedOut": "Ha cerrado la sesión."
+    },
+    "forgot": {
+      "title": "Contraseña olvidada",
+      "subtitle": "Indique su correo: si existe una cuenta, recibirá un enlace para elegir una nueva contraseña.",
+      "submit": "Recibir el enlace",
+      "sentTitle": "Correo enviado",
+      "sentMessage": "Si existe una cuenta para {{email}}, se acaba de enviar un enlace válido durante 1 hora.",
+      "resetTitle": "Elegir una nueva contraseña",
+      "resetHelp": "Pegue el enlace recibido por correo y elija su nueva contraseña.",
+      "resetSubmit": "Guardar la nueva contraseña",
+      "successTitle": "Contraseña cambiada",
+      "successMessage": "Por su seguridad, se han cerrado sus otras sesiones. Inicie sesión con su nueva contraseña.",
+      "changeEmail": "Usar otro correo"
+    }
+  },
+  "profile": {
+    "title": "Perfil",
+    "todoTitle": "Próximamente: su perfil médico",
+    "todoText": "Identidad, tipo de diabetes, rango objetivo y umbrales, contacto de emergencia.",
+    "settings": "Ajustes",
+    "settingsHint": "Apariencia, unidades, notificaciones, seguridad",
+    "signOut": "Cerrar sesión",
+    "signOutConfirmTitle": "¿Cerrar sesión en este teléfono?",
+    "signOutConfirmText": "Sus datos siguen guardados en su cuenta. Se quitarán de este teléfono y podrá volver a iniciar sesión en cualquier momento.",
+    "signOutUnsynced_one": "Atención: {{count}} cambio aún no se ha enviado al servidor. Se perderá si cierra la sesión ahora. Si es posible, conéctese primero a internet.",
+    "signOutUnsynced_other": "Atención: {{count}} cambios aún no se han enviado al servidor. Se perderán si cierra la sesión ahora. Si es posible, conéctese primero a internet.",
+    "signOutUnsynced_many": "Atención: {{count}} cambios aún no se han enviado al servidor. Se perderán si cierra la sesión ahora. Si es posible, conéctese primero a internet.",
+    "import": "Importar un historial",
+    "importHint": "Archivo CSV o Excel de un cuaderno o de un glucómetro",
+    "sync": "Sincronización",
+    "syncHint": "Estado, envíos pendientes, cambios rechazados"
+  },
+  "tabs": {
+    "home": "Inicio",
+    "timeline": "Historial",
+    "insights": "Análisis",
+    "share": "Compartir",
+    "profile": "Perfil",
+    "add": "Añadir"
+  },
+  "settings": {
+    "overline": "Ajustes",
+    "title": "Ajustes",
+    "appearance": "Apariencia",
+    "appearanceHint": "Tema claro u oscuro, color de acento",
+    "language": "Idioma",
+    "languageHint": "Idioma de la aplicación",
+    "units": "Unidades y umbrales",
+    "unitsHint": "Unidad preferida, rango objetivo, umbrales de alerta",
+    "unitsScreen": {
+      "intro": "Unidad de visualización, rango objetivo y umbrales de alerta. A definir con su médico: Afyabora nunca da consejos de tratamiento.",
+      "saved": "Guardado. Sus mediciones se muestran ahora en {{unit}}.",
+      "discard": "Descartar los cambios",
+      "storedNote": "Sus mediciones ya guardadas no cambian: solo su visualización sigue la unidad elegida.",
+      "problem": {
+        "offline": "Sin conexión: este ajuste necesita internet. Vuelva a intentarlo cuando vuelva la red.",
+        "noProfile": "Complete primero su perfil: estos ajustes forman parte de él.",
+        "invalid": "El servidor rechazó estos valores. Compruebe el orden: muy bajo < rango objetivo < muy alto.",
+        "profile": "Su perfil contiene un dato incompleto: complételo antes de cambiar estos ajustes.",
+        "error": "No se pudo guardar el ajuste. Vuelva a intentarlo en un momento."
+      }
+    },
+    "notifications": "Notificaciones",
+    "notificationsHint": "Recordatorios, alertas, horas de silencio",
+    "security": "Seguridad",
+    "securityHint": "Desbloqueo biométrico o código",
+    "account": "Mis datos y mi cuenta",
+    "accountHint": "Exportar mis datos, eliminar mi cuenta",
+    "about": "Acerca de",
+    "aboutHint": "Versión, aviso, privacidad",
+    "design": "Guía de estilo",
+    "designHint": "Visible en desarrollo: colores, textos, componentes"
+  },
+  "account": {
+    "title": "Mis datos y mi cuenta",
+    "intro": "Obtenga una copia de sus datos en cualquier momento, o elimine su cuenta y todo lo que contiene.",
+    "export": {
+      "title": "Exportar mis datos",
+      "body": "Un archivo (formato JSON) con su perfil, todas sus mediciones y sus eventos, notas incluidas. Puede guardarlo o enviarlo a otro servicio.",
+      "privacy": "Este archivo contiene sus datos de salud sin cifrar: guárdelo en un lugar seguro y compártalo solo con personas de confianza.",
+      "pendingFirst_one": "{{count}} registro aún no enviado se enviará primero, para que aparezca en el archivo.",
+      "pendingFirst_other": "{{count}} registros aún no enviados se enviarán primero, para que aparezcan en el archivo.",
+      "pendingFirst_many": "{{count}} registros aún no enviados se enviarán primero, para que aparezcan en el archivo.",
+      "button": "Exportar mis datos",
+      "again": "Exportar de nuevo",
+      "shareAgain": "Volver a compartir este archivo",
+      "shareTitle": "Mis datos de Afyabora",
+      "phase": {
+        "syncing": "Enviando sus últimos registros…",
+        "downloading": "Preparando el archivo…",
+        "sharing": "Abriendo el menú para compartir…"
+      },
+      "done": "Archivo listo: {{name}}",
+      "unsent_one": "{{count}} registro no se pudo enviar: no está en este archivo. Vuelva a intentarlo cuando la conexión sea mejor.",
+      "unsent_other": "{{count}} registros no se pudieron enviar: no están en este archivo. Vuelva a intentarlo cuando la conexión sea mejor.",
+      "unsent_many": "{{count}} registros no se pudieron enviar: no están en este archivo. Vuelva a intentarlo cuando la conexión sea mejor.",
+      "problem": {
+        "offline": "Sin conexión: la exportación necesita internet.",
+        "tooMany": "Demasiadas exportaciones en poco tiempo. Vuelva a intentarlo en un minuto.",
+        "noProfile": "Complete primero su perfil: todavía no hay nada que exportar.",
+        "cannotShare": "El archivo está listo, pero compartir no está disponible en este dispositivo.",
+        "error": "La exportación no se completó. Vuelva a intentarlo en un momento."
+      }
+    },
+    "delete": {
+      "title": "Eliminar mi cuenta",
+      "body": "Su cuenta y todos sus datos se borrarán de nuestros servidores y de este teléfono:",
+      "what": {
+        "data": "su perfil, todas sus mediciones y sus eventos, notas incluidas;",
+        "shares": "sus accesos compartidos: los médicos pierden el acceso a su expediente inmediatamente;",
+        "emergency": "su tarjeta de emergencia: su código QR dejará de abrirse;",
+        "phone": "los datos guardados en este teléfono."
+      },
+      "irreversible": "Es definitivo: no se podrá recuperar nada. Exporte sus datos antes si desea conservarlos.",
+      "start": "Eliminar mi cuenta…",
+      "password": "Contraseña",
+      "passwordHint": "Para confirmar que es usted.",
+      "understand": "Entiendo que mi cuenta y todos mis datos se eliminarán definitivamente.",
+      "confirm": "Eliminar definitivamente",
+      "problem": {
+        "password": "Contraseña incorrecta. No se ha eliminado nada.",
+        "tooMany": "Demasiados intentos. Espere un minuto antes de volver a intentarlo. No se ha eliminado nada.",
+        "offline": "Sin conexión: la eliminación necesita internet. No se ha eliminado nada.",
+        "error": "La eliminación no se completó. No se ha eliminado nada: vuelva a intentarlo en un momento."
+      },
+      "doneTitle": "Cuenta eliminada",
+      "done": "Su cuenta y todos sus datos se han borrado. Gracias por haber usado Afyabora."
+    }
+  },
+  "appearance": {
+    "overline": "Ajustes",
+    "title": "Apariencia",
+    "intro": "Elija el estilo de Afyabora. Los textos siempre se leen bien.",
+    "theme": "Tema",
+    "themeA11y": "Tema de la aplicación",
+    "light": "Claro",
+    "dark": "Oscuro",
+    "system": "Automático",
+    "systemHint": "Sigue el ajuste del teléfono (actualmente: {{mode}}).",
+    "systemLight": "claro",
+    "systemDark": "oscuro",
+    "accent": "Color de acento",
+    "preview": "Vista previa",
+    "previewOverline": "Última medición · ejemplo",
+    "previewButton": "Añadir una medición"
+  },
+  "language": {
+    "title": "Idioma",
+    "intro": "Elija el idioma de la aplicación. Sus datos no cambian.",
+    "system": "Idioma del teléfono",
+    "systemHint": "Actualmente: {{name}}",
+    "inReview": "Traducción en revisión",
+    "inReviewNote": "Los idiomas marcados «traducción en revisión» aún no han sido revisados por una persona que hable el idioma. Si un mensaje de salud no está claro, consulte a su equipo de salud.",
+    "serverNote": "Por ahora, algunos contenidos siguen en francés: las respuestas y fichas del asistente, el informe PDF y los correos."
+  },
+  "onboarding": {
+    "progress": "Paso {{current}} de {{total}}",
+    "next": "Continuar",
+    "review": "Revisar mis datos",
+    "privacy": "Sus datos son privados: solo usted elige quién puede verlos.",
+    "identity": {
+      "title": "¿Quién es usted?",
+      "intro": "Estos datos permiten a su médico reconocerle e interpretar sus mediciones.",
+      "firstName": "Nombre",
+      "lastName": "Apellido",
+      "birthDate": "Fecha de nacimiento",
+      "birthDatePlaceholder": "DD/MM/AAAA",
+      "sex": "Sexo",
+      "sexF": "Mujer",
+      "sexM": "Hombre",
+      "sexOther": "Otro"
+    },
+    "diabetes": {
+      "title": "Su diabetes",
+      "intro": "El tipo de diabetes ayuda a interpretar su seguimiento. Si tiene dudas, elija «Otro»: podrá cambiarlo más adelante.",
+      "type": "Tipo de diabetes",
+      "type1": "Tipo 1",
+      "type2": "Tipo 2",
+      "gestational": "Gestacional",
+      "other": "Otro",
+      "year": "Año del diagnóstico",
+      "yearHint": "Opcional. Basta con una estimación."
+    },
+    "thresholds": {
+      "title": "Unidad y umbrales",
+      "intro": "Elija la unidad de su glucómetro y revise su rango objetivo.",
+      "unit": "Unidad de medida",
+      "doctorNote": "Valores habituales propuestos por defecto: a definir con su médico. Afyabora nunca da consejos de tratamiento.",
+      "veryLowMgDl": "Muy bajo por debajo de",
+      "targetMinMgDl": "Rango objetivo: inicio",
+      "targetMaxMgDl": "Rango objetivo: fin",
+      "veryHighMgDl": "Muy alto por encima de",
+      "reset": "Volver a los valores por defecto",
+      "reviewed": "Estos umbrales se definieron con mi médico.",
+      "barCaption": "Muy bajo · bajo · rango objetivo · alto · muy alto",
+      "barA11y": "Rango objetivo de {{min}} a {{max}} miligramos por decilitro",
+      "rangeTitle": "Rango objetivo",
+      "alertTitle": "Umbrales de alerta",
+      "rangeHint": "Los valores entre estos dos números están «en el rango».",
+      "alertHint": "Por debajo del muy bajo o por encima del muy alto, Afyabora le avisará.",
+      "short": {
+        "targetMinMgDl": "Desde",
+        "targetMaxMgDl": "Hasta",
+        "veryLowMgDl": "Muy bajo",
+        "veryHighMgDl": "Muy alto"
+      }
+    },
+    "contacts": {
+      "title": "Sus contactos",
+      "intro": "Opcional, pero útil en caso de necesidad. Podrá cambiarlos más adelante.",
+      "relativeTitle": "Un familiar o allegado a quien avisar",
+      "relativeHint": "Aparecerá en su tarjeta de emergencia si la activa.",
+      "name": "Nombre",
+      "phone": "Teléfono",
+      "relation": "Relación (opcional)",
+      "relationPlaceholder": "Esposa, hijo, amigo…",
+      "doctorTitle": "Su médico",
+      "doctorHint": "El médico que sigue su diabetes.",
+      "doctorName": "Nombre del médico",
+      "doctorNamePlaceholder": "Dr. …",
+      "emergencyTitle": "En caso de emergencia",
+      "emergencyHint": "El número al que llamar para pedir ayuda donde usted vive. Afyabora no lo adivina: compruébelo en su centro de salud.",
+      "country": "País",
+      "countries": {
+        "CD": "RD del Congo",
+        "CG": "Congo",
+        "RW": "Ruanda",
+        "BI": "Burundi",
+        "UG": "Uganda",
+        "AO": "Angola",
+        "FR": "Francia",
+        "BE": "Bélgica",
+        "OTHER": "Otro país"
+      },
+      "otherCountry": "Código del país (2 letras)",
+      "otherCountryHint": "Por ejemplo, KE para Kenia o CM para Camerún.",
+      "clearCountry": "No indicar país",
+      "emergencyNumber": "Número de emergencia",
+      "emergencyNumberHint": "Emergencias, ambulancia u hospital más cercano.",
+      "emergencyNumberPlaceholder": "Ej. 112"
+    },
+    "summary": {
+      "overline": "Último paso",
+      "title": "¿Todo es correcto?",
+      "intro": "Revise sus datos antes de guardarlos.",
+      "edit": "Modificar",
+      "name": "Nombre",
+      "target": "Rango objetivo",
+      "none": "Sin indicar",
+      "save": "Guardar mi perfil"
+    },
+    "done": {
+      "title": "¡Bienvenido/a, {{name}}!",
+      "message": "Su perfil está listo. Ya puede registrar su primera medición.",
+      "action": "Descubrir Afyabora"
+    },
+    "errors": {
+      "firstName": "Introduzca su nombre.",
+      "lastName": "Introduzca su apellido.",
+      "birthDate": "Fecha no válida: use el formato DD/MM/AAAA (sin fechas futuras).",
+      "sex": "Elija una opción.",
+      "diabetesType": "Elija el tipo de diabetes.",
+      "diagnosisYear": "Año entre 1950 y hoy, posterior a su nacimiento.",
+      "preferredUnit": "Elija una unidad.",
+      "thresholds": {
+        "veryLowMgDl": "Valor no válido: debe ser inferior al inicio del rango objetivo.",
+        "targetMinMgDl": "Valor no válido o fuera de los límites (20 a 600 mg/dL).",
+        "targetMaxMgDl": "Valor no válido: el fin del rango debe ser mayor que el inicio.",
+        "veryHighMgDl": "Valor no válido: debe ser superior al fin del rango objetivo."
+      },
+      "emergencyContact": {
+        "name": "Introduzca el nombre de su familiar o allegado.",
+        "phone": "Introduzca un número de teléfono (al menos 6 caracteres).",
+        "relation": "Texto demasiado largo."
+      },
+      "doctorContact": {
+        "name": "Introduzca el nombre de su médico.",
+        "phone": "Introduzca un número de teléfono (al menos 6 caracteres)."
+      },
+      "country": "Elija un país o escriba su código de 2 letras (ej. KE).",
+      "emergencyNumber": "Introduzca un número formado por cifras (se permite «+» al principio)."
+    }
+  },
+  "security": {
+    "pad": {
+      "progress": "{{count}} cifra(s) introducida(s) de {{total}}",
+      "delete": "Borrar"
+    },
+    "lock": {
+      "title": "Afyabora está bloqueado",
+      "prompt": "Introduzca su código para continuar.",
+      "wrong": "Código incorrecto. Vuelva a intentarlo.",
+      "wait": "Demasiados intentos. Vuelva a intentarlo en {{seconds}} s.",
+      "bioPrompt": "Desbloquear Afyabora",
+      "useCode": "Usar mi código",
+      "useFace": "Desbloquear con la cara",
+      "useFinger": "Desbloquear con la huella",
+      "forgot": "¿Olvidó el código?",
+      "forgotTitle": "Cerrar sesión para restablecer",
+      "forgotText": "Tendrá que volver a iniciar sesión con su correo y su contraseña. Los datos que aún no se hayan enviado se perderán en este teléfono.",
+      "forgotConfirm": "Cerrar sesión"
+    },
+    "settings": {
+      "title": "Seguridad",
+      "intro": "Proteja el acceso a sus datos de salud en este teléfono.",
+      "lockLabel": "Bloquear la aplicación",
+      "lockHint": "Se pedirá un código (y su huella, si lo desea) al abrirla.",
+      "bioFinger": "Desbloquear con la huella",
+      "bioFace": "Desbloquear con la cara",
+      "bioHint": "Su código siempre se puede usar.",
+      "bioUnavailable": "Huella o cara no disponibles en este teléfono: se pedirá el código.",
+      "timeoutLabel": "Volver a bloquear tras",
+      "timeout": {
+        "immediate": "De inmediato",
+        "1min": "1 min",
+        "5min": "5 min"
+      },
+      "change": "Cambiar el código",
+      "lengthTitle": "Elija su código",
+      "lengthLabel": "Longitud del código",
+      "four": "4 cifras",
+      "fourHint": "Más rápido de escribir",
+      "six": "6 cifras",
+      "sixHint": "Más difícil de adivinar",
+      "createTitle": "Introduzca un código nuevo",
+      "confirmTitle": "Introdúzcalo de nuevo",
+      "verifyTitle": "Introduzca su código actual",
+      "mismatch": "Los dos códigos no coinciden. Empiece de nuevo.",
+      "problem": {
+        "length": "El código debe tener de 4 a 6 cifras.",
+        "digits": "El código solo contiene cifras.",
+        "tooSimple": "Código demasiado fácil de adivinar (p. ej. 1234, 0000). Elija otro."
+      },
+      "enabled": "Bloqueo activado.",
+      "changed": "Código cambiado.",
+      "disabled": "Bloqueo desactivado.",
+      "tipsTitle": "Bueno saber",
+      "tips": "Su código nunca se guarda sin cifrar. Tras 5 errores, hay que esperar antes de volver a intentarlo. ¿Olvidó el código? Podrá cerrar sesión y volver a iniciarla con su contraseña.",
+      "storage": {
+        "title": "Datos de salud en este teléfono",
+        "loading": "Comprobando…",
+        "encrypted": "Cifrados",
+        "encryptedHint": "Base de datos local cifrada (AES-256, SQLCipher). La clave se guarda en el almacén seguro del teléfono.",
+        "unencrypted": "Sin cifrar",
+        "unencryptedHint": "Modo de desarrollo (Expo Go): el cifrado solo está activo en la aplicación instalada (APK).",
+        "web": "Vista previa web",
+        "webHint": "No se guarda nada en este dispositivo: los datos permanecen en memoria durante la visita.",
+        "error": "No disponibles",
+        "errorHint": "No se pudo abrir la base de datos local. Cierre la aplicación y vuelva a abrirla.",
+        "migrated": "Los datos que ya estaban guardados en este teléfono se han cifrado.",
+        "reset": "La base de datos de este teléfono no se podía leer y se ha recreado. Sus datos se están recargando desde el servidor; solo podrían haberse perdido los registros nunca sincronizados."
+      }
+    }
+  },
+  "legal": {
+    "updated": "Versión {{version}} · actualizada el {{date}}",
+    "date": "10 de octubre de 2026",
+    "close": "Cerrar",
+    "emergencyTitle": "En caso de emergencia",
+    "emergency": "Si se siente mal, o tiene una glucemia muy baja o muy alta con síntomas, no espere a la aplicación: llame a emergencias o acuda al centro de salud más cercano.",
+    "disclaimer": {
+      "overline": "Aviso",
+      "title": "Herramienta de apoyo, no una opinión médica",
+      "short": "Afyabora le ayuda a seguir su glucemia. No hace diagnósticos y no sustituye la opinión de un profesional de la salud.",
+      "more": "Más información",
+      "moreA11y": "Leer el aviso completo",
+      "intro": "Afyabora es una herramienta de apoyo al seguimiento de la diabetes. Antes de usarla, es importante saber lo que hace y, sobre todo, lo que no hace.",
+      "does": {
+        "title": "Lo que hace Afyabora",
+        "body": "Registra sus mediciones, incluso sin red. Calcula cifras sencillas a partir de sus propios datos (promedios, tiempo en su rango objetivo, episodios altos o bajos). Le ayuda a preparar su consulta y a compartir su historial con el médico que usted elija."
+      },
+      "doesNot": {
+        "title": "Lo que no hace",
+        "body": "No hace ningún diagnóstico. No propone ninguna dosis de insulina ni ningún medicamento. Nunca afirma la causa de una glucemia alta o baja: sus observaciones son pistas para comentar con un profesional."
+      },
+      "quality": {
+        "title": "Resultados que dependen de sus registros",
+        "body": "Los cálculos solo son correctos si las mediciones lo son: un valor mal copiado o días sin mediciones cambian los resultados. La aplicación le avisa cuando hay muy pocos datos para sacar conclusiones."
+      },
+      "treatment": {
+        "title": "Su tratamiento",
+        "body": "Nunca cambie su tratamiento basándose solo en la aplicación. Háblelo primero con su médico o su equipo de salud."
+      },
+      "alerts": {
+        "title": "Recordatorios y alertas",
+        "body": "Los recordatorios y alertas pueden no llegar (teléfono apagado, batería agotada, notificaciones desactivadas). No sustituyen su atención ni la de sus allegados."
+      }
+    },
+    "privacy": {
+      "overline": "Privacidad",
+      "title": "Política de privacidad",
+      "intro": "Sus datos de salud le pertenecen. Esta página explica, de forma sencilla, qué guardamos, por qué, dónde y quién puede verlo.",
+      "prototype": "Afyabora es hoy un prototipo realizado en un marco de formación. Esta política se revisará con los responsables antes de cualquier puesta a disposición del público.",
+      "data": {
+        "title": "Los datos registrados",
+        "body": "Su cuenta: correo electrónico y contraseña (nunca guardada sin cifrar). Su perfil: nombre, fecha de nacimiento, sexo, tipo de diabetes, año del diagnóstico, unidad y umbrales elegidos. Si lo desea: un familiar o allegado a quien avisar y su médico de cabecera. Su seguimiento: mediciones de glucemia, eventos (comidas, actividad, tratamiento…) y notas."
+      },
+      "purpose": {
+        "title": "Por qué",
+        "body": "Únicamente para su seguimiento: mostrar su historial, calcular sus estadísticas y preparar sus consultas. Sin publicidad. Sus datos nunca se venden ni se alquilan."
+      },
+      "storage": {
+        "title": "Dónde se guardan",
+        "body": "Primero en su teléfono, para funcionar sin red, y luego en nuestro servidor en cuanto hay conexión. Los intercambios están cifrados, sus notas personales están cifradas en el servidor y puede bloquear la aplicación con un código o su huella. Al cerrar sesión, los datos se borran del teléfono."
+      },
+      "sharing": {
+        "title": "Compartir con un médico",
+        "body": "No se comparte nada sin que usted lo haga. Usted genera un código QR, válido poco tiempo y una sola vez; solo un médico conectado y verificado puede escanearlo. Usted elige lo que ve y durante cuánto tiempo, puede detener el acceso en cualquier momento y cada consulta aparece en su registro de accesos."
+      },
+      "emergency": {
+        "title": "La tarjeta de emergencia",
+        "body": "Si la activa, la tarjeta de emergencia puede leerse sin cuenta: ese es su objetivo, para los servicios de emergencia. Solo contiene la información que usted ha elegido, nunca su historial. Se le avisa de cada apertura y puede desactivarla o renovarla en cualquier momento."
+      },
+      "analysis": {
+        "title": "Los análisis",
+        "body": "Las cifras y observaciones las calcula la aplicación según reglas fijas y verificables, a partir únicamente de sus datos. Si algún día se activa una reformulación automática de los textos, solo recibirá cifras resumidas, sin su nombre ni sus datos de contacto."
+      },
+      "retention": {
+        "title": "Durante cuánto tiempo",
+        "body": "Sus datos se conservan mientras exista su cuenta. La eliminación de la cuenta borra sus datos de nuestros servidores."
+      },
+      "rights": {
+        "title": "Sus derechos",
+        "body": "Puede obtener una copia de sus datos, corregirlos y eliminar su cuenta. El consentimiento dado al registrarse puede retirarse eliminando su cuenta. Nunca está obligado a compartir sus datos con un médico."
+      }
+    },
+    "about": {
+      "overline": "Ajustes",
+      "title": "Acerca de",
+      "version": "Versión {{version}}",
+      "legalTitle": "Información legal",
+      "privacyHint": "Lo que guardamos y quién puede verlo",
+      "disclaimerHint": "Lo que hace la aplicación y lo que no hace",
+      "credits": "Proyecto PBL 5 · MEO. Diseñado para las personas que viven con diabetes."
+    }
+  },
+  "measurement": {
+    "overline": "Registro",
+    "title": "Nueva medición",
+    "close": "Cerrar sin guardar",
+    "valueLabel": "Glucemia",
+    "valueA11y": "Valor de la glucemia, en {{unit}}",
+    "equals": "es decir {{values}}",
+    "unitLabel": "Unidad",
+    "when": {
+      "label": "¿Cuándo?",
+      "now": "Ahora",
+      "minus30": "−30 min",
+      "minus60": "−1 h",
+      "custom": "Otro",
+      "today": "Hoy",
+      "yesterday": "Ayer",
+      "dayBefore": "Anteayer",
+      "time": "Hora de la medición",
+      "hourMinus": "Una hora antes",
+      "hourPlus": "Una hora después",
+      "minuteMinus": "Cinco minutos antes",
+      "minutePlus": "Cinco minutos después",
+      "summary": "{{day}}, {{time}}"
+    },
+    "context": {
+      "label": "Contexto",
+      "FASTING": "En ayunas",
+      "BEFORE_MEAL": "Antes de comer",
+      "AFTER_MEAL": "Después de comer",
+      "BEDTIME": "Al acostarse",
+      "NIGHT": "Por la noche",
+      "OTHER": "Otro"
+    },
+    "noteLabel": "Nota (opcional)",
+    "notePlaceholder": "Ej.: después de caminar, cena tardía…",
+    "noteHint": "Visible para usted; solo se comparte si usted lo decide.",
+    "save": "Guardar",
+    "problem": {
+      "empty": "Introduzca el valor medido.",
+      "invalid": "Valor ilegible: use solo cifras.",
+      "zero": "El valor debe ser mayor que cero.",
+      "decimals": "Demasiados decimales para esta unidad: revise lo que ha escrito.",
+      "unusual": "Valor inusual: revise el valor y la unidad elegida.",
+      "future": "Esta hora está en el futuro.",
+      "context": "Elija el contexto de la medición."
+    },
+    "duplicateTitle": "¿Ya registrada?",
+    "duplicate": "Ya existe una medición con el mismo valor a esta hora.",
+    "duplicateConfirm": "Guardar de todos modos",
+    "error": "No se pudo guardar la medición en este teléfono. Vuelva a intentarlo.",
+    "saved": {
+      "title": "Medición guardada",
+      "detail": "{{value}} · {{context}} · {{when}}",
+      "local": "Guardada en este teléfono; se enviará en cuanto la conexión lo permita.",
+      "another": "Añadir otra medición",
+      "done": "Listo",
+      "confirmedUnusual": "Valor inusual confirmado por usted."
+    },
+    "addA11y": "Añadir una medición de glucemia",
+    "unusual": {
+      "question": "{{value}}: ¿es correcto?",
+      "explain": "Este valor es inusual: un glucómetro suele mostrar entre {{min}} y {{max}}.",
+      "unitHint": "¿Error de unidad? Conserve el número y cambie la unidad:",
+      "switchUnit": "Era en {{unit}}",
+      "confirm": "Sí, es correcto",
+      "fix": "Corregir el valor"
+    },
+    "safety": {
+      "title": {
+        "VERY_LOW": "Valor muy bajo",
+        "VERY_HIGH": "Valor muy alto"
+      },
+      "message": "Siga las indicaciones de su equipo de salud. Si se siente mal, pida ayuda de inmediato."
+    },
+    "edit": {
+      "overline": "Medición",
+      "title": "Modificar la medición",
+      "close": "Cerrar sin guardar",
+      "savedAt": "{{day}} a las {{time}}",
+      "whenLabel": "Fecha y hora",
+      "day": "Día de la medición",
+      "previousDay": "Día anterior",
+      "nextDay": "Día siguiente",
+      "save": "Guardar los cambios",
+      "saveError": "No se pudo guardar el cambio en este teléfono. Vuelva a intentarlo.",
+      "delete": "Eliminar esta medición",
+      "deleteTitle": "¿Eliminar esta medición?",
+      "deleteText": "Desaparecerá de su historial y de sus análisis, en este teléfono y luego en el servidor.",
+      "deleteConfirm": "Eliminar",
+      "deleteError": "No se pudo eliminar la medición en este teléfono. Vuelva a intentarlo.",
+      "cancel": "Cancelar",
+      "missingTitle": "Medición no encontrada",
+      "missingText": "Puede que ya se haya eliminado.",
+      "back": "Volver"
+    }
+  },
+  "dashboard": {
+    "greeting": {
+      "morning": "Buenos días",
+      "evening": "Buenas noches"
+    },
+    "latest": {
+      "title": "Última medición",
+      "today": "Hoy",
+      "yesterday": "Ayer",
+      "when": "{{day}}, {{time}}",
+      "age": {
+        "justNow": "Ahora mismo",
+        "minutes_one": "Hace {{count}} min",
+        "minutes_other": "Hace {{count}} min",
+        "minutes_many": "Hace {{count}} min",
+        "hours_one": "Hace {{count}} h",
+        "hours_other": "Hace {{count}} h",
+        "hours_many": "Hace {{count}} h",
+        "days_one": "Hace {{count}} día",
+        "days_other": "Hace {{count}} días",
+        "days_many": "Hace {{count}} días"
+      },
+      "a11y": "Última medición: {{value}}, {{state}}. {{context}}, {{when}}.",
+      "add": "Nueva medición"
+    },
+    "empty": {
+      "title": "Aún no hay mediciones",
+      "text": "Anote su primera glucemia: se queda en este teléfono, incluso sin red.",
+      "action": "Anotar mi primera medición"
+    },
+    "error": "No se pudieron leer sus mediciones en este teléfono.",
+    "chart": {
+      "title": "Evolución",
+      "periodLabel": "Periodo del gráfico",
+      "period_one": "{{count}} d",
+      "period_other": "{{count}} d",
+      "period_many": "{{count}} d",
+      "summary_one": "{{count}} medición en {{days}} días",
+      "summary_other": "{{count}} mediciones en {{days}} días",
+      "summary_many": "{{count}} mediciones en {{days}} días",
+      "hint": "Toque la curva para ver el detalle de una medición.",
+      "empty": "Ninguna medición en estos {{days}} días.",
+      "target": "Rango objetivo: {{min}} – {{max}}",
+      "a11y_one": "Gráfico de la glucemia en {{days}} días: {{count}} medición.",
+      "a11y_other": "Gráfico de la glucemia en {{days}} días: {{count}} mediciones.",
+      "a11y_many": "Gráfico de la glucemia en {{days}} días: {{count}} mediciones.",
+      "a11yHint": "Deslice hacia arriba o hacia abajo para pasar de una medición a otra.",
+      "a11yPoint": "{{value}}, {{state}}. {{detail}}"
+    },
+    "stats": {
+      "title": "Estadísticas",
+      "count_one": "{{count}} medición · {{days}} d",
+      "count_other": "{{count}} mediciones · {{days}} d",
+      "count_many": "{{count}} mediciones · {{days}} d",
+      "insufficientTitle": "Datos insuficientes",
+      "insufficient_one": "Se necesitan al menos {{min}} mediciones en estos {{days}} días para obtener cifras fiables. Tiene {{count}}.",
+      "insufficient_other": "Se necesitan al menos {{min}} mediciones en estos {{days}} días para obtener cifras fiables. Tiene {{count}}.",
+      "insufficient_many": "Se necesitan al menos {{min}} mediciones en estos {{days}} días para obtener cifras fiables. Tiene {{count}}.",
+      "shareA11y": "Distribución de las mediciones: {{below}} % por debajo, {{inRange}} % en el rango, {{above}} % por encima.",
+      "mean": "Promedio",
+      "sd": "Desviación estándar",
+      "cv": "Variabilidad",
+      "compareTitle": "Respecto a los {{days}} días anteriores",
+      "tirChange": "Tiempo en el objetivo: {{value}}",
+      "meanChange": "Promedio: {{value}}",
+      "points_one": "{{sign}}{{count}} punto",
+      "points_other": "{{sign}}{{count}} puntos",
+      "points_many": "{{sign}}{{count}} puntos",
+      "stable": "estable",
+      "direction": {
+        "up": "en aumento",
+        "down": "en descenso",
+        "flat": "estable"
+      },
+      "noPrevious": "No hay suficientes mediciones en los {{days}} días anteriores para comparar."
+    },
+    "quality": {
+      "title": "Calidad de los datos",
+      "level": {
+        "GOOD": "Buena",
+        "PARTIAL": "Parcial",
+        "INSUFFICIENT": "Insuficiente"
+      },
+      "reason": {
+        "empty": "Ninguna medición en estos {{days}} días: por ahora no hay nada que evaluar.",
+        "good": "Mediciones regulares: {{covered}} días medidos de {{days}}, {{perDay}} al día de promedio.",
+        "coverage": "Mediciones solo en {{covered}} de {{days}} días: medir más días hace el análisis más fiable.",
+        "freshness_one": "Última medición hace {{count}} día: las cifras reflejan menos la situación actual.",
+        "freshness_other": "Última medición hace {{count}} días: las cifras reflejan menos la situación actual.",
+        "freshness_many": "Última medición hace {{count}} días: las cifras reflejan menos la situación actual.",
+        "density_one": "{{perDay}} medición por día medido de promedio: el objetivo es {{target}} para una imagen más completa.",
+        "density_other": "{{perDay}} mediciones por día medido de promedio: el objetivo es {{target}} para una imagen más completa.",
+        "density_many": "{{perDay}} mediciones por día medido de promedio: el objetivo es {{target}} para una imagen más completa."
+      },
+      "coverage": "Días medidos",
+      "density": "Mediciones por día",
+      "freshness": "Actualidad",
+      "formula": "Puntuación = 50 % días medidos + 30 % mediciones por día + 20 % actualidad.",
+      "a11y": "Calidad de los datos: {{score}} sobre 100, {{level}}. {{sentence}}"
+    }
+  },
+  "timeline": {
+    "overline": "Cronología",
+    "title": "Historial",
+    "filtersLabel": "Filtrar la cronología",
+    "filter": {
+      "all": "Todo",
+      "glucose": "Glucemia",
+      "MEAL": "Comidas",
+      "ACTIVITY": "Actividad",
+      "TREATMENT": "Tratamientos",
+      "alerts": "Alertas"
+    },
+    "type": {
+      "MEAL": "Comida",
+      "ACTIVITY": "Actividad",
+      "TREATMENT": "Tratamiento"
+    },
+    "duration_one": "{{type}} · {{count}} min",
+    "duration_other": "{{type}} · {{count}} min",
+    "duration_many": "{{type}} · {{count}} min",
+    "declared": "Declarado por usted",
+    "pending": "Aún no enviada",
+    "source": {
+      "MANUAL": "Manual",
+      "IMPORT": "Importación",
+      "DEVICE": "Dispositivo",
+      "importBatch": "Importación · lote {{batch}}",
+      "a11y": "Origen: {{label}}"
+    },
+    "count_one": "{{count}} elemento",
+    "count_other": "{{count}} elementos",
+    "count_many": "{{count}} elementos",
+    "more": "Ver los {{days}} días anteriores",
+    "end": "No hay nada más antiguo en este teléfono.",
+    "empty": {
+      "title": "Su historial está vacío",
+      "text": "Sus mediciones, comidas, actividades y tratamientos aparecerán aquí, día a día.",
+      "action": "Anotar una medición",
+      "import": "Importar un archivo"
+    },
+    "emptyFilter": {
+      "title": "Nada que mostrar",
+      "text": "Ningún elemento «{{filter}}» en los últimos {{days}} días."
+    },
+    "error": "No se pudo leer el historial en este teléfono.",
+    "a11y": {
+      "measurement": "{{time}}, glucemia {{value}}, {{state}}, {{context}}",
+      "event": "{{time}}, {{label}}, {{meta}}"
+    },
+    "addEvent": "Añadir",
+    "openHint": "Abre el detalle para modificar o eliminar"
+  },
+  "event": {
+    "overline": "Registro rápido",
+    "title": "Nuevo evento",
+    "close": "Cerrar sin guardar",
+    "typeLabel": "Tipo",
+    "type": {
+      "MEAL": "Comida",
+      "ACTIVITY": "Actividad",
+      "TREATMENT": "Tratamiento"
+    },
+    "typeHint": {
+      "MEAL": "Lo que comió, y cuándo",
+      "ACTIVITY": "Una actividad física y su duración",
+      "TREATMENT": "Un tratamiento que tomó, tal como usted lo declara"
+    },
+    "chooseFirst": "Elija primero el tipo de evento.",
+    "label": {
+      "MEAL": "Comida",
+      "ACTIVITY": "Actividad",
+      "TREATMENT": "Nombre del tratamiento"
+    },
+    "placeholder": {
+      "MEAL": "Ej.: almuerzo, arroz y frijoles",
+      "ACTIVITY": "Ej.: caminata",
+      "TREATMENT": "Ej.: insulina lenta, metformina"
+    },
+    "suggestionsLabel": "Sugerencias",
+    "suggestion": {
+      "breakfast": "Desayuno",
+      "lunch": "Almuerzo",
+      "dinner": "Cena",
+      "snack": "Merienda",
+      "walk": "Caminata",
+      "run": "Carrera",
+      "bike": "Bicicleta",
+      "football": "Fútbol",
+      "dance": "Baile",
+      "housework": "Tareas domésticas"
+    },
+    "durationLabel": "Duración",
+    "durationOther": "Otra duración (minutos)",
+    "minutes_one": "{{count}} min",
+    "minutes_other": "{{count}} min",
+    "minutes_many": "{{count}} min",
+    "details": {
+      "MEAL": "Detalles (opcional)",
+      "ACTIVITY": "Detalles (opcional)",
+      "TREATMENT": "Nota (opcional)"
+    },
+    "detailsPlaceholder": {
+      "MEAL": "Ej.: ración más grande de lo habitual",
+      "ACTIVITY": "Ej.: por el barrio",
+      "TREATMENT": "Ej.: como siempre por la noche"
+    },
+    "detailsHint": "Visible para usted; solo se comparte si usted lo decide.",
+    "treatmentTitle": "Declarado por usted",
+    "treatmentInfo": "Afyabora registra lo que usted indica, sin calcular ni aconsejar dosis. Siga las indicaciones de su equipo de salud.",
+    "save": "Guardar",
+    "error": "No se pudo guardar el evento en este teléfono. Vuelva a intentarlo.",
+    "problem": {
+      "type": "Elija el tipo de evento.",
+      "label": "Indique una descripción.",
+      "labelTooLong": "{{max}} caracteres como máximo.",
+      "duration": "Duración en minutos, de 1 a 1440.",
+      "future": "Esta hora está en el futuro."
+    },
+    "saved": {
+      "title": "Evento guardado",
+      "local": "Guardado en este teléfono; se enviará en cuanto la conexión lo permita.",
+      "another": "Añadir otro evento",
+      "done": "Listo"
+    }
+  },
+  "insights": {
+    "title": "Análisis",
+    "subtitle": "Lo que muestran sus mediciones. Calculado en este teléfono, incluso sin red.",
+    "periodLabel": "Periodo analizado",
+    "error": "No se pueden leer las mediciones guardadas en este teléfono.",
+    "summary": {
+      "title": "Últimos {{days}} días",
+      "range": "Del {{from}} al {{to}}",
+      "inRange": "en el rango objetivo",
+      "count_one": "{{count}} medición",
+      "count_other": "{{count}} mediciones",
+      "count_many": "{{count}} mediciones",
+      "quality": "Calidad de los datos: {{score}}/100 · {{level}}",
+      "a11y": "En los últimos {{days}} días: {{percent}} % de las mediciones en el rango objetivo, {{readings}}. Calidad de los datos: {{score}} sobre 100, {{level}}."
+    },
+    "headline": {
+      "calm": "Nada en particular que señalar en este periodo.",
+      "watch_one": "{{count}} observación para revisar con más atención.",
+      "watch_other": "{{count}} observaciones para revisar con más atención.",
+      "watch_many": "{{count}} observaciones para revisar con más atención."
+    },
+    "insufficient": {
+      "title": "Todavía no hay suficientes mediciones",
+      "body_one": "{{count}} medición en estos {{days}} días: se necesitan al menos 10 para un análisis fiable.",
+      "body_other": "{{count}} mediciones en estos {{days}} días: se necesitan al menos 10 para un análisis fiable.",
+      "body_many": "{{count}} mediciones en estos {{days}} días: se necesitan al menos 10 para un análisis fiable.",
+      "action": "Anotar una medición"
+    },
+    "observations_one": "{{count}} observación",
+    "observations_other": "{{count}} observaciones",
+    "observations_many": "{{count}} observaciones",
+    "severity": {
+      "INFO": "Información",
+      "ATTENTION": "A vigilar",
+      "ALERT": "Alerta"
+    },
+    "type": {
+      "TREND": "Tendencia",
+      "TIME_OF_DAY_PATTERN": "Momento del día",
+      "ANOMALY": "Valor inusual",
+      "HIGH_STREAK": "Serie de valores altos",
+      "REPEATED_HYPO": "Valores bajos repetidos",
+      "MISSING_DATA": "Días sin mediciones",
+      "PERIOD_COMPARISON": "Comparación"
+    },
+    "slot": {
+      "MORNING": "mañana",
+      "NOON": "mediodía",
+      "EVENING": "tarde-noche",
+      "NIGHT": "noche"
+    },
+    "sentence": {
+      "REPEATED_HYPO": "Observo {{count}} mediciones por debajo del umbral bajo en los últimos {{days}} días.",
+      "HIGH_STREAK": "Observo una serie de {{length}} mediciones consecutivas por encima del umbral alto.",
+      "ANOMALY": "{{count}} medición(es) difiere(n) notablemente de su historial reciente.",
+      "TIME_OF_DAY_PATTERN": "Los valores altos son más frecuentes en la franja «{{slot}}» ({{slotAbovePct}} % frente a {{globalAbovePct}} % en general).",
+      "MISSING_DATA": "{{daysWithoutData}} día(s) de {{daysInPeriod}} no contienen ninguna medición: algunos análisis pueden estar incompletos.",
+      "PERIOD_COMPARISON": "Tiempo en el objetivo: {{timeInRangePct}} % (periodo anterior: {{previousTimeInRangePct}} %).",
+      "TREND": "Tendencia observada en el periodo."
+    },
+    "threshold": {
+      "below": "Umbral superado: por debajo de {{value}}",
+      "above": "Umbral superado: por encima de {{value}}"
+    },
+    "alertReminder": "Háblelo con su profesional de la salud.",
+    "evidence": {
+      "show_one": "Ver la medición correspondiente",
+      "show_other": "Ver las {{count}} mediciones correspondientes",
+      "show_many": "Ver las {{count}} mediciones correspondientes",
+      "hide": "Ocultar las mediciones",
+      "more_one": "Mostrar {{count}} medición más",
+      "more_other": "Mostrar las otras {{count}} mediciones",
+      "more_many": "Mostrar las otras {{count}} mediciones",
+      "openHint": "Abre el detalle de esta medición.",
+      "a11y": "{{when}}: {{value}}, {{state}}. {{context}}."
+    },
+    "cardA11y": "{{severity}}. {{title}}. {{sentence}}",
+    "summaryText": {
+      "title": "En resumen",
+      "note": "Resumen elaborado a partir de sus mediciones. No es una opinión médica.",
+      "insufficient": "Todavía no hay suficientes mediciones en los últimos {{days}} días para un análisis fiable (se necesitan al menos 10).",
+      "counts": "En los últimos {{days}} días se analizaron {{measures}} mediciones (calidad de los datos: {{level}}, {{score}}/100).",
+      "level": {
+        "GOOD": "buena",
+        "PARTIAL": "parcial",
+        "INSUFFICIENT": "insuficiente"
+      },
+      "split": "Estuvieron en el objetivo el {{inRange}} % del tiempo, por encima el {{above}} % y por debajo el {{below}} %.",
+      "previous": "En el periodo anterior, el tiempo en el objetivo fue del {{previous}} %.",
+      "points": "Puntos para revisar con su profesional de la salud: {{list}}.",
+      "none": "No se ha detectado ningún punto en particular en este periodo.",
+      "missing": "{{missing}} día(s) de {{days}} sin mediciones: algunos análisis pueden estar incompletos.",
+      "point": {
+        "REPEATED_HYPO": "valores bajos repetidos",
+        "HIGH_STREAK": "una serie de valores altos",
+        "ANOMALY": "valores inusuales",
+        "TIME_OF_DAY_PATTERN": "valores altos más frecuentes {{slots}}"
+      },
+      "slot": {
+        "MORNING": "por la mañana",
+        "NOON": "al mediodía",
+        "EVENING": "por la tarde-noche",
+        "NIGHT": "por la noche"
+      },
+      "and": "y"
+    },
+    "rewritten": "Redacción propuesta por la IA, cifras verificadas"
+  },
+  "assistant": {
+    "title": "Afyabora",
+    "subtitle": "Su asistente de seguimiento",
+    "entry": {
+      "title": "¿Una pregunta sobre sus mediciones?",
+      "body": "Pregunte a Afyabora, su asistente: responde a partir de sus mediciones y de fichas revisadas por un médico."
+    },
+    "welcome": {
+      "title": "Hola, soy Afyabora",
+      "body": "Hágame sus preguntas sobre sus glucemias o sobre la diabetes.",
+      "measures": "Describo sus mediciones con los mismos cálculos que la pantalla Análisis.",
+      "sheets": "Para las preguntas generales, me baso en fichas revisadas por un médico y las cito.",
+      "never": "Nunca doy dosis, diagnósticos ni consejos de tratamiento: para eso, su profesional de la salud sigue siendo la persona adecuada.",
+      "try": "Pruebe",
+      "suggestionHint": "Hace esta pregunta a Afyabora"
+    },
+    "suggestions": {
+      "week": "Comment s'est passée ma semaine ?",
+      "evening": "Mes glycémies du soir sont-elles hautes ?",
+      "hba1c": "C'est quoi l'HbA1c ?",
+      "hypo": "Que faire en cas d'hypoglycémie ?"
+    },
+    "frenchOnly": "Por ahora, el asistente solo entiende y responde en francés. Las sugerencias de abajo están en francés por ese motivo.",
+    "kinds": {
+      "measurements": "Según sus mediciones",
+      "sheet": "Según una ficha",
+      "emergency": "Emergencia",
+      "refusal": "Fuera de mi función",
+      "outOfScope": "Sin respuesta segura"
+    },
+    "source": {
+      "title_one": "Ficha citada",
+      "title_other": "Fichas citadas",
+      "title_many": "Fichas citadas",
+      "validated": "Revisada por un médico",
+      "draft": "Ficha aún no revisada",
+      "openHint": "Abre la ficha completa"
+    },
+    "rephrased": "Redactado por la IA local y luego verificado",
+    "pending": {
+      "title": "Afyabora está preparando su respuesta…",
+      "hint": "Puede tardar hasta 2 minutos.",
+      "late": "La respuesta tarda un poco: aparecerá en cuanto esté lista."
+    },
+    "outgoing": {
+      "sending": "Enviando…",
+      "offline": "No enviada: sin conexión. El asistente necesita internet.",
+      "quota": "No enviada: 20 preguntas por hora como máximo. Vuelva a intentarlo en {{minutes}} min.",
+      "conflict": "No enviada: vuelva a intentarlo.",
+      "unknown": "No enviada: el servicio no responde. Vuelva a intentarlo.",
+      "discard": "Quitar"
+    },
+    "composer": {
+      "label": "Su pregunta",
+      "placeholder": "Escriba su pregunta…",
+      "hint": "De 2 a 500 caracteres. No indique datos que le identifiquen.",
+      "send": "Enviar la pregunta",
+      "counter": "{{count}} / {{max}}",
+      "tooLong": "Demasiado largo: {{max}} caracteres como máximo."
+    },
+    "emergency": {
+      "button": "Emergencia",
+      "buttonHint": "Muestra los números a los que llamar en caso de emergencia",
+      "title": "En caso de emergencia",
+      "body": "Si se siente mal, no se quede solo: llame enseguida a emergencias o pida a alguien que lo haga.",
+      "noNumber": "No hay ningún número de emergencia guardado: llame a los servicios de emergencia de su país. Puede guardar su número de emergencia en su perfil.",
+      "callNumber": "Llamar al {{phone}}",
+      "call_relative": "Llamar a {{name}}",
+      "call_doctor": "Llamar a {{name}} (médico)",
+      "callHint": "Abre la llamada telefónica"
+    },
+    "load": {
+      "loading": "Cargando la conversación",
+      "offlineTitle": "Sin conexión",
+      "offline": "Sus conversaciones se guardan cifradas en el servidor: se necesita internet para mostrarlas.",
+      "error": "No se pudo cargar la conversación.",
+      "notFound": "Esta conversación ya no existe: puede que se haya borrado.",
+      "newConversation": "Nueva conversación"
+    },
+    "a11y": {
+      "question": "Su pregunta: {{text}}",
+      "answerReady": "Afyabora ha respondido."
+    },
+    "home": {
+      "subtitle": "Su asistente de seguimiento: sus mediciones y fichas revisadas por un médico.",
+      "new": "Nueva conversación",
+      "sheets": "Fichas de conocimiento",
+      "sheetsHint": "Hipoglucemia, HbA1c, alimentación…"
+    },
+    "list": {
+      "title": "Sus conversaciones",
+      "loading": "Cargando sus conversaciones",
+      "offline": "Sus conversaciones se guardan cifradas en el servidor: se necesita internet para mostrarlas.",
+      "error": "No se pudieron cargar sus conversaciones.",
+      "empty": "Todavía no hay conversaciones. Haga su primera pregunta a Afyabora.",
+      "today": "Hoy, {{time}}",
+      "yesterday": "Ayer, {{time}}",
+      "messages_one": "{{count}} mensaje",
+      "messages_other": "{{count}} mensajes",
+      "messages_many": "{{count}} mensajes",
+      "noPreview": "Conversación sin pregunta",
+      "openHint": "Abre la conversación",
+      "remove": "Borrar esta conversación",
+      "removeTitle": "¿Borrar esta conversación?",
+      "removeText": "Las preguntas y las respuestas se borrarán definitivamente.",
+      "removeConfirm": "Borrar",
+      "removeAll": "Borrar todas mis conversaciones",
+      "removeAllTitle": "¿Borrar todas sus conversaciones?",
+      "removeAllText": "Todas sus preguntas y todas las respuestas se borrarán definitivamente.",
+      "removeAllConfirm": "Borrar todo",
+      "removeOffline": "No se ha borrado nada: sin conexión. Vuelva a intentarlo cuando esté en línea.",
+      "removeError": "No se ha borrado nada: el servicio no responde. Vuelva a intentarlo.",
+      "more": "Ver más",
+      "privacy": "Sus conversaciones están cifradas y se guardan hasta que usted las borre. Su médico nunca tiene acceso a ellas."
+    },
+    "sheets": {
+      "title": "Fichas de conocimiento",
+      "intro": "Afyabora se basa en estas fichas para responder a las preguntas generales. Cada una cita sus fuentes oficiales.",
+      "offline": "Las fichas están en el servidor: se necesita internet para mostrarlas.",
+      "error": "No se pudieron cargar las fichas.",
+      "empty": "Por ahora no hay ninguna ficha disponible.",
+      "notFound": "Esta ficha no está disponible.",
+      "overline": "Ficha de conocimiento",
+      "reviewedOn": "Revisada por un médico el {{date}}",
+      "reminder": "Esta ficha da referencias generales. Para una decisión que le afecte, háblelo con su profesional de la salud.",
+      "sources_one": "Fuente",
+      "sources_other": "Fuentes",
+      "sources_many": "Fuentes",
+      "sourceHint": "Abre la fuente en el navegador",
+      "version": "Versión {{version}}"
+    }
+  },
+  "import": {
+    "overline": "Importar",
+    "title": "Importar un historial",
+    "intro": "Recupere las mediciones de un cuaderno o de otro glucómetro desde un archivo CSV o Excel. Verá un informe antes de que se importe nada.",
+    "close": "Cerrar sin importar",
+    "step": {
+      "file": "El archivo",
+      "unit": "Unidad de los valores"
+    },
+    "file": {
+      "choose": "Elegir un archivo",
+      "chooseHint": "CSV o Excel (.xlsx) · 5 MB y 5000 filas como máximo",
+      "change": "Cambiar de archivo",
+      "kind": {
+        "csv": "Archivo CSV",
+        "xlsx": "Libro de Excel"
+      }
+    },
+    "size": {
+      "bytes": "{{amount}} B",
+      "kb": "{{amount}} KB",
+      "mb": "{{amount}} MB"
+    },
+    "fileProblem": {
+      "empty": "Este archivo está vacío.",
+      "tooLarge": "Este archivo supera los 5 MB. Conserve solo las mediciones útiles o divídalo en varios archivos.",
+      "oldExcel": "Formato antiguo de Excel (.xls): ábralo en Excel y guárdelo como .xlsx o CSV.",
+      "unsupported": "Este tipo de archivo no es compatible. Elija un archivo .csv o .xlsx."
+    },
+    "unit": {
+      "hint": "Se usa para las filas que no indican su unidad.",
+      "example": "ej. {{value}}"
+    },
+    "analyse": "Analizar el archivo",
+    "privacy": "Solo se envía el contenido del archivo para el análisis. No se importa nada sin su consentimiento y podrá deshacerlo todo después.",
+    "network": "Se necesita conexión a internet: el análisis se hace en el servidor.",
+    "problem": {
+      "offline": {
+        "title": "Sin conexión",
+        "text": "El análisis se hace en el servidor. Compruebe su conexión y vuelva a intentarlo."
+      },
+      "tooLarge": {
+        "title": "Archivo demasiado grande",
+        "text": "5 MB y 5000 filas como máximo. Divida el archivo y vuelva a intentarlo."
+      },
+      "unreadable": {
+        "title": "Archivo ilegible"
+      },
+      "tooMany": {
+        "title": "Demasiados análisis seguidos",
+        "text": "Espere un minuto y vuelva a intentarlo."
+      },
+      "rejected": {
+        "title": "Análisis imposible"
+      },
+      "error": {
+        "title": "Análisis imposible",
+        "text": "Se produjo un error. Vuelva a intentarlo en un momento."
+      }
+    },
+    "stepLabel": "Paso {{number}}: {{title}}",
+    "mapping": {
+      "title": "¿Qué columnas?",
+      "intro": "No reconocimos todas las columnas de «{{name}}». Indique dónde están la fecha y la glucemia: lo demás es opcional.",
+      "back": "Volver a la elección del archivo",
+      "analyse": "Analizar con estas columnas",
+      "required": "Obligatorio",
+      "optional": "Opcional",
+      "none": "Ninguna",
+      "usedFor": "ya usada para {{role}}",
+      "missing": "Falta elegir: {{roles}}.",
+      "and": " y ",
+      "role": {
+        "date": "Fecha",
+        "time": "Hora",
+        "value": "Glucemia",
+        "unit": "Unidad",
+        "context": "Momento de la medición"
+      },
+      "hint": {
+        "date": "La fecha de cada medición, con o sin la hora.",
+        "time": "Si la hora está en una columna aparte.",
+        "value": "La cifra medida (ej. 1,10 o 110).",
+        "unit": "Si cada fila indica su unidad. Si no: {{unit}}, elegida para el archivo.",
+        "context": "En ayunas, antes o después de comer…"
+      },
+      "changed": {
+        "title": "Columnas por revisar",
+        "text": "El archivo no contiene todas las columnas elegidas. Revise su elección y vuelva a lanzar el análisis."
+      },
+      "lost": {
+        "title": "Ningún archivo en curso",
+        "text": "Vuelva a elegir el archivo que desea importar: no se conserva cuando se cierra la aplicación."
+      }
+    },
+    "report": {
+      "title": "Informe de importación",
+      "analyzed_one": "{{count}} fila analizada",
+      "analyzed_other": "{{count}} filas analizadas",
+      "analyzed_many": "{{count}} filas analizadas",
+      "label": {
+        "valid": "Válidas",
+        "duplicates": "Duplicados",
+        "inconsistent": "Por revisar",
+        "errors": "Errores"
+      },
+      "tile": {
+        "valid": "{{count}} válidas",
+        "duplicates": "{{count}} duplicados",
+        "inconsistent": "{{count}} por revisar",
+        "errors": "{{count}} errores"
+      },
+      "allValid": "Todas las filas son válidas: no hay nada que revisar.",
+      "group": {
+        "INCONSISTENT": {
+          "title": "Por revisar ({{count}})",
+          "text": "Valor inusual o unidad diferente: corríjalo, acéptelo tal cual o ignore la fila."
+        },
+        "DUPLICATE": {
+          "title": "Duplicados ({{count}})",
+          "text": "Misma fecha, misma hora y mismo valor que una medición ya existente: se ignoran, salvo que los acepte."
+        },
+        "ERROR": {
+          "title": "Errores ({{count}})",
+          "text": "Fila ilegible: corrija el valor o ignore la fila."
+        }
+      },
+      "acceptAll": "Aceptar todo",
+      "ignoreAll": "Ignorar todo",
+      "line": "Fila {{line}}",
+      "empty": "(vacío)",
+      "decisionFor": "Decisión para la fila {{line}}",
+      "action": {
+        "IGNORE": "Ignorar",
+        "ACCEPT": "Aceptar",
+        "CORRECT": "Corregir"
+      },
+      "correctedValue": "Valor correcto",
+      "correctedHint": "Valor en {{unit}} (cambie la unidad si es necesario).",
+      "correctedUnit": "Unidad del valor correcto",
+      "problem": {
+        "missing": "Indique el valor correcto.",
+        "invalid": "Valor ilegible: un número, por ejemplo 1,10.",
+        "outOfRange": "Valor fuera de los límites plausibles (20 a 600 mg/dL): compruebe la unidad."
+      },
+      "more_one": "Ver {{count}} fila más",
+      "more_other": "Ver {{count}} filas más",
+      "more_many": "Ver {{count}} filas más",
+      "fixCorrections": "Complete las correcciones señaladas antes de importar.",
+      "rowsRefused": "Algunas decisiones fueron rechazadas: vea las filas señaladas.",
+      "import_one": "Importar {{count}} medición",
+      "import_other": "Importar {{count}} mediciones",
+      "import_many": "Importar {{count}} mediciones",
+      "nothingToImport": "Nada que importar",
+      "defaults": "Sin decisión, los duplicados, las filas por revisar y los errores se ignoran.",
+      "undoable": "No se importa nada antes de pulsar este botón y podrá deshacer la importación después."
+    },
+    "done": {
+      "title_one": "{{count}} medición importada",
+      "title_other": "{{count}} mediciones importadas",
+      "title_many": "{{count}} mediciones importadas",
+      "skipped_zero": "Ninguna fila ignorada.",
+      "skipped_one": "{{count}} fila ignorada.",
+      "skipped_other": "{{count}} filas ignoradas.",
+      "skipped_many": "{{count}} filas ignoradas.",
+      "sync": "Las mediciones están guardadas en su cuenta. Llegarán al historial de este teléfono en unos segundos (sincronización automática).",
+      "finish": "Terminar",
+      "revert": "Deshacer esta importación",
+      "revertConfirmTitle": "¿Deshacer esta importación?",
+      "revertConfirmText_one": "La medición importada se quitará de su cuenta.",
+      "revertConfirmText_other": "Las {{count}} mediciones importadas se quitarán de su cuenta.",
+      "revertConfirmText_many": "Las {{count}} mediciones importadas se quitarán de su cuenta.",
+      "revertedTitle": "Importación deshecha",
+      "revertedText_zero": "No había ninguna medición que quitar.",
+      "revertedText_one": "{{count}} medición quitada de su cuenta.",
+      "revertedText_other": "{{count}} mediciones quitadas de su cuenta.",
+      "revertedText_many": "{{count}} mediciones quitadas de su cuenta.",
+      "keep": "Conservar la importación",
+      "revertYes_one": "Quitar la medición",
+      "revertYes_other": "Quitar las {{count}} mediciones",
+      "revertYes_many": "Quitar las {{count}} mediciones"
+    },
+    "issue": {
+      "restart": "Empezar de nuevo",
+      "offline": {
+        "title": "Sin conexión",
+        "text": "No se ha importado nada. Compruebe su conexión y vuelva a intentarlo."
+      },
+      "done": {
+        "title": "Ya hecho",
+        "text": "Este archivo ya se importó o se deshizo (quizá desde otro dispositivo)."
+      },
+      "expired": {
+        "title": "Análisis demasiado antiguo",
+        "text": "El informe tiene más de 24 horas: vuelva a lanzar el análisis del archivo."
+      },
+      "notFound": {
+        "title": "Análisis no encontrado",
+        "text": "Vuelva a lanzar el análisis del archivo."
+      },
+      "error": {
+        "title": "Importación imposible",
+        "text": "Se produjo un error. Vuelva a intentarlo en un momento."
+      }
+    }
+  },
+  "report": {
+    "overline": "Informe PDF",
+    "title": "Preparar mi consulta",
+    "intro": "Un informe claro de sus mediciones para entregar a su médico: por WhatsApp, por correo electrónico, impreso o mostrado en su teléfono.",
+    "close": "Cerrar",
+    "period": "Periodo del informe",
+    "few": {
+      "title": "Pocas mediciones en este periodo",
+      "text_one": "{{count}} medición en estos {{days}} días. El informe se creará de todos modos y lo indicará.",
+      "text_other": "{{count}} mediciones en estos {{days}} días. El informe se creará de todos modos y lo indicará.",
+      "text_many": "{{count}} mediciones en estos {{days}} días. El informe se creará de todos modos y lo indicará."
+    },
+    "contents": {
+      "title": "Qué contiene el informe",
+      "identity": {
+        "title": "Usted y su seguimiento",
+        "text": "Nombre, apellido, tipo de diabetes, año del diagnóstico y sus rangos objetivo."
+      },
+      "quality": {
+        "title": "Mediciones y calidad de los datos",
+        "text": "Número de mediciones, promedio, variabilidad, días sin mediciones."
+      },
+      "ranges": {
+        "title": "Tiempo en el rango objetivo",
+        "text": "Proporción de mediciones por debajo, en el rango y por encima."
+      },
+      "episodes": {
+        "title": "Episodios y valores inusuales",
+        "text": "Los momentos por debajo o por encima de sus umbrales, con fecha."
+      },
+      "points": {
+        "title": "Puntos para revisar con su médico",
+        "text": "Las observaciones del análisis, en frases sencillas."
+      },
+      "chart": {
+        "title": "Gráfico y detalle",
+        "text": "Todas las mediciones del periodo, en su unidad, con los días sin mediciones."
+      },
+      "private": "Sus notas personales nunca aparecen en el informe. El archivo solo sale del teléfono si usted lo comparte."
+    },
+    "pending_one": "{{count}} medición aún no se ha enviado: se enviará antes de crear el informe.",
+    "pending_other": "{{count}} mediciones aún no se han enviado: se enviarán antes de crear el informe.",
+    "pending_many": "{{count}} mediciones aún no se han enviado: se enviarán antes de crear el informe.",
+    "create": "Crear y compartir el PDF",
+    "phase": {
+      "syncing": "Enviando sus últimas mediciones…",
+      "creating": "Creando el informe…",
+      "sharing": "Abriendo el menú para compartir…"
+    },
+    "network": "El informe lo crea el servidor: se necesita conexión a internet.",
+    "shareTitle": "Compartir el informe",
+    "shareAgain": "Volver a compartir",
+    "createAgain": "Crear un nuevo informe",
+    "done": {
+      "title": "Informe listo",
+      "text": "{{filename}}. Puede volver a compartirlo, por ejemplo también por correo electrónico."
+    },
+    "unsent": {
+      "title_one": "{{count}} medición no está en el informe",
+      "title_other": "{{count}} mediciones no están en el informe",
+      "title_many": "{{count}} mediciones no están en el informe",
+      "text_one": "Aún no se ha podido enviar. Permanece en su teléfono y se enviará en cuanto sea posible; después, cree un nuevo informe.",
+      "text_other": "Aún no se han podido enviar. Permanecen en su teléfono y se enviarán en cuanto sea posible; después, cree un nuevo informe.",
+      "text_many": "Aún no se han podido enviar. Permanecen en su teléfono y se enviarán en cuanto sea posible; después, cree un nuevo informe."
+    },
+    "problem": {
+      "offline": {
+        "title": "Sin conexión",
+        "text": "El informe lo crea el servidor. Vuelva a conectarse a internet y vuelva a intentarlo."
+      },
+      "tooMany": {
+        "title": "Demasiados informes seguidos",
+        "text": "Espere un minuto antes de crear otro."
+      },
+      "noProfile": {
+        "title": "Perfil médico por completar",
+        "text": "El informe necesita su perfil médico (tipo de diabetes, rangos objetivo)."
+      },
+      "cannotShare": {
+        "title": "Compartir no disponible",
+        "text": "Este dispositivo no permite compartir un archivo."
+      },
+      "error": {
+        "title": "No se pudo crear el informe",
+        "text": "Se produjo un error. Vuelva a intentarlo en un momento."
+      }
+    },
+    "doctor": {
+      "title": "Su médico también puede descargarlo",
+      "text": "Marque «Informe PDF» cuando comparta su historial por QR."
+    },
+    "entry": {
+      "title": "Preparar mi consulta",
+      "body": "Un informe PDF de sus mediciones para entregar a su médico."
+    }
+  },
+  "emergency": {
+    "editCard": "Modificar mi tarjeta",
+    "overline": "Compartir",
+    "title": "Tarjeta de emergencia",
+    "close": "Cerrar",
+    "intro": "Una ficha para los servicios de emergencia, separada del acceso compartido con su médico. Su QR se imprime o se pone como fondo de pantalla: quien lo escanea solo ve lo que usted elige.",
+    "status": {
+      "on": "Tarjeta activa",
+      "off": "Tarjeta desactivada",
+      "onText": "El QR funciona: muestra su tarjeta a quien lo escanee.",
+      "offText": "El QR no muestra nada, ni siquiera impreso. Active la tarjeta para que funcione.",
+      "toggle": "Tarjeta activa",
+      "emptyHint": "Complete primero su tarjeta («Modificar mi tarjeta»)."
+    },
+    "qr": {
+      "hint": "Imprímala o póngala como fondo de pantalla. No contiene su nombre ni ningún dato de salud.",
+      "export": "Guardar como imagen",
+      "shareTitle": "Imagen de mi tarjeta de emergencia",
+      "exportProblem": {
+        "title": "No se pudo guardar la imagen",
+        "text": "Vuelva a intentarlo en un momento."
+      },
+      "regenerate": "Generar un nuevo QR",
+      "confirm": {
+        "title": "¿Sustituir su QR?",
+        "text": "El QR anterior dejará de funcionar de inmediato, incluidas las copias impresas o en fondo de pantalla.",
+        "yes": "Sí, generar un nuevo QR",
+        "no": "Cancelar"
+      },
+      "elsewhere": {
+        "title": "Su QR no está en este teléfono",
+        "text": "Se creó en otro teléfono o antes de reinstalar la aplicación. Genere uno nuevo aquí: el anterior dejará de funcionar.",
+        "action": "Generar un nuevo QR"
+      }
+    },
+    "image": {
+      "title": "TARJETA DE EMERGENCIA",
+      "instruction": "En caso de emergencia, escanee este QR",
+      "audience": "Profesionales de la salud y socorristas",
+      "a11y": "Imagen del QR de su tarjeta de emergencia, para imprimir o poner como fondo de pantalla."
+    },
+    "preview": {
+      "title": "Lo que verá el socorrista",
+      "empty": "Su tarjeta está vacía: añada solo lo que quiera mostrar a los servicios de emergencia.",
+      "updated": "Actualizada el {{date}}."
+    },
+    "field": {
+      "fullName": "Nombre",
+      "diabetesType": "Diabetes",
+      "declaredTreatment": "Tratamiento declarado",
+      "allergies": "Alergias",
+      "bloodGroup": "Grupo sanguíneo",
+      "lastKnownGlucoseMgDl": "Última glucemia conocida",
+      "emergencyContactName": "Contacto de emergencia",
+      "emergencyContactPhone": "Teléfono del contacto"
+    },
+    "edit": {
+      "title": "Modificar mi tarjeta",
+      "cancel": "Cerrar sin guardar",
+      "intro": "Cada dato es opcional: complete solo lo que quiera mostrar a los servicios de emergencia.",
+      "profile": {
+        "title": "Usar mi perfil",
+        "text": "Su nombre, su tipo de diabetes y su contacto de emergencia, para los campos aún vacíos.",
+        "action": "Usar mi perfil",
+        "applied": "Datos del perfil añadidos. Revíselos antes de guardar.",
+        "nothing": "Nada que añadir: estos campos ya están completos.",
+        "failed": "No se pudo leer el perfil (¿conexión?)."
+      },
+      "hint": {
+        "diabetesType": "Ej.: Tipo 1, Tipo 2.",
+        "declaredTreatment": "Lo que toma, con sus palabras. Ej.: insulina lenta por la noche.",
+        "allergies": "Ej.: penicilina. Déjelo vacío si no tiene.",
+        "glucose": "Solo se muestra este valor: nunca su historial.",
+        "phone": "Con el prefijo del país, ej. +243 81 000 0000."
+      },
+      "noBloodGroup": "Sin indicar",
+      "useLatest": "Usar mi última medición ({{value}}, el {{date}})",
+      "privacy": "Estos datos solo son visibles si su tarjeta está activa y alguien escanea su QR. Se le avisa de cada apertura.",
+      "fixErrors": "Corrija los campos señalados antes de guardar.",
+      "save": "Guardar mi tarjeta",
+      "error": {
+        "tooLong": "Demasiado largo: {{max}} caracteres como máximo.",
+        "glucoseInvalid": "Introduzca un número, ej. 1,32.",
+        "glucoseRange": "Valor fuera de los límites (20 a 600 mg/dL).",
+        "phoneInvalid": "Introduzca un número formado por cifras (se permite «+» al principio)."
+      }
+    },
+    "log": {
+      "title": "Quién abrió mi tarjeta",
+      "text": "Cada apertura se anota en «Quién consultó mis datos» y se le notifica."
+    },
+    "problem": {
+      "offline": {
+        "title": "Sin conexión",
+        "text": "La tarjeta se modifica en línea. Vuelva a conectarse a internet y vuelva a intentarlo."
+      },
+      "noProfile": {
+        "title": "Perfil médico por completar",
+        "text": "Su tarjeta de emergencia necesita su perfil médico."
+      },
+      "tooMany": {
+        "title": "Demasiadas solicitudes",
+        "text": "Espere un minuto antes de volver a intentarlo."
+      },
+      "invalid": {
+        "title": "Dato rechazado",
+        "text": "Un dato de la tarjeta no es válido. Revíselo."
+      },
+      "error": {
+        "title": "Se produjo un error",
+        "text": "Vuelva a intentarlo en un momento."
+      }
+    }
+  },
+  "share": {
+    "home": {
+      "overline": "Acceso compartido seguro",
+      "title": "Compartir con un médico",
+      "intro": "Su médico escanea un QR en su pantalla y consulta, durante un tiempo limitado, solo lo que usted ha elegido.",
+      "promise": {
+        "noData": {
+          "title": "Ningún dato en el QR",
+          "text": "El QR solo contiene un código secreto que cambia cada minuto y sirve una sola vez."
+        },
+        "limited": {
+          "title": "Un acceso limitado",
+          "text": "Usted elige qué compartir y durante cuánto tiempo. Solo un médico verificado puede escanearlo."
+        },
+        "control": {
+          "title": "Usted tiene el control",
+          "text": "Puede terminar el acceso en cualquier momento y ver quién consultó sus datos."
+        }
+      },
+      "start": "Compartir mi historial",
+      "network": "Compartir requiere conexión a internet.",
+      "log": "Quién consultó mis datos",
+      "logHint": "Los médicos que tuvieron acceso, y cuándo",
+      "emergency": "Tarjeta de emergencia",
+      "report": "Preparar mi consulta",
+      "reportHint": "Un informe PDF de sus mediciones para entregar al médico",
+      "emergencyHint": "La información útil para los servicios de emergencia"
+    },
+    "new": {
+      "overline": "Compartir mi historial",
+      "title": "¿Qué quiere compartir?",
+      "close": "Cerrar sin compartir",
+      "intro": "El médico solo verá lo que usted marque. No se comparte nada hasta que escanee el QR.",
+      "what": "Lo que el médico podrá ver",
+      "count_one": "{{count}} de {{total}}",
+      "count_other": "{{count}} de {{total}}",
+      "count_many": "{{count}} de {{total}}",
+      "noneSelected": "Marque al menos una categoría para crear el QR.",
+      "howLong": "Durante cuánto tiempo",
+      "durationLabel": "Duración del acceso",
+      "startsAtScan": "La duración empieza cuando el médico escanea el QR. Podrá terminarlo antes.",
+      "generate": "Generar el QR",
+      "qrNote": "El QR no contiene ningún dato médico. Cambia cada 60 segundos y sirve una sola vez."
+    },
+    "category": {
+      "GLUCOSE_HISTORY": {
+        "label": "Historial de glucemia",
+        "text": "Sus mediciones, sus momentos y sus rangos objetivo"
+      },
+      "TREATMENTS": {
+        "label": "Tratamientos declarados",
+        "text": "Los medicamentos y tomas que ha anotado"
+      },
+      "MEALS": {
+        "label": "Comidas",
+        "text": "Las comidas que ha anotado"
+      },
+      "ACTIVITY": {
+        "label": "Actividad física",
+        "text": "Las actividades que ha anotado"
+      },
+      "AI_SUMMARY": {
+        "label": "Resumen de los análisis",
+        "text": "Las cifras clave y observaciones calculadas por Afyabora"
+      },
+      "REPORT_DOWNLOAD": {
+        "label": "Descarga del informe",
+        "text": "El médico podrá guardar un informe PDF"
+      },
+      "PERSONAL_NOTES": {
+        "label": "Notas personales",
+        "text": "El texto libre que escribió en sus notas",
+        "note": "Sus notas pueden contener información muy personal."
+      }
+    },
+    "duration": {
+      "MIN_5": {
+        "label": "5 min",
+        "hint": "Un vistazo"
+      },
+      "MIN_30": {
+        "label": "30 min",
+        "hint": "Una consulta corta"
+      },
+      "HOUR_1": {
+        "label": "1 h",
+        "hint": "Una consulta larga"
+      },
+      "CONSULTATION": {
+        "label": "Consulta",
+        "hint": "2 h como máximo"
+      }
+    },
+    "problem": {
+      "offline": {
+        "title": "Sin conexión",
+        "text": "Compartir necesita internet: el servidor crea y verifica el QR. Sus datos permanecen en este teléfono."
+      },
+      "tooMany": {
+        "title": "Demasiados QR creados",
+        "text": "Espere un minuto antes de crear uno nuevo."
+      },
+      "busy": {
+        "title": "Servicio no disponible por el momento",
+        "text": "Hay mucha demanda. Vuelva a intentarlo en un momento."
+      },
+      "rejected": {
+        "title": "No es posible compartir por ahora"
+      },
+      "error": {
+        "title": "No se pudo crear el QR",
+        "text": "Se produjo un error. Vuelva a intentarlo en un momento."
+      }
+    },
+    "qr": {
+      "overline": "Compartir mi historial",
+      "title": "Muestre este QR a su médico",
+      "scannedTitle": "Su acceso compartido",
+      "intro": "Su médico lo escanea desde su portal Afyabora. El QR cambia automáticamente: mantenga esta pantalla abierta.",
+      "qrA11y": "QR para compartir, para que lo escanee su médico",
+      "expired": "Este QR ya no es válido",
+      "renewing": "Nuevo QR…",
+      "next_one": "Nuevo QR en {{count}} s",
+      "next_other": "Nuevo QR en {{count}} s",
+      "next_many": "Nuevo QR en {{count}} s",
+      "nextA11y_one": "Nuevo QR en {{count}} segundo",
+      "nextA11y_other": "Nuevo QR en {{count}} segundos",
+      "nextA11y_many": "Nuevo QR en {{count}} segundos",
+      "shared": "Compartido",
+      "duration": "Duración del acceso",
+      "durationValue": "{{duration}}, a partir del escaneo",
+      "stop": "Detener el acceso",
+      "close": "Cerrar",
+      "doctorNote": "Solo un médico verificado puede escanear este QR. No contiene ningún dato médico y sirve una sola vez.",
+      "problem": {
+        "offline": {
+          "title": "Conexión perdida",
+          "text": "El QR no se puede renovar sin internet. Nuevo intento automático."
+        },
+        "busy": {
+          "title": "Servicio muy solicitado",
+          "text": "El nuevo QR llegará en un momento. Nuevo intento automático."
+        },
+        "error": {
+          "title": "No se pudo renovar el QR",
+          "text": "Nuevo intento automático en un momento."
+        }
+      },
+      "scanned": {
+        "title": "Su QR ha sido escaneado",
+        "byDoctor": "{{name}} está consultando su expediente",
+        "until": "Acceso hasta las {{time}}.",
+        "end": "Terminar el acceso",
+        "endFailed": "No se pudo cortar el acceso. Compruebe su conexión y vuelva a intentarlo."
+      },
+      "ended": {
+        "title": "Acceso terminado",
+        "text": "El médico ya no tiene acceso a sus datos. Puede crear un nuevo QR en cualquier momento."
+      },
+      "none": {
+        "title": "Ningún QR en curso",
+        "text": "Cree un QR para compartir su historial con un médico.",
+        "action": "Crear un QR"
+      },
+      "backup": {
+        "show": "¿El médico no tiene cámara? Mostrar el código de respaldo",
+        "label": "Código de respaldo",
+        "a11y": "Código de respaldo, para copiar o pegar en el portal del médico",
+        "hint": "El médico lo introduce en su portal, en «Escanear un QR». Como el QR, cambia cada minuto y sirve una sola vez.",
+        "hide": "Ocultar el código"
+      }
+    },
+    "live": {
+      "expiresIn": "Caduca en",
+      "remainingA11y": "Acceso restante: {{minutes}} min {{seconds}} s",
+      "offline": "Conexión perdida: el temporizador sigue y el estado se comprobará en cuanto vuelva la red.",
+      "confirm": "¿Cortar ahora el acceso de {{name}}? Ya no podrá ver sus datos.",
+      "confirmNoName": "¿Cortar ahora el acceso del médico? Ya no podrá ver sus datos.",
+      "confirmYes": "Sí, terminar el acceso",
+      "confirmNo": "Cancelar",
+      "checking": "Se acaba de escanear el QR. Comprobando…",
+      "newQr": "Crear un nuevo QR",
+      "ended": {
+        "expired": "El acceso de {{name}} ha llegado a su fin.",
+        "expiredNoName": "El acceso ha llegado a su fin.",
+        "revoked": "Usted terminó el acceso de {{name}}.",
+        "revokedNoName": "Se ha detenido el acceso compartido."
+      }
+    },
+    "log": {
+      "overline": "Registro de accesos",
+      "title": "Quién consultó mis datos",
+      "close": "Cerrar",
+      "intro": "Cada acceso a su expediente se registra aquí. Nadie puede modificar este registro.",
+      "loading": "Cargando el registro",
+      "count_one": "{{count}} acceso",
+      "count_other": "{{count}} accesos",
+      "count_many": "{{count}} accesos",
+      "today": "Hoy a las {{time}}",
+      "onDate": "El {{date}} a las {{time}}",
+      "lasted": "acceso de {{duration}}",
+      "doctor": "Dr. {{name}}",
+      "unknownDoctor": "Médico",
+      "end": {
+        "expired": "Llegó a su fin",
+        "revoked": "Detenido por usted",
+        "ongoing": "En curso"
+      },
+      "views_one": "{{count}} consulta",
+      "views_other": "{{count}} consultas",
+      "views_many": "{{count}} consultas",
+      "report": "Informe descargado",
+      "emergency": {
+        "title": "Acceso de emergencia",
+        "text": "Su tarjeta de emergencia se abrió sin cuenta."
+      },
+      "empty": {
+        "title": "Nadie ha consultado aún sus datos",
+        "text": "Cuando un médico escanee su QR, su acceso aparecerá aquí: quién, cuándo y durante cuánto tiempo."
+      },
+      "more": "Ver los accesos más antiguos",
+      "problem": {
+        "offline": {
+          "title": "Sin conexión",
+          "text": "El registro se guarda en el servidor: vuelva a conectarse para consultarlo."
+        },
+        "error": {
+          "title": "No se pudo cargar el registro",
+          "text": "Vuelva a intentarlo en un momento."
+        }
+      }
+    }
+  }
+}
