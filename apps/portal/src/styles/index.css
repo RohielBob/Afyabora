@@ -2,8 +2,9 @@
 
 /*
  * Système de design du portail (ADR-0008) — mêmes jetons que l'application mobile.
- * Les valeurs (--afy-*) sont générées depuis @glyka/ui-tokens par src/theme/theme.ts, en clair et en
- * sombre. Ici, on ne fait que les brancher sur Tailwind : `bg-primary`, `text-muted`, `border-line`…
+ * Les valeurs (--afy-*) sont générées depuis @glyka/ui-tokens par src/theme/theme.ts, pour le thème et
+ * la couleur d'accent choisis. Ici, on ne fait que les brancher sur Tailwind : `bg-primary`,
+ * `text-muted`, `border-line`…
  * Aucune couleur écrite en dur dans les pages.
  */
 
@@ -39,6 +40,10 @@
   font-weight: 800;
   font-display: swap;
 }
+
+/* Variante `dark:` de Tailwind : suit le thème CHOISI dans le menu « Apparence » (data-theme sur <html>,
+   posé par src/theme/theme.ts), et non directement le réglage de l'ordinateur. */
+@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
 
 @theme inline {
   --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;

@@ -2,10 +2,12 @@
 //  - sur ordinateur : à gauche, un panneau de marque (ce que le portail permet, et ses garanties) ;
 //    à droite, le formulaire ;
 //  - sur tablette / téléphone : le formulaire seul, logo au-dessus.
+// Menu « Apparence » en haut à droite, sur tous les écrans.
 // Le contenu entre en douceur (fondu + léger glissement), désactivé si l'ordinateur réduit les animations.
 import type { ReactNode } from 'react';
 import { Wordmark } from '@/components/brand/Logo';
 import { fr } from '@/i18n/fr';
+import { AppearanceMenu } from './AppearanceMenu';
 
 function Check() {
   return (
@@ -67,9 +69,12 @@ export function AuthLayout({
       </aside>
 
       {/* Formulaire */}
-      <main className="flex min-h-dvh flex-col px-4 py-8 sm:px-8 lg:min-h-0 lg:justify-center lg:py-12">
-        <div className="mb-10 lg:hidden">
-          <Wordmark size={30} />
+      <main className="relative flex min-h-dvh flex-col px-4 py-8 sm:px-8 lg:min-h-0 lg:justify-center lg:py-12">
+        <div className="mb-10 flex items-center justify-between gap-4 lg:absolute lg:top-6 lg:right-8 lg:mb-0">
+          <div className="lg:hidden">
+            <Wordmark size={30} />
+          </div>
+          <AppearanceMenu />
         </div>
         <div
           className={`animate-enter mx-auto flex w-full flex-col gap-7 ${wide ? 'max-w-[600px]' : 'max-w-[420px]'}`}

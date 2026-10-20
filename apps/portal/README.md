@@ -20,7 +20,8 @@ src/
 ├─ features/                 # auth · scanner · sessions · patient-record · report (README + tickets)
 ├─ components/               # ui/ (Button, TextField, Checkbox, Alert…), layout/, brand/ (logo)
 ├─ i18n/fr.ts                # TOUS les textes du portail (aucun texte écrit dans les pages)
-├─ theme/theme.ts            # jetons @glyka/ui-tokens → variables CSS (clair + sombre)
+├─ theme/theme.ts            # jetons @glyka/ui-tokens → variables CSS (thème et accent choisis)
+├─ theme/appearance.ts       # choix « Apparence » (Clair/Sombre/Automatique × accent), gardé dans le navigateur
 ├─ lib/                      # config, client HTTP (jeton d'accès en mémoire, renouvellement unique)
 └─ styles/index.css          # Tailwind branché sur les variables du thème, police, animations
 ```
@@ -31,11 +32,14 @@ src/
 - L'expiration est vérifiée **par le serveur à chaque requête** ; le compte à rebours affiché n'est qu'indicatif.
 - À l'expiration ou à la révocation : on **vide les données en mémoire** (cache React Query compris) et on affiche « Accès expiré ».
 - Un onglet dont la catégorie n'est pas autorisée n'est pas affiché.
-- Aucune donnée patient dans `localStorage`, dans les logs ou l'URL.
+- Aucune donnée patient dans `localStorage`, dans les logs ou l'URL (seul le choix d'apparence y est
+  gardé : `glyka.portal.appearance`).
 - Responsive : utilisable sur ordinateur, tablette et téléphone.
 - **Système de design (ADR-0008)** : mêmes jetons que le mobile (`@glyka/ui-tokens`) : rouge Afyabora
   pour l'action principale, police Plus Jakarta Sans **hébergée avec le portail** (`public/fonts`, licence
-  OFL, aucune requête vers Google), clair / sombre selon l'ordinateur, animations modérées désactivées
+  OFL, aucune requête vers Google), menu **« Apparence »** dans l'en-tête de toutes les pages : thème
+  Clair (défaut) / Sombre / Automatique (suit l'ordinateur) et accent Rubis / Framboise / Marine /
+  Graphite, comme le mobile ; animations modérées désactivées
   si l'ordinateur demande « réduire les animations ». Une page n'utilise que `@/components/ui` et les
   classes du thème (`bg-primary`, `text-muted`, `border-line`…) : **pas de couleur écrite en dur**.
 - Session : jeton d'accès en mémoire, session limitée à l'onglet, déconnexion après 30 min

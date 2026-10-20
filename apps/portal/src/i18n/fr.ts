@@ -168,6 +168,22 @@ export const fr = {
     signingOut: 'Déconnexion…',
     menu: 'Compte',
   },
+  // Menu « Apparence » (en-tête de toutes les pages) : mêmes choix que Réglages → Apparence du mobile.
+  appearance: {
+    button: 'Apparence',
+    title: 'Apparence',
+    intro: 'Réglage gardé dans ce navigateur. Les textes restent toujours lisibles.',
+    theme: 'Thème',
+    light: 'Clair',
+    dark: 'Sombre',
+    system: 'Automatique',
+    systemHint: 'Suit le réglage de l’ordinateur (actuellement : {{mode}}).',
+    systemLight: 'clair',
+    systemDark: 'sombre',
+    accent: 'Couleur d’accent',
+    accents: { rubis: 'Rubis', framboise: 'Framboise', marine: 'Marine', graphite: 'Graphite' },
+    close: 'Fermer',
+  },
   // L4-09 : provenance d'une mesure (même règle et mêmes mots que l'application du patient).
   provenance: {
     MANUAL: 'Saisie',
